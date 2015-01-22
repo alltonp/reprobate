@@ -1,0 +1,15 @@
+language: scala
+scala:
+- 2.10.4
+jdk:
+- oraclejdk7
+before_script: ./scripts/prepublish.sh
+script: ./scripts/ci-build.sh
+env:
+  global:
+  - LIB_VERSION=$TRAVIS_BUILD_NUMBER
+  - secure: Ytq8sr7ZhbNh+esyNG+rIKhjC3fDqmEmO4QA5ayCmx18P0j1sUXFfek15eHNuX70ips0dG/ooq/QpFhE9MAtxnu6QhKyBDtcqHdCsJmbebk/tSnA2YZsFVj9pUXUdU2UDHaPr/ZRrO9sfTnOsh1qjGoV6Dw7Diej5gOaNLMemK0=
+  - secure: Vo6VhVjGbO7rlu18K3BZNRtwqZXsC2B1A55FOV3Vgz8PfOh0Y1CvGRQycYY1Xm/akP8fgLqktz0wj7Ran4DvgtzXQuRr5ZEGzOTAB8AahUL87AtJtIbxZgWKsA1lf9Ygw/ik+O7V5FPBWSQPbXhZVAdbpEBSCWRnIqNr9Ar3RyE=
+  - secure: H8PxbkjisZT/rZP4JJInAZFTlOCynxZOwWrOyDI+XgrDka92YsfFehDcL/jMHfvQkSyirUhIfi3wO4DPkIbbec07aKBqCzfz0flz5G1DvYBBBKaSzVB/CIiwenyLNqqOCU95JPSiLJ3mo0dT/UINnE0cCT0+tWByVD2xrfs8ugM=
+notifications:
+  email: false
