@@ -46,8 +46,8 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(Iam)
 
     // Use HTML5 for rendering
-//    LiftRules.htmlProperties.default.set((r: Req) =>
-//      new Html5Properties(r.userAgent))
+    LiftRules.htmlProperties.default.set((r: Req) =>
+      new Html5Properties(r.userAgent))
 
     //TODO: we probably need an init to kick things off.
     ServiceFactory.probeProviderActor()
