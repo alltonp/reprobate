@@ -19,6 +19,7 @@ libraryDependencies ++= {
       "container,test",
     "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" %
       "container,compile" artifacts Artifact("javax.servlet", "jar", "jar"),
+    "org.scala-lang.modules" %% "scala-xml" % "1.0.1",
     "io.shaka" %% "naive-http" % "48"
   )
 }
