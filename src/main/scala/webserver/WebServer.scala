@@ -5,27 +5,27 @@ package webserver
 //import org.eclipse.jetty.webapp.WebAppContext
 //import java.io.File
 
-object WebServer2 extends App {
-  import org.eclipse.jetty.server.Server
-  import org.eclipse.jetty.webapp.WebAppContext
-  import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker
-
-  val server = new Server(8080)
-  val maxFormSize = 20 * 1000 * 1000
-  server.setHandler(new WebAppContext("src/main/webapp", "/") {
-    addAliasCheck(new AllowSymLinkAliasChecker)
-  })
-  try {
-    server.start()
-//    if (args.contains("interruptible")) {
-//      Console.readLine("Press Enter to exit")
-//      server.stop()
-//    }
-    server.join()
-  }
-  catch { case e: Throwable => e.printStackTrace(); System.exit(1) }
-  finally System.exit(0)
-}
+//object WebServer2 extends App {
+//  import org.eclipse.jetty.server.Server
+//  import org.eclipse.jetty.webapp.WebAppContext
+//  import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker
+//
+//  val server = new Server(8080)
+//  val maxFormSize = 20 * 1000 * 1000
+//  server.setHandler(new WebAppContext("src/main/webapp", "/") {
+//    addAliasCheck(new AllowSymLinkAliasChecker)
+//  })
+//  try {
+//    server.start()
+////    if (args.contains("interruptible")) {
+////      Console.readLine("Press Enter to exit")
+////      server.stop()
+////    }
+//    server.join()
+//  }
+//  catch { case e: Throwable => e.printStackTrace(); System.exit(1) }
+//  finally System.exit(0)
+//}
 
 //object WebServer extends App {
 //
