@@ -1,13 +1,13 @@
 package webserver
 
+//TODO: rename and tidy
 object WebServer extends App {
   import org.eclipse.jetty.server.Server
   import org.eclipse.jetty.server.nio.SelectChannelConnector
   import org.eclipse.jetty.webapp.WebAppContext
   import java.io.File
 
-  val serverPort = 8473
-  val productionMode = "production"
+  private val serverPort = 8473
   private val server = createServer
   private val context = createContext
   server.setHandler(context)
@@ -37,7 +37,7 @@ object WebServer extends App {
     val context = new WebAppContext()
     context.setServer(server)
     context.setContextPath("/")
-    if(new File("src/main/webapp").exists())
+    if (new File("src/main/webapp").exists())
       context.setWar("src/main/webapp")
     else {
       val loader = context.getClass.getClassLoader
