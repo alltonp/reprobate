@@ -11,11 +11,13 @@ scalaVersion := "2.11.1"
 
 libraryDependencies ++= {
   val liftVersion = "2.6"
+  val jettyVersion = "8.1.7.v20120910"
   Seq(
     "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
-    "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910",
-    "org.eclipse.jetty" % "jetty-server" % "8.1.7.v20120910",
-    "io.shaka" %% "naive-http" % "48"
+    "org.eclipse.jetty" % "jetty-webapp" % jettyVersion,
+    "org.eclipse.jetty" % "jetty-server" % jettyVersion,
+    "io.shaka" %% "naive-http" % "48",
+    "ch.qos.logback" % "logback-classic" % "1.0.6"
   )
 }
 
