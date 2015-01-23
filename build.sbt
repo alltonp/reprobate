@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
 	"org.scalatest" %% "scalatest" % "2.2.0" % "test",
 //  "org.eclipse.jetty" % "jetty-server" % "8.1.7.v20120910",
   "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115",
-  "net.liftweb" %% "lift-webkit" % "2.6"
+  "net.liftweb" %% "lift-webkit" % "2.6",
+  "io.shaka" %% "naive-http" % "48"
 )
 
 libraryDependencies := {
