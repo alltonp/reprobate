@@ -6,7 +6,7 @@ object WebServer extends App {
   import org.eclipse.jetty.webapp.WebAppContext
   import java.io.File
 
-  val serverPort = 8080
+  val serverPort = 8473
   val productionMode = "production"
   private val server = createServer
   private val context = createContext
