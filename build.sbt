@@ -42,6 +42,8 @@ publishArtifact in Test := false
 
 publishArtifact in (Compile, packageBin) := false
 
+addArtifact(artifact in (Compile, BuildSettings.dist), BuildSettings.dist).settings
+
 homepage := Some(url("https://github.com/alltonp/reprobate"))
 
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
