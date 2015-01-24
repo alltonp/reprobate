@@ -11,9 +11,11 @@ object Reprobate extends Build {
 object BuildSettings {
   val dist = taskKey[File]("dist")
 
+  //http://www.scala-sbt.org/0.13/docs/Combined+Pages.html
   // create an Artifact for publishing the .war file
   artifact in (Compile, dist) := {
     val previous: Artifact = (artifact in (Compile, dist)).value
+    println(s"####### artifact: " + previous)
     previous.copy(`type` = "zip", extension = "zip")
   }
 
@@ -42,6 +44,8 @@ object BuildSettings {
         val files = Seq(artifact -> "dist/reprobate.jar")
         val outputZip: File = targetDir / "dist.zip"
         IO.zip(files ++ jars ++ script, outputZip)
+
+        println(s"####### dist: " + outputZip.getName)
         outputZip
     }
   )
