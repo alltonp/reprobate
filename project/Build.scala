@@ -1,16 +1,11 @@
 import sbt._
 import Keys._
 
-object WebappDeploy extends Build {
-//  import Dependency._
-//  import Resolvers._
+object Reprobate extends Build {
   import BuildSettings._
   import scala.collection._
 
-  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings ++ Seq(
-//    resolvers := Seq(jettyRepo, resolver, Classpaths.typesafeReleases),
-//    libraryDependencies ++= jetty ++ scalaTest
-  ))
+  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings ++ Seq())
 }
 
 object BuildSettings {

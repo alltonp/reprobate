@@ -22,11 +22,12 @@ object WebServer extends App {
 
   private def startServer() = {
     try {
+      println(s"### Starting jetty on $serverPort")
       server.start()
       while (!server.isRunning) Thread.sleep(100)
     } catch {
       case exception: Exception => {
-        println("### failed to start jetty")
+        println("### Failed to start jetty")
         exception.printStackTrace()
         throw exception
       }
