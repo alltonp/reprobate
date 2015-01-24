@@ -20,6 +20,9 @@ object BuildSettings {
 
     dist <<= (baseDirectory, target, packageBin in Compile, dependencyClasspath in Compile) map {
       (base, targetDir, artifact, libs) =>
+        //TOOO: push jar into the lib dir
+        //TOOO: give jar version
+        //TODO: tidy up start script to remove jar name
         //TODO: put version in dist name ...
         //TODO: apparently gzip will maintain permissions ...
         //TODO: exclude compiler jars etc
