@@ -20,34 +20,17 @@ object BuildSettings {
 
     dist <<= (baseDirectory, target, packageBin in Compile, dependencyClasspath in Compile) map {
       (base, targetDir, artifact, libs) =>
+        //TODO: put version in dist name ...
+        //TODO: apparently gzip will maintain permissions ...
+        //TODO: exclude compiler jars etc
         val dist = "dist"
         val distdir: File = base / "dist"
         IO.delete(distdir)
         IO.createDirectory(distdir)
-
-//        val libdir = distdir / "lib"
-
         val jars = libs.map(_.data).pair(flatRebase("dist/lib"))
-
         val script = file("reprobate.sh").pair(flatRebase("dist"))
-        //TODO: put version in jar name ...
-//        val files = Seq(artifact -> "reprobate.jar")
         val files = Seq(artifact -> "dist/reprobate.jar")
-//        val files = Seq(artifact.pair(flatRebase("dist")) -> "reprobate.jar")
-//        val files = file("reprobate.jar") x flat
-
-//        println(s"artifact: $artifact")
-//        println(s"script: $script")
-//        println(s"files: $files")
-//        println(s"distdir: $distdir")
-
-//        IO.move(files ++ jars, distdir)
-
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
-//        IO.zip(distdir., targetDir / "dist.zip")
-
-        //TODO: apparently gzip will maintain permissions ...
-        //TODO: exclude compiler jars etc
     }
   )
 }
