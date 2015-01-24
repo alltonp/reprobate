@@ -20,6 +20,7 @@ object BuildSettings {
       (base, targetDir, artifact, libs) =>
         val jars = libs.map(_.data) x flat
         val script = file("reprobate.sh") x flat
+        //TODO: put version in jar name ...
         val files = Seq(artifact -> "reprobate.jar")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
         //TODO: put libs in a lib dir
