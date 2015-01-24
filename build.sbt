@@ -40,6 +40,8 @@ publishMavenStyle := true
 
 publishArtifact in Test := false
 
+publishArtifact in (Compile, packageBin) := false
+
 homepage := Some(url("https://github.com/alltonp/reprobate"))
 
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
