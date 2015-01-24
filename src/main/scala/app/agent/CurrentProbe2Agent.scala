@@ -1,12 +1,13 @@
 package app.agent
 
-import jetboot.{R, Renderable}
-import jetboot.widget.SimpleWidgets._
+import im.mange.jetboot.js.JsCmdFactory
+import im.mange.jetboot.{Html, R, Renderable}
 import app.server.CurrentRunStatusUpdate
 import net.liftweb.http.js.JsExp
 import net.liftweb.http.js.JE.{JsRaw, JsArray, JsObj}
 import net.liftweb.http.js.JsCmds._
-import jetboot.jscmd.JsCmdFactory._
+import JsCmdFactory._
+import Html._
 
 case class DataPoint(key: String, value: JsExp)
 

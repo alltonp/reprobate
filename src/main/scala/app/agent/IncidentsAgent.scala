@@ -1,30 +1,16 @@
 package app.agent
 
-import jetboot._
-import jetboot.widget.SimpleWidgets._
-import jetboot3.GridSystem._
-import app.server.AllRunsStatusUpdate
-import jetboot.widget.{TableHeader, TableHeaders, TableModel, SimpleTable, TableRow}
-import app.model.{IncidentProbe, Incident}
-import jetboot3.Bootstrap._
-import jetboot3.GridSystem
-import Css._
-import jetboot.widget.TableHeader
-import app.model.IncidentProbe
-import jetboot.widget.TableModel
-import app.server.AllRunsStatusUpdate
-import jetboot.widget.TableRow
-import jetboot.widget.TableHeaders
-import jetboot.widget.SimpleTable
 import app.model.Incident
-import scala.xml.{NodeSeq, Unparsed}
-import jetboot.widget.TableHeader
-import jetboot.widget.TableModel
 import app.server.AllRunsStatusUpdate
-import jetboot.widget.TableRow
-import jetboot.widget.TableHeaders
-import jetboot.widget.SimpleTable
-import app.model.Incident
+import im.mange.jetboot.Css._
+import im.mange.jetboot.Html._
+import im.mange.jetboot._
+import im.mange.jetboot.bootstrap3.Bootstrap._
+import im.mange.jetboot.bootstrap3.GridSystem
+import im.mange.jetboot.bootstrap3.GridSystem._
+import im.mange.jetboot.widget._
+
+import scala.xml.Unparsed
 
 //TODO: mouse over to see incident details ... start/finish etc
 //TODO: should put incidents in tracking.txt

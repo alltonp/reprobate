@@ -1,11 +1,12 @@
 package app.agent
 
 import app.model.ProbeHistory
-import jetboot.Css._
-import jetboot._
-import jetboot.widget.SimpleWidgets._
-import jetboot.widget._
-import jetboot3.Bootstrap._
+import im.mange.jetboot.bootstrap3.Bootstrap
+import im.mange.jetboot.{R, Renderable}
+import im.mange.jetboot.widget._
+import im.mange.jetboot.Css._
+import im.mange.jetboot.Html._
+import Bootstrap._
 
 //TODO: consider making this live and encode the status in the row colour for inactive, open etc
 //TODO: rename to Probe checks or something

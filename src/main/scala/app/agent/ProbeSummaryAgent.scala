@@ -1,11 +1,12 @@
 package app.agent
 
-import jetboot.{Composite, R, Renderable}
-import jetboot.widget.SimpleWidgets._
-import jetboot.Css._
+import im.mange.jetboot.widget.Spacer
+import im.mange.jetboot.{Composite, R, Renderable}
+import im.mange.jetboot.Html._
+import im.mange.jetboot.Css._
 import app.server.AllRunsStatusUpdate
 import java.text.DecimalFormat
-import jetboot3.Bootstrap._
+import im.mange.jetboot.bootstrap3.Bootstrap._
 
 case class ProbeSummaryAgent() extends Renderable {
   private val formatter = new DecimalFormat( "#,###,###,###" )

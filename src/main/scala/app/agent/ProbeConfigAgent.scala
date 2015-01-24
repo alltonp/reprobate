@@ -1,9 +1,9 @@
 package app.agent
 
-import jetboot.widget.SimpleWidgets._
-import jetboot.Css._
-import jetboot.{R, Renderable}
 import app.server.ProbeConfigResponse
+import im.mange.jetboot.Css._
+import im.mange.jetboot.Html._
+import im.mange.jetboot.Renderable
 
 case class ProbeConfigAgent() extends Renderable {
   private val holder = div("probeConfig").classes("hidden").styles(marginTop("5px"))

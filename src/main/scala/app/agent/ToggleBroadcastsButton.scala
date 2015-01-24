@@ -1,8 +1,7 @@
 package app.agent
 
-import jetboot.widget.ServerSideButton
-import jetboot.widget.SimpleWidgets._
-import jetboot.ButtonPresentation
+import im.mange.jetboot.widget.{ButtonPresentation, ServerSideButton}
+import im.mange.jetboot.Html._
 
 //TODO: theres a widget in here somewhere ... jetpac
 case class ToggleBroadcastsButton(parent: RootAgent) extends ServerSideButton {

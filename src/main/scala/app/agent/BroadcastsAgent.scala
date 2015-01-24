@@ -1,9 +1,9 @@
 package app.agent
 
 import app.server.BroadcastsResponse
-import jetboot.Css._
-import jetboot.Renderable
-import jetboot.widget.SimpleWidgets._
+import im.mange.jetboot.{Html, Css, Renderable}
+import Css._
+import Html._
 
 case class BroadcastsAgent() extends Renderable {
   private val holder = div("broadcasts").classes("hidden").styles(marginTop("5px"))

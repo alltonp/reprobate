@@ -1,9 +1,9 @@
 package app.agent
 
-import jetboot._
-import jetboot.widget.SimpleWidgets._
+import im.mange.jetboot.{R, Renderable, Css}
 import Css._
-import jetboot.jscmd.JsCmdFactory._
+import im.mange.jetboot.Html._
+import im.mange.jetboot.js.JsCmdFactory._
 import java.util.UUID
 import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast

@@ -1,11 +1,12 @@
 package app.agent
 
 import app.model.Broadcast
-import jetboot.Css._
-import jetboot._
-import jetboot.widget.SimpleWidgets._
-import jetboot.widget.{SimpleTable, TableHeader, TableHeaders, TableModel, TableRow}
-import jetboot3.Bootstrap._
+import im.mange.jetboot.bootstrap3.Bootstrap
+import im.mange.jetboot.widget._
+import im.mange.jetboot.{Css, Html, R, Renderable}
+import Css._
+import Html._
+import Bootstrap._
 import scala.xml.Unparsed
 
 //TODO: theres  a widget in here too ... jetpac

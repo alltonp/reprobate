@@ -1,14 +1,12 @@
 package app.agent
 
-import jetboot.{R, Renderable}
-import jetboot.widget.SimpleWidgets._
-import jetboot.Css._
 import app.server.CurrentRunStatusUpdate
-import jetboot.Composite
+import im.mange.jetboot.Css._
+import im.mange.jetboot.Html._
+import im.mange.jetboot._
 
 //TODO: this is not a good name - it's more like CurrentProbeStatus
 case class CurrentProbeAgent() extends Renderable {
-  import jetboot3.Bootstrap._
 
   private val body = div(id = "currentProbeBody")
   private val panel = div(body).styles(marginBottom("10px"))

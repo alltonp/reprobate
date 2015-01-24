@@ -1,13 +1,12 @@
 import scala.util.Try
 
-
 name := "reprobate"
 
 organization := "im.mange"
 
 version := Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.4"
 
 libraryDependencies ++= {
   val liftVersion = "2.6"
@@ -17,34 +16,14 @@ libraryDependencies ++= {
     "org.eclipse.jetty" % "jetty-webapp" % jettyVersion,
     "org.eclipse.jetty" % "jetty-server" % jettyVersion,
     "io.shaka" %% "naive-http" % "48",
-    "ch.qos.logback" % "logback-classic" % "1.0.6"
+    "ch.qos.logback" % "logback-classic" % "1.0.6",
+    "im.mange" %% "jetboot" % "0.0.5"//7,
+    //"im.mange" %% "shoreditch-api" % "0.0.60"
   )
 }
 
-////crossScalaVersions := Seq("2.10.4"/*, "2.11.0"*/)
-//
-
 //resolvers ++= Seq(
 //  "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/"
-//)
-//
-////see: https://github.com/karma4u101/lift-jquery-module
-//
-//libraryDependencies ++= Seq(
-//	"junit" % "junit" % "4.11" % "test->default",
-//	"org.scalatest" %% "scalatest" % "2.2.0" % "test",
-////  "net.liftweb" %% "lift-webkit" % "2.6" % "compile",
-////  "net.liftmodules"   %% "lift-jquery-module" % ("2.6" + "-2.2"),
-////  "org.eclipse.jetty" % "jetty-webapp"        % "8.1.7.v20120910"  % "container,test",
-////  "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container,test" artifacts Artifact("javax.servlet", "jar", "jar"),
-////  "ch.qos.logback" % "logback-classic" % "1.0.6",
-////  9.2.3.v20140905
-//"net.liftweb" %% "lift-webkit" % "2.6" % "compile",
-//  "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910"  %
-//    "container,test",
-//  "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" %
-//    "container,compile" artifacts Artifact("javax.servlet", "jar", "jar"),
-//  "io.shaka" %% "naive-http" % "48"
 //)
 //
 //sonatypeSettings

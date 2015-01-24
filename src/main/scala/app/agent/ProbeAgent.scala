@@ -1,15 +1,15 @@
 package app.agent
 
-import jetboot.{Composite, Css, R, Renderable}
 import app.model.Probe
-import app.server.{ProbeStatusUpdate, ProbeFailure}
-import jetboot.widget.bootstrap.{Badge, Panel}
-import jetboot3.Bootstrap
+import app.server.{ProbeFailure, ProbeStatusUpdate}
+import im.mange.jetboot.Renderable
+import im.mange.jetboot.widget.Spacer
+//import im.mange.jetboot.widget.bootstrap.{Badge, Panel}
 
 case class ProbeAgent(probe: Probe) extends Renderable {
-  import jetboot.widget.SimpleWidgets._
-  import Css._
-  import Bootstrap._
+  import im.mange.jetboot.Css._
+  import im.mange.jetboot.Html._
+  import im.mange.jetboot.bootstrap3.Bootstrap._
 
   private val content = div(id = probe.id)
 

@@ -1,15 +1,14 @@
 package app.agent
 
 import app.comet.Subscriber
-import jetboot._
-import jetboot3.{Bootstrap, GridSystem}
+import im.mange.jetboot.bootstrap3.{Bootstrap, GridSystem}
 import app.server._
-import jetboot.Css._
+import im.mange.jetboot.Css._
 import app.server.AllRunsStatusUpdate
 import app.server.ProbeFailure
 import app.server.CurrentRunStatusUpdate
 import app.model.{Broadcast, Probe}
-import jetboot.Composite
+import im.mange.jetboot.{Renderable, Composite}
 import app.server.ProbeStatusUpdate
 
 //TODO:
@@ -63,8 +62,8 @@ import app.server.ProbeStatusUpdate
 
 //TODO: rename to reprobate agent
 case class RootAgent(subscriber: Subscriber) extends Renderable {
-  import jetboot.widget.SimpleWidgets._
-  import jetboot.jscmd.JsCmdFactory._
+  import im.mange.jetboot.Html._
+  import im.mange.jetboot.js.JsCmdFactory._
   import GridSystem._
   import Bootstrap._
 

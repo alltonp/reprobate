@@ -1,10 +1,10 @@
 package app.agent
 
-import jetboot._
-import jetboot.widget.SimpleWidgets._
-import jetboot3.Bootstrap._
-import Css._
 import app.server.Message
+import im.mange.jetboot.Css._
+import im.mange.jetboot.Html._
+import im.mange.jetboot.widget.Spacer
+import im.mange.jetboot.{R, Renderable}
 
 //TODO: seems to be a container-tastic
 case class StatusMessageAgent() extends Renderable {

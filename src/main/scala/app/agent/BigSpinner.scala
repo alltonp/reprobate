@@ -1,6 +1,6 @@
 package app.agent
 
-import jetboot.{Element, Renderable}
+import im.mange.jetboot.{Element, Renderable}
 
 //TODO: should be in jetpack or whatever
 case class BigSpinner(id: String, message: String) extends Renderable {
