@@ -1,11 +1,12 @@
-package webserver
+package server
 
 //TODO: rename and tidy
 object WebServer extends App {
-  import org.eclipse.jetty.server.Server
+  import java.io.File
+
+import org.eclipse.jetty.server.Server
   import org.eclipse.jetty.server.nio.SelectChannelConnector
   import org.eclipse.jetty.webapp.WebAppContext
-  import java.io.File
 
   private val serverPort = 8473
   private val server = createServer

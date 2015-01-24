@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function start() {
-    nohup java -cp $(echo *.jar | tr ' ' ':') webserver.WebServer > app.log 2>&1 &
+    nohup java -cp $(echo *.jar | tr ' ' ':') server.WebServer > app.log 2>&1 &
 }
 
 function stop() {
