@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sbt test "+ publishSigned" sonatypeReleaseAll
+sbt test dist "+ publishSigned" sonatypeReleaseAll
