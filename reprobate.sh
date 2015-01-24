@@ -4,10 +4,13 @@ function start() {
     nohup java -cp reprobate.jar:$(echo lib/*.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
 }
 
-#TODO: don't try to kill missing PID, results in: ps -ef | awk '/[R]eprobateServer/{print $2}'
 function stop() {
     PID=`currentpid`
-    echo "### Killing PID ${PID}...."
+    if [[ -n $PID ]]; then
+        echo "### Killing PID ${PID}...."
+    else
+        echo "### Reprobate wasn't running..."
+    fi
     kill $PID
 }
 
