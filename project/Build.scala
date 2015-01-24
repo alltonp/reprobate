@@ -13,7 +13,7 @@ object BuildSettings {
 
   //http://www.scala-sbt.org/0.13/docs/Combined+Pages.html
   // create an Artifact for publishing the .war file
-  artifact in (Compile, dist) := {
+  artifact in (Compile, packageBin) := {
     val previous: Artifact = (artifact in (Compile, dist)).value
     println(s"####### artifact: " + previous)
     previous.copy(`type` = "zip", extension = "zip")
