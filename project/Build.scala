@@ -4,20 +4,20 @@ import sbt._
 object Reprobate extends Build {
   import BuildSettings._
 
-  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings ++
-    addArtifact(artifact in (Compile, dist), dist).settings)
+  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings/* ++
+    addArtifact(artifact in (Compile, dist), dist).settings*/)
 }
 
 object BuildSettings {
   val dist = taskKey[File]("dist")
 
   //http://www.scala-sbt.org/0.13/docs/Combined+Pages.html
-  // create an Artifact for publishing the .war file
-  artifact in (Compile, packageBin) := {
-    val previous: Artifact = (artifact in (Compile, dist)).value
-    println(s"####### artifact: " + previous)
-    previous.copy(`type` = "zip", extension = "zip")
-  }
+//  // create an Artifact for publishing the .war file
+//  artifact in (Compile, packageBin) := {
+//    val previous: Artifact = (artifact in (Compile, dist)).value
+//    println(s"####### artifact: " + previous)
+//    previous.copy(`type` = "zip", extension = "zip")
+//  }
 
   val standardBuildSettings: Seq[Def.Setting[_]] = Defaults.defaultSettings ++ Seq[Setting[_]](
     mappings in (Compile, packageBin) ++= {

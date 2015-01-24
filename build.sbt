@@ -40,9 +40,9 @@ publishMavenStyle := true
 
 publishArtifact in Test := false
 
-publishArtifact in (Compile, packageBin) := false
+//publishArtifact in (Compile, packageBin) := false
 
-addArtifact(artifact in (Compile, BuildSettings.dist), BuildSettings.dist).settings
+//addArtifact(artifact in (Compile, BuildSettings.dist), BuildSettings.dist).settings
 
 homepage := Some(url("https://github.com/alltonp/reprobate"))
 
