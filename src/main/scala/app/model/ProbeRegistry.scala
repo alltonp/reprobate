@@ -24,15 +24,16 @@ object ProbeRegistry {
       |---{- to ignore}url,description,active,remedy,defcon
       |---TIP: the order in the file is the order on screen, so put most interesting at the top
       |---TIP: name probes so the messages yield the problem nicely ... e.g. app is dead (Prod)
-      |
+      |---TIP: active - can be from (e.g. "8") or a range (e.g. "8-10)
+      |---TIP: defcon - 5..1 ... where 1 is somewhat shouty ...
       |
       |--LOCAL--
       |http://localhost:8473,/demo/success,LOCAL,Success (Demo),,Call support,5
       |http://localhost:8473,/demo/flipflop,LOCAL,Flipflop (Demo),,Call support,5
-      |http://localhost:8473,/demo/oddevenminute,LOCAL,Failure on odd minute (Demo),,Call support,5
-      |http://localhost:8473,/demo/oddevenhour,LOCAL,Failure on odd hour (Demo),,Call support,5
-      |http://localhost:8473,/demo/failureafter/10,LOCAL,Failure after 10 probes executed (Demo),,Call support,5
-      |http://localhost:8473,/demo/failureafter/20,LOCAL,Failure after 20 probes executed (Demo),,Call support,5
+      |-http://localhost:8473,/demo/oddevenminute,LOCAL,Failure on odd minute (Demo),,Call support,5
+      |-http://localhost:8473,/demo/oddevenhour,LOCAL,Failure on odd hour (Demo),,Call support,5
+      |-http://localhost:8473,/demo/failureafter/10,LOCAL,Failure after 10 probes executed (Demo),,Call support,5
+      |-http://localhost:8473,/demo/failureafter/20,LOCAL,Failure after 20 probes executed (Demo),,Call support,5
       |http://localhost:8473,/demo/missing,LOCAL,Missing (Demo),,Call support,5
       |http://localhost:8473,/demo/slow/11,LOCAL,Timeout (Demo),,Call support,5
       |http://localhost:8473,/demo/failure,LOCAL,Failure @ defcon 5 (Demo),,Call support,5

@@ -1,9 +1,10 @@
 #!/bin/bash
 
 function start() {
-    nohup java -cp $(echo *.jar | tr ' ' ':') server.WebServer > app.log 2>&1 &
+    nohup java -cp $(echo *.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
 }
 
+#TODO: don't try to kill missing PID, results in: ps -ef | awk '/[R]eprobateServer/{print $2}'
 function stop() {
     PID=`currentpid`
     echo "### Killing PID ${PID}...."
@@ -19,9 +20,8 @@ function status() {
     fi
 }
 
-
 function currentpid() {
-    ps -ef | awk '/[w]ebserver/{print $2}'
+    ps -ef | awk '/[R]eprobateServer/{print $2}'
 }
 
 case "$1" in

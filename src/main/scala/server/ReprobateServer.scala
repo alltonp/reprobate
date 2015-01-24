@@ -1,7 +1,7 @@
 package server
 
-//TODO: rename and tidy
-object WebServer extends App {
+//TODO: tidy
+object ReprobateServer extends App {
   import java.io.File
 
 import org.eclipse.jetty.server.Server
