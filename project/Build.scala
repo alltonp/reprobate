@@ -11,6 +11,14 @@ object Reprobate extends Build {
 object BuildSettings {
   val dist = taskKey[File]("dist")
 
+  publishArtifact in (Compile, packageBin) := false
+
+  // create an Artifact for publishing the .war file
+  artifact in (Compile, dist) := {
+    val previous: Artifact = (artifact in (Compile, dist)).value
+    previous.copy(`type` = "zip", extension = "zip")
+  }
+
   val standardBuildSettings: Seq[Def.Setting[_]] = Defaults.defaultSettings ++ Seq[Setting[_]](
     mappings in (Compile, packageBin) ++= {
       val webapp: File = baseDirectory.value / "src/main/webapp"
