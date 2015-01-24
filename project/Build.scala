@@ -16,13 +16,41 @@ object BuildSettings {
       for ((from, to) <- (webapp ***) x rebase(webapp, "webapp")) yield (from, to)
     },
 
+    //TODO: give up and just use - https://github.com/xerial/sbt-pack
+
     dist <<= (baseDirectory, target, packageBin in Compile, dependencyClasspath in Compile) map {
       (base, targetDir, artifact, libs) =>
-        val jars = libs.map(_.data) x flat
+//        val distdir: File = target.value / "dist"
+//        IO.delete(distdir)
+//        IO.createDirectory(distdir)
+
+//        val libdir = distdir / "lib"
+
+        val jars = libs.map(_.data).pair(flatRebase("lib"))
+
+//        IO.copy(jars, distdir)
+//        jars.map(j => IO.copyFile(j._1, libdir))
+
         val script = file("reprobate.sh") x flat
         //TODO: put version in jar name ...
         val files = Seq(artifact -> "reprobate.jar")
+
+        println(s"artifact: $artifact")
+        println(s"jars: $jars")
+        println(s"libs: $libs")
+        println(s"script: $script")
+        println(s"files: $files")
+//        println(s"distdir: $distdir")
+
+//        IO.copyFile(files, distdir)
+
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
+//        IO.zip(Seq[distdir, targetDir / "dist.zip")
+
+//        def entries(f: File):List[File] = f :: (if (f.isDirectory) IO.listFiles(f).toList.flatMap(entries(_)) else Nil)
+//        IO.zip(entries(distdir).map(d => (d, d.getAbsolutePath.substring(distdir.getParent.length))), targetDir / "dist.zip")
+
+        //TODO: apparently gzip will maintain permissions ...
         //TODO: put libs in a lib dir
         //TODO: exclude resolution-cache∂
         //TODO: exclude streams
