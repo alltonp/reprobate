@@ -6,7 +6,7 @@ function start() {
 
 function stop() {
     PID=`currentpid`
-    echo "Killing PID ${PID}...."
+    echo "### Killing PID ${PID}...."
     kill $PID
 }
 
