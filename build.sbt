@@ -17,8 +17,8 @@ libraryDependencies ++= {
     "org.eclipse.jetty" % "jetty-server" % jettyVersion,
     "io.shaka" %% "naive-http" % "48",
     "ch.qos.logback" % "logback-classic" % "1.0.6",
-    "im.mange" %% "jetboot" % "0.0.7"//,
-    //"im.mange" %% "shoreditch-api" % "0.0.60"
+    "im.mange" %% "jetboot" % "0.0.7",
+    "im.mange" %% "shoreditch-api" % "0.0.60"
   )
 }
 
