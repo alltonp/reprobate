@@ -8,10 +8,10 @@ function stop() {
     PID=`currentpid`
     if [[ -n $PID ]]; then
         echo "### Killing PID ${PID}...."
+        kill $PID
     else
         echo "### Reprobate wasn't running..."
     fi
-    kill $PID
 }
 
 function status() {
