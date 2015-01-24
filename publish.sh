@@ -1,1 +1,0 @@
-./sbt dist +publishSigned sonatypeReleaseAll

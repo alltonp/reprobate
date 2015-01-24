@@ -4,11 +4,12 @@ import sbt._
 object Reprobate extends Build {
   import BuildSettings._
 
-  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings)
+  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings ++
+    addArtifact(artifact in (Compile, dist), dist).settings)
 }
 
 object BuildSettings {
-  val dist = taskKey[Unit]("dist")
+  val dist = taskKey[File]("dist")
 
   val standardBuildSettings: Seq[Def.Setting[_]] = Defaults.defaultSettings ++ Seq[Setting[_]](
     mappings in (Compile, packageBin) ++= {
@@ -33,7 +34,9 @@ object BuildSettings {
         val jars = libs.map(_.data).pair(flatRebase("dist/lib"))
         val script = file("reprobate.sh").pair(flatRebase("dist"))
         val files = Seq(artifact -> "dist/reprobate.jar")
-        IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
+        val outputZip: File = targetDir / "dist.zip"
+        IO.zip(files ++ jars ++ script, outputZip)
+        outputZip
     }
   )
 }
