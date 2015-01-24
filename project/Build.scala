@@ -31,12 +31,14 @@ object BuildSettings {
 
         val script = file("reprobate.sh").pair(flatRebase("dist"))
         //TODO: put version in jar name ...
-        val files = Seq(artifact -> "reprobate.jar")
+//        val files = Seq(artifact -> "reprobate.jar")
+        val files = Seq(artifact -> "dist/reprobate.jar")
+//        val files = Seq(artifact.pair(flatRebase("dist")) -> "reprobate.jar")
 //        val files = file("reprobate.jar") x flat
 
-        println(s"artifact: $artifact")
-        println(s"script: $script")
-        println(s"files: $files")
+//        println(s"artifact: $artifact")
+//        println(s"script: $script")
+//        println(s"files: $files")
 //        println(s"distdir: $distdir")
 
 //        IO.move(files ++ jars, distdir)
@@ -45,9 +47,6 @@ object BuildSettings {
 //        IO.zip(distdir., targetDir / "dist.zip")
 
         //TODO: apparently gzip will maintain permissions ...
-        //TODO: exclude resolution-cache∂
-        //TODO: exclude streams
-        //TODO: exclude scala 2.11
         //TODO: exclude compiler jars etc
     }
   )
