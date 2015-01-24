@@ -22,6 +22,11 @@ object BuildSettings {
         val script = file("reprobate.sh") x flat
         val files = Seq(artifact -> "reprobate.jar")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
+        //TODO: put libs in a lib dir
+        //TODO: exclude resolution-cache∂
+        //TODO: exclude streams
+        //TODO: exclude scala 2.11
+        //TODO: exclude compiler jars etc
     }
   )
 }
