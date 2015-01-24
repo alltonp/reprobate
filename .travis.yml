@@ -13,3 +13,13 @@ env:
   - secure: H8PxbkjisZT/rZP4JJInAZFTlOCynxZOwWrOyDI+XgrDka92YsfFehDcL/jMHfvQkSyirUhIfi3wO4DPkIbbec07aKBqCzfz0flz5G1DvYBBBKaSzVB/CIiwenyLNqqOCU95JPSiLJ3mo0dT/UINnE0cCT0+tWByVD2xrfs8ugM=
 notifications:
   email: false
+deploy:
+  provider: releases
+  user: alltonp
+  file: dist.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
+  password:
+    secure: THe4fiM5sZenuofbd6VOHWxJoF/AursSNyG6URB8CVm++FA/1iwE+hHE9NmPvLYBHXyLSi98Z3bSp8Ck+SPbYfpmHGjH2nu7vREQkYkHITNYSMXGpt8jYwLcGxxrc5HEgZqg2Yr/p16HIERRwXbOopfFUVJ6pJ4uZTkioVU/5x0=
