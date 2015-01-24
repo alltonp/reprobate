@@ -24,13 +24,14 @@ function currentpid() {
     ps -ef | awk '/[R]eprobateServer/{print $2}'
 }
 
+#TODO: default to status
 case "$1" in
     'start')
-    echo "Starting Reprobate"
+    echo "### Starting Reprobate"
     start
 ;;
     'stop')
-    echo "Stopping Reprobate"
+    echo "### Stopping Reprobate"
     stop
 ;;
     'status')
