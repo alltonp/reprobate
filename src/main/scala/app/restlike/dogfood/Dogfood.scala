@@ -1,6 +1,7 @@
 package app.restlike.dogfood
 
-import im.mange.reprobate.api.{Probe, Runner}
+import im.mange.reprobate.api.Runner
+import im.mange.shoreditch.api.Check
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.{GetRequest, Req}
 import app.ServiceFactory
@@ -14,21 +15,19 @@ object Dogfood extends RestHelper {
   }
 }
 
-case class OkProbe(env: String) extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = {
+case class OkProbe(env: String) extends Check {
+  def run = {
     val future = ServiceFactory.probeProviderActor() !< GetProbeStatuses
     val result = future.get(60 * 1000).asInstanceOf[Box[ProbeStatuses]]
 
     result match {
-      case Full(x) if x.failures.isEmpty => win
+      case Full(x) if x.failures.isEmpty => success
       case Full(x) => {
         val probesMatchingEnv = x.failures.filter(p => env.isEmpty || p.probe.env.toLowerCase == env.toLowerCase)
-        if (probesMatchingEnv.isEmpty) win else epicFail(probesMatchingEnv.map(fp => fp.probe.name + ": " + fp.failures.head).toList)
+        if (probesMatchingEnv.isEmpty) success else failure(probesMatchingEnv.map(fp => fp.probe.name + ": " + fp.failures.head).toList)
       }
-      case Failure(f, _, _) => epicFail(List(f))
-      case _ => epicFail(List("A problem occurred getting probe status"))
+      case Failure(f, _, _) => failure(List(f))
+      case _ => failure(List("A problem occurred getting probe status"))
     }
   }
 }

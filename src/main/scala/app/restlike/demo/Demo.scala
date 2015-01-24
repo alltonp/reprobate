@@ -1,7 +1,8 @@
 package app.restlike.demo
 
 import app.ServiceFactory._
-import im.mange.reprobate.api.{AlwaysPassProbe, Probe, Runner}
+import im.mange.reprobate.api.Runner
+import im.mange.shoreditch.api.Check
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.{GetRequest, Req}
 import org.joda.time.LocalDateTime
@@ -30,60 +31,51 @@ case class DemoCounter() {
   }
 }
 
-case object FailureProbe extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = epicFail(List("I always let myself down"))
+object AlwaysPassProbe extends Check {
+  def run = success
 }
 
-case object FlipFloppingProbe extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
+case object FailureProbe extends Check {
+  def run = failure(List("I always let myself down"))
+}
 
+case object FlipFloppingProbe extends Check {
   private var imAFailure = true
 
-  def probe = {
+  def run = {
     imAFailure = !imAFailure
-    if (imAFailure) epicFail(List("I let myself down every other time")) else win
+    if (imAFailure) failure(List("I let myself down every other time")) else success
   }
 }
 
-case object OddFailureEvenSuccessMinuteProbe extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = if (isEven) win else epicFail(List("Every other minute I feel odd, then I let myself down: " + minute))
+case object OddFailureEvenSuccessMinuteProbe extends Check {
+  def run = if (isEven) success else failure(List("Every other minute I feel odd, then I let myself down: " + minute))
 
   private def minute = systemClock().localDateTime.getMinuteOfHour
   private def isEven = minute % 2 == 0
 }
 
-case object OddFailureEvenSuccessHourProbe extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = if (isEven) win else epicFail(List("Every other hour I feel odd, then I let myself down: " + hour))
-
+case object OddFailureEvenSuccessHourProbe extends Check {
+  def run = if (isEven) success else failure(List("Every other hour I feel odd, then I let myself down: " + hour))
 
   private def hour = systemClock().localDateTime.getHourOfDay
   private def isEven = hour % 2 == 0
 }
 
-case class FailureAfter(after: Int, counter: DemoCounter) extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = {
+case class FailureAfter(after: Int, counter: DemoCounter) extends Check {
+  def run = {
     val next = counter.next
-    if (next > after) epicFail(List("I started well, now I just let myself down every time")) else win
+    if (next > after) failure(List("I started well, now I just let myself down every time")) else success
   }
 }
 
-case class SlowProbe(sleepSeconds: Int) extends Probe {
-  import im.mange.reprobate.api.ProbeResponse._
-
-  def probe = {
+case class SlowProbe(sleepSeconds: Int) extends Check {
+  def run = {
     val sleepUntil = new LocalDateTime().plusSeconds(sleepSeconds)
     while (new LocalDateTime().isBefore(sleepUntil)) {
       Thread.sleep(1000)
       Thread.`yield`()
     }
-    win
+    success
   }
 }
