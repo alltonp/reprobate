@@ -19,8 +19,8 @@ object BuildSettings {
     dist <<= (baseDirectory, target, packageBin in Compile, dependencyClasspath in Compile) map {
       (base, targetDir, artifact, libs) =>
         val jars = libs.map(_.data) x flat
-        val script = file("webappDeploy.sh") x flat
-        val files = Seq(artifact -> "webappDeploy.jar")
+        val script = file("reprobate.sh") x flat
+        val files = Seq(artifact -> "reprobate.jar")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
     }
   )

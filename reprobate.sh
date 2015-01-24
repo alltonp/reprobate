@@ -13,9 +13,9 @@ function stop() {
 function status() {
     PID=`currentpid`
     if [[ -n $PID ]]; then
-        echo "WebServer is running..."
+        echo "### Reprobate is running..."
     else
-        echo "WebServer is NOT running..."
+        echo "### Reprobate is NOT running..."
     fi
 }
 
@@ -26,11 +26,11 @@ function currentpid() {
 
 case "$1" in
     'start')
-    echo "Starting application"
+    echo "Starting Reprobate"
     start
 ;;
     'stop')
-    echo "Stopping application"
+    echo "Stopping Reprobate"
     stop
 ;;
     'status')
