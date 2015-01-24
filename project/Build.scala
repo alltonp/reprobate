@@ -9,7 +9,7 @@ object Reprobate extends Build {
 }
 
 object BuildSettings {
-  val dist = taskKey[File]("dist")
+  val dist = taskKey[Unit]("dist")
 
   //http://www.scala-sbt.org/0.13/docs/Combined+Pages.html
 //  // create an Artifact for publishing the .war file
@@ -46,7 +46,7 @@ object BuildSettings {
         IO.zip(files ++ jars ++ script, outputZip)
 
         println(s"####### dist: " + outputZip.getName)
-        outputZip
+//        outputZip
     }
   )
 }
