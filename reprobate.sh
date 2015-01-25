@@ -2,7 +2,7 @@
 
 function start() {
     echo "### Starting Reprobate"
-    nohup java -cp reprobate.jar:$(echo lib/*.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
+    nohup java -cp $(echo lib/*.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
 }
 
 function stop() {
@@ -35,16 +35,13 @@ else
     case "$1" in
         'start')
         start
-        status
     ;;
         'stop')
         stop
-        status
     ;;
         'restart')
         stop
         start
-        status
     ;;
         'status')
         status
