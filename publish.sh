@@ -1,1 +1,1 @@
--./sbt dist +publishSigned sonatypeReleaseAll
+//-./sbt dist +publishSigned sonatypeReleaseAll
