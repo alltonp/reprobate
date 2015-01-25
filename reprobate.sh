@@ -1,10 +1,12 @@
 #!/bin/bash
 
 function start() {
+    echo "### Starting Reprobate"
     nohup java -cp reprobate.jar:$(echo lib/*.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
 }
 
 function stop() {
+    echo "### Stopping Reprobate"
     PID=`currentpid`
     if [[ -n $PID ]]; then
         echo "### Killing PID ${PID}...."
@@ -28,16 +30,18 @@ function currentpid() {
 }
 
 if [ $# -lt 1 ]; then
-    echo 'Usage: reprobate.sh {status|start|stop}'
+    echo 'Usage: reprobate.sh {status|start|stop|restart}'
 else
     case "$1" in
         'start')
-        echo "### Starting Reprobate"
         start
     ;;
         'stop')
-        echo "### Stopping Reprobate"
         stop
+    ;;
+        'restart')
+        stop
+        start
     ;;
         'status')
         status
