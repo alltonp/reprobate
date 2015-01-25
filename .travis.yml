@@ -20,7 +20,7 @@ deploy:
   skip_cleanup: true
   before_deploy: git fetch --tags
   on:
-    tags: false
+    tags: true
     all_branches: true
   api-key:
     secure: CErzeuIZOqvWyt2jwAQ/AVfetmU/ugaSxATCO9P+8WRhDUiKRTM+gmdcwIP+tY8myHqZboJCTgN6zin9+EJ1GrEwYAJ7YFT4NKrHhCEEobWQxhN+9HP/LmYIy41B72NTLGMd18fIaIBOnH3R+QjQaLjr68TDAYRxHzkeWjJF6UQ=
