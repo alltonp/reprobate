@@ -1,6 +1,8 @@
 import sbt.Keys._
 import sbt._
 
+import scala.util.Try
+
 object Reprobate extends Build {
   import BuildSettings._
 
@@ -43,7 +45,7 @@ object BuildSettings {
         val script = file("reprobate.sh").pair(flatRebase("dist"))
         val files = Seq(artifact -> "dist/reprobate.jar")
 //        println(s"####### dist: " + outputZip.getName)
-        println(s"### Building dist.zip for $version ...")
+        println(s"### Building dist.zip for ${Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")} ...")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
 //        outputZip
 
