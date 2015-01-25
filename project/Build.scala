@@ -28,14 +28,15 @@ object BuildSettings {
         //TODO: put version in dist name ...
         //TODO: apparently gzip will maintain permissions ...
         //TODO: exclude compiler jars etc
-        val dist = "dist"
-        val distdir: File = base / "dist"
+        val ver = Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")
+        val dist = s"reprobate_$ver"
+        val distdir: File = base / dist
         IO.delete(distdir)
         IO.createDirectory(distdir)
-        val jars = libs.map(_.data).pair(flatRebase("dist/lib"))
-        val script = file("reprobate.sh").pair(flatRebase("dist"))
-        val files = Seq(artifact -> "dist/reprobate.jar")
-        println(s"### Building dist.zip for ${Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")} ...")
+        val jars = libs.map(_.data).pair(flatRebase(s"$dist/lib"))
+        val script = file("reprobate.sh").pair(flatRebase(dist))
+        val files = Seq(artifact -> s"$dist/reprobate.jar")
+        println(s"### Building $dist.zip")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
     }
   )
