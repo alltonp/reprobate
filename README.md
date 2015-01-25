@@ -3,15 +3,18 @@
 ## Welcome to Reprobate - continuous system monitoring
 
 ### Quick start (if you already know what this is)
+
+**Install:**
+
 1. download and unzip <a href="https://github.com/alltonp/reprobate/releases/download/current/reprobate.zip">current version</a>
 2. chmod +x reprobate.sh
 3. ./reprobate.sh start
 4. browse to http://localhost:8473
 5. that's it!
 
-Configure your own checks:
+**Configure your own checks:**
 
-1. edit checks.txt
+1. edit checks.csv
 2. ./reprobate.sh restart
 3. that's it!
 
@@ -26,24 +29,24 @@ Configure your own checks:
 ### What is a check?
 - An assertion or invariant of your system, exposed as a JSON endpoint - adhering to the following contract:
 
-	e.g. GET {host}/check/xxx e.g. GET http://localhost:8080/check/alive
+	`GET {host}/check/xxx e.g. GET http://localhost:8080/check/alive`
 	
-- check successful, return an empty list o failures:
+- check successful, return an empty list of failures:
 
-	{"failures":[]}
+	`{"failures":[]}`
 
 - check unsuccessful, return a list of (one or more) failures:
 
-	{"failures":["I am not alive"]}
+	`{"failures":["I am not alive"]}`
 
 ### What constitutes a good check?
-- One expressed in business terms e.g. check/no/trades/rejected or check/can/price/trade
+- One expressed in business terms e.g. `check/reports/valid/today` or `check/can/price/trade`
 - Calling it frequently should not negatively impact the application/service. If your check is expensive, abstract the expensive bit into another thing and have your check query that other thing.
 
 ### How do I configure it?
-- see the examples in checks.txt in your reprobate installation (it is created on reprobates first run)
+- see the examples in checks.csv in your reprobate installation (it is created on first run)
 
 ### Can I configure how shouty it is etc?
-- see instructions in checks.txt
+- see instructions in checks.csv
 
 (c) 2015 Flatmap Ltd
