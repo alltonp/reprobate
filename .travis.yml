@@ -19,7 +19,7 @@ deploy:
   file: dist.zip
   skip_cleanup: true
   on:
-    tags: true
+    tags: false
     all_branches: true
   password:
     secure: THe4fiM5sZenuofbd6VOHWxJoF/AursSNyG6URB8CVm++FA/1iwE+hHE9NmPvLYBHXyLSi98Z3bSp8Ck+SPbYfpmHGjH2nu7vREQkYkHITNYSMXGpt8jYwLcGxxrc5HEgZqg2Yr/p16HIERRwXbOopfFUVJ6pJ4uZTkioVU/5x0=
