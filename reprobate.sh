@@ -35,13 +35,16 @@ else
     case "$1" in
         'start')
         start
+        status
     ;;
         'stop')
         stop
+        status
     ;;
         'restart')
         stop
         start
+        status
     ;;
         'status')
         status
