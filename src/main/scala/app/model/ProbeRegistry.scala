@@ -35,7 +35,7 @@ object ProbeRegistry {
       |-http://localhost:8473,/demo/failureafter/10,LOCAL,Failure after 10 probes executed (Demo),,Call support,5
       |-http://localhost:8473,/demo/failureafter/20,LOCAL,Failure after 20 probes executed (Demo),,Call support,5
       |http://localhost:8473,/demo/missing,LOCAL,Missing (Demo),,Call support,5
-      |http://localhost:8473,/demo/slow/11,LOCAL,Timeout (Demo),,Call support,5
+      |-http://localhost:8473,/demo/slow/11,LOCAL,Timeout (Demo),,Call support,5
       |http://localhost:8473,/demo/failure,LOCAL,Failure @ defcon 5 (Demo),,Call support,5
       |http://localhost:8473,/demo/failure,LOCAL,Failure @ defcon 4 (Demo),,Call support,4
       |http://localhost:8473,/demo/failure,LOCAL,Failure @ defcon 3 (Demo),,Call support,3
