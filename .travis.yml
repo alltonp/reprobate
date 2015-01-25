@@ -19,4 +19,4 @@ after_success:
   - 'ASSETID=$(curl -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/881828/assets" | jq ".[0].id")'
   - echo $ASSETID
   - 'curl -XDELETE -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/assets/$ASSETID"'
-  - 'curl -XPOST -s -H "Authorization: token ${GITHUBTOKEN}" -H "Content-Type: application/zip" --data-binary @./dist.zip "https://uploads.github.com/repos/alltonp/reprobate/releases/881828/assets?name=reprobate_$TRAVIS_BUILD_NUMBER.zip"'
+  - 'curl -XPOST -s -H "Authorization: token ${GITHUBTOKEN}" -H "Content-Type: application/zip" --data-binary @./dist.zip "https://uploads.github.com/repos/alltonp/reprobate/releases/881828/assets?name=Reprobate_0.0.$TRAVIS_BUILD_NUMBER.zip"'
