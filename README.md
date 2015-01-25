@@ -49,4 +49,5 @@
 ### Can I configure how shouty it is etc?
 - see instructions in checks.csv
 
+-----
 (c) 2015 Flatmap Ltd

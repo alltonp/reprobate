@@ -43,7 +43,6 @@ import app.server.ProbeStatusUpdate
 //http://www.cssreset.com/demos/layouts/how-to-keep-footer-at-bottom-of-page-with-css/#
 //http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page
 //render all the bits only on init()
-//create probes.txt with usage in (if it does not exist on startup)
 //have a url that will pause for x minutes ... (for release time)
 //how to handle probes that need to go via proxy ... hmmmm
 

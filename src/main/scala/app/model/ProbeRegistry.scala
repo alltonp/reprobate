@@ -4,7 +4,7 @@ import java.io.File
 import scala.io.Source
 
 object ProbeRegistry {
-  private val file = new File("probes.txt")
+  private val file = new File("checks.csv")
 
   def load = {
     val counter = ProbeIdCounter()
