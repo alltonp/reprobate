@@ -6,20 +6,11 @@ import scala.util.Try
 object Reprobate extends Build {
   import BuildSettings._
 
-  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings/* ++
-    addArtifact(artifact in (Compile, dist), dist).settings*/)
+  lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings)
 }
 
 object BuildSettings {
   val dist = taskKey[Unit]("dist")
-
-  //http://www.scala-sbt.org/0.13/docs/Combined+Pages.html
-//  // create an Artifact for publishing the .war file
-//  artifact in (Compile, packageBin) := {
-//    val previous: Artifact = (artifact in (Compile, dist)).value
-//    println(s"####### artifact: " + previous)
-//    previous.copy(`type` = "zip", extension = "zip")
-//  }
 
   val standardBuildSettings: Seq[Def.Setting[_]] = Defaults.defaultSettings ++ Seq[Setting[_]](
     mappings in (Compile, packageBin) ++= {
@@ -44,11 +35,8 @@ object BuildSettings {
         val jars = libs.map(_.data).pair(flatRebase("dist/lib"))
         val script = file("reprobate.sh").pair(flatRebase("dist"))
         val files = Seq(artifact -> "dist/reprobate.jar")
-//        println(s"####### dist: " + outputZip.getName)
         println(s"### Building dist.zip for ${Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")} ...")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
-//        outputZip
-
     }
   )
 }

@@ -3,7 +3,6 @@ scala:
 - 2.11.4
 jdk:
 - oraclejdk7
-before_script: ./scripts/prepublish.sh
 script: ./scripts/ci-build.sh
 env:
   global:
