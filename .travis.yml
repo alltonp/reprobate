@@ -18,7 +18,7 @@ deploy:
   file: dist.zip
   skip_cleanup: true
   before_deploy: git fetch --tags
-  release-number: v1.1
+  release-number: v1.0
   on:
     tags: false
     all_branches: true
