@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#TIP: https://raw.githubusercontent.com/terryburton/travis-github-release/master/github-release.sh
+
 REPO="alltonp/reprobate"
 
 JSON=$(cat <<EOF
