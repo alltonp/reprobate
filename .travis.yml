@@ -20,6 +20,7 @@ deploy:
   skip_cleanup: true
   before_deploy: git fetch --tags
   on:
+    repo: alltonp/reprobate
     tags: true
     all_branches: true
   api-key:
