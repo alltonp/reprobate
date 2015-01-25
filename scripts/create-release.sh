@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$REPO="alltonp/reprobate"
+REPO="alltonp/reprobate"
 
 JSON=$(cat <<EOF
 {
