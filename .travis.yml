@@ -16,6 +16,6 @@ notifications:
   email: false
 after_success:
   - cd target
-  - 'ASSETID=$(curl -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/assets/393733" | jq ".[0].id")'
-  - 'curl -XDELETE -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/assets/393733"'
+  - 'ASSETID=$(curl -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/assets/881828" | jq ".[0].id")'
+  - 'curl -XDELETE -s -H "Authorization: token ${GITHUBTOKEN}" "https://api.github.com/repos/alltonp/reprobate/releases/assets/881828"'
   - 'curl -XPOST -s -H "Authorization: token ${GITHUBTOKEN}" -H "Content-Type: application/zip" --data-binary @./dist.zip "https://uploads.github.com/repos/alltonp/reprobate/releases/393733/assets?name=dist.zip"'
