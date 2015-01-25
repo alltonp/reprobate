@@ -15,12 +15,11 @@ notifications:
   email: false
 deploy:
   provider: releases
-  user: alltonp
   file: dist.zip
   skip_cleanup: true
   before_deploy: git fetch --tags
+  release-number: v1.1
   on:
-    repo: alltonp/reprobate
     tags: false
     all_branches: true
   api-key:
