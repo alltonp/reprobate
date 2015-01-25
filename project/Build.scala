@@ -43,7 +43,7 @@ object BuildSettings {
         val script = file("reprobate.sh").pair(flatRebase("dist"))
         val files = Seq(artifact -> "dist/reprobate.jar")
 //        println(s"####### dist: " + outputZip.getName)
-        println(s"### Building dist.zip...")
+        println(s"### Building dist.zip for $version ...")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
 //        outputZip
 
