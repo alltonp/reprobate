@@ -45,6 +45,7 @@ object BuildSettings {
         //        println(s"####### dist: " + outputZip.getName)
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
 //        outputZip
+
     }
   )
 }
