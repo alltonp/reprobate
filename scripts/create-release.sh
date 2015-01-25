@@ -1,5 +1,7 @@
 #!/bin/sh
 
+$REPO="alltonp/reprobate"
+
 JSON=$(cat <<EOF
 {
   "tag_name":         "$TRAVIS_BUILD_NUMBER",
