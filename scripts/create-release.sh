@@ -6,8 +6,8 @@ JSON=$(cat <<EOF
 {
   "tag_name":         "$TRAVIS_BUILD_NUMBER",
   "target_commitish": "master",
-  "name":             "$TRAVIS_BUILD_NUMBER: New release",
-  "draft":            true,
+  "name":             "$TRAVIS_BUILD_NUMBER release",
+  "draft":            false,
   "prerelease":       false
 }
 EOF
@@ -21,6 +21,7 @@ if [ "`echo "$RESULT" | tail -1`" != "201" ]; then
   echo "$RESULT"
   exit 1
 fi
+echo $RESULT
 RELEASEID=`echo "$RESULT" | sed -ne 's/^  "id": \(.*\),$/\1/p'`
 if [[ -z "$RELEASEID" ]]; then
   echo FAILED
