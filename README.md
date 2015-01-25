@@ -1,6 +1,6 @@
 <a href="https://travis-ci.org/alltonp/reprobate" target="_blank"><img src="https://travis-ci.org/alltonp/reprobate.png?branch=master"></a>
 
-## Welcome to Reprobate - continuous system monitoring
+### Reprobate - continuous system monitoring
 
 ### Quick start (if you already know what this is)
 
