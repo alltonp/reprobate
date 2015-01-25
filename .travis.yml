@@ -18,6 +18,7 @@ deploy:
   user: alltonp
   file: dist.zip
   skip_cleanup: true
+  before_deploy: git fetch --tags
   on:
     tags: false
     all_branches: true
