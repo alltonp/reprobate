@@ -50,4 +50,4 @@
 - see instructions in checks.csv
 
 -----
-(c) 2015 Flatmap Ltd
+Copyright © 2014-2015 Flatmap Ltd
