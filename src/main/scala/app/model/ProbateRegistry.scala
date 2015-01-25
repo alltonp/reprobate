@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets
 case class ProbateState(checksExecuted: Long, incidentsReported: Long)
 
 object ProbateRegistry {
-  private val file = new File("probate.json")
+  private val file = new File("state.json")
 
   def load = {
 //    val counter = ProbeIdCounter()
