@@ -1,10 +1,10 @@
-package app.agent
+package app
 
-import org.joda.time.format.DateTimeFormat._
+import app.ServiceFactory._
 import org.joda.time.DateTimeZone._
-import org.joda.time.{Period, Interval, Duration, LocalDateTime}
-import app.ServiceFactory.systemClock
+import org.joda.time.format.DateTimeFormat._
 import org.joda.time.format.PeriodFormatterBuilder
+import org.joda.time.{Interval, LocalDateTime, Period}
 
 object DateFormatForHumans {
   private val standardTimeFormat = forPattern("HH:mm:ss").withZone(UTC)
@@ -22,7 +22,7 @@ object DateFormatForHumans {
     .appendSeparator(", ")
     .appendSeconds()
     .appendSuffix("s")
-    .toFormatter()
+    .toFormatter
 
   def format(when: LocalDateTime) = formatFor(when).print(when)
   def ago(when: LocalDateTime) = agoFormat.print(new Interval(when.toDateTime, today.toDateTime).toPeriod)

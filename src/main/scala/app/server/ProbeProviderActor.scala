@@ -3,8 +3,7 @@ package app.server
 import java.io.FileNotFoundException
 import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
-
-import app.agent.DateFormatForHumans
+import app.DateFormatForHumans
 import app.comet.{Init, Subscriber}
 import app.model._
 import app.probe.HttpClient

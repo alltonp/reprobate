@@ -1,5 +1,6 @@
 package app.agent
 
+import app.DateFormatForHumans
 import im.mange.jetboot.{R, Renderable, Css}
 import Css._
 import im.mange.jetboot.Html._

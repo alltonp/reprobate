@@ -1,5 +1,6 @@
 package app.agent
 
+import app.DateFormatForHumans
 import app.model.Broadcast
 import im.mange.jetboot.bootstrap3.Bootstrap
 import im.mange.jetboot.widget._
