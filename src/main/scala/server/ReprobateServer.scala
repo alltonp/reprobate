@@ -1,53 +1,47 @@
 package server
 
-//TODO: tidy
-object ReprobateServer extends App {
-  import java.io.File
+import java.io.File
 
 import org.eclipse.jetty.server.Server
-  import org.eclipse.jetty.server.nio.SelectChannelConnector
-  import org.eclipse.jetty.webapp.WebAppContext
+import org.eclipse.jetty.server.nio.SelectChannelConnector
+import org.eclipse.jetty.webapp.WebAppContext
 
-  private val serverPort = 8473
-  private val server = createServer
+class WebServer(serverPort: Int) {
+  private val server = createServer(serverPort)
   private val context = createContext
   server.setHandler(context)
 
-  private def createServer = {
+  private def createServer(port: Int) = {
     val server = new Server
     val selectChannelConnector = new SelectChannelConnector
-    selectChannelConnector.setPort(serverPort)
+    selectChannelConnector.setPort(port)
     server.setConnectors(Array(selectChannelConnector))
     server
   }
 
-  private def startServer() = {
-    try {
-      println(s"### Starting jetty on $serverPort")
-      server.start()
-      while (!server.isRunning) Thread.sleep(100)
-    } catch {
-      case exception: Exception => {
-        println("### Failed to start jetty")
-        exception.printStackTrace()
-        throw exception
-      }
-    }
+  private def startServer() = try {
+    server.start()
+  } catch {
+    case e: Throwable => e.printStackTrace(); throw e
   }
 
   private def createContext = {
+    def packagedPath(loader: ClassLoader, root: String) = loader.getResource(root).toExternalForm
+
+    def discover(path: String, packaged: String, context: WebAppContext) =
+      if (new File(path).exists()) path
+      else packagedPath(context.getClass.getClassLoader, "webapp")
+
     val context = new WebAppContext()
     context.setServer(server)
     context.setContextPath("/")
-    if (new File("src/main/webapp").exists())
-      context.setWar("src/main/webapp")
-    else {
-      val loader = context.getClass.getClassLoader
-      val war = loader.getResource("webapp").toExternalForm
-      context.setWar(war)
-    }
+    context.setWar(discover("src/main/webapp", "webapp", context))
     context
   }
 
-   startServer()
+  startServer()
+}
+
+object ReprobateServer extends App {
+  new WebServer(8473)
 }
