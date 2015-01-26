@@ -75,7 +75,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private val probeConfigAgent = ChecksConfigAgent()
   private val broadcastsAgent = BroadcastsHistoryAgent()
   private val toggleConfigButton = ToggleCheckConfigButton(this)
-  private val toggleBroadcastsButton = ToggleBroadcastsButton(this)
+  private val toggleBroadcastsButton = ToggleBroadcastsHistoryButton(this)
 
   private var checkStatusAgents: List[CheckStatusAgent] = _
 
