@@ -77,7 +77,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private val toggleConfigButton = ToggleConfigButton(this)
   private val toggleBroadcastsButton = ToggleBroadcastsButton(this)
 
-  private var probeAgents: List[ProbeAgent] = _
+  private var checkStatusAgents: List[CheckStatusAgent] = _
 
   def render = <form class="lift:form.ajax"><br/>{layout.render}</form>
 
@@ -111,14 +111,14 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   )
 
   def onInit(allProbes: List[Probe]) = {
-    probeAgents = allProbes.map(ProbeAgent(_))
-    allProbesStatus.fill(Composite(probeAgents:_*))
+    checkStatusAgents = allProbes.map(CheckStatusAgent(_))
+    allProbesStatus.fill(Composite(checkStatusAgents:_*))
   }
 
   def onProbeStatusUpdate(update: ProbeStatusUpdate) =
     update.status match {
-      case ProbeSuccess => probeAgents.find(update.probe.id == _.probe.id).fold(nothing){_.onProbeSuccess(update)}
-      case f:ProbeFailure => probeAgents.find(update.probe.id == _.probe.id).fold(nothing){_.onProbeFailed(f)}
+      case ProbeSuccess => checkStatusAgents.find(update.probe.id == _.probe.id).fold(nothing){_.onSuccess(update)}
+      case f:ProbeFailure => checkStatusAgents.find(update.probe.id == _.probe.id).fold(nothing){_.onFailure(f)}
       case ProbeInactive => nothing
     }
 
