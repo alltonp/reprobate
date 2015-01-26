@@ -10,10 +10,9 @@ import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast
 import scala.xml.Unparsed
 
-//TODO: seems to be a container-tastic
 case class BroadcastFlashAgent() extends Renderable {
-  private val body = div(id = "broadcastFlashBody").styles(float(left)/*, paddingBottom("10px")*/)//.styles(display(inlineBlock))
-  private val panel = span(body)//.classes().styles(marginBottom("10px"))
+  private val body = div(id = "broadcastFlashBody").styles(float(left))
+  private val panel = span(body)
 
   def render = panel.render
 
