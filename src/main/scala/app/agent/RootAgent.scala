@@ -68,7 +68,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   //TODO: pull out an agent for this ...
   private val allProbesStatus = div(id = "allProbesStatus")
   private val currentProbeAgent = ChecksProgressAgent()
-  private val probeSummaryAgent = ProbeSummaryAgent()
+  private val probeSummaryAgent = ChecksSummaryAgent()
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()

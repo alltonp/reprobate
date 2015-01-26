@@ -8,14 +8,13 @@ import app.server.AllRunsStatusUpdate
 import java.text.DecimalFormat
 import im.mange.jetboot.bootstrap3.Bootstrap._
 
-case class ProbeSummaryAgent() extends Renderable {
+case class ChecksSummaryAgent() extends Renderable {
   private val formatter = new DecimalFormat( "#,###,###,###" )
-  private val body = div(id = "probeSummaryBody").styles(display(inlineBlock))
+  private val body = div(id = "checksSummary").styles(display(inlineBlock))
   private val panel = div(body).classes(textCenter, "center-block").styles(marginBottom("10px"))
 
   def render = panel.render
 
-  //TODO: each thing could be a widget here
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = body.fill(Composite(
     div(
       span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h3").styles(padding("40px")),
