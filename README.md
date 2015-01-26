@@ -19,6 +19,7 @@
 3. that's it!
 
 **Migrating between versions:**
+
 1. install new version
 2. copy checks.csv and state.json from previous version
 3. that's it!
@@ -64,16 +65,38 @@
 	DEPLOYER=`id -u -n`
 	MESSAGE="(${APP}) ${VERSION} deployed to ${MACHINE_NAME} by ${DEPLOYER}"
 
-	#WGET
-	wget --timeout=15 --no-proxy -O- --post-data="{\"messages\":[\"${MESSAGE}\"]}" --header=Content-Type:application/json "http://localhost:8473/broadcast"
+	wget --timeout=15 --no-proxy -O- --header=Content-Type:application/json
+		--post-data="{\"messages\":[\"${MESSAGE}\"]}" "http://localhost:8473/broadcast"
 
-	#or CURL
-	curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"messages\":[\"${MESSAGE}\"]}" http://localhost:8473/broadcast
+	Or
+
+	curl --connect-timeout 15 -H "Content-Type: application/json"
+		-d "{\"messages\":[\"${MESSAGE}\"]}" http://localhost:8473/broadcast
 
     ```
 
-### what else can it do you?
-- Dogfood: coming soon
+### Does reprobate have an API?
+- Reprobate hosts a 'check' for that - `http://{hostname}:8473/check/probes/ok/{query}`
+
+	e.g.
+
+	`http://localhost:8473/check/probes/ok/prod`
+
+- all checks successful:
+
+	`{"failures":[]}`
+
+- some checks unsuccessful:
+
+	```
+	{
+      "failures":[
+      	"PROD Failure active between 10am and 1pm (Demo): I always let myself down",
+      	"PROD Failure @ defcon 3 (Demo): I always let myself down"
+      ]
+    }
+	```
+- This is useful if you have multiple stacks monitored by reprobate you can aggregate them all into one uber reprobate, or you want to integrate with other monitoring tools.
 
 -----
 
