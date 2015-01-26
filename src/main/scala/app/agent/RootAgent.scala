@@ -47,7 +47,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   import im.mange.jetboot.Html._
   import im.mange.jetboot.js.JsCmdFactory._
   import GridSystem._
-  import Bootstrap._
 
   private val allProbesStatus = div(id = "allProbesStatus")
   private val checksProgressAgent = ChecksProgressAgent()
@@ -115,6 +114,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   def cleanup() {}
 
   //TODO: should probably be a ButtonGroup
-  private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def configButton = span(toggleCheckConfigButton).classes(Bootstrap.pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(Bootstrap.pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }
