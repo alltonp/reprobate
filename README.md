@@ -6,7 +6,7 @@
 
 **Install:**
 
-1. download and unzip <a href="https://github.com/alltonp/reprobate/releases/download/current/reprobate.zip">current version</a>
+1. download and unzip <a href="https://github.com/alltonp/reprobate/releases/download/current/reprobate.zip">current binary</a>
 2. chmod +x reprobate.sh
 3. ./reprobate.sh start
 4. browse to http://localhost:8473
