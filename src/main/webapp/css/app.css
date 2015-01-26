@@ -28,7 +28,7 @@ body {
    padding-top:10px
 }
 
-// main
+//main
 
 @-webkit-keyframes 'blink' {
     50% { background: #cc0000;  color: #ffffff; }
