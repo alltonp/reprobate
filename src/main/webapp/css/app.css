@@ -67,24 +67,6 @@ body {
     50% { background: #cc0000;  color: #ffffff; }
 }
 
-.blink {
-    -webkit-animation-direction: normal;
-    -webkit-animation-duration: 2s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-name: blink;
-    -webkit-animation-timing-function: linear;
-}
-
-.fliptop {
-  background-color: #fff;
-  padding: 0px 5px;
-  font-weight: bold;
-
-  -webkit-border-radius: 4px 0px;
-     -moz-border-radius: 4px 0px;
-          border-radius: 4px 0px;
-}
-
 /* these are actually used - not sure about the others anymore */
 .round-corners {
   background-color: #fff;

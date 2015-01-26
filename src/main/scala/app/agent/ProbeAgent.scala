@@ -26,7 +26,6 @@ case class ProbeAgent(probe: Probe) extends Renderable {
     //TIP: stop bottom truncation ...
 
     content.fill(div(panel).classes("shake", probe.defcon.shake, "shake-constant", "hover-stop").styles(float(left)/*, padding("5px")*/))
-//      .classes("blink").styles(padding("5px"))
   }
 
   private def topRow(failed: ProbeFailure) = div(description.classes(pullLeft)).styles(clear(both), marginTop("0px")).classes("h" + probe.defcon.level)
