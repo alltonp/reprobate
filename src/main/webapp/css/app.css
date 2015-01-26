@@ -28,40 +28,7 @@ body {
    padding-top:10px
 }
 
-//main
-
-.success {
-    background: #00cc00; /* Old browsers */
-    background: -moz-linear-gradient(top,  #ffffff 0%, #00cc00 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#00cc00)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #ffffff 0%,#00cc00 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #ffffff 0%,#00cc00 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #ffffff 0%,#00cc00 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #ffffff 0%,#00cc00 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00cc00',GradientType=0 ); /* IE6-9 */
-}
-
-.failure {
-    background: #cc0000; /* Old browsers */
-    background: -moz-linear-gradient(top,  #ffffff 0%, #cc0000 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #ffffff 0%,#cc0000 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #ffffff 0%,#cc0000 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #ffffff 0%,#cc0000 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #ffffff 0%,#cc0000 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
-}
-
-.unknown {
-    background: #cccc00; /* Old browsers */
-    background: -moz-linear-gradient(top,  #ffffff 0%, #cccc00 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cccc00)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #ffffff 0%,#cccc00 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #ffffff 0%,#cccc00 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #ffffff 0%,#cccc00 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #ffffff 0%,#cccc00 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cccc00',GradientType=0 ); /* IE6-9 */
-}
+// main
 
 @-webkit-keyframes 'blink' {
     50% { background: #cc0000;  color: #ffffff; }
