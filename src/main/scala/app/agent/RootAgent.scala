@@ -69,7 +69,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   //TODO: pull out an agent for this ...
   private val allProbesStatus = div(id = "allProbesStatus")
   private val currentProbeAgent = CurrentProbeAgent()
-  private val currentProbeAgent2 = CurrentProbe2Agent()
   private val probeSummaryAgent = ProbeSummaryAgent()
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
@@ -127,8 +126,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
     }
 
   def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) =
-    currentProbeAgent.onCurrentRunStatusUpdate(update) &
-    currentProbeAgent2.onCurrentRunStatusUpdate(update)
+    currentProbeAgent.onCurrentRunStatusUpdate(update)
 
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = probeSummaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
