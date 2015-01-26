@@ -19,9 +19,6 @@ import app.server.ProbeStatusUpdate
 //split failures into columns: e.g. prod, uat, etc
 //think about dismisable alerts using (x) for a period of time ...
 //consider having start/stop (or sleep ) button on the currently running probe (for release type stuff)
-//rename to reprobate and brand it
-//tidy up css
-//get a marquee in there, perhaps for probe counts - e.g. http://jsfiddle.net/jonathansampson/XxUXD/
 //Add a heart beat, if not received then go red
 //Refresh page every hour using JavaScript
 //add uptime or last udpated time?
@@ -34,14 +31,7 @@ import app.server.ProbeStatusUpdate
 
 //#next
 //consider updating the checks, even if its just once per run and limit only to interested subscribers
-//total runs/inactive/success line/bar chart
-//some serious tidy up required
 //tests!
-//fixed chart and/or summary to the bottom of screen
-//using one of:
-//http://www.cssreset.com/how-to-keep-footer-at-bottom-of-page-with-css/
-//http://www.cssreset.com/demos/layouts/how-to-keep-footer-at-bottom-of-page-with-css/#
-//http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page
 //render all the bits only on init()
 //have a url that will pause for x minutes ... (for release time)
 //how to handle probes that need to go via proxy ... hmmmm
@@ -49,12 +39,6 @@ import app.server.ProbeStatusUpdate
 //have a button for closed incident toggling - glyphicon glyphicon-info-sign or glyphicon glyphicon-list-alt
 //show bad numbers need to icons (could update those in realtime) - careful with dorin bug though
 //show badge counts in table
-
-//#bug
-//(1) open incident but not appearing with a red box - possibly because its now inactive .... or a page refresh occured
-//(2) page not updating until next run again
-//(3) incident duration is wrong when incidents longer than 24(?) hours
-//(4) probe does not exist - shows no red box
 
 //features:
 //store probe duration ...
@@ -65,17 +49,16 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   import GridSystem._
   import Bootstrap._
 
-  //TODO: pull out an agent for this ...
   private val allProbesStatus = div(id = "allProbesStatus")
-  private val currentProbeAgent = ChecksProgressAgent()
-  private val probeSummaryAgent = ChecksSummaryAgent()
+  private val checksProgressAgent = ChecksProgressAgent()
+  private val checksSummaryAgent = ChecksSummaryAgent()
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
-  private val probeConfigAgent = ChecksConfigAgent()
-  private val broadcastsAgent = BroadcastsHistoryAgent()
-  private val toggleConfigButton = ToggleCheckConfigButton(this)
-  private val toggleBroadcastsButton = ToggleBroadcastsHistoryButton(this)
+  private val checksConfigAgent = ChecksConfigAgent()
+  private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
+  private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
+  private val toggleBroadcastsHistoryButton = ToggleBroadcastsHistoryButton(this)
 
   private var checkStatusAgents: List[CheckStatusAgent] = _
 
@@ -83,27 +66,27 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
 
   private[agent] def requestConfig = {
     subscriber ! SendProbeConfig
-    probeConfigAgent.requestConfig
+    checksConfigAgent.requestConfig
   }
 
-  private[agent] def hideConfig = probeConfigAgent.hide
+  private[agent] def hideConfig = checksConfigAgent.hide
 
   private[agent] def showBroadcasts = {
     subscriber ! SendBroadcasts
-    broadcastsAgent.onShowRequest
+    broadcastsHistoryAgent.onShowRequest
   }
 
-  private[agent] def hideBroadcasts = broadcastsAgent.onHide
+  private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = container(
     row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
-    row(col(12, currentProbeAgent)),
-    row(col(12, probeSummaryAgent)),
+    row(col(12, checksProgressAgent)),
+    row(col(12, checksSummaryAgent)),
     row(col(12, broadcastFlashAgent)),
     row(col(12, allProbesStatus)),
     row(col(12, incidentsAgent)),
-    row(col(12, probeConfigAgent)),
-    row(col(12, broadcastsAgent))
+    row(col(12, checksConfigAgent)),
+    row(col(12, broadcastsHistoryAgent))
   )
 
   def onInit(allProbes: List[Probe]) = {
@@ -118,13 +101,13 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
       case ProbeInactive => nothing
     }
 
-  def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) = currentProbeAgent.onCurrentRunStatusUpdate(update)
+  def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) = checksProgressAgent.onCurrentRunStatusUpdate(update)
 
-  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = probeSummaryAgent.onAllRunsStatusUpdate(update) &
+  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = checksSummaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
 
-  def onProbeConfigResponse(response: ProbeConfigResponse) = probeConfigAgent.show(response)
-  def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsAgent.onShowResponse(response)
+  def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
+  def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
   def onBroadcast(broadcast: Broadcast) = broadcastFlashAgent.onBroadcast(broadcast)
@@ -132,6 +115,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   def cleanup() {}
 
   //TODO: should probably be a ButtonGroup
-  private def configButton = span(toggleConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def broadcastButton = span(toggleBroadcastsButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }
