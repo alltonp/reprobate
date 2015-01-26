@@ -6,10 +6,10 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot.widget.Spacer
 import im.mange.jetboot.{R, Renderable}
 
-//TODO: seems to be a container-tastic
+//TODO: is there a widget here ... something with a body div that we fill, empty etc ContainerAgent perhaps?
 case class StatusMessageAgent() extends Renderable {
-  private val body = div(id = "messageBody").styles(float(left), paddingBottom("10px"))//.styles(display(inlineBlock))
-  private val panel = span(body)//.classes().styles(marginBottom("10px"))
+  private val body = div(id = "statusMessageBody").styles(float(left), paddingBottom("10px"))
+  private val panel = span(body)
 
   def render = panel.render
 
