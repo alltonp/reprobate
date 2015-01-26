@@ -95,16 +95,15 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
 
   private[agent] def hideBroadcasts = broadcastsAgent.onHide
 
-  private def layout = GridSystem.container(
-    GridSystem.row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
-    //TODO: RunStatusAgent - need some better names
-    GridSystem.row(col(12, currentProbeAgent)),
-    GridSystem.row(col(12, probeSummaryAgent)),
-    GridSystem.row(col(12, broadcastFlashAgent)),
-    GridSystem.row(col(12, allProbesStatus)),
-    GridSystem.row(col(12, incidentsAgent)),
-    GridSystem.row(col(12, probeConfigAgent)),
-    GridSystem.row(col(12, broadcastsAgent))
+  private def layout = container(
+    row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
+    row(col(12, currentProbeAgent)),
+    row(col(12, probeSummaryAgent)),
+    row(col(12, broadcastFlashAgent)),
+    row(col(12, allProbesStatus)),
+    row(col(12, incidentsAgent)),
+    row(col(12, probeConfigAgent)),
+    row(col(12, broadcastsAgent))
   )
 
   def onInit(allProbes: List[Probe]) = {
@@ -119,8 +118,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
       case ProbeInactive => nothing
     }
 
-  def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) =
-    currentProbeAgent.onCurrentRunStatusUpdate(update)
+  def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) = currentProbeAgent.onCurrentRunStatusUpdate(update)
 
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = probeSummaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
@@ -129,11 +127,11 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
-  def onBroadcast(message: Broadcast) = broadcastFlashAgent.onBroadcast(message)
+  def onBroadcast(broadcast: Broadcast) = broadcastFlashAgent.onBroadcast(broadcast)
 
   def cleanup() {}
 
-  //TODO: de-dupe
+  //TODO: should probably be a ButtonGroup
   private def configButton = span(toggleConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def broadcastButton = span(toggleBroadcastsButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }
