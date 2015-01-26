@@ -1,6 +1,7 @@
 package app.agent
 
 import app.server.ProbeConfigResponse
+import app.ui.BigSpinner
 import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
 import im.mange.jetboot.Renderable

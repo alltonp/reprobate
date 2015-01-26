@@ -1,6 +1,7 @@
 package app.agent
 
 import app.server.BroadcastsResponse
+import app.ui.BigSpinner
 import im.mange.jetboot.{Html, Css, Renderable}
 import Css._
 import Html._

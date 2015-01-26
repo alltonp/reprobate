@@ -1,4 +1,4 @@
-package app.agent
+package app.ui
 
 import im.mange.jetboot.{Element, Renderable}
 
