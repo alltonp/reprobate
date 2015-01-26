@@ -12,8 +12,8 @@ libraryDependencies ++= {
   Seq(
     "io.shaka" %% "naive-http" % "48",
     "ch.qos.logback" % "logback-classic" % "1.0.6",
-    "im.mange" %% "jetboot" % "0.0.7",
-    "im.mange" %% "little-server" % "0.0.1",
+    "im.mange" %% "jetboot" % "0.0.11",
+    "im.mange" %% "little-server" % "0.0.2",
     "im.mange" %% "shoreditch-api" % "0.0.60"
   )
 }
