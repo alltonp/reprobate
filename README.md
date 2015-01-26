@@ -52,10 +52,27 @@
 - see the examples in checks.csv in your reprobate installation (it is created on first run)
 
 ### Can I make is more/less shouty?
-- see instructions for defcon level in checks.csv
+- see instructions for 'defcon level' in checks.csv
+
+### All my checks fail when I deploy new versions of my stack...
+- have your deployment scripts send a broadcast message to reprobate
+
+    ```
+	APP="app"
+	VERSION="version"
+	MACHINE_NAME="machine"
+	DEPLOYER=`id -u -n`
+	MESSAGE="(${APP}) ${VERSION} deployed to ${MACHINE_NAME} by ${DEPLOYER}"
+
+	#WGET
+	wget --timeout=15 --no-proxy -O- --post-data="{\"messages\":[\"${MESSAGE}\"]}" --header=Content-Type:application/json "http://localhost:8473/broadcast"
+
+	#or CURL
+	curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"messages\":[\"${MESSAGE}\"]}" http://localhost:8473/broadcast
+
+    ```
 
 ### what else can it do you?
-- Broadacasts: coming soon
 - Dogfood: coming soon
 
 -----
