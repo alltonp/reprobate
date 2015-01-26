@@ -28,7 +28,7 @@ function status() {
 }
 
 function currentpid() {
-    ps -ef | awk '/[R]eprobateServer/{print $2}'
+    ps -ef | awk '/[R]eprobate/{print $2}'
 }
 
 if [ $# -lt 1 ]; then
