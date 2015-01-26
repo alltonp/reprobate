@@ -32,10 +32,4 @@ case class CurrentProbeAgent() extends Renderable {
           </div>
       )
     ).classes("progress", "progress-striped", "active").styles(clear(both), marginBottom("0px"))
-
-//  private def description(update: CurrentRunStatusUpdate)=
-//    div(
-//      span(span().classes("glyphicon glyphicon-play"), R(" " + DateFormatForHumans.timeNow + " " + update.description)).styles(fontSize(smaller), fontWeight(bold)).classes(pullLeft),
-//      span("Success: " + update.success + ", Failure: " + update.failure + ", Inactive: " + update.inactive + ", Total: " + update.of).styles(fontSize(smaller), fontWeight(bold)).classes(pullRight)
-//    ).styles(clear(both))
 }

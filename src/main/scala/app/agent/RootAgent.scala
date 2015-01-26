@@ -59,7 +59,6 @@ import app.server.ProbeStatusUpdate
 //features:
 //store probe duration ...
 
-//TODO: rename to reprobate agent
 case class RootAgent(subscriber: Subscriber) extends Renderable {
   import im.mange.jetboot.Html._
   import im.mange.jetboot.js.JsCmdFactory._
@@ -109,8 +108,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
     GridSystem.row(col(12, incidentsAgent)),
     GridSystem.row(col(12, probeConfigAgent)),
     GridSystem.row(col(12, broadcastsAgent))
-
-    //TODO: think about a lozenge for env
   )
 
   def onInit(allProbes: List[Probe]) = {
