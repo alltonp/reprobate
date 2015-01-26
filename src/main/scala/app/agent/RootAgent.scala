@@ -96,10 +96,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private[agent] def hideBroadcasts = broadcastsAgent.onHide
 
   private def layout = GridSystem.container(
-//    GridSystem.row(col(12, messageAgent)),
     GridSystem.row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
-//    row(col(12, Composite(probeSummaryAgent, span(toggleConfigButton).styles(paddingTop("15px"))))),
-    //    row(col(10, currentProbeAgent), col(2, currentProbeAgent2)),
     //TODO: RunStatusAgent - need some better names
     GridSystem.row(col(12, currentProbeAgent)),
     GridSystem.row(col(12, probeSummaryAgent)),

@@ -10,7 +10,7 @@ case class CheckStatusAgent(probe: Probe) extends Renderable {
   import im.mange.jetboot.Html._
   import im.mange.jetboot.bootstrap3.Bootstrap._
 
-  private val content = div(id = probe.id)
+  private val content = div(id = "checkStatus_" + probe.id)
 
   def render = content.render
 

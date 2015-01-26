@@ -11,7 +11,7 @@ import app.model.Broadcast
 import scala.xml.Unparsed
 
 case class BroadcastFlashAgent() extends Renderable {
-  private val body = div(id = "broadcastFlashBody").styles(float(left))
+  private val body = div(id = "broadcastFlash").styles(float(left))
   private val panel = span(body)
 
   def render = panel.render

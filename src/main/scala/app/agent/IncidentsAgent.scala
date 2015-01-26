@@ -14,7 +14,6 @@ import im.mange.jetboot.widget._
 import scala.xml.Unparsed
 
 //TODO: mouse over to see incident details ... start/finish etc
-//TODO: should put incidents in tracking.txt
 case class IncidentsAgent() extends Renderable {
   private val body = div(id = "incidentsBody").styles(fontSize(smaller))
   private val panel = div(body).styles(marginTop("15px"))
