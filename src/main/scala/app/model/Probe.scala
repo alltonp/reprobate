@@ -5,6 +5,7 @@ import app.server.{ProbeFailure, ProbeStatus}
 import scala.collection.immutable.HashMap
 
 //TODO: we should proable make this like shoreditch, with an apply() to do the parsing
+//TODO: should this be called Check now? or CheckConfig?
 case class Probe(id: String, config: String) {
   private val bits = config.split(",")
 

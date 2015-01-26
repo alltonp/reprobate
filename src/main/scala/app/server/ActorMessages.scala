@@ -24,7 +24,7 @@ case object ProbeSuccess extends ProbeStatus
 case class ProbeFailure(failures: List[String]) extends ProbeStatus
 case object ProbeInactive extends ProbeStatus
 
-case class CurrentRunStatusUpdate(/*description: String, */success: Int, failure: Int, inactive: Int, of: Int) {
+case class CurrentRunStatusUpdate(success: Int, failure: Int, inactive: Int, of: Int) {
   def successPercent = percentageOfTotal(success)
   def failurePercent = percentageOfTotal(failure)
   def inactivePercent = percentageOfTotal(inactive)
