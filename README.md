@@ -31,6 +31,7 @@
 - You have a stack of applications/services and need to know they are working **all** the time.
 - You want to be notified of production problems **before** your users report them
 - You need to "keep it up without touching it" (tm) - you probably work for an investment bank and enjoy segregation of duties etc
+- Generally we check our assertions only run at dev/build time - why wouldn't you want to run them all the time?
 
 ### What is a check?
 - An assertion or invariant of your system, exposed as a JSON endpoint - adhering to the following contract:
