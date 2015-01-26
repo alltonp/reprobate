@@ -1,27 +1,29 @@
 #!/bin/bash
 
+APP="Reprobate"
+
 function start() {
-    echo "### Starting Reprobate"
-    nohup java -cp $(echo lib/*.jar | tr ' ' ':') server.ReprobateServer > app.log 2>&1 &
+    echo "### Starting $APP"
+    nohup java -cp $(echo lib/*.jar | tr ' ' ':') server.$APP > app.log 2>&1 &
 }
 
 function stop() {
-    echo "### Stopping Reprobate"
+    echo "### Stopping $APP"
     PID=`currentpid`
     if [[ -n $PID ]]; then
         echo "### Killing PID ${PID}...."
         kill $PID
     else
-        echo "### Reprobate wasn't running..."
+        echo "### $APP wasn't running..."
     fi
 }
 
 function status() {
     PID=`currentpid`
     if [[ -n $PID ]]; then
-        echo "### Reprobate is running..."
+        echo "### $APP is running..."
     else
-        echo "### Reprobate is NOT running..."
+        echo "### $APP is NOT running..."
     fi
 }
 
