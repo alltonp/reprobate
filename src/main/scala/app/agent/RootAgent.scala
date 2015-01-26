@@ -72,7 +72,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
-  private val probeConfigAgent = ProbeConfigAgent()
+  private val probeConfigAgent = ChecksConfigAgent()
   private val broadcastsAgent = BroadcastsAgent()
   private val toggleConfigButton = ToggleCheckConfigButton(this)
   private val toggleBroadcastsButton = ToggleBroadcastsButton(this)
@@ -128,7 +128,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = probeSummaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
 
-  def onProbeConfigResponse(response: ProbeConfigResponse) = probeConfigAgent.onProbeConfigResponse(response)
+  def onProbeConfigResponse(response: ProbeConfigResponse) = probeConfigAgent.show(response)
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
