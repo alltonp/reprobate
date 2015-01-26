@@ -10,6 +10,6 @@ case class ChecksConfigAgent() extends Renderable {
 
   def render = holder.render
   def requestConfig = holder.show & holder.fill(BigSpinner("checksConfigSpinner", "Loading checks..."))
-  def show(response: ProbeConfigResponse) = holder.fill(ProbeConfigPresentation(response.probes))
+  def show(response: ProbeConfigResponse) = holder.fill(ChecksConfigPresentation(response.probes))
   def hide = holder.empty & holder.hide
 }

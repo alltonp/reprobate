@@ -2,13 +2,13 @@ package app.model
 
 import app.server.{ProbeSuccess, ProbeInactive, ProbeFailure}
 
-case class ProbeHistory(probe: Probe, executedCount: Int, failedCount: Int, inactiveCount: Int, incidentCount: Int)
+case class ChecksHistory(probe: Probe, executedCount: Int, failedCount: Int, inactiveCount: Int, incidentCount: Int)
 
 //TODO: is ProbeCheckHistory a better name for this
 case class ProbeRunHistory(allProbes: List[Probe], incidentLog: IncidentLog, historicChecksExecuted: Long) {
 //  private var history = List[ProbeRun]()
   private var currentRun: Option[ProbeRun] = None
-  private var summarisedHistory = allProbes.map(ProbeHistory(_ , 0, 0 ,0, 0))
+  private var summarisedHistory = allProbes.map(ChecksHistory(_ , 0, 0 ,0, 0))
 
   //TODO: we should store the summary and not the full history or we will just run out of memory ...
   //TIP: leaving the println here to remind me to do fix it ...

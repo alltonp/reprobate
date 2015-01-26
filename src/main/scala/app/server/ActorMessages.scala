@@ -5,7 +5,7 @@ import app.comet.Subscriber
 import org.joda.time.LocalDateTime
 import scala._
 import app.model.Probe
-import app.model.ProbeHistory
+import app.model.ChecksHistory
 import app.model.Incident
 
 case class Subscribe(subscriber: Subscriber)
@@ -40,7 +40,7 @@ case class AllRunsStatusUpdate(totalExecuted: Long, totalIncidents: Long, openIn
 //TODO: this is all a bit manky - needing two messages for the request
 case object SendProbeConfig
 case class ProbeConfigRequest(subscriber: Subscriber)
-case class ProbeConfigResponse(probes: List[ProbeHistory])
+case class ProbeConfigResponse(probes: List[ChecksHistory])
 
 //TODO: this is all a bit manky - needing two messages for the request
 case object SendBroadcasts

@@ -1,6 +1,6 @@
 package app.agent
 
-import app.model.ProbeHistory
+import app.model.ChecksHistory
 import im.mange.jetboot.bootstrap3.Bootstrap
 import im.mange.jetboot.{R, Renderable}
 import im.mange.jetboot.widget._
@@ -9,13 +9,12 @@ import im.mange.jetboot.Html._
 import Bootstrap._
 
 //TODO: consider making this live and encode the status in the row colour for inactive, open etc
-//TODO: rename to Probe checks or something
 //TODO: maybe ENV first
 //TODO: have a message when no checks configured
-case class ProbeConfigPresentation(probes: List[ProbeHistory]) extends Renderable {
+case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Renderable {
   def render = {
     val h = TableHeaders(List(
-      TableHeader(span("Checks: " + probes.size).styles(color("#0088cc"))).styles(width("28%")),
+      TableHeader(span("Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
       TableHeader(R("Environment")).styles(width("9%")),
       TableHeader(R("Active Period")).styles(width("9%")),
       TableHeader(R("Defcon")).styles(width("9%")),
@@ -36,14 +35,14 @@ case class ProbeConfigPresentation(probes: List[ProbeHistory]) extends Renderabl
     R("-"),
     R("-"),
     R("-"),
-    R(probes.map(_.executedCount).sum.toString),
-    R(probes.map(_.failedCount).sum.toString),
-    R(probes.map(_.inactiveCount).sum.toString),
-    R(probes.map(_.incidentCount).sum.toString),
+    R(checks.map(_.executedCount).sum.toString),
+    R(checks.map(_.failedCount).sum.toString),
+    R(checks.map(_.inactiveCount).sum.toString),
+    R(checks.map(_.incidentCount).sum.toString),
     R("-")
   ))
 
-  private def rows = probes.map(p => TableRow(List(
+  private def rows = checks.map(p => TableRow(List(
     R(p.probe.description),
     R(p.probe.env),
     R(p.probe.activePeriod.startHour + "-" + p.probe.activePeriod.finishHour),
@@ -63,7 +62,7 @@ case class ProbeConfigPresentation(probes: List[ProbeHistory]) extends Renderabl
       div(
         span(
           span().classes(glyphicon("link"))
-        ).classes(pullLeft)//,
+        ).classes(pullLeft)
       ).styles(clear(both)).render
     )
 
