@@ -5,10 +5,8 @@ import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
 import im.mange.jetboot._
 
-//TODO: this is not a good name - it's more like CurrentProbeStatus
-case class CurrentProbeAgent() extends Renderable {
-
-  private val body = div(id = "currentProbeBody")
+case class ChecksProgressAgent() extends Renderable {
+  private val body = div(id = "checksProgress")
   private val panel = div(body).styles(marginBottom("10px"))
 
   def render = panel.render
