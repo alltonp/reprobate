@@ -9,10 +9,8 @@ version := Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SN
 scalaVersion := "2.11.4"
 
 libraryDependencies ++= {
-  val liftVersion = "2.6"
   val jettyVersion = "8.1.7.v20120910"
   Seq(
-    "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
     "org.eclipse.jetty" % "jetty-webapp" % jettyVersion,
     "org.eclipse.jetty" % "jetty-server" % jettyVersion,
     "io.shaka" %% "naive-http" % "48",
