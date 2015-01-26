@@ -1,6 +1,6 @@
 <a href="https://travis-ci.org/alltonp/reprobate" target="_blank"><img src="https://travis-ci.org/alltonp/reprobate.png?branch=master"></a>
 
-### Reprobate - continuous system monitoring
+### Reprobate - continuous assertion monitoring
 
 ### Quick start (if you already know what this is)
 
@@ -18,8 +18,13 @@
 2. ./reprobate.sh restart
 3. that's it!
 
+**Migrating between versions:**
+1. install new version
+2. copy checks.csv and state.json from previous version
+3. that's it!
+
 ### What is it?
-- A simple monitor that loops through a supplied list of checks, alerting you in suitably annoying fashion should any checks fail. Ideally displayed on a huge monitor, for all to see.
+- A simple monitor that loops through a supplied list of "checks", alerting you in suitably annoying fashion should any checks fail. Ideally displayed on a huge monitor, for all to see.
 
 ### Why would I use it?
 - You have a stack of applications/services and need to know they are working **all** the time.
@@ -46,8 +51,13 @@
 ### How do I configure it?
 - see the examples in checks.csv in your reprobate installation (it is created on first run)
 
-### Can I configure how shouty it is etc?
-- see instructions in checks.csv
+### Can I make is more/less shouty?
+- see instructions for defcon level in checks.csv
+
+### what else can it do you?
+- Broadacasts: coming soon
+- Dogfood: coming soon
 
 -----
+
 Copyright © 2014-2015 Flatmap Ltd
