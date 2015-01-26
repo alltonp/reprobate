@@ -1,3 +1,5 @@
+#!/bin/sh
+
 APP="app"
 VERSION="version"
 MACHINE_NAME="machine"
