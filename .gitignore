@@ -38,4 +38,4 @@ lift_proto*
 
 # IntelliJ
 workspace.xml
-.idea*
+.idea
