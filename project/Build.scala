@@ -4,12 +4,12 @@ import sbt._
 import scala.util.Try
 
 object Reprobate extends Build {
-  import BuildSettings._
+  import Build._
 
   lazy val root = Project(id = "reprobate", base = file("."), settings = standardBuildSettings)
 }
 
-object BuildSettings {
+object Build {
   val dist = taskKey[Unit]("dist")
 
   val standardBuildSettings: Seq[Def.Setting[_]] = Defaults.defaultSettings ++ Seq[Setting[_]](
