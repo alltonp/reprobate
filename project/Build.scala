@@ -24,9 +24,7 @@ object BuildSettings {
         //TODO: exclude compiler jars etc
         val ver = Try(sys.env("TRAVIS_BUILD_NUMBER")).map("0.0." + _).getOrElse("1.0-SNAPSHOT")
         val dist = s"reprobate-$ver"
-        val distdir: File = base / dist
-        IO.delete(distdir)
-        IO.createDirectory(distdir)
+        val distdir = targetDir / dist
         val jars = libs.map(_.data).pair(flatRebase(s"$dist/lib"))
         val script = file("package/reprobate.sh").pair(flatRebase(dist))
         val files = Seq(artifact -> s"$dist/lib/$dist.jar")

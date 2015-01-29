@@ -28,11 +28,12 @@ function status() {
 }
 
 function currentpid() {
+    #TODO: use $APP
     ps -ef | awk '/[R]eprobate/{print $2}'
 }
 
 if [ $# -lt 1 ]; then
-    echo 'Usage: reprobate.sh {status|start|stop|restart}'
+    echo "Usage: $0 {status|start|stop|restart}"
 else
     case "$1" in
         'start')
