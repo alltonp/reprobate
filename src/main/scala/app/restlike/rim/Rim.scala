@@ -119,19 +119,26 @@ object Model {
       //TODO: need to check that there are args - for pretty much all (except help)
       bits.headOption match {
         case Some("aka") => {
+          //TODO: check args
           val aka = bits.drop(1).headOption
-          state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
 
           synchronized {
-            //      if (delete) deleteAll(who)
-            //      else if ("-" == value.trim) deleteKey(who, key)
-            //      else updateKey(who, key, value)
-                  save(state)
+            state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
+            save(state)
           }
 
-          t(s"akaing: " + bits.init.mkString(" ") :: Nil)
+          t(s"akaing: " + aka :: Nil)
         }
-        case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
+        case Some("+") => {
+          val description = bits.tail.mkString(" ")
+
+          synchronized {
+            state = state.copy(issues = state.issues.updated("1", Issue(description, None)))
+            save(state)
+          }
+
+          t(s"adding: " + description :: Nil)
+        }
         case Some("help") => t(help(who))
         //> id
         //< id
