@@ -9,7 +9,7 @@ import net.liftweb.http._
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.json._
 
-import scala.collection.{immutable, mutable}
+import scala.collection.immutable
 import scala.io.Source
 
 object Rim extends RestHelper {
@@ -87,7 +87,8 @@ object RimRequestJson {
   }
 }
 
-case class RimState(rim: immutable.Map[String, immutable.Map[String, String]])
+case class Issue(description: String, state: Option[String])
+case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: immutable.Map[String, Issue])
 case class RimUpdate(value: String)
 
 object Model {
@@ -95,9 +96,9 @@ object Model {
   import app.restlike.rim.Responder._
 
   private val file = new File("rim.json")
-  private val whoToStatuses = load
+  private var state = load
 
-  println("### loaded:" + whoToStatuses)
+  println("### loaded:" + state)
 
 //  def query(who: String, key: Option[String]) = t(
 //    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
@@ -113,11 +114,23 @@ object Model {
       val bits = value.split(" ")
       println(s"message in: ${bits.toList}")
 
-      if (!Model.knows_?(who)) return t(notAuthorised(who))
+//      if (!Model.knows_?(who)) return t(notAuthorised(who))
 
       //TODO: need to check that there are args - for pretty much all (except help)
       bits.headOption match {
-        case Some("aka") => t(s"akaing: " + bits.init.mkString(" ") :: Nil)
+        case Some("aka") => {
+          val aka = bits.drop(1).headOption
+          state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
+
+          synchronized {
+            //      if (delete) deleteAll(who)
+            //      else if ("-" == value.trim) deleteKey(who, key)
+            //      else updateKey(who, key, value)
+                  save(state)
+          }
+
+          t(s"akaing: " + bits.init.mkString(" ") :: Nil)
+        }
         case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
         case Some("help") => t(help(who))
         //> id
@@ -144,7 +157,7 @@ object Model {
   //TODO: this should exclude me ...
 //  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
 //  private def everyone = whoToStatuses.keys.toList.sorted
-  private def knows_?(who: String) = whoToStatuses.contains(who)
+  private def knows_?(who: String) = state.userToAka.contains(who)
 //  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
 
 //  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
@@ -170,11 +183,12 @@ object Model {
 //    }
 //  }
 
-  def load: mutable.Map[String, immutable.Map[String, String]] = {
-    if (!file.exists()) save(RimState(immutable.Map[String, immutable.Map[String, String]]()))
-    val raw = Json.deserialise(Source.fromFile(file).getLines().mkString("\n")).rim
-    if (raw.isEmpty) mutable.Map[String, immutable.Map[String, String]]()
-    else collection.mutable.Map(raw.toSeq: _*)
+  def load: RimState = {
+    if (!file.exists()) save(RimState(List("next", "doing", "done"), immutable.Map[String, String](), immutable.Map[String, Issue]()))
+    val raw = Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
+//    if (raw.isEmpty) mutable.Map[String, immutable.Map[String, String]]()
+//    else collection.mutable.Map(raw.toSeq: _*)
+    raw
   }
 
   private def save(state: RimState) {
