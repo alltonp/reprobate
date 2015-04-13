@@ -37,7 +37,7 @@ object Messages {
   val eh = "- eh?"
   val ok = "- ok"
 
-  def notAuthorised(who: String) = List(s"- easy ${who}, you must share before you can query, see 'rim help'") //s"OK - ${who} is ${key} ${value}"
+  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'") //s"OK - ${who} is ${key} ${value}"
 
   def help(who: String) = List(
     s"- hello ${who}, welcome to rim! - © 2015 spabloshi ltd",
@@ -115,11 +115,14 @@ object Model {
       val bits = value.split(" ")
       println(s"message in: ${bits.toList}")
 
+      if (!Model.knows_?(who)) return t(notAuthorised(who))
+
       bits.headOption match {
         case Some("help") => t(help(who))
         case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
         //>
         //<
+        //?
         case Some(x) => t(s"$eh $x" :: Nil)
         case None => t(eh :: Nil) //TODO: should be help
       }
