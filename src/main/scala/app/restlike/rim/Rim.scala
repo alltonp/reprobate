@@ -21,7 +21,7 @@ object Rim extends RestHelper {
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, r)
-    case _ ⇒ t(eh :: Nil)
+    case _ ⇒ t("sorry, it looks like your rim is badly configured" :: Nil)
   }
 }
 
@@ -151,12 +151,10 @@ object Model {
       val bits = value.split(" ")
       println(s"message in: ${bits.toList}")
 
-      //TODO: headOption TS
-//      if (value.isEmpty || bits.size == 0) return t(eh)
       bits.headOption match {
         case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
-        case Some(x) => t(s" $x" :: eh :: Nil)
-        case None => t(eh :: Nil)
+        case Some(x) => t(s"$eh $x" :: Nil)
+        case None => t(eh :: Nil) //TODO: should be help
       }
 
 //      if (operator == "+") println(s"adding: " + bits.init.mkString(" "))
