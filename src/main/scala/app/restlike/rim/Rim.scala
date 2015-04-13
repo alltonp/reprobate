@@ -117,6 +117,7 @@ object Model {
 //      if (!Model.knows_?(who)) return t(notAuthorised(who))
 
       //TODO: need to check that there are args - for pretty much all (except help)
+      //TODO: start to match on (bits.head, bits.tail)
       bits.headOption match {
         case Some("aka") => {
           //TODO: check args
