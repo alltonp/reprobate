@@ -1,22 +1,20 @@
 package app.restlike.rim
 
-import app.restlike.iam.Iam._
-import net.liftweb.http.rest.RestHelper
-import net.liftweb.http._
-import net.liftweb.common._
-import net.liftweb.json._
-import scala.collection.{immutable, mutable}
-import java.nio.file.{StandardOpenOption, Paths, Files}
-import java.nio.charset.StandardCharsets
 import java.io.File
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Paths, StandardOpenOption}
+
+import net.liftweb.common.{Full, _}
+import net.liftweb.http._
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.json._
+
+import scala.collection.{immutable, mutable}
 import scala.io.Source
-import scala.collection
-import net.liftweb.common.Full
-import scala.Some
 
 object Rim extends RestHelper {
-  import Responder._
-  import Messages._
+  import app.restlike.rim.Messages._
+  import app.restlike.rim.Responder._
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
@@ -66,7 +64,7 @@ object Messages {
 }
 
 object JsonRequestHandler extends Loggable {
-  import Responder._
+  import app.restlike.rim.Responder._
 
   def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
     try {
@@ -93,18 +91,18 @@ case class RimState(rim: immutable.Map[String, immutable.Map[String, String]])
 case class RimUpdate(value: String)
 
 object Model {
-  import Responder._
-  import Messages._
+  import app.restlike.rim.Messages._
+  import app.restlike.rim.Responder._
 
   private val file = new File("rim.json")
   private val whoToStatuses = load
 
   println("### loaded:" + whoToStatuses)
 
-  def query(who: String, key: Option[String]) = t(
-    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
-    else key.fold(help(who)){k => notAuthorised(who) }
-  )
+//  def query(who: String, key: Option[String]) = t(
+//    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
+//    else key.fold(help(who)){k => notAuthorised(who) }
+//  )
 
   //TODO:
   //(1) get aka and store in list of key-value or map!
@@ -122,9 +120,10 @@ object Model {
         case Some("aka") => t(s"akaing: " + bits.init.mkString(" ") :: Nil)
         case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
         case Some("help") => t(help(who))
-        //>
-        //<
-        //?
+        //> id
+        //< id
+        //? query
+        //- id
         case Some(x) => t(s"$eh $x" :: Nil)
         case None => t(eh :: Nil) //TODO: should be help
       }
@@ -134,42 +133,42 @@ object Model {
 //      t(value :: Nil)
     })
 
-  def delete(who: String) = {
-    safeDoUpdate(who, null, null, delete = true)
-    t("- ok, " + who + " has now left the building" :: allAboutEveryone)
-  }
+//  def delete(who: String) = {
+//    safeDoUpdate(who, null, null, delete = true)
+//    t("- ok, " + who + " has now left the building" :: allAboutEveryone)
+//  }
 
-  private def allAboutEveryone = everyone.map(w => "- " + w + " is " + allAbout(w) ).toList
-  private def allAbout(who: String) = whoToStatuses(who).keys.to.sorted.map(k => k + " " + whoToStatuses(who)(k)).mkString(", ")
+//  private def allAboutEveryone = everyone.map(w => "- " + w + " is " + allAbout(w) ).toList
+//  private def allAbout(who: String) = whoToStatuses(who).keys.to.sorted.map(k => k + " " + whoToStatuses(who)(k)).mkString(", ")
 
   //TODO: this should exclude me ...
-  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
-  private def everyone = whoToStatuses.keys.toList.sorted
+//  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
+//  private def everyone = whoToStatuses.keys.toList.sorted
   private def knows_?(who: String) = whoToStatuses.contains(who)
-  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
+//  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
 
-  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
-    def updateKey(who: String, key: String, value: String) {
-      val state = keysFor(who)
-      val newState: immutable.Map[String, String] = state.updated(key, value).toMap
-      whoToStatuses.update(who, newState)
-    }
-
-    def deleteKey(who: String, key: String) {
-      val state = keysFor(who)
-      val newState = state.-(key).toMap
-      whoToStatuses.update(who, newState)
-    }
-
-    def deleteAll(who: String) { whoToStatuses.remove(who) }
-
-    synchronized {
-      if (delete) deleteAll(who)
-      else if ("-" == value.trim) deleteKey(who, key)
-      else updateKey(who, key, value)
-      save(RimState(whoToStatuses.toMap))
-    }
-  }
+//  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
+//    def updateKey(who: String, key: String, value: String) {
+//      val state = keysFor(who)
+//      val newState: immutable.Map[String, String] = state.updated(key, value).toMap
+//      whoToStatuses.update(who, newState)
+//    }
+//
+//    def deleteKey(who: String, key: String) {
+//      val state = keysFor(who)
+//      val newState = state.-(key).toMap
+//      whoToStatuses.update(who, newState)
+//    }
+//
+//    def deleteAll(who: String) { whoToStatuses.remove(who) }
+//
+//    synchronized {
+//      if (delete) deleteAll(who)
+//      else if ("-" == value.trim) deleteKey(who, key)
+//      else updateKey(who, key, value)
+//      save(RimState(whoToStatuses.toMap))
+//    }
+//  }
 
   def load: mutable.Map[String, immutable.Map[String, String]] = {
     if (!file.exists()) save(RimState(immutable.Map[String, immutable.Map[String, String]]()))
