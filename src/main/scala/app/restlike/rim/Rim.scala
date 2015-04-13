@@ -97,25 +97,14 @@ object Messages {
       |#- set RIM_HOST (e.g. RIM_HOST="http://localhost:8473")
       |#- that's it!
       |
+      |RIM_HOST="http://localhost:8473"
+      |
       |OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
       |BASE="rim/$WHO"
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
-      |
-      |#set
-      |#if [[ $# > 1 ]]; then
-      |    REQUEST="$REQUEST/$1"
-      |    echo $REQUEST
-      |    MESSAGE="${@:2}"
-      |    RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |#get
-      |#else
-      |#   if [[ $# > 0 ]]; then
-      |#     REQUEST="$REQUEST/$1"
-      |#   fi
-      |#  RESPONSE=`wget $REQUEST`
-      |#fi
-      |
+      |MESSAGE="${@:1}"
+      |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |echo "$RESPONSE"
       |
     """.stripMargin.split("\n").toList
