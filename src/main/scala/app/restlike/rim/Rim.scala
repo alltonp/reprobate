@@ -20,14 +20,14 @@ object Rim extends RestHelper {
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rim" :: who :: "help" :: Nil, _, GetRequest) ⇒ () ⇒ t(help(who))
-    case r@Req("rim" :: who :: Nil, _, GetRequest) ⇒ () ⇒ Model.query(who, None)
+//    case r@Req("rim" :: who :: "help" :: Nil, _, GetRequest) ⇒ () ⇒ t(help(who))
+//    case r@Req("rim" :: who :: Nil, _, GetRequest) ⇒ () ⇒ Model.query(who, None)
     //TODO: experimental
-    case r@Req("rim" :: who :: "+" :: Nil, _, PostRequest) ⇒ () ⇒ t(List(s"$who wants to + " + r.json))
-    case r@Req("rim" :: who :: "-" :: Nil, _, GetRequest) ⇒ () ⇒ Model.delete(who) // a little odd that this is a GET, but we will get over it
-    case r@Req("rim" :: who :: key :: Nil, _, GetRequest) ⇒ () ⇒ Model.query(who, Some(key))
-    case r@Req("rim" :: who :: key :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, key, r)
-    //case _ ⇒ t(eh)
+    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, r)
+//    case r@Req("rim" :: who :: "-" :: Nil, _, GetRequest) ⇒ () ⇒ Model.delete(who) // a little odd that this is a GET, but we will get over it
+//    case r@Req("rim" :: who :: key :: Nil, _, GetRequest) ⇒ () ⇒ Model.query(who, Some(key))
+//    case r@Req("rim" :: who :: key :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, key, r)
+    case _ ⇒ t(eh)
   }
 }
 
@@ -93,7 +93,7 @@ object Messages {
   val install =
     """#!/bin/bash
       |#INSTALLATION:
-      |#- alias rim='{path to}/rim/sh'
+      |#- alias rim='{path to}/rim.sh'
       |#- set RIM_HOST (e.g. RIM_HOST="http://localhost:8473")
       |#- that's it!
       |
@@ -105,6 +105,7 @@ object Messages {
       |#set
       |#if [[ $# > 1 ]]; then
       |    REQUEST="$REQUEST/$1"
+      |    echo $REQUEST
       |    MESSAGE="${@:2}"
       |    RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |#get
@@ -161,11 +162,13 @@ object Model {
     else key.fold(help(who)){k => notAuthorised(who) }
   )
 
-  def update(who: String, key: String, req: Req) =
+  def update(who: String, req: Req) =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value
-      safeDoUpdate(who, key, value)
-      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
+      println(value)
+//      safeDoUpdate(who, key, value)
+//      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
+      t(value :: Nil)
     })
 
   def delete(who: String) = {

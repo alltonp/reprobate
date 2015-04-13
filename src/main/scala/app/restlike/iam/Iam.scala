@@ -94,7 +94,7 @@ object Messages {
   val install =
     """#!/bin/bash
       |#INSTALLATION:
-      |#- alias iam='{path to}/iam/sh'
+      |#- alias iam='{path to}/iam.sh'
       |#- set IAM_HOST (e.g. IAM_HOST="http://localhost:8473")
       |#- that's it!
       |
