@@ -21,7 +21,7 @@ object Rim extends RestHelper {
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, r)
-    case _ ⇒ t(eh)
+    case _ ⇒ t(eh :: Nil)
   }
 }
 
@@ -34,7 +34,7 @@ object Responder {
 }
 
 object Messages {
-  val eh = List("- eh?")
+  val eh = "- eh?"
   val ok = "ok"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, you must share before you can query, see 'rim help'") //s"OK - ${who} is ${key} ${value}"
@@ -148,17 +148,21 @@ object Model {
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
-
       val bits = value.split(" ")
-      println(bits.toList)
+      println(s"message in: ${bits.toList}")
 
-      if (value.isEmpty || bits.size == 0) return t(eh)
-      val operator = bits.head
+      //TODO: headOption TS
+//      if (value.isEmpty || bits.size == 0) return t(eh)
+      bits.headOption match {
+        case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
+        case Some(x) => t(s" $x" :: eh :: Nil)
+        case None => t(eh :: Nil)
+      }
 
-      if (operator == "+") println(s"adding: " + bits.init.mkString(" "))
-//      safeDoUpdate(who, key, value)
-//      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
-      t(value :: Nil)
+//      if (operator == "+") println(s"adding: " + bits.init.mkString(" "))
+////      safeDoUpdate(who, key, value)
+////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
+//      t(value :: Nil)
     })
 
   def delete(who: String) = {
