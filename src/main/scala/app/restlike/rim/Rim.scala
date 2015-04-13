@@ -35,7 +35,7 @@ object Responder {
 
 object Messages {
   val eh = "- eh?"
-  val ok = "ok"
+  val ok = "- ok"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, you must share before you can query, see 'rim help'") //s"OK - ${who} is ${key} ${value}"
 
@@ -145,6 +145,9 @@ object Model {
     else key.fold(help(who)){k => notAuthorised(who) }
   )
 
+  //TODO:
+  //(1) get aka and store in list of key-value or map!
+  //(2) get issues and store in map by (atomic) id
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
@@ -157,7 +160,6 @@ object Model {
         case None => t(eh :: Nil) //TODO: should be help
       }
 
-//      if (operator == "+") println(s"adding: " + bits.init.mkString(" "))
 ////      safeDoUpdate(who, key, value)
 ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
 //      t(value :: Nil)
