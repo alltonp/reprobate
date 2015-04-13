@@ -42,45 +42,7 @@ object Messages {
   def help(who: String) = List(
     s"- hello ${who}, welcome to rim! - © 2015 spabloshi ltd",
     "",
-    "- what is iam?",
-    "  probably the *only* micro-status social network!",
-    "",
-    "- right, er ... so what would i use it for?",
-    "  sharing information about yourself",
-    "  seeing what information others have shared about themselves",
-    "",
-    "- ok, how does it work?",
-    "  essentially you set micro statuses, associating a 'key' with 'value' ⇒ 'iam [doing] [task x y z]'",
-    "  where the key is 'doing' and value is 'task x y z'",
-    "  you can then query what other users are doing ⇒ 'iam doing'",
-    "  keys are completely free-range, over time domain specific keys will emerge (probably)",
-    "",
-    "- amazing, how do i get started?",
-    "  you *must* first share something about yourself e.g. 'iam doing support today'",
-    "",
-    "- after that feel free to add/update/delete/query whatever statuses your heart desires, using:",
-    "  set (or update) a status ⇒ 'iam [key] [value blah blah blah]'",
-    "  query a status ⇒ 'iam [key]'",
-    "  remove a status ⇒ 'iam' [key] -",
-    "  query all statuses ⇒ 'iam'",
-    "  remove yourself completely  ⇒ 'iam' -",
-    "",
-    "- for example:",
-    s"  is '${who}' your real name?, why not set an aka ⇒ 'iam aka [name]`",
-    "  set where you are located ⇒ 'iam in london'",
-    "  set where you are working ...",
-    "    'iam at home' or ",
-    "    'iam working from home' or",
-    "    'iam @ home'",
-    "  ... literally anything you like ...",
-    "    'iam at lunch'",
-    "    'iam on holiday until x'",
-    "    'iam feeling happy'",
-    "    'iam leaving at five'",
-    "    'iam doing T123'",
-    "    'iam pairing-with barry'",
-    "",
-    "- to display this message ⇒ 'iam help'"
+    "- to display this message ⇒ 'rim help'"
   )
 
   //TODO: parameterise the hostname and proxy bits and load from disk
@@ -91,8 +53,7 @@ object Messages {
       |#- set RIM_HOST (e.g. RIM_HOST="http://localhost:8473")
       |#- that's it!
       |
-      |RIM_HOST="http://localhost:8473"
-      |
+      |#RIM_HOST="http://localhost:8473"
       |OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
       |BASE="rim/$WHO"
@@ -155,7 +116,10 @@ object Model {
       println(s"message in: ${bits.toList}")
 
       bits.headOption match {
+        case Some("help") => t(help(who))
         case Some("+") => t(s"adding: " + bits.init.mkString(" ") :: Nil)
+        //>
+        //<
         case Some(x) => t(s"$eh $x" :: Nil)
         case None => t(eh :: Nil) //TODO: should be help
       }
