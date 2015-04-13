@@ -164,8 +164,9 @@ object Model {
 
   def update(who: String, req: Req) =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
-      val value = RimRequestJson.deserialise(pretty(render(json))).value
+      val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
       println(value)
+      if (value.startsWith("+ ")) println("adding")
 //      safeDoUpdate(who, key, value)
 //      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
       t(value :: Nil)
