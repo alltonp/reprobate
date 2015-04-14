@@ -49,8 +49,8 @@ object Messages {
     "- add issue ⇒ 'rim + [the description]'",
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
-    "- forward issue ⇒ 'rim [ref] /'",
-    "- reverse issue ⇒ 'rim [ref] \\'",
+    "- move issue forward ⇒ 'rim [ref] /'",
+    "- move issue backward ⇒ 'rim [ref] \\'",
     "- display this message ⇒ 'rim help'"
   )
 
