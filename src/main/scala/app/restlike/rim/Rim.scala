@@ -183,7 +183,22 @@ object Model {
           }
         }
 
-//        case Cmd(Some(ref), List("=")) => {
+        case Cmd(Some(ref), List("+")) => {
+          synchronized {
+            val found = state.issues.find(_.ref == ref)
+            if (found.isDefined) {
+              val updated = found.get.copy(state = Some(state.workflowStates.head))
+              val index = state.issues.indexOf(found.get)
+              state = state.copy(issues = state.issues.updated(index, updated))
+              save(state)
+              t(s"updated: $ref" :: Nil)
+            } else {
+              t(eh + " " + ref :: Nil)
+            }
+          }
+        }
+
+        //        case Cmd(Some(ref), List("=")) => {
 //          synchronized {
 //            val found = state.issues.find(_.id == id)
 //            if (found.isDefined) {
