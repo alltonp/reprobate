@@ -105,13 +105,16 @@ object Model {
 //    else key.fold(help(who)){k => notAuthorised(who) }
 //  )
 
+  case class Cmd(head: Option[String], tail:List[String])
   //TODO:
   //(1) get aka and store in list of key-value or map!
   //(2) get issues and store in map by (atomic) id
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
-      val bits = value.split(" ")
+      val bits = value.split(" ").map(_.trim)
+      val cmd = Cmd(bits.headOption, bits.tail.toList)
+
       println(s"message in: ${bits.toList}")
 
 //      if (!Model.knows_?(who)) return t(notAuthorised(who))
@@ -141,10 +144,11 @@ object Model {
           t(s"adding: " + description :: Nil)
         }
         case Some("help") => t(help(who))
-        //> id
-        //< id
+        //id >
+        //id <
         //? query
-        //- id
+        //id -
+        //id = x
         case Some(x) => t(s"$eh $x" :: Nil)
         case None => t(eh :: Nil) //TODO: should be help
       }
