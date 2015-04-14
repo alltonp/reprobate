@@ -46,8 +46,8 @@ object Messages {
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "- set an aka ⇒ 'rim aka [initials]'",
-    "- add issue ⇒ 'rim + [issue description]'",
-    "- delete issue ⇒ 'rim [id] -'",
+    "- add issue ⇒ 'rim + [the description]'",
+    "- delete issue ⇒ 'rim [ref] -'",
     "- display this message ⇒ 'rim help'"
   )
 
@@ -102,7 +102,7 @@ case class IssueRef(initial: Long) {
   }
 }
 
-case class Issue(id: String, description: String, state: Option[String])
+case class Issue(ref: String, description: String, state: Option[String])
 case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
@@ -112,7 +112,7 @@ object Model {
 
   private val file = new File("rim.json")
   private var state = load
-  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.id).max.toLong)
+  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
 
   println("### loaded:" + state)
 
@@ -154,26 +154,26 @@ object Model {
           }
         }
 
-        case Cmd(Some(id), List("-")) => {
+        case Cmd(Some(ref), List("-")) => {
           synchronized {
-            val found = state.issues.find(_.id == id)
+            val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
               state = state.copy(issues = state.issues.filterNot(i => i == found.get))
               save(state)
-              t(s"$id: deleted" :: Nil)
+              t(s"deleted: $ref" :: Nil)
             } else {
-              t(eh + " " + id :: Nil)
+              t(eh + " " + ref :: Nil)
             }
           }
         }
 
-//        case Cmd(Some(id), List("=")) => {
+//        case Cmd(Some(ref), List("=")) => {
 //          synchronized {
 //            val found = state.issues.find(_.id == id)
 //            if (found.isDefined) {
 //              state = state.copy(issues = state.issues.updated(state.issues.indexOf(found.get), found.copy(description = ))map(i => i == found.get))
 //              save(state)
-//              t(s"$id: edited" :: Nil)
+//              t(s"edited: $id" :: Nil)
 //            } else {
 //              t(eh + " " + id :: Nil)
 //            }
