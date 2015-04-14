@@ -67,7 +67,7 @@ object Messages {
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |echo "$RESPONSE"
+      |printf "\n$RESPONSE\n\n"
       |
     """).stripMargin.split("\n").toList
 }
