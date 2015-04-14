@@ -109,8 +109,8 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
   private val indexed = List(ref, description, state.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  //TODO: need to make state and option
-  def render = s"$ref: $description ${state.fold("")(":" + _)} ${by.fold("")("@" + _)}"
+  //TODO: ${state.fold("")(":" + _)}
+  def render = s"$ref: $description ${by.fold("")("@" + _)}"
 }
 
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
