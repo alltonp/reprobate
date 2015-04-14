@@ -139,21 +139,18 @@ object Model {
           synchronized {
             state = state.copy(userToAka = state.userToAka.updated(who, aka))
             save(state)
+            t(help(aka))
           }
-
-          t(help(aka))
         }
 
         case Cmd(Some("+"), args) => {
-          val ref = issueRef.next
-          val description = args.mkString(" ")
-
           synchronized {
+            val ref = issueRef.next
+            val description = args.mkString(" ")
             state = state.copy(issues = Issue(ref, description, None) :: state.issues)
             save(state)
+            t(s"$ref: $description" :: Nil)
           }
-
-          t(s"$ref: $description" :: Nil)
         }
 
         case Cmd(Some(id), List("-")) => {
