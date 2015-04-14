@@ -47,8 +47,10 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "- set an aka ⇒ 'rim aka [initials]'",
     "- add issue ⇒ 'rim + [the description]'",
-    "- delete issue ⇒ 'rim [ref] -'",
     "- list issues ⇒ 'rim ? {query}'",
+    "- delete issue ⇒ 'rim [ref] -'",
+    "- forward issue ⇒ 'rim [ref] /'",
+    "- reverse issue ⇒ 'rim [ref] \\'",
     "- display this message ⇒ 'rim help'"
   )
 
@@ -183,7 +185,7 @@ object Model {
           }
         }
 
-        case Cmd(Some(ref), List("+")) => {
+        case Cmd(Some(ref), List("/")) => {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
