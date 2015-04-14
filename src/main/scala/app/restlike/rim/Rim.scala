@@ -105,7 +105,7 @@ case class IssueRef(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, state: Option[String]) {
+case class Issue(ref: String, description: String, state: Option[String], by: Option[String]) {
   private val indexed = List(ref, description, state.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
@@ -136,7 +136,7 @@ object Model {
       val stateToIssues = state.issues.groupBy(_.state)
       val r = state.workflowStates.map(s => {
         val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-        val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
+        val issues = issuesForState.map(i => s"\n  ${i.ref}: ${i.description}").mkString
         s"$s: (${issuesForState.size})" + issues
       })
       t(r)
@@ -165,7 +165,7 @@ object Model {
           synchronized {
             val ref = issueRef.next
             val description = args.mkString(" ")
-            state = state.copy(issues = Issue(ref, description, None) :: state.issues)
+            state = state.copy(issues = Issue(ref, description, None, Some(who)) :: state.issues)
             save(state)
             t(s"$ref: $description" :: Nil)
           }
@@ -249,6 +249,7 @@ object Model {
       //id //
       //id !!
       //id = x
+      //release
       //check for dupes when adding ...
 
 ////      safeDoUpdate(who, key, value)
