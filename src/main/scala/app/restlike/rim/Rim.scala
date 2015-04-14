@@ -103,7 +103,12 @@ case class IssueRef(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, state: Option[String])
+case class Issue(ref: String, description: String, state: Option[String]) {
+  private val indexed = List(ref, description, state.getOrElse("")).mkString(" ")
+
+  def search(query: String) = indexed.contains(query)
+}
+
 case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
@@ -161,7 +166,7 @@ object Model {
         }
 
         case Cmd(Some("?"), List(query)) => {
-          val matching = state.issues.filter(i => i.description.contains(query))
+          val matching = state.issues.filter(i => i.search(query))
           t(matching.reverse.map(i => s"${i.ref}: ${i.description}"))
         }
 
