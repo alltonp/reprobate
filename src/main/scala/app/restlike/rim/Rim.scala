@@ -187,6 +187,7 @@ object Model {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
+//              val nextState = if (found.get.state.isEmpty)
               val updated = found.get.copy(state = Some(state.workflowStates.head))
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
@@ -218,8 +219,8 @@ object Model {
           println(stateToIssues)
           val r = state.workflowStates.map(s => {
             val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-            val issues = issuesForState.map(i => s"- ${i.ref}: ${i.description}").mkString("\n")
-            s"$s: (${issuesForState.size})" + issues
+            val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
+            s"> $s: (${issuesForState.size})" + issues
           })
           t(r)
         }
