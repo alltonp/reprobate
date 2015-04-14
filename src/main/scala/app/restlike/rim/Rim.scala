@@ -129,39 +129,51 @@ object Model {
 
       if (!cmd.head.getOrElse("").equals("aka") && !Model.knows_?(who)) return t(notAuthorised(who))
 
-      //TODO: need to check that there are args - for pretty much all (except help)
-      //TODO: start to match on (bits.head, bits.tail)
-      bits.headOption match {
-        case Some("aka") => {
-          //TODO: check args
-          val aka = bits.drop(1).headOption
-
+      cmd match {
+        case Cmd(Some("aka"), List(aka)) => {
           synchronized {
-            state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
+            state = state.copy(userToAka = state.userToAka.updated(who, aka))
             save(state)
           }
 
           t(s"akaing: " + aka :: Nil)
         }
-        case Some("+") => {
-          val description = bits.tail.mkString(" ")
-
-          synchronized {
-            state = state.copy(issues = Issue(issueRef.next, description, None) :: state.issues)
-            save(state)
-          }
-
-          t(s"adding: " + description :: Nil)
-        }
-        case Some("help") => t(help(who))
-        //id >
-        //id <
-        //? query
-        //id -
-        //id = x
-        case Some(x) => t(s"$eh $x" :: Nil)
-        case None => t(eh :: Nil) //TODO: should be help
+        case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
+
+      //TODO: need to check that there are args - for pretty much all (except help)
+      //TODO: start to match on (bits.head, bits.tail)
+//      bits.headOption match {
+////        case Some("aka") => {
+////          //TODO: check args
+////          val aka = bits.drop(1).headOption
+////
+////          synchronized {
+////            state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
+////            save(state)
+////          }
+////
+////          t(s"akaing: " + aka :: Nil)
+////        }
+//        case Some("+") => {
+//          val description = bits.tail.mkString(" ")
+//
+//          synchronized {
+//            state = state.copy(issues = Issue(issueRef.next, description, None) :: state.issues)
+//            save(state)
+//          }
+//
+//          t(s"adding: " + description :: Nil)
+//        }
+//        case Some("help") => t(help(who))
+//        //id >
+//        //id <
+//        //? query
+//        //id -
+//        //id = x
+//        case Some(x) => t(s"$eh $x" :: Nil)
+//        case None => t(eh :: Nil) //TODO: should be help
+//      }
 
 ////      safeDoUpdate(who, key, value)
 ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
