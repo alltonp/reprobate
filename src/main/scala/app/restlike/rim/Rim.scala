@@ -115,7 +115,7 @@ object Model {
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
 
-      println(s"message in: ${bits.toList}")
+      println(s"cmd: ${cmd}")
 
 //      if (!Model.knows_?(who)) return t(notAuthorised(who))
 
