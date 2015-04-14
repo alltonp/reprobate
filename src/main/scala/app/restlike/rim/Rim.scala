@@ -109,7 +109,7 @@ case class Issue(ref: String, description: String, state: Option[String]) {
   def search(query: String) = indexed.contains(query)
 }
 
-case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
+case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
 object Model {
@@ -198,6 +198,15 @@ object Model {
 
         case Cmd(Some("help"), Nil) => t(help(who))
 
+        case Cmd(Some(""), Nil) => {
+          val stateToIssues = state.issues.groupBy(_.state)
+          println(stateToIssues)
+          val r = state.workflowStates.map(s => {
+            s"$s: (0)"
+          })
+          t(r)
+        }
+
         //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
@@ -205,8 +214,6 @@ object Model {
       //TODO: next ..
       //id >
       //id <
-      //? query
-      //id -
       //id = x
       //check for dupes when adding ...
 
@@ -253,7 +260,10 @@ object Model {
 //  }
 
   def load: RimState = {
-    if (!file.exists()) save(RimState(List("next", "doing", "done"), immutable.Map[String, String](), List[Issue]()))
+    if (!file.exists()) {
+      val defaultStatuses = List("next", "doing", "done")
+      save(RimState(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
+    }
     val raw = Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
 //    if (raw.isEmpty) mutable.Map[String, immutable.Map[String, String]]()
 //    else collection.mutable.Map(raw.toSeq: _*)
