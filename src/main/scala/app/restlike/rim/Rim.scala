@@ -155,15 +155,14 @@ object Model {
           }
         }
 
-        case Cmd(Some("?"), args) => {
-//          synchronized {
-//            val ref = issueRef.next
-//            val description = args.mkString(" ")
-//            state = state.copy(issues = Issue(ref, description, None) :: state.issues)
-//            save(state)
-//            t(s"$ref: $description" :: Nil)
-//          }
-          t(state.issues.reverse.map(i => s"${i.ref}: ${i.description}"))
+        case Cmd(Some("?"), Nil) => {
+          val matching = state.issues
+          t(matching.reverse.map(i => s"${i.ref}: ${i.description}"))
+        }
+
+        case Cmd(Some("?"), List(query)) => {
+          val matching = state.issues.filter(i => i.description.contains(query))
+          t(matching.reverse.map(i => s"${i.ref}: ${i.description}"))
         }
 
         case Cmd(Some(ref), List("-")) => {
