@@ -130,6 +130,20 @@ object Model {
 //  )
 
   case class Cmd(head: Option[String], tail:List[String])
+
+  object Present {
+    def board = {
+      val stateToIssues = state.issues.groupBy(_.state)
+      println(stateToIssues)
+      val r = state.workflowStates.map(s => {
+        val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+        val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
+        s"> $s: (${issuesForState.size})" + issues
+      })
+      t(r)
+    }
+  }
+
   //TODO:
   //(1) get aka and store in list of key-value or map!
   //(2) get issues and store in map by (atomic) id
@@ -199,6 +213,29 @@ object Model {
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
+//              t(s"updated: $ref" :: Nil)
+              Present.board
+              //TODO: we should show the board instead ..
+            } else {
+              t(eh + " " + ref :: Nil)
+            }
+          }
+        }
+
+        case Cmd(Some(ref), List("\\")) => {
+          synchronized {
+            val found = state.issues.find(_.ref == ref)
+            if (found.isDefined) {
+              val nextState = if (found.get.state.isEmpty) state.workflowStates.head
+                              else {
+                                val currentIndex = state.workflowStates.indexOf(found.get.state.get)
+                                val newIndex = if (currentIndex <= 0) 0 else currentIndex - 1
+                                state.workflowStates(newIndex)
+                              }
+              val updated = found.get.copy(state = Some(nextState))
+              val index = state.issues.indexOf(found.get)
+              state = state.copy(issues = state.issues.updated(index, updated))
+              save(state)
               t(s"updated: $ref" :: Nil)
               //TODO: we should show the board instead ..
             } else {
@@ -222,16 +259,8 @@ object Model {
 
         case Cmd(Some("help"), Nil) => t(help(who))
 
-        case Cmd(Some(""), Nil) => {
-          val stateToIssues = state.issues.groupBy(_.state)
-          println(stateToIssues)
-          val r = state.workflowStates.map(s => {
-            val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-            val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
-            s"> $s: (${issuesForState.size})" + issues
-          })
-          t(r)
-        }
+        case Cmd(Some(""), Nil) => Present.board
+
 
         //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
