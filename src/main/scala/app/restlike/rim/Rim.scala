@@ -263,8 +263,9 @@ object Model {
       }
 
       //TODO: next ..
-      //id >
-      //id <
+      //id @ (and shoe everywhere)
+      //id //
+      //id !!
       //id = x
       //check for dupes when adding ...
 
