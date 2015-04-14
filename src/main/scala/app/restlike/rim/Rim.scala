@@ -50,7 +50,7 @@ object Messages {
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
     "- move issue forward ⇒ 'rim [ref] /'",
-    "- move issue backward ⇒ 'rim [ref] \\'",
+    "- move issue backward ⇒ 'rim [ref] !'",
     "- display this message ⇒ 'rim help'"
   )
 
@@ -213,16 +213,14 @@ object Model {
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
-//              t(s"updated: $ref" :: Nil)
               Present.board
-              //TODO: we should show the board instead ..
             } else {
               t(eh + " " + ref :: Nil)
             }
           }
         }
 
-        case Cmd(Some(ref), List("\\")) => {
+        case Cmd(Some(ref), List("!")) => {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
@@ -236,8 +234,7 @@ object Model {
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
-              t(s"updated: $ref" :: Nil)
-              //TODO: we should show the board instead ..
+              Present.board
             } else {
               t(eh + " " + ref :: Nil)
             }
