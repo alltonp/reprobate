@@ -109,6 +109,8 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
   private val indexed = List(ref, description, state.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
+  //TODO: need to make state and option
+  def render = s"$ref: $description ${state.fold("")(":" + _)} ${by.fold("")("@" + _)}"
 }
 
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
@@ -136,7 +138,7 @@ object Model {
       val stateToIssues = state.issues.groupBy(_.state)
       val r = state.workflowStates.map(s => {
         val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-        val issues = issuesForState.map(i => s"\n  ${i.ref}: ${i.description}").mkString
+        val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
         s"$s: (${issuesForState.size})" + issues
       })
       t(r)
