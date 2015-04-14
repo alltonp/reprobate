@@ -26,7 +26,7 @@ object Rim extends RestHelper {
 object Responder {
   def t(messages: List[String], downcase: Boolean = true) = {
     val response = messages.mkString("\n")
-    println("⇒ " + response)
+    println("<= " + response)
     Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
   }
 }
@@ -134,7 +134,6 @@ object Model {
   object Present {
     def board = {
       val stateToIssues = state.issues.groupBy(_.state)
-      println(stateToIssues)
       val r = state.workflowStates.map(s => {
         val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
         val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
@@ -147,7 +146,7 @@ object Model {
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
-      println(s"$who: [${value}]")
+      println(s"=> $who: [${value}]")
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
 
