@@ -50,7 +50,7 @@ object Messages {
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
     "- move issue forward ⇒ 'rim [ref] /'",
-    "- move issue backward ⇒ 'rim [ref] !'",
+    "- move issue backward ⇒ 'rim [ref] .'",
     "- display this message ⇒ 'rim help'"
   )
 
@@ -220,7 +220,7 @@ object Model {
           }
         }
 
-        case Cmd(Some(ref), List("!")) => {
+        case Cmd(Some(ref), List(".")) => {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
