@@ -144,16 +144,12 @@ object Model {
     }
   }
 
-  //TODO:
-  //(1) get aka and store in list of key-value or map!
-  //(2) get issues and store in map by (atomic) id
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
+      println(s"$who: [${value}]")
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
-
-      println(s"cmd: ${cmd}")
 
       if (!cmd.head.getOrElse("").equals("aka") && !Model.knows_?(who)) return t(notAuthorised(who))
 
