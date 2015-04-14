@@ -154,6 +154,17 @@ object Model {
           }
         }
 
+        case Cmd(Some("?"), args) => {
+//          synchronized {
+//            val ref = issueRef.next
+//            val description = args.mkString(" ")
+//            state = state.copy(issues = Issue(ref, description, None) :: state.issues)
+//            save(state)
+//            t(s"$ref: $description" :: Nil)
+//          }
+          t(state.issues.reverse.map(i => s"${i.ref}: ${i.description}"))
+        }
+
         case Cmd(Some(ref), List("-")) => {
           synchronized {
             val found = state.issues.find(_.ref == ref)
@@ -192,6 +203,7 @@ object Model {
       //? query
       //id -
       //id = x
+      //check for dupes when adding ...
 
 ////      safeDoUpdate(who, key, value)
 ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
