@@ -25,8 +25,8 @@ object Rim extends RestHelper {
 
 object Responder {
   def t(messages: List[String], downcase: Boolean = true) = {
-    val response = "⇒ " + messages.mkString("\n") + "\n"
-    println(response)
+    val response = messages.mkString("\n")
+    println("⇒ " + response)
     Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
   }
 }
@@ -44,21 +44,18 @@ object Messages {
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'") //s"OK - ${who} is ${key} ${value}"
 
   def help(who: String) = List(
-    s"- hello ${who}, welcome to rim! - © 2015 spabloshi ltd",
-    "",
+    s"- hello ${who}, welcome to rim! © 2015 spabloshi ltd",
     "- to display this message ⇒ 'rim help'"
   )
 
-  //TODO: parameterise the hostname and proxy bits and load from disk
   val install =
-    """#!/bin/bash
+    (s"""#!/bin/bash
       |#INSTALLATION:
       |#- alias rim='{path to}/rim.sh'
-      |#- set RIM_HOST (e.g. RIM_HOST="http://localhost:8473")
       |#- that's it!
       |
-      |#RIM_HOST="http://localhost:8473"
-      |OPTIONS="--timeout=15 --no-proxy -qO-"
+      |RIM_HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
+      |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
       |BASE="rim/$WHO"
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
@@ -66,7 +63,7 @@ object Messages {
       |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |echo "$RESPONSE"
       |
-    """.stripMargin.split("\n").toList
+    """).stripMargin.split("\n").toList
 }
 
 object JsonRequestHandler extends Loggable {
@@ -157,6 +154,8 @@ object Model {
           t(s"$ref: $description" :: Nil)
         }
 
+        case Cmd(Some("help"), Nil) => t(help(who))
+
         //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
@@ -164,27 +163,6 @@ object Model {
       //TODO: need to check that there are args - for pretty much all (except help)
       //TODO: start to match on (bits.head, bits.tail)
 //      bits.headOption match {
-////        case Some("aka") => {
-////          //TODO: check args
-////          val aka = bits.drop(1).headOption
-////
-////          synchronized {
-////            state = state.copy(userToAka = state.userToAka.updated(who, aka.get))
-////            save(state)
-////          }
-////
-////          t(s"akaing: " + aka :: Nil)
-////        }
-//        case Some("+") => {
-//          val description = bits.tail.mkString(" ")
-//
-//          synchronized {
-//            state = state.copy(issues = Issue(issueRef.next, description, None) :: state.issues)
-//            save(state)
-//          }
-//
-//          t(s"adding: " + description :: Nil)
-//        }
 //        case Some("help") => t(help(who))
 //        //id >
 //        //id <
