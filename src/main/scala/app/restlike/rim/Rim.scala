@@ -25,7 +25,7 @@ object Rim extends RestHelper {
 
 object Responder {
   def t(messages: List[String], downcase: Boolean = true) = {
-    val response = "=> " + messages.mkString("\n")
+    val response = "⇒ " + messages.mkString("\n") + "\n"
     println(response)
     Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
   }
@@ -145,11 +145,12 @@ object Model {
           t(s"akaing: " + aka :: Nil)
         }
 
-        case Cmd(Some("+"), description) => {
+        case Cmd(Some("+"), args) => {
           val ref = issueRef.next
+          val description = args.mkString(" ")
 
           synchronized {
-            state = state.copy(issues = Issue(ref, description.mkString(" "), None) :: state.issues)
+            state = state.copy(issues = Issue(ref, description, None) :: state.issues)
             save(state)
           }
 
