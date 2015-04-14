@@ -87,8 +87,17 @@ object RimRequestJson {
   }
 }
 
-case class Issue(description: String, state: Option[String])
-case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: immutable.Map[String, Issue])
+case class IssueRef(initial: Long) {
+  private var count = initial
+
+  def next = synchronized {
+    count += 1
+    count
+  }
+}
+
+case class Issue(id: Long, description: String, state: Option[String])
+case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
 object Model {
@@ -97,6 +106,7 @@ object Model {
 
   private val file = new File("rim.json")
   private var state = load
+  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.id).max)
 
   println("### loaded:" + state)
 
@@ -137,7 +147,7 @@ object Model {
           val description = bits.tail.mkString(" ")
 
           synchronized {
-            state = state.copy(issues = state.issues.updated("1", Issue(description, None)))
+            state = state.copy(issues = Issue(issueRef.next, description, None) :: state.issues)
             save(state)
           }
 
@@ -196,7 +206,7 @@ object Model {
 //  }
 
   def load: RimState = {
-    if (!file.exists()) save(RimState(List("next", "doing", "done"), immutable.Map[String, String](), immutable.Map[String, Issue]()))
+    if (!file.exists()) save(RimState(List("next", "doing", "done"), immutable.Map[String, String](), List[Issue]()))
     val raw = Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
 //    if (raw.isEmpty) mutable.Map[String, immutable.Map[String, String]]()
 //    else collection.mutable.Map(raw.toSeq: _*)
