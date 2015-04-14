@@ -44,8 +44,10 @@ object Messages {
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'") //s"OK - ${who} is ${key} ${value}"
 
   def help(who: String) = List(
-    s"- hello ${who}, welcome to rim! © 2015 spabloshi ltd",
-    "- to display this message ⇒ 'rim help'"
+    s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
+    "- set an aka ⇒ 'rim aka [initials]'",
+    "- add an issue ⇒ 'rim + [issue description]'",
+    "- display this message ⇒ 'rim help'"
   )
 
   val install =
@@ -139,7 +141,7 @@ object Model {
             save(state)
           }
 
-          t(s"akaing: " + aka :: Nil)
+          t(help(aka))
         }
 
         case Cmd(Some("+"), args) => {
