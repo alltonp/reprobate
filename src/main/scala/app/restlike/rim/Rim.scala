@@ -240,19 +240,6 @@ object Model {
           }
         }
 
-        //        case Cmd(Some(ref), List("=")) => {
-//          synchronized {
-//            val found = state.issues.find(_.id == id)
-//            if (found.isDefined) {
-//              state = state.copy(issues = state.issues.updated(state.issues.indexOf(found.get), found.copy(description = ))map(i => i == found.get))
-//              save(state)
-//              t(s"edited: $id" :: Nil)
-//            } else {
-//              t(eh + " " + id :: Nil)
-//            }
-//          }
-//        }
-
         case Cmd(Some("help"), Nil) => t(help(who))
 
         case Cmd(Some(""), Nil) => Present.board
