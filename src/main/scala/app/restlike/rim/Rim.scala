@@ -31,6 +31,11 @@ object Responder {
   }
 }
 
+//TODO: colourise
+//http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python?rq=1
+//http://apple.stackexchange.com/questions/74777/echo-color-coding-stopped-working-in-mountain-lion
+//http://unix.stackexchange.com/questions/43408/printing-colored-text-using-echo
+//e.g. printf '%s \e[0;31m%s\e[0m %s\n' 'Some text' 'in color' 'no more color'
 object Messages {
   val eh = "- eh?"
   val ok = "- ok"
