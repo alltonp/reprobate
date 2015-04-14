@@ -187,8 +187,13 @@ object Model {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
-//              val nextState = if (found.get.state.isEmpty)
-              val updated = found.get.copy(state = Some(state.workflowStates.head))
+              val nextState = if (found.get.state.isEmpty) state.workflowStates.head
+                              else {
+                                val currentIndex = state.workflowStates.indexOf(found.get.state.get)
+                                val newIndex = if (currentIndex >= state.workflowStates.size-1) currentIndex else currentIndex + 1
+                                state.workflowStates(newIndex)
+                              }
+              val updated = found.get.copy(state = Some(nextState))
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
