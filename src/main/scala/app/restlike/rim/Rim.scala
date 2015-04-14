@@ -193,6 +193,7 @@ object Model {
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
               t(s"updated: $ref" :: Nil)
+              //TODO: we should show the board instead ..
             } else {
               t(eh + " " + ref :: Nil)
             }
