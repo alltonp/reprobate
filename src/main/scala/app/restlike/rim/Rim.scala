@@ -162,18 +162,12 @@ object Model {
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
 
-      //TODO: need to check that there are args - for pretty much all (except help)
-      //TODO: start to match on (bits.head, bits.tail)
-//      bits.headOption match {
-//        case Some("help") => t(help(who))
-//        //id >
-//        //id <
-//        //? query
-//        //id -
-//        //id = x
-//        case Some(x) => t(s"$eh $x" :: Nil)
-//        case None => t(eh :: Nil) //TODO: should be help
-//      }
+      //TODO: next ..
+      //id >
+      //id <
+      //? query
+      //id -
+      //id = x
 
 ////      safeDoUpdate(who, key, value)
 ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
