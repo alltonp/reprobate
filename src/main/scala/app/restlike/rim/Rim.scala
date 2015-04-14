@@ -166,6 +166,19 @@ object Model {
           }
         }
 
+//        case Cmd(Some(id), List("=")) => {
+//          synchronized {
+//            val found = state.issues.find(_.id == id)
+//            if (found.isDefined) {
+//              state = state.copy(issues = state.issues.updated(state.issues.indexOf(found.get), found.copy(description = ))map(i => i == found.get))
+//              save(state)
+//              t(s"$id: edited" :: Nil)
+//            } else {
+//              t(eh + " " + id :: Nil)
+//            }
+//          }
+//        }
+
         case Cmd(Some("help"), Nil) => t(help(who))
 
         //TODO: should show the current release
