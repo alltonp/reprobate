@@ -46,7 +46,8 @@ object Messages {
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "- set an aka ⇒ 'rim aka [initials]'",
-    "- add an issue ⇒ 'rim + [issue description]'",
+    "- add issue ⇒ 'rim + [issue description]'",
+    "- delete issue ⇒ 'rim [id] -'",
     "- display this message ⇒ 'rim help'"
   )
 
