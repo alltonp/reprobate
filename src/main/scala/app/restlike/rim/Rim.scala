@@ -39,6 +39,7 @@ object Responder {
 object Messages {
   val eh = "- eh?"
   val ok = "- ok"
+//  def red(value: String) = s"\e[1;31m $value \e[0m"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'") //s"OK - ${who} is ${key} ${value}"
 
