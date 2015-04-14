@@ -137,7 +137,7 @@ object Model {
       val r = state.workflowStates.map(s => {
         val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
         val issues = issuesForState.map(i => s"\n- ${i.ref}: ${i.description}").mkString
-        s"> $s: (${issuesForState.size})" + issues
+        s"$s: (${issuesForState.size})" + issues
       })
       t(r)
     }
