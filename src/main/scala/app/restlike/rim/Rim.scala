@@ -48,6 +48,7 @@ object Messages {
     "- set an aka ⇒ 'rim aka [initials]'",
     "- add issue ⇒ 'rim + [the description]'",
     "- delete issue ⇒ 'rim [ref] -'",
+    "- list issues ⇒ 'rim ? {query}'",
     "- display this message ⇒ 'rim help'"
   )
 
