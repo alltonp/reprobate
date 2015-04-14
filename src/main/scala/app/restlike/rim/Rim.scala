@@ -97,11 +97,11 @@ case class IssueRef(initial: Long) {
 
   def next = synchronized {
     count += 1
-    count
+    s"$count"
   }
 }
 
-case class Issue(id: Long, description: String, state: Option[String])
+case class Issue(id: String, description: String, state: Option[String])
 case class RimState(states: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
@@ -111,7 +111,7 @@ object Model {
 
   private val file = new File("rim.json")
   private var state = load
-  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.id).max)
+  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.id).max.toLong)
 
   println("### loaded:" + state)
 
@@ -154,6 +154,19 @@ object Model {
           }
 
           t(s"$ref: $description" :: Nil)
+        }
+
+        case Cmd(Some(id), List("-")) => {
+          synchronized {
+            val found = state.issues.find(_.id == id)
+            if (found.isDefined) {
+              state = state.copy(issues = state.issues.filterNot(i => i == found.get))
+              save(state)
+              t(s"$id: deleted" :: Nil)
+            } else {
+              t(eh + " " + id :: Nil)
+            }
+          }
         }
 
         case Cmd(Some("help"), Nil) => t(help(who))
