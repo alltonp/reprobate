@@ -202,7 +202,8 @@ object Model {
           val stateToIssues = state.issues.groupBy(_.state)
           println(stateToIssues)
           val r = state.workflowStates.map(s => {
-            s"$s: (0)"
+            val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+            s"$s: (${issuesForState.size})"
           })
           t(r)
         }
