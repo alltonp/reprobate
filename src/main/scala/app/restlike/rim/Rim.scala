@@ -144,6 +144,15 @@ object Model {
 
           t(s"akaing: " + aka :: Nil)
         }
+        case Cmd(Some("+"), description) => {
+          synchronized {
+            state = state.copy(issues = Issue(issueRef.next, description.mkString(" "), None) :: state.issues)
+            save(state)
+          }
+
+          t(s"adding: " + description :: Nil)        }
+
+        //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
 
