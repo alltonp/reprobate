@@ -224,7 +224,7 @@ object Model {
           synchronized {
             val found = state.issues.find(_.ref == ref)
             if (found.isDefined) {
-              val nextState = if (found.get.state.isEmpty) Some(state.workflowStates.head)
+              val nextState = if (found.get.state.isEmpty) None
                               else {
                                 val currentIndex = state.workflowStates.indexOf(found.get.state.get)
                                 if (currentIndex <= 0) None else Some(state.workflowStates(currentIndex - 1))
