@@ -25,6 +25,7 @@ object Messages {
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
     "- move issue forward ⇒ 'rim [ref] /'",
+    "- move issue to end ⇒ 'rim [ref] //'",
     "- move issue backward ⇒ 'rim [ref] .'",
     "- own issue ⇒ 'rim [ref] @'",
     "- display this message ⇒ 'rim help'"
@@ -83,6 +84,7 @@ object Commander {
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
+      case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentState)
       case In(Some("help"), Nil) => ooHelp(who)
@@ -129,6 +131,16 @@ object Commander {
         val newIndex = if (currentIndex >= currentState.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentState.workflowStates(newIndex)
       }
+      val updated = found.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found)
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Presentation.board(updatedState), Some(updatedState))
+    }
+  }
+
+  private def onFastForwardIssue(who: String, ref: String, currentState: Model) = {
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newStatus = currentState.workflowStates.reverse.head
       val updated = found.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
