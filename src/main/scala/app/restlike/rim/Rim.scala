@@ -224,10 +224,9 @@ object Controller {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
       println(s"=> $who: [${value}]")
       val bits = value.split(" ").map(_.trim)
-      val cmd = In(bits.headOption, bits.tail.toList)
 
       synchronized {
-        val out = Commander.process(cmd, who, model)
+        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model)
         out.updatedState.map(s => {
           model = s
           Persistence.save(model)
