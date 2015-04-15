@@ -122,30 +122,24 @@ object Commander {
   }
 
   private def onForwardIssue(who: String, ref: String, currentState: Model) = {
-    val found = currentState.findIssue(ref)
-    if (found.isDefined) {
-      val newStatus = if (found.get.status.isEmpty) currentState.workflowStates.head
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newStatus = if (found.status.isEmpty) currentState.workflowStates.head
       else {
-        val currentIndex = currentState.workflowStates.indexOf(found.get.status.get)
+        val currentIndex = currentState.workflowStates.indexOf(found.status.get)
         val newIndex = if (currentIndex >= currentState.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentState.workflowStates(newIndex)
       }
-      val updated = found.get.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
-      val index = currentState.issues.indexOf(found.get)
+      val updated = found.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
-    } else {
-      Out(Messages.notFound(ref), None)
     }
   }
 
   private def onRemoveIssue(ref: String, currentState: Model) = {
-    val found = currentState.findIssue(ref)
-    if (found.isDefined) {
-      val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
-      Out(s"- ${found.get.render}" :: Nil, Some(updatedState))
-    } else {
-      Out(Messages.notFound(ref), None)
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found))
+      Out(s"- ${found.render}" :: Nil, Some(updatedState))
     }
   }
 
