@@ -37,8 +37,8 @@ object Messages {
     " - return to backlog ⇒ 'rim [ref] ..'",
     "",
     "other:",
-    " - set an aka ⇒ 'rim aka [initials]'",
-    " - display this message ⇒ 'rim help'"
+    " - set aka ⇒ 'rim aka [initials]'",
+    " - get show ⇒ 'rim help'"
   )
 
   val install =
@@ -77,6 +77,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 }
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue]) {
+  def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
 }
 
@@ -91,7 +92,7 @@ object Commander {
     cmd match {
       case In(Some(""), Nil) => onShowBoard(currentState)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
-      case In(Some("help"), Nil) => onHelp(who)
+      case In(Some("help"), Nil) => onHelp(who, currentState)
       case In(Some("+"), args) => onAddIssue(args, currentState)
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
@@ -111,7 +112,7 @@ object Commander {
 
   private def onShowBoard(currentState: Model) = Out(Presentation.board(currentState), None)
 
-  private def onHelp(who: String) = Out(Messages.help(who), None)
+  private def onHelp(who: String, currentState: Model) = Out(Messages.help(currentState.aka(who)), None)
 
   private def onOwnIssue(who: String, ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
