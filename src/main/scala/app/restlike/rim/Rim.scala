@@ -78,7 +78,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 
 case class In(head: Option[String], tail:List[String])
-case class Out(response: Box[LiftResponse], newState: Option[RimState])
+case class Out(response: Box[LiftResponse], updatedState: Option[RimState])
 
 object Commander {
 
@@ -113,8 +113,8 @@ object Commander {
     if (found.isDefined) {
       val updated = found.get.copy(by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(t(s"@ ${found.get.render}" :: Nil), Some(newState))
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(t(s"@ ${found.get.render}" :: Nil), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -130,8 +130,8 @@ object Commander {
       }
       val updated = found.get.copy(status = newStatus, by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(Present.board(newState), Some(newState))
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Present.board(updatedState), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -148,8 +148,8 @@ object Commander {
       }
       val updated = found.get.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(Present.board(newState), Some(newState))
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Present.board(updatedState), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -158,8 +158,8 @@ object Commander {
   private def onRemoveIssue(ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      val newState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
-      Out(t(s"- ${found.get.render}" :: Nil), Some(newState))
+      val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
+      Out(t(s"- ${found.get.render}" :: Nil), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -185,13 +185,13 @@ object Commander {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
-    val newState = currentState.copy(issues = created :: currentState.issues)
-    Out(t(s"+ ${created.render}" :: Nil), Some(newState))
+    val updatedState = currentState.copy(issues = created :: currentState.issues)
+    Out(t(s"+ ${created.render}" :: Nil), Some(updatedState))
   }
 
   private def onAka(who: String, aka: String, currentState: RimState) = {
-    val newState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
-    Out(t(Messages.help(aka.toUpperCase)), Some(newState))
+    val updatedState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
+    Out(t(Messages.help(aka.toUpperCase)), Some(updatedState))
   }
 }
 
@@ -211,22 +211,17 @@ object Controller {
   private var state = Persistence.load
   val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
 
-  println("### loaded:" + state)
-
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
       println(s"=> $who: [${value}]")
-
       val bits = value.split(" ").map(_.trim)
       val cmd = In(bits.headOption, bits.tail.toList)
 
-      //TODO: feels like this should take the state and return an update state (option) and presentation
-      //TODO: we can just sycronise around the whole thing
       synchronized {
         val out = Commander.process(cmd, who, state)
-        out.newState.map(ns => {
-          state = ns
+        out.updatedState.map(s => {
+          state = s
           Persistence.save(state)
         })
         out.response
