@@ -101,17 +101,12 @@ object Commander {
     }
   }
 
-  private def doUnknownCommand(head: Option[String], tail: List[String]) = {
+  private def doUnknownCommand(head: Option[String], tail: List[String]) =
     Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
-  }
 
-  private def doShowBoard(currentState: RimState) = {
-    Out(Present.board(currentState), None)
-  }
+  private def doShowBoard(currentState: RimState) = Out(Present.board(currentState), None)
 
-  private def doHelp(who: String) = {
-    Out(t(Messages.help(who)), None)
-  }
+  private def doHelp(who: String) = Out(t(Messages.help(who)), None)
 
   private def doOwnIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
