@@ -14,7 +14,6 @@ import scala.io.Source
 
 object Messages {
   val eh = "- eh?"
-  val ok = "- ok"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
 
