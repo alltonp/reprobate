@@ -65,7 +65,10 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
+case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue]) {
+  def findIssue(ref: String) = issues.find(_.ref == ref)
+}
+
 case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String], updatedState: Option[Model])
 
@@ -96,7 +99,7 @@ object Commander {
   private def ooHelp(who: String) = Out(Messages.help(who), None)
 
   private def onOwnIssue(who: String, ref: String, currentState: Model) = {
-    currentState.issues.find(_.ref == ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updated = found.copy(by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
@@ -105,7 +108,7 @@ object Commander {
   }
 
   private def onBackwardIssue(who: String, ref: String, currentState: Model) = {
-    val found = currentState.issues.find(_.ref == ref)
+    val found = currentState.findIssue(ref)
     if (found.isDefined) {
       val newStatus = if (found.get.status.isEmpty) None
       else {
@@ -122,7 +125,7 @@ object Commander {
 }
 
   private def onForwardIssue(who: String, ref: String, currentState: Model) = {
-    val found = currentState.issues.find(_.ref == ref)
+    val found = currentState.findIssue(ref)
     if (found.isDefined) {
       val newStatus = if (found.get.status.isEmpty) currentState.workflowStates.head
       else {
@@ -140,7 +143,7 @@ object Commander {
   }
 
   private def onRemoveIssue(ref: String, currentState: Model) = {
-    val found = currentState.issues.find(_.ref == ref)
+    val found = currentState.findIssue(ref)
     if (found.isDefined) {
       val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
       Out(s"- ${found.get.render}" :: Nil, Some(updatedState))
@@ -149,6 +152,7 @@ object Commander {
     }
   }
 
+  //TODO: add search to Model
   private def onQueryIssues(currentState: Model, query: Option[String]) = {
     val matching = query.fold(currentState.issues)(q => currentState.issues.filter(i => i.search(q)))
     val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
