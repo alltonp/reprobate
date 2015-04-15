@@ -21,13 +21,14 @@ object Messages {
 
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
+    "- show the release board ⇒ 'rim'",
     "- set an aka ⇒ 'rim aka [initials]'",
     "- add issue ⇒ 'rim + [the description]'",
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
     "- edit issue ⇒ 'rim [ref] ='",
     "- move issue forward ⇒ 'rim [ref] /'",
-    "- move issue to end ⇒ 'rim [ref] //'",
+    "- move issue to end state ⇒ 'rim [ref] //'",
     "- move issue backward ⇒ 'rim [ref] .'",
     "- move issue to backlog ⇒ 'rim [ref] ..'",
     "- own issue ⇒ 'rim [ref] @'",
@@ -82,7 +83,9 @@ object Commander {
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
+      case In(Some(""), Nil) => onShowBoard(currentState)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
+      case In(Some("help"), Nil) => ooHelp(who)
       case In(Some("+"), args) => onAddIssue(args, currentState)
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
@@ -93,8 +96,6 @@ object Commander {
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentState)
-      case In(Some("help"), Nil) => ooHelp(who)
-      case In(Some(""), Nil) => onShowBoard(currentState)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
