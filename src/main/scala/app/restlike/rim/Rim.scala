@@ -230,7 +230,7 @@ object Model {
                                 val currentIndex = state.workflowStates.indexOf(found.get.state.get)
                                 if (currentIndex <= 0) None else Some(state.workflowStates(currentIndex - 1))
                               }
-              val updated = found.get.copy(state = nextState)
+              val updated = found.get.copy(state = nextState, by = Some(state.userToAka(who)))
               val index = state.issues.indexOf(found.get)
               state = state.copy(issues = state.issues.updated(index, updated))
               save(state)
