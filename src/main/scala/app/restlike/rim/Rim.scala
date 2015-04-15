@@ -16,6 +16,7 @@ object Messages {
   val eh = "- eh?"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
+  def notFound(ref: String) = List(s"issue not found: $ref")
 
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
@@ -102,7 +103,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(s"@ ${found.get.render}" :: Nil, Some(updatedState))
     } else {
-      Out(Messages.eh + " " + ref :: Nil, None)
+      Out(Messages.notFound(ref), None)
     }
   }
 
@@ -119,7 +120,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
     } else {
-      Out(Messages.eh + " " + ref :: Nil, None)
+      Out(Messages.notFound(ref), None)
     }
 }
 
@@ -137,7 +138,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
     } else {
-      Out(Messages.eh + " " + ref :: Nil, None)
+      Out(Messages.notFound(ref), None)
     }
   }
 
@@ -147,7 +148,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
       Out(s"- ${found.get.render}" :: Nil, Some(updatedState))
     } else {
-      Out(Messages.eh + " " + ref :: Nil, None)
+      Out(Messages.notFound(ref), None)
     }
   }
 
