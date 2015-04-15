@@ -16,7 +16,8 @@ object Messages {
   val eh = "- eh?"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
-  def notFound(ref: String) = List(s"issue not found: $ref")
+  def notFound(ref: String) = problem("issue not found: $ref")
+  def problem(message: String) = List(s"problem - $message")
 
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
@@ -189,14 +190,15 @@ object Commander {
   }
 
   private def onAddIssue(args: List[String], currentState: Model) = {
-    val ref = Controller.issueRef.next
+    val newRef = Controller.issueRef.next
     val description = args.mkString(" ")
-    val created = Issue(ref, description, None, None)
+    val created = Issue(newRef, description, None, None)
     val updatedState = currentState.copy(issues = created :: currentState.issues)
     Out(s"+ ${created.render}" :: Nil, Some(updatedState))
   }
 
-  private def onAka(who: String, aka: String, currentState: Model) = {
+  private def onAka(who: String, aka: String, currentState: Model): Out = {
+    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
     val updatedState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
     Out(Messages.help(aka.toUpperCase), Some(updatedState))
   }
@@ -236,6 +238,7 @@ object Controller {
       //TODO:
       //release
       //check for dupes when adding ...
+      //log all commands somewhere
     })
 
   //TODO: this should exclude me ...
