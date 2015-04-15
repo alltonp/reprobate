@@ -24,7 +24,7 @@ object Rim extends RestHelper {
 }
 
 object Responder {
-  def t(messages: List[String], downcase: Boolean = true) = {
+  def t(messages: List[String], downcase: Boolean = false) = {
     val response = messages.mkString("\n")
     println("<= " + response)
     Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
@@ -114,7 +114,7 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 
   def search(query: String) = indexed.contains(query)
   //TODO: ${state.fold("")(":" + _)}
-  def render = s"$ref: $description ${by.fold("")("@" + _)}"
+  def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
@@ -151,7 +151,7 @@ object Model {
 
   def update(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
-      val value = RimRequestJson.deserialise(pretty(render(json))).value.trim
+      val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
       println(s"=> $who: [${value}]")
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
@@ -161,9 +161,9 @@ object Model {
       cmd match {
         case Cmd(Some("aka"), List(aka)) => {
           synchronized {
-            state = state.copy(userToAka = state.userToAka.updated(who, aka))
+            state = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
             save(state)
-            t(help(aka))
+            t(help(aka.toUpperCase()))
           }
         }
 
@@ -171,7 +171,7 @@ object Model {
           synchronized {
             val ref = issueRef.next
             val description = args.mkString(" ")
-            state = state.copy(issues = Issue(ref, description, None, Some(who)) :: state.issues)
+            state = state.copy(issues = Issue(ref, description, None, None) :: state.issues)
             save(state)
             t(s"$ref: $description" :: Nil)
           }
