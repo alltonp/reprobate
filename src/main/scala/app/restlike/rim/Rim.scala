@@ -96,14 +96,11 @@ object Commander {
   private def ooHelp(who: String) = Out(Messages.help(who), None)
 
   private def onOwnIssue(who: String, ref: String, currentState: Model) = {
-    val found = currentState.issues.find(_.ref == ref)
-    if (found.isDefined) {
-      val updated = found.get.copy(by = Some(currentState.userToAka(who)))
-      val index = currentState.issues.indexOf(found.get)
+    currentState.issues.find(_.ref == ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val updated = found.copy(by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(s"@ ${found.get.render}" :: Nil, Some(updatedState))
-    } else {
-      Out(Messages.notFound(ref), None)
+      Out(s"@ ${found.render}" :: Nil, Some(updatedState))
     }
   }
 
