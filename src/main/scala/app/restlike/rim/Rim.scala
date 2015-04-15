@@ -97,7 +97,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
-      case In(Some(ref), args) if !args.isEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentState)
+      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
