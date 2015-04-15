@@ -87,28 +87,28 @@ object Commander {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)), None)
 
     cmd match {
-      case In(Some("aka"), List(aka)) => doAka(who, aka, currentState)
-      case In(Some("+"), args) => doAddIssue(args, currentState)
-      case In(Some("?"), Nil) => doQuery(currentState)
-      case In(Some("?"), List(query)) => doQueryWithString(currentState, query)
-      case In(Some(ref), List("-")) => doRemoveIssue(ref, currentState)
-      case In(Some(ref), List("/")) => doForwardIssue(who, ref, currentState)
-      case In(Some(ref), List(".")) => doBackwardIssue(who, ref, currentState)
-      case In(Some(ref), List("@")) => doOwnIssue(who, ref, currentState)
-      case In(Some("help"), Nil) => doHelp(who)
-      case In(Some(""), Nil) => doShowBoard(currentState)
-      case In(head, tail) => doUnknownCommand(head, tail)
+      case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
+      case In(Some("+"), args) => onAddIssue(args, currentState)
+      case In(Some("?"), Nil) => onQueryIssues(currentState)
+      case In(Some("?"), List(query)) => onQueryIssuesWithString(currentState, query)
+      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
+      case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
+      case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
+      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentState)
+      case In(Some("help"), Nil) => ooHelp(who)
+      case In(Some(""), Nil) => onShowBoard(currentState)
+      case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
 
-  private def doUnknownCommand(head: Option[String], tail: List[String]) =
+  private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
 
-  private def doShowBoard(currentState: RimState) = Out(Present.board(currentState), None)
+  private def onShowBoard(currentState: RimState) = Out(Present.board(currentState), None)
 
-  private def doHelp(who: String) = Out(t(Messages.help(who)), None)
+  private def ooHelp(who: String) = Out(t(Messages.help(who)), None)
 
-  private def doOwnIssue(who: String, ref: String, currentState: RimState) = {
+  private def onOwnIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val updated = found.get.copy(by = Some(currentState.userToAka(who)))
@@ -120,7 +120,7 @@ object Commander {
     }
   }
 
-  private def doBackwardIssue(who: String, ref: String, currentState: RimState) = {
+  private def onBackwardIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val nextState = if (found.get.state.isEmpty) None
@@ -137,7 +137,7 @@ object Commander {
     }
 }
 
-  private def doForwardIssue(who: String, ref: String, currentState: RimState) = {
+  private def onForwardIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val nextState = if (found.get.state.isEmpty) currentState.workflowStates.head
@@ -155,7 +155,7 @@ object Commander {
     }
   }
 
-  private def doRemoveIssue(ref: String, currentState: RimState) = {
+  private def onRemoveIssue(ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val newState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
@@ -166,7 +166,7 @@ object Commander {
   }
 
   //TODO: combine
-  private def doQueryWithString(currentState: RimState, query: String) = {
+  private def onQueryIssuesWithString(currentState: RimState, query: String) = {
     val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
@@ -174,14 +174,14 @@ object Commander {
   }
 
   //TODO: combine
-  private def doQuery(currentState: RimState) = {
+  private def onQueryIssues(currentState: RimState) = {
     val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
     Out(t(result), None)
   }
 
-  private def doAddIssue(args: List[String], currentState: RimState) = {
+  private def onAddIssue(args: List[String], currentState: RimState) = {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
@@ -189,7 +189,7 @@ object Commander {
     Out(t(s"+ ${created.render}" :: Nil), Some(newState))
   }
 
-  private def doAka(who: String, aka: String, currentState: RimState) = {
+  private def onAka(who: String, aka: String, currentState: RimState) = {
     val newState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
     Out(t(Messages.help(aka.toUpperCase)), Some(newState))
   }
