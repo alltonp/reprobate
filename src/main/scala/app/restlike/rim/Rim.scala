@@ -85,114 +85,158 @@ object Commander {
 
     cmd match {
       case Cmd(Some("aka"), List(aka)) => {
-        synchronized {
-          Controller.state = Controller.state.copy(userToAka = Controller.state.userToAka.updated(who, aka.toUpperCase))
-          Persistence.save(Controller.state)
-          t(Messages.help(aka.toUpperCase))
-        }
+        doAka(who, aka)
       }
 
       case Cmd(Some("+"), args) => {
-        synchronized {
-          val ref = Controller.issueRef.next
-          val description = args.mkString(" ")
-          val created = Issue(ref, description, None, None)
-          Controller.state = Controller.state.copy(issues = created :: Controller.state.issues)
-          Persistence.save(Controller.state)
-          t(s"+ ${created.render}" :: Nil)
-        }
+        doAddIssue(args)
       }
 
       case Cmd(Some("?"), Nil) => {
-        val matching = Controller.state.issues
-        val result = if (matching.isEmpty) "no issues found" :: Nil
-        else matching.reverse.map(i => i.render)
-        t(result)
+        doQuery
       }
 
       case Cmd(Some("?"), List(query)) => {
-        val matching = Controller.state.issues.filter(i => i.search(query))
-        val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
-        else matching.reverse.map(i => i.render)
-        t(result)
+        doQueryWithString(query)
       }
 
       case Cmd(Some(ref), List("-")) => {
-        synchronized {
-          val found = Controller.state.issues.find(_.ref == ref)
-          if (found.isDefined) {
-            Controller.state = Controller.state.copy(issues = Controller.state.issues.filterNot(i => i == found.get))
-            Persistence.save(Controller.state)
-            t(s"- ${found.get.render}" :: Nil)
-          } else {
-            t(Messages.eh + " " + ref :: Nil)
-          }
-        }
+        doRemoveIssue(ref)
       }
 
       case Cmd(Some(ref), List("/")) => {
-        synchronized {
-          val found = Controller.state.issues.find(_.ref == ref)
-          if (found.isDefined) {
-            val nextState = if (found.get.state.isEmpty) Controller.state.workflowStates.head
-            else {
-              val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
-              val newIndex = if (currentIndex >= Controller.state.workflowStates.size-1) currentIndex else currentIndex + 1
-              Controller.state.workflowStates(newIndex)
-            }
-            val updated = found.get.copy(state = Some(nextState), by = Some(Controller.state.userToAka(who)))
-            val index = Controller.state.issues.indexOf(found.get)
-            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-            Persistence.save(Controller.state)
-            Present.board(Controller.state)
-          } else {
-            t(Messages.eh + " " + ref :: Nil)
-          }
-        }
+        doForwardIssue(who, ref)
       }
 
       case Cmd(Some(ref), List(".")) => {
-        synchronized {
-          val found = Controller.state.issues.find(_.ref == ref)
-          if (found.isDefined) {
-            val nextState = if (found.get.state.isEmpty) None
-            else {
-              val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
-              if (currentIndex <= 0) None else Some(Controller.state.workflowStates(currentIndex - 1))
-            }
-            val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
-            val index = Controller.state.issues.indexOf(found.get)
-            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-            Persistence.save(Controller.state)
-            Present.board(Controller.state)
-          } else {
-            t(Messages.eh + " " + ref :: Nil)
-          }
-        }
+        doBackwardIssue(who, ref)
       }
 
       case Cmd(Some(ref), List("@")) => {
-        synchronized {
-          val found = Controller.state.issues.find(_.ref == ref)
-          if (found.isDefined) {
-            val updated = found.get.copy(by = Some(Controller.state.userToAka(who)))
-            val index = Controller.state.issues.indexOf(found.get)
-            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-            Persistence.save(Controller.state)
-            t(s"@ ${found.get.render}" :: Nil)
-          } else {
-            t(Messages.eh + " " + ref :: Nil)
-          }
-        }
+        doOwnIssue(who, ref)
       }
 
-      case Cmd(Some("help"), Nil) => t(Messages.help(who))
+      case Cmd(Some("help"), Nil) => doHelp(who)
 
-      case Cmd(Some(""), Nil) => Present.board(Controller.state)
+      case Cmd(Some(""), Nil) => doShowBoard
 
-      case Cmd(head, tail) => t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
+      case Cmd(head, tail) => doUnknownCommand(head, tail)
     }
 
+  }
+
+  def doUnknownCommand(head: Option[String], tail: List[String]): Full[PlainTextResponse] = {
+    t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
+  }
+
+  def doShowBoard: Full[PlainTextResponse] = {
+    Present.board(Controller.state)
+  }
+
+  def doHelp(who: String): Full[PlainTextResponse] = {
+    t(Messages.help(who))
+  }
+
+  def doOwnIssue(who: String, ref: String): Full[PlainTextResponse] = {
+    synchronized {
+      val found = Controller.state.issues.find(_.ref == ref)
+      if (found.isDefined) {
+        val updated = found.get.copy(by = Some(Controller.state.userToAka(who)))
+        val index = Controller.state.issues.indexOf(found.get)
+        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+        Persistence.save(Controller.state)
+        t(s"@ ${found.get.render}" :: Nil)
+      } else {
+        t(Messages.eh + " " + ref :: Nil)
+      }
+    }
+  }
+
+  def doBackwardIssue(who: String, ref: String): Full[PlainTextResponse] = {
+    synchronized {
+      val found = Controller.state.issues.find(_.ref == ref)
+      if (found.isDefined) {
+        val nextState = if (found.get.state.isEmpty) None
+        else {
+          val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+          if (currentIndex <= 0) None else Some(Controller.state.workflowStates(currentIndex - 1))
+        }
+        val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
+        val index = Controller.state.issues.indexOf(found.get)
+        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+        Persistence.save(Controller.state)
+        Present.board(Controller.state)
+      } else {
+        t(Messages.eh + " " + ref :: Nil)
+      }
+    }
+  }
+
+  def doForwardIssue(who: String, ref: String): Full[PlainTextResponse] = {
+    synchronized {
+      val found = Controller.state.issues.find(_.ref == ref)
+      if (found.isDefined) {
+        val nextState = if (found.get.state.isEmpty) Controller.state.workflowStates.head
+        else {
+          val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+          val newIndex = if (currentIndex >= Controller.state.workflowStates.size - 1) currentIndex else currentIndex + 1
+          Controller.state.workflowStates(newIndex)
+        }
+        val updated = found.get.copy(state = Some(nextState), by = Some(Controller.state.userToAka(who)))
+        val index = Controller.state.issues.indexOf(found.get)
+        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+        Persistence.save(Controller.state)
+        Present.board(Controller.state)
+      } else {
+        t(Messages.eh + " " + ref :: Nil)
+      }
+    }
+  }
+
+  def doRemoveIssue(ref: String): Full[PlainTextResponse] = {
+    synchronized {
+      val found = Controller.state.issues.find(_.ref == ref)
+      if (found.isDefined) {
+        Controller.state = Controller.state.copy(issues = Controller.state.issues.filterNot(i => i == found.get))
+        Persistence.save(Controller.state)
+        t(s"- ${found.get.render}" :: Nil)
+      } else {
+        t(Messages.eh + " " + ref :: Nil)
+      }
+    }
+  }
+
+  def doQueryWithString(query: String): Full[PlainTextResponse] = {
+    val matching = Controller.state.issues.filter(i => i.search(query))
+    val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
+    else matching.reverse.map(i => i.render)
+    t(result)
+  }
+
+  def doQuery: Full[PlainTextResponse] = {
+    val matching = Controller.state.issues
+    val result = if (matching.isEmpty) "no issues found" :: Nil
+    else matching.reverse.map(i => i.render)
+    t(result)
+  }
+
+  def doAddIssue(args: List[String]): Full[PlainTextResponse] = {
+    synchronized {
+      val ref = Controller.issueRef.next
+      val description = args.mkString(" ")
+      val created = Issue(ref, description, None, None)
+      Controller.state = Controller.state.copy(issues = created :: Controller.state.issues)
+      Persistence.save(Controller.state)
+      t(s"+ ${created.render}" :: Nil)
+    }
+  }
+
+  def doAka(who: String, aka: String): Full[PlainTextResponse] = {
+    synchronized {
+      Controller.state = Controller.state.copy(userToAka = Controller.state.userToAka.updated(who, aka.toUpperCase))
+      Persistence.save(Controller.state)
+      t(Messages.help(aka.toUpperCase))
+    }
   }
 }
 
