@@ -85,6 +85,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
+      case i@In(Some(ref), "=" :: List(args)) => onEditIssue(ref, i.tail, currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
@@ -161,6 +162,17 @@ object Commander {
     }
   }
 
+  private def onEditIssue(ref: String, args: List[String], currentState: Model) = {
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newDescription = args.drop(1).mkString(" ")
+      println(newDescription)
+      val updated = found.copy(description = newDescription)
+      val index = currentState.issues.indexOf(found)
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(s"= ${updated.render}" :: Nil, Some(updatedState))
+    }
+  }
+
   private def onRemoveIssue(ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found))
@@ -221,9 +233,7 @@ object Controller {
         t(out.messages)
       }
 
-      //TODO: next ..
-      //id //
-      //id !!
+      //TODO:
       //id = x
       //release
       //check for dupes when adding ...
