@@ -55,6 +55,7 @@ object Messages {
     "- delete issue ⇒ 'rim [ref] -'",
     "- move issue forward ⇒ 'rim [ref] /'",
     "- move issue backward ⇒ 'rim [ref] .'",
+    "- own issue ⇒ 'rim [ref] @'",
     "- display this message ⇒ 'rim help'"
   )
 
@@ -246,10 +247,24 @@ object Model {
           }
         }
 
+        case Cmd(Some(ref), List("@")) => {
+          synchronized {
+            val found = state.issues.find(_.ref == ref)
+            if (found.isDefined) {
+              val updated = found.get.copy(by = Some(state.userToAka(who)))
+              val index = state.issues.indexOf(found.get)
+              state = state.copy(issues = state.issues.updated(index, updated))
+              save(state)
+              t(s"@ ${found.get.render}" :: Nil)
+            } else {
+              t(eh + " " + ref :: Nil)
+            }
+          }
+        }
+
         case Cmd(Some("help"), Nil) => t(help(who))
 
         case Cmd(Some(""), Nil) => Present.board
-
 
         //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
