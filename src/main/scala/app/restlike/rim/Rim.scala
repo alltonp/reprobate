@@ -76,8 +76,8 @@ object Commander {
     cmd match {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
       case In(Some("+"), args) => onAddIssue(args, currentState)
-      case In(Some("?"), Nil) => onQueryIssues(currentState)
-      case In(Some("?"), List(query)) => onQueryIssuesWithString(currentState, query)
+      case In(Some("?"), Nil) => onQueryIssues(currentState, None)
+      case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
@@ -152,21 +152,20 @@ object Commander {
     }
   }
 
-  //TODO: combine
-  private def onQueryIssuesWithString(currentState: Model, query: String) = {
-    val matching = currentState.issues.filter(i => i.search(query))
-    val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
+  private def onQueryIssues(currentState: Model, query: Option[String]) = {
+    val matching = query.fold(currentState.issues)(q => currentState.issues.filter(i => i.search(q)))
+    val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
     else matching.reverse.map(i => i.render)
     Out(result, None)
   }
 
-  //TODO: combine
-  private def onQueryIssues(currentState: Model) = {
-    val matching = currentState.issues
-    val result = if (matching.isEmpty) "no issues found" :: Nil
-    else matching.reverse.map(i => i.render)
-    Out(result, None)
-  }
+//  //TODO: combine
+//  private def onQueryIssues(currentState: Model) = {
+//    val matching = currentState.issues
+//    val result = if (matching.isEmpty) "no issues found" :: Nil
+//    else matching.reverse.map(i => i.render)
+//    Out(result, None)
+//  }
 
   private def onAddIssue(args: List[String], currentState: Model) = {
     val ref = Controller.issueRef.next
