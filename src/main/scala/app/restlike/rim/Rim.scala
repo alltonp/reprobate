@@ -4,31 +4,12 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths, StandardOpenOption}
 
-import net.liftweb.common.{Full, _}
+import net.liftweb.common._
 import net.liftweb.http._
-import net.liftweb.http.rest.RestHelper
 import net.liftweb.json._
 
 import scala.collection.immutable
 import scala.io.Source
-
-object Rim extends RestHelper {
-  import app.restlike.rim.Messages._
-  import app.restlike.rim.Responder._
-
-  serve {
-    case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
-  }
-}
-
-object Responder {
-  def t(messages: List[String], downcase: Boolean = false) = {
-    val response = messages.mkString("\n")
-    println("<= " + response)
-    Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
-  }
-}
 
 //TODO: colourise
 //http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python?rq=1
