@@ -222,12 +222,10 @@ object Controller {
 
         case Cmd(Some(""), Nil) => Present.board
 
-        //TODO: should show the current release
         case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
       }
 
       //TODO: next ..
-      //id @ (and shoe everywhere)
       //id //
       //id !!
       //id = x
