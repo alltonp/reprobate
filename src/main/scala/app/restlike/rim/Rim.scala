@@ -19,7 +19,6 @@ object Rim extends RestHelper {
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
-    case _ ⇒ t("sorry, it looks like your rim is badly configured" :: Nil)
   }
 }
 
