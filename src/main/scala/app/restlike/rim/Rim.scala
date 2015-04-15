@@ -18,7 +18,7 @@ object Rim extends RestHelper {
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.process(who, r)
+    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
     case _ ⇒ t("sorry, it looks like your rim is badly configured" :: Nil)
   }
 }
@@ -121,7 +121,7 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
-object Model {
+object Controller {
   import app.restlike.rim.Messages._
   import app.restlike.rim.Responder._
 
@@ -157,7 +157,7 @@ object Model {
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
 
-      if (!cmd.head.getOrElse("").equals("aka") && !Model.knows_?(who)) return t(notAuthorised(who))
+      if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return t(notAuthorised(who))
 
       cmd match {
         case Cmd(Some("aka"), List(aka)) => {
