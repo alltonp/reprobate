@@ -35,6 +35,7 @@ object Messages {
     "  - move to end ⇒ 'rim [ref] //'",
     "  - move backward ⇒ 'rim [ref] .'",
     "  - return to backlog ⇒ 'rim [ref] ..'",
+//    "  - release ⇒ 'rim release [tag]'",
     "",
     "other:",
     "  - set aka ⇒ 'rim aka [initials]'",
