@@ -80,20 +80,20 @@ case class RimState(workflowStates: List[String], userToAka: immutable.Map[Strin
 object Commander {
 
   //TODO: this return is definitely not right ....
-  def process(cmd: Cmd, who: String, state: RimState): Box[LiftResponse] = {
+  def process(cmd: Cmd, who: String, currentState: RimState): Box[LiftResponse] = {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return t(Messages.notAuthorised(who))
 
     cmd match {
-      case Cmd(Some("aka"), List(aka)) => doAka(who, aka, state)
-      case Cmd(Some("+"), args) => doAddIssue(args, state)
-      case Cmd(Some("?"), Nil) => doQuery(state)
-      case Cmd(Some("?"), List(query)) => doQueryWithString(state, query)
-      case Cmd(Some(ref), List("-")) => doRemoveIssue(ref, state)
-      case Cmd(Some(ref), List("/")) => doForwardIssue(who, ref, state)
-      case Cmd(Some(ref), List(".")) => doBackwardIssue(who, ref, state)
-      case Cmd(Some(ref), List("@")) => doOwnIssue(who, ref, state)
+      case Cmd(Some("aka"), List(aka)) => doAka(who, aka, currentState)
+      case Cmd(Some("+"), args) => doAddIssue(args, currentState)
+      case Cmd(Some("?"), Nil) => doQuery(currentState)
+      case Cmd(Some("?"), List(query)) => doQueryWithString(currentState, query)
+      case Cmd(Some(ref), List("-")) => doRemoveIssue(ref, currentState)
+      case Cmd(Some(ref), List("/")) => doForwardIssue(who, ref, currentState)
+      case Cmd(Some(ref), List(".")) => doBackwardIssue(who, ref, currentState)
+      case Cmd(Some(ref), List("@")) => doOwnIssue(who, ref, currentState)
       case Cmd(Some("help"), Nil) => doHelp(who)
-      case Cmd(Some(""), Nil) => doShowBoard(state)
+      case Cmd(Some(""), Nil) => doShowBoard(currentState)
       case Cmd(head, tail) => doUnknownCommand(head, tail)
     }
   }
@@ -102,20 +102,20 @@ object Commander {
     t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
   }
 
-  def doShowBoard(state: RimState): Full[PlainTextResponse] = {
-    Present.board(state)
+  def doShowBoard(currentState: RimState): Full[PlainTextResponse] = {
+    Present.board(currentState)
   }
 
   def doHelp(who: String): Full[PlainTextResponse] = {
     t(Messages.help(who))
   }
 
-  def doOwnIssue(who: String, ref: String, state: RimState): Full[PlainTextResponse] = {
-    val found = state.issues.find(_.ref == ref)
+  def doOwnIssue(who: String, ref: String, currentState: RimState): Full[PlainTextResponse] = {
+    val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      val updated = found.get.copy(by = Some(state.userToAka(who)))
-      val index = state.issues.indexOf(found.get)
-      Controller.state = state.copy(issues = state.issues.updated(index, updated))
+      val updated = found.get.copy(by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found.get)
+      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
       t(s"@ ${found.get.render}" :: Nil)
     } else {
@@ -123,17 +123,17 @@ object Commander {
     }
   }
 
-  def doBackwardIssue(who: String, ref: String, state: RimState): Full[PlainTextResponse] = {
-    val found = state.issues.find(_.ref == ref)
+  def doBackwardIssue(who: String, ref: String, currentState: RimState): Full[PlainTextResponse] = {
+    val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val nextState = if (found.get.state.isEmpty) None
       else {
-        val currentIndex = state.workflowStates.indexOf(found.get.state.get)
-        if (currentIndex <= 0) None else Some(state.workflowStates(currentIndex - 1))
+        val currentIndex = currentState.workflowStates.indexOf(found.get.state.get)
+        if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
       }
       val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
-      val index = state.issues.indexOf(found.get)
-      Controller.state = state.copy(issues = state.issues.updated(index, updated))
+      val index = currentState.issues.indexOf(found.get)
+      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
       Present.board(Controller.state)
     } else {
@@ -141,18 +141,18 @@ object Commander {
     }
 }
 
-  def doForwardIssue(who: String, ref: String, state: RimState): Full[PlainTextResponse] = {
-    val found = state.issues.find(_.ref == ref)
+  def doForwardIssue(who: String, ref: String, currentState: RimState): Full[PlainTextResponse] = {
+    val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      val nextState = if (found.get.state.isEmpty) state.workflowStates.head
+      val nextState = if (found.get.state.isEmpty) currentState.workflowStates.head
       else {
-        val currentIndex = state.workflowStates.indexOf(found.get.state.get)
-        val newIndex = if (currentIndex >= state.workflowStates.size - 1) currentIndex else currentIndex + 1
-        state.workflowStates(newIndex)
+        val currentIndex = currentState.workflowStates.indexOf(found.get.state.get)
+        val newIndex = if (currentIndex >= currentState.workflowStates.size - 1) currentIndex else currentIndex + 1
+        currentState.workflowStates(newIndex)
       }
-      val updated = found.get.copy(state = Some(nextState), by = Some(state.userToAka(who)))
-      val index = state.issues.indexOf(found.get)
-      Controller.state = state.copy(issues = state.issues.updated(index, updated))
+      val updated = found.get.copy(state = Some(nextState), by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found.get)
+      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
       Present.board(Controller.state)
     } else {
@@ -160,10 +160,10 @@ object Commander {
     }
   }
 
-  def doRemoveIssue(ref: String, state: RimState): Full[PlainTextResponse] = {
-    val found = state.issues.find(_.ref == ref)
+  def doRemoveIssue(ref: String, currentState: RimState): Full[PlainTextResponse] = {
+    val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      Controller.state = state.copy(issues = state.issues.filterNot(i => i == found.get))
+      Controller.state = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
       Persistence.save(Controller.state)
       t(s"- ${found.get.render}" :: Nil)
     } else {
@@ -172,26 +172,26 @@ object Commander {
   }
 
   //TODO: combine
-  def doQueryWithString(state: RimState, query: String): Full[PlainTextResponse] = {
-    val matching = state.issues.filter(i => i.search(query))
+  def doQueryWithString(currentState: RimState, query: String): Full[PlainTextResponse] = {
+    val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
     t(result)
   }
 
   //TODO: combine
-  def doQuery(state: RimState): Full[PlainTextResponse] = {
-    val matching = state.issues
+  def doQuery(currentState: RimState): Full[PlainTextResponse] = {
+    val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
     t(result)
   }
 
-  def doAddIssue(args: List[String], state: RimState): Full[PlainTextResponse] = {
+  def doAddIssue(args: List[String], currentState: RimState): Full[PlainTextResponse] = {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
-    Controller.state = state.copy(issues = created :: state.issues)
+    Controller.state = currentState.copy(issues = created :: currentState.issues)
     Persistence.save(Controller.state)
     t(s"+ ${created.render}" :: Nil)
   }
@@ -218,7 +218,6 @@ object Present {
 }
 
 object Controller {
-
   var state = Persistence.load
   val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
 
