@@ -111,71 +111,63 @@ object Commander {
   }
 
   def doOwnIssue(who: String, ref: String): Full[PlainTextResponse] = {
-    synchronized {
-      val found = Controller.state.issues.find(_.ref == ref)
-      if (found.isDefined) {
-        val updated = found.get.copy(by = Some(Controller.state.userToAka(who)))
-        val index = Controller.state.issues.indexOf(found.get)
-        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-        Persistence.save(Controller.state)
-        t(s"@ ${found.get.render}" :: Nil)
-      } else {
-        t(Messages.eh + " " + ref :: Nil)
-      }
+    val found = Controller.state.issues.find(_.ref == ref)
+    if (found.isDefined) {
+      val updated = found.get.copy(by = Some(Controller.state.userToAka(who)))
+      val index = Controller.state.issues.indexOf(found.get)
+      Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+      Persistence.save(Controller.state)
+      t(s"@ ${found.get.render}" :: Nil)
+    } else {
+      t(Messages.eh + " " + ref :: Nil)
     }
   }
 
   def doBackwardIssue(who: String, ref: String): Full[PlainTextResponse] = {
-    synchronized {
-      val found = Controller.state.issues.find(_.ref == ref)
-      if (found.isDefined) {
-        val nextState = if (found.get.state.isEmpty) None
-        else {
-          val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
-          if (currentIndex <= 0) None else Some(Controller.state.workflowStates(currentIndex - 1))
-        }
-        val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
-        val index = Controller.state.issues.indexOf(found.get)
-        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-        Persistence.save(Controller.state)
-        Present.board(Controller.state)
-      } else {
-        t(Messages.eh + " " + ref :: Nil)
+    val found = Controller.state.issues.find(_.ref == ref)
+    if (found.isDefined) {
+      val nextState = if (found.get.state.isEmpty) None
+      else {
+        val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+        if (currentIndex <= 0) None else Some(Controller.state.workflowStates(currentIndex - 1))
       }
+      val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
+      val index = Controller.state.issues.indexOf(found.get)
+      Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+      Persistence.save(Controller.state)
+      Present.board(Controller.state)
+    } else {
+      t(Messages.eh + " " + ref :: Nil)
     }
-  }
+}
 
   def doForwardIssue(who: String, ref: String): Full[PlainTextResponse] = {
-    synchronized {
-      val found = Controller.state.issues.find(_.ref == ref)
-      if (found.isDefined) {
-        val nextState = if (found.get.state.isEmpty) Controller.state.workflowStates.head
-        else {
-          val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
-          val newIndex = if (currentIndex >= Controller.state.workflowStates.size - 1) currentIndex else currentIndex + 1
-          Controller.state.workflowStates(newIndex)
-        }
-        val updated = found.get.copy(state = Some(nextState), by = Some(Controller.state.userToAka(who)))
-        val index = Controller.state.issues.indexOf(found.get)
-        Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
-        Persistence.save(Controller.state)
-        Present.board(Controller.state)
-      } else {
-        t(Messages.eh + " " + ref :: Nil)
+    val found = Controller.state.issues.find(_.ref == ref)
+    if (found.isDefined) {
+      val nextState = if (found.get.state.isEmpty) Controller.state.workflowStates.head
+      else {
+        val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+        val newIndex = if (currentIndex >= Controller.state.workflowStates.size - 1) currentIndex else currentIndex + 1
+        Controller.state.workflowStates(newIndex)
       }
+      val updated = found.get.copy(state = Some(nextState), by = Some(Controller.state.userToAka(who)))
+      val index = Controller.state.issues.indexOf(found.get)
+      Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+      Persistence.save(Controller.state)
+      Present.board(Controller.state)
+    } else {
+      t(Messages.eh + " " + ref :: Nil)
     }
   }
 
   def doRemoveIssue(ref: String): Full[PlainTextResponse] = {
-    synchronized {
-      val found = Controller.state.issues.find(_.ref == ref)
-      if (found.isDefined) {
-        Controller.state = Controller.state.copy(issues = Controller.state.issues.filterNot(i => i == found.get))
-        Persistence.save(Controller.state)
-        t(s"- ${found.get.render}" :: Nil)
-      } else {
-        t(Messages.eh + " " + ref :: Nil)
-      }
+    val found = Controller.state.issues.find(_.ref == ref)
+    if (found.isDefined) {
+      Controller.state = Controller.state.copy(issues = Controller.state.issues.filterNot(i => i == found.get))
+      Persistence.save(Controller.state)
+      t(s"- ${found.get.render}" :: Nil)
+    } else {
+      t(Messages.eh + " " + ref :: Nil)
     }
   }
 
@@ -194,22 +186,18 @@ object Commander {
   }
 
   def doAddIssue(args: List[String]): Full[PlainTextResponse] = {
-    synchronized {
-      val ref = Controller.issueRef.next
-      val description = args.mkString(" ")
-      val created = Issue(ref, description, None, None)
-      Controller.state = Controller.state.copy(issues = created :: Controller.state.issues)
-      Persistence.save(Controller.state)
-      t(s"+ ${created.render}" :: Nil)
-    }
+    val ref = Controller.issueRef.next
+    val description = args.mkString(" ")
+    val created = Issue(ref, description, None, None)
+    Controller.state = Controller.state.copy(issues = created :: Controller.state.issues)
+    Persistence.save(Controller.state)
+    t(s"+ ${created.render}" :: Nil)
   }
 
   def doAka(who: String, aka: String): Full[PlainTextResponse] = {
-    synchronized {
-      Controller.state = Controller.state.copy(userToAka = Controller.state.userToAka.updated(who, aka.toUpperCase))
-      Persistence.save(Controller.state)
-      t(Messages.help(aka.toUpperCase))
-    }
+    Controller.state = Controller.state.copy(userToAka = Controller.state.userToAka.updated(who, aka.toUpperCase))
+    Persistence.save(Controller.state)
+    t(Messages.help(aka.toUpperCase))
   }
 }
 
@@ -244,7 +232,9 @@ object Controller {
 
       //TODO: feels like this should take the state and return an update state (option) and presentation
       //TODO: we can just sycronise around the whole thing
-      Commander.process(cmd, who)
+      synchronized {
+        Commander.process(cmd, who)
+      }
 
       //TODO: next ..
       //id //
