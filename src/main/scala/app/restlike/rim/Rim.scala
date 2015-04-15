@@ -18,7 +18,7 @@ object Rim extends RestHelper {
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.update(who, r)
+    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Model.process(who, r)
     case _ ⇒ t("sorry, it looks like your rim is badly configured" :: Nil)
   }
 }
@@ -150,7 +150,7 @@ object Model {
     }
   }
 
-  def update(who: String, req: Req): Box[LiftResponse] =
+  def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
       println(s"=> $who: [${value}]")
