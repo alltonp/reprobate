@@ -108,21 +108,18 @@ object Commander {
   }
 
   private def onBackwardIssue(who: String, ref: String, currentState: Model) = {
-    val found = currentState.findIssue(ref)
-    if (found.isDefined) {
-      val newStatus = if (found.get.status.isEmpty) None
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newStatus = if (found.status.isEmpty) None
       else {
-        val currentIndex = currentState.workflowStates.indexOf(found.get.status.get)
+        val currentIndex = currentState.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
       }
-      val updated = found.get.copy(status = newStatus, by = Some(currentState.userToAka(who)))
-      val index = currentState.issues.indexOf(found.get)
+      val updated = found.copy(status = newStatus, by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
-    } else {
-      Out(Messages.notFound(ref), None)
     }
-}
+  }
 
   private def onForwardIssue(who: String, ref: String, currentState: Model) = {
     val found = currentState.findIssue(ref)
