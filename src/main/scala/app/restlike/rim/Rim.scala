@@ -86,7 +86,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
-      case i@In(Some(ref), "=" :: List(_)) => onEditIssue(ref, i.tail, currentState)
+      case i@In(Some(ref), tail) if tail.head == "=" => onEditIssue(ref, i.tail, currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
