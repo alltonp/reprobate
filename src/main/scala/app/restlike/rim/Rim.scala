@@ -159,14 +159,6 @@ object Commander {
     Out(result, None)
   }
 
-//  //TODO: combine
-//  private def onQueryIssues(currentState: Model) = {
-//    val matching = currentState.issues
-//    val result = if (matching.isEmpty) "no issues found" :: Nil
-//    else matching.reverse.map(i => i.render)
-//    Out(result, None)
-//  }
-
   private def onAddIssue(args: List[String], currentState: Model) = {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
