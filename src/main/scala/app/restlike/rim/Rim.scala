@@ -77,40 +77,40 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 
-case class Cmd(head: Option[String], tail:List[String])
-case class CmdResult(output: Box[LiftResponse])
+case class In(head: Option[String], tail:List[String])
+case class Out(output: Box[LiftResponse])
 
 object Commander {
 
   //TODO: this return is definitely not right ....
-  def process(cmd: Cmd, who: String, currentState: RimState): CmdResult = {
-    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return CmdResult(t(Messages.notAuthorised(who)))
+  def process(cmd: In, who: String, currentState: RimState): Out = {
+    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)))
 
     cmd match {
-      case Cmd(Some("aka"), List(aka)) => doAka(who, aka, currentState)
-      case Cmd(Some("+"), args) => doAddIssue(args, currentState)
-      case Cmd(Some("?"), Nil) => doQuery(currentState)
-      case Cmd(Some("?"), List(query)) => doQueryWithString(currentState, query)
-      case Cmd(Some(ref), List("-")) => doRemoveIssue(ref, currentState)
-      case Cmd(Some(ref), List("/")) => doForwardIssue(who, ref, currentState)
-      case Cmd(Some(ref), List(".")) => doBackwardIssue(who, ref, currentState)
-      case Cmd(Some(ref), List("@")) => doOwnIssue(who, ref, currentState)
-      case Cmd(Some("help"), Nil) => doHelp(who)
-      case Cmd(Some(""), Nil) => doShowBoard(currentState)
-      case Cmd(head, tail) => doUnknownCommand(head, tail)
+      case In(Some("aka"), List(aka)) => doAka(who, aka, currentState)
+      case In(Some("+"), args) => doAddIssue(args, currentState)
+      case In(Some("?"), Nil) => doQuery(currentState)
+      case In(Some("?"), List(query)) => doQueryWithString(currentState, query)
+      case In(Some(ref), List("-")) => doRemoveIssue(ref, currentState)
+      case In(Some(ref), List("/")) => doForwardIssue(who, ref, currentState)
+      case In(Some(ref), List(".")) => doBackwardIssue(who, ref, currentState)
+      case In(Some(ref), List("@")) => doOwnIssue(who, ref, currentState)
+      case In(Some("help"), Nil) => doHelp(who)
+      case In(Some(""), Nil) => doShowBoard(currentState)
+      case In(head, tail) => doUnknownCommand(head, tail)
     }
   }
 
   def doUnknownCommand(head: Option[String], tail: List[String]) = {
-    CmdResult(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil))
+    Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil))
   }
 
   def doShowBoard(currentState: RimState) = {
-    CmdResult(Present.board(currentState))
+    Out(Present.board(currentState))
   }
 
   def doHelp(who: String) = {
-    CmdResult(t(Messages.help(who)))
+    Out(t(Messages.help(who)))
   }
 
   def doOwnIssue(who: String, ref: String, currentState: RimState) = {
@@ -120,9 +120,9 @@ object Commander {
       val index = currentState.issues.indexOf(found.get)
       Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
-      CmdResult(t(s"@ ${found.get.render}" :: Nil))
+      Out(t(s"@ ${found.get.render}" :: Nil))
     } else {
-      CmdResult(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil))
     }
   }
 
@@ -138,9 +138,9 @@ object Commander {
       val index = currentState.issues.indexOf(found.get)
       Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
-      CmdResult(Present.board(Controller.state))
+      Out(Present.board(Controller.state))
     } else {
-      CmdResult(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil))
     }
 }
 
@@ -157,9 +157,9 @@ object Commander {
       val index = currentState.issues.indexOf(found.get)
       Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
       Persistence.save(Controller.state)
-      CmdResult(Present.board(Controller.state))
+      Out(Present.board(Controller.state))
     } else {
-      CmdResult(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil))
     }
   }
 
@@ -168,9 +168,9 @@ object Commander {
     if (found.isDefined) {
       Controller.state = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
       Persistence.save(Controller.state)
-      CmdResult(t(s"- ${found.get.render}" :: Nil))
+      Out(t(s"- ${found.get.render}" :: Nil))
     } else {
-      CmdResult(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil))
     }
   }
 
@@ -179,7 +179,7 @@ object Commander {
     val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
-    CmdResult(t(result))
+    Out(t(result))
   }
 
   //TODO: combine
@@ -187,7 +187,7 @@ object Commander {
     val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
-    CmdResult(t(result))
+    Out(t(result))
   }
 
   def doAddIssue(args: List[String], currentState: RimState) = {
@@ -196,13 +196,13 @@ object Commander {
     val created = Issue(ref, description, None, None)
     Controller.state = currentState.copy(issues = created :: currentState.issues)
     Persistence.save(Controller.state)
-    CmdResult(t(s"+ ${created.render}" :: Nil))
+    Out(t(s"+ ${created.render}" :: Nil))
   }
 
   def doAka(who: String, aka: String, state: RimState) = {
     Controller.state = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
     Persistence.save(Controller.state)
-    CmdResult(t(Messages.help(aka.toUpperCase)))
+    Out(t(Messages.help(aka.toUpperCase)))
   }
 }
 
@@ -230,7 +230,7 @@ object Controller {
       println(s"=> $who: [${value}]")
 
       val bits = value.split(" ").map(_.trim)
-      val cmd = Cmd(bits.headOption, bits.tail.toList)
+      val cmd = In(bits.headOption, bits.tail.toList)
 
       //TODO: feels like this should take the state and return an update state (option) and presentation
       //TODO: we can just sycronise around the whole thing
