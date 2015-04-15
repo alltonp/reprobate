@@ -104,7 +104,7 @@ object Commander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
 
-  private def onShowBoard(currentState: RimState) = Out(Present.board(currentState), None)
+  private def onShowBoard(currentState: RimState) = Out(Presentation.board(currentState), None)
 
   private def ooHelp(who: String) = Out(t(Messages.help(who)), None)
 
@@ -131,7 +131,7 @@ object Commander {
       val updated = found.get.copy(status = newStatus, by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(Present.board(updatedState), Some(updatedState))
+      Out(Presentation.board(updatedState), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -149,7 +149,7 @@ object Commander {
       val updated = found.get.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(Present.board(updatedState), Some(updatedState))
+      Out(Presentation.board(updatedState), Some(updatedState))
     } else {
       Out(t(Messages.eh + " " + ref :: Nil), None)
     }
@@ -195,7 +195,7 @@ object Commander {
   }
 }
 
-object Present {
+object Presentation {
   def board(state: RimState) = {
     val stateToIssues = state.issues.groupBy(_.status)
     val r = state.workflowStates.map(s => {
