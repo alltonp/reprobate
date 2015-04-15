@@ -77,30 +77,6 @@ object Messages {
     """).stripMargin.split("\n").toList
 }
 
-object JsonRequestHandler extends Loggable {
-  import app.restlike.rim.Responder._
-
-  def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
-    try {
-      req.json match {
-        case Full(json) ⇒ process(json, req)
-        case o ⇒ println(req.json); t(List(s"unexpected item in the bagging area ${o}"))
-      }
-    } catch {
-      case e: Exception ⇒ println("### Error handling request: " + req + " - " + e.getMessage); t(List(e.getMessage))
-    }
-  }
-}
-
-object RimRequestJson {
-  import net.liftweb.json._
-
-  def deserialise(json: String) = {
-    implicit val formats = Serialization.formats(NoTypeHints)
-    parse(json).extract[RimUpdate]
-  }
-}
-
 case class IssueRef(initial: Long) {
   private var count = initial
 
@@ -336,23 +312,6 @@ object Controller {
     val jsonAst = Json.serialise(state)
     Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
-  }
-}
-
-object Json {
-  import net.liftweb.json.Serialization._
-  import net.liftweb.json._
-
-  private val iamFormats = Serialization.formats(NoTypeHints)
-
-  def deserialise(json: String) = {
-    implicit val formats = iamFormats
-    parse(json).extract[RimState]
-  }
-
-  def serialise(response: RimState) = {
-    implicit val formats = iamFormats
-    JsonParser.parse(write(response))
   }
 }
 
