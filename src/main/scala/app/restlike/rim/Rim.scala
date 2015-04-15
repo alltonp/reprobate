@@ -75,15 +75,15 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
-case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
+case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 
 case class In(head: Option[String], tail:List[String])
-case class Out(response: Box[LiftResponse], updatedState: Option[RimState])
+case class Out(response: Box[LiftResponse], updatedState: Option[Model])
 
 object Commander {
 
   //TODO: this return is definitely not right ....
-  def process(cmd: In, who: String, currentState: RimState): Out = {
+  def process(cmd: In, who: String, currentState: Model): Out = {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)), None)
 
     cmd match {
@@ -104,11 +104,11 @@ object Commander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
 
-  private def onShowBoard(currentState: RimState) = Out(Presentation.board(currentState), None)
+  private def onShowBoard(currentState: Model) = Out(Presentation.board(currentState), None)
 
   private def ooHelp(who: String) = Out(t(Messages.help(who)), None)
 
-  private def onOwnIssue(who: String, ref: String, currentState: RimState) = {
+  private def onOwnIssue(who: String, ref: String, currentState: Model) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val updated = found.get.copy(by = Some(currentState.userToAka(who)))
@@ -120,7 +120,7 @@ object Commander {
     }
   }
 
-  private def onBackwardIssue(who: String, ref: String, currentState: RimState) = {
+  private def onBackwardIssue(who: String, ref: String, currentState: Model) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val newStatus = if (found.get.status.isEmpty) None
@@ -137,7 +137,7 @@ object Commander {
     }
 }
 
-  private def onForwardIssue(who: String, ref: String, currentState: RimState) = {
+  private def onForwardIssue(who: String, ref: String, currentState: Model) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val newStatus = if (found.get.status.isEmpty) currentState.workflowStates.head
@@ -155,7 +155,7 @@ object Commander {
     }
   }
 
-  private def onRemoveIssue(ref: String, currentState: RimState) = {
+  private def onRemoveIssue(ref: String, currentState: Model) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
@@ -166,7 +166,7 @@ object Commander {
   }
 
   //TODO: combine
-  private def onQueryIssuesWithString(currentState: RimState, query: String) = {
+  private def onQueryIssuesWithString(currentState: Model, query: String) = {
     val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
@@ -174,14 +174,14 @@ object Commander {
   }
 
   //TODO: combine
-  private def onQueryIssues(currentState: RimState) = {
+  private def onQueryIssues(currentState: Model) = {
     val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
     Out(t(result), None)
   }
 
-  private def onAddIssue(args: List[String], currentState: RimState) = {
+  private def onAddIssue(args: List[String], currentState: Model) = {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
@@ -189,14 +189,14 @@ object Commander {
     Out(t(s"+ ${created.render}" :: Nil), Some(updatedState))
   }
 
-  private def onAka(who: String, aka: String, currentState: RimState) = {
+  private def onAka(who: String, aka: String, currentState: Model) = {
     val updatedState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
     Out(t(Messages.help(aka.toUpperCase)), Some(updatedState))
   }
 }
 
 object Presentation {
-  def board(state: RimState) = {
+  def board(state: Model) = {
     val stateToIssues = state.issues.groupBy(_.status)
     val r = state.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
@@ -208,8 +208,8 @@ object Presentation {
 }
 
 object Controller {
-  private var state = Persistence.load
-  val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
+  private var model = Persistence.load
+  val issueRef = IssueRef(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
@@ -219,10 +219,10 @@ object Controller {
       val cmd = In(bits.headOption, bits.tail.toList)
 
       synchronized {
-        val out = Commander.process(cmd, who, state)
+        val out = Commander.process(cmd, who, model)
         out.updatedState.map(s => {
-          state = s
-          Persistence.save(state)
+          model = s
+          Persistence.save(model)
         })
         out.response
       }
@@ -236,19 +236,19 @@ object Controller {
     })
 
   //TODO: this should exclude me ...
-  def knows_?(who: String) = state.userToAka.contains(who)
+  def knows_?(who: String) = model.userToAka.contains(who)
 }
 
 object Persistence {
   private val file = new File("rim.json")
   private val defaultStatuses = List("next", "doing", "done")
 
-  def load: RimState = {
-    if (!file.exists()) save(RimState(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
+  def load: Model = {
+    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
     Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
   }
 
-  def save(state: RimState) {
+  def save(state: Model) {
     Files.write(Paths.get(file.getName), pretty(render(Json.serialise(state))).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }

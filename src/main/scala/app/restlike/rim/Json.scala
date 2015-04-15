@@ -38,10 +38,10 @@ object Json {
 
   def deserialise(json: String) = {
     implicit val formats = iamFormats
-    parse(json).extract[RimState]
+    parse(json).extract[Model]
   }
 
-  def serialise(response: RimState) = {
+  def serialise(response: Model) = {
     implicit val formats = iamFormats
     JsonParser.parse(write(response))
   }
