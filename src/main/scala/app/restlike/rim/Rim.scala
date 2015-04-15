@@ -84,45 +84,18 @@ object Commander {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return t(Messages.notAuthorised(who))
 
     cmd match {
-      case Cmd(Some("aka"), List(aka)) => {
-        doAka(who, aka)
-      }
-
-      case Cmd(Some("+"), args) => {
-        doAddIssue(args)
-      }
-
-      case Cmd(Some("?"), Nil) => {
-        doQuery
-      }
-
-      case Cmd(Some("?"), List(query)) => {
-        doQueryWithString(query)
-      }
-
-      case Cmd(Some(ref), List("-")) => {
-        doRemoveIssue(ref)
-      }
-
-      case Cmd(Some(ref), List("/")) => {
-        doForwardIssue(who, ref)
-      }
-
-      case Cmd(Some(ref), List(".")) => {
-        doBackwardIssue(who, ref)
-      }
-
-      case Cmd(Some(ref), List("@")) => {
-        doOwnIssue(who, ref)
-      }
-
+      case Cmd(Some("aka"), List(aka)) => doAka(who, aka)
+      case Cmd(Some("+"), args) => doAddIssue(args)
+      case Cmd(Some("?"), Nil) => doQuery
+      case Cmd(Some("?"), List(query)) => doQueryWithString(query)
+      case Cmd(Some(ref), List("-")) => doRemoveIssue(ref)
+      case Cmd(Some(ref), List("/")) => doForwardIssue(who, ref)
+      case Cmd(Some(ref), List(".")) => doBackwardIssue(who, ref)
+      case Cmd(Some(ref), List("@")) => doOwnIssue(who, ref)
       case Cmd(Some("help"), Nil) => doHelp(who)
-
       case Cmd(Some(""), Nil) => doShowBoard
-
       case Cmd(head, tail) => doUnknownCommand(head, tail)
     }
-
   }
 
   def doUnknownCommand(head: Option[String], tail: List[String]): Full[PlainTextResponse] = {
