@@ -78,13 +78,13 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 
 case class In(head: Option[String], tail:List[String])
-case class Out(output: Box[LiftResponse])
+case class Out(response: Box[LiftResponse], newState: Option[RimState])
 
 object Commander {
 
   //TODO: this return is definitely not right ....
   def process(cmd: In, who: String, currentState: RimState): Out = {
-    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)))
+    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)), None)
 
     cmd match {
       case In(Some("aka"), List(aka)) => doAka(who, aka, currentState)
@@ -102,15 +102,15 @@ object Commander {
   }
 
   def doUnknownCommand(head: Option[String], tail: List[String]) = {
-    Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil))
+    Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
   }
 
   def doShowBoard(currentState: RimState) = {
-    Out(Present.board(currentState))
+    Out(Present.board(currentState), None)
   }
 
   def doHelp(who: String) = {
-    Out(t(Messages.help(who)))
+    Out(t(Messages.help(who)), None)
   }
 
   def doOwnIssue(who: String, ref: String, currentState: RimState) = {
@@ -118,11 +118,10 @@ object Commander {
     if (found.isDefined) {
       val updated = found.get.copy(by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Persistence.save(Controller.state)
-      Out(t(s"@ ${found.get.render}" :: Nil))
+      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(t(s"@ ${found.get.render}" :: Nil), Some(newState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil), None)
     }
   }
 
@@ -134,13 +133,12 @@ object Commander {
         val currentIndex = currentState.workflowStates.indexOf(found.get.state.get)
         if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
       }
-      val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
+      val updated = found.get.copy(state = nextState, by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Persistence.save(Controller.state)
-      Out(Present.board(Controller.state))
+      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Present.board(newState), Some(newState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil), None)
     }
 }
 
@@ -155,22 +153,20 @@ object Commander {
       }
       val updated = found.get.copy(state = Some(nextState), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
-      Controller.state = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Persistence.save(Controller.state)
-      Out(Present.board(Controller.state))
+      val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Present.board(newState), Some(newState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil), None)
     }
   }
 
   def doRemoveIssue(ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      Controller.state = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
-      Persistence.save(Controller.state)
-      Out(t(s"- ${found.get.render}" :: Nil))
+      val newState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
+      Out(t(s"- ${found.get.render}" :: Nil), Some(newState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil))
+      Out(t(Messages.eh + " " + ref :: Nil), None)
     }
   }
 
@@ -179,7 +175,7 @@ object Commander {
     val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
-    Out(t(result))
+    Out(t(result), None)
   }
 
   //TODO: combine
@@ -187,22 +183,20 @@ object Commander {
     val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
-    Out(t(result))
+    Out(t(result), None)
   }
 
   def doAddIssue(args: List[String], currentState: RimState) = {
     val ref = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
-    Controller.state = currentState.copy(issues = created :: currentState.issues)
-    Persistence.save(Controller.state)
-    Out(t(s"+ ${created.render}" :: Nil))
+    val newState = currentState.copy(issues = created :: currentState.issues)
+    Out(t(s"+ ${created.render}" :: Nil), Some(newState))
   }
 
   def doAka(who: String, aka: String, state: RimState) = {
-    Controller.state = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
-    Persistence.save(Controller.state)
-    Out(t(Messages.help(aka.toUpperCase)))
+    val newState = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
+    Out(t(Messages.help(aka.toUpperCase)), Some(newState))
   }
 }
 
@@ -219,7 +213,7 @@ object Present {
 }
 
 object Controller {
-  var state = Persistence.load
+  private var state = Persistence.load
   val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
 
   println("### loaded:" + state)
@@ -235,7 +229,12 @@ object Controller {
       //TODO: feels like this should take the state and return an update state (option) and presentation
       //TODO: we can just sycronise around the whole thing
       synchronized {
-        Commander.process(cmd, who, state).output
+        val out = Commander.process(cmd, who, state)
+        out.newState.map(ns => {
+          state = ns
+          Persistence.save(state)
+        })
+        out.response
       }
 
       //TODO: next ..
