@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths, StandardOpenOption}
 
+import app.restlike.rim.Responder._
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.json._
@@ -77,153 +78,162 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
 case class RimUpdate(value: String)
 
-object Controller {
-  import app.restlike.rim.Messages._
-  import app.restlike.rim.Responder._
+object Commander {
 
-  private val file = new File("rim.json")
-  private var state = load
-  private val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
+  //TODO: this return is definitely not right ....
+  def process(cmd: Cmd, who: String): Box[LiftResponse] = {
+    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return t(Messages.notAuthorised(who))
+
+    cmd match {
+      case Cmd(Some("aka"), List(aka)) => {
+        synchronized {
+          Controller.state = Controller.state.copy(userToAka = Controller.state.userToAka.updated(who, aka.toUpperCase))
+          Persistence.save(Controller.state)
+          t(Messages.help(aka.toUpperCase))
+        }
+      }
+
+      case Cmd(Some("+"), args) => {
+        synchronized {
+          val ref = Controller.issueRef.next
+          val description = args.mkString(" ")
+          val created = Issue(ref, description, None, None)
+          Controller.state = Controller.state.copy(issues = created :: Controller.state.issues)
+          Persistence.save(Controller.state)
+          t(s"+ ${created.render}" :: Nil)
+        }
+      }
+
+      case Cmd(Some("?"), Nil) => {
+        val matching = Controller.state.issues
+        val result = if (matching.isEmpty) "no issues found" :: Nil
+        else matching.reverse.map(i => i.render)
+        t(result)
+      }
+
+      case Cmd(Some("?"), List(query)) => {
+        val matching = Controller.state.issues.filter(i => i.search(query))
+        val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
+        else matching.reverse.map(i => i.render)
+        t(result)
+      }
+
+      case Cmd(Some(ref), List("-")) => {
+        synchronized {
+          val found = Controller.state.issues.find(_.ref == ref)
+          if (found.isDefined) {
+            Controller.state = Controller.state.copy(issues = Controller.state.issues.filterNot(i => i == found.get))
+            Persistence.save(Controller.state)
+            t(s"- ${found.get.render}" :: Nil)
+          } else {
+            t(Messages.eh + " " + ref :: Nil)
+          }
+        }
+      }
+
+      case Cmd(Some(ref), List("/")) => {
+        synchronized {
+          val found = Controller.state.issues.find(_.ref == ref)
+          if (found.isDefined) {
+            val nextState = if (found.get.state.isEmpty) Controller.state.workflowStates.head
+            else {
+              val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+              val newIndex = if (currentIndex >= Controller.state.workflowStates.size-1) currentIndex else currentIndex + 1
+              Controller.state.workflowStates(newIndex)
+            }
+            val updated = found.get.copy(state = Some(nextState), by = Some(Controller.state.userToAka(who)))
+            val index = Controller.state.issues.indexOf(found.get)
+            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+            Persistence.save(Controller.state)
+            Present.board(Controller.state)
+          } else {
+            t(Messages.eh + " " + ref :: Nil)
+          }
+        }
+      }
+
+      case Cmd(Some(ref), List(".")) => {
+        synchronized {
+          val found = Controller.state.issues.find(_.ref == ref)
+          if (found.isDefined) {
+            val nextState = if (found.get.state.isEmpty) None
+            else {
+              val currentIndex = Controller.state.workflowStates.indexOf(found.get.state.get)
+              if (currentIndex <= 0) None else Some(Controller.state.workflowStates(currentIndex - 1))
+            }
+            val updated = found.get.copy(state = nextState, by = Some(Controller.state.userToAka(who)))
+            val index = Controller.state.issues.indexOf(found.get)
+            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+            Persistence.save(Controller.state)
+            Present.board(Controller.state)
+          } else {
+            t(Messages.eh + " " + ref :: Nil)
+          }
+        }
+      }
+
+      case Cmd(Some(ref), List("@")) => {
+        synchronized {
+          val found = Controller.state.issues.find(_.ref == ref)
+          if (found.isDefined) {
+            val updated = found.get.copy(by = Some(Controller.state.userToAka(who)))
+            val index = Controller.state.issues.indexOf(found.get)
+            Controller.state = Controller.state.copy(issues = Controller.state.issues.updated(index, updated))
+            Persistence.save(Controller.state)
+            t(s"@ ${found.get.render}" :: Nil)
+          } else {
+            t(Messages.eh + " " + ref :: Nil)
+          }
+        }
+      }
+
+      case Cmd(Some("help"), Nil) => t(Messages.help(who))
+
+      case Cmd(Some(""), Nil) => Present.board(Controller.state)
+
+      case Cmd(head, tail) => t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
+    }
+
+  }
+}
+
+case class Cmd(head: Option[String], tail:List[String])
+
+object Present {
+  def board(state: RimState) = {
+    val stateToIssues = state.issues.groupBy(_.state)
+    val r = state.workflowStates.map(s => {
+      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+      val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
+      s"$s: (${issuesForState.size})" + issues
+    })
+    t(r)
+  }
+}
+
+object Controller {
+
+  var state = Persistence.load
+  val issueRef = IssueRef(if (state.issues.isEmpty) 0 else state.issues.map(_.ref).max.toLong)
 
   println("### loaded:" + state)
 
-//  def query(who: String, key: Option[String]) = t(
-//    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
-//    else key.fold(help(who)){k => notAuthorised(who) }
-//  )
-
-  case class Cmd(head: Option[String], tail:List[String])
-
-  object Present {
-    def board = {
-      val stateToIssues = state.issues.groupBy(_.state)
-      val r = state.workflowStates.map(s => {
-        val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-        val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
-        s"$s: (${issuesForState.size})" + issues
-      })
-      t(r)
-    }
-  }
+  //  def query(who: String, key: Option[String]) = t(
+  //    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
+  //    else key.fold(help(who)){k => notAuthorised(who) }
+  //  )
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
       println(s"=> $who: [${value}]")
+
       val bits = value.split(" ").map(_.trim)
       val cmd = Cmd(bits.headOption, bits.tail.toList)
 
-      if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return t(notAuthorised(who))
-
-      cmd match {
-        case Cmd(Some("aka"), List(aka)) => {
-          synchronized {
-            state = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
-            save(state)
-            t(help(aka.toUpperCase))
-          }
-        }
-
-        case Cmd(Some("+"), args) => {
-          synchronized {
-            val ref = issueRef.next
-            val description = args.mkString(" ")
-            val created = Issue(ref, description, None, None)
-            state = state.copy(issues = created :: state.issues)
-            save(state)
-            t(s"+ ${created.render}" :: Nil)
-          }
-        }
-
-        case Cmd(Some("?"), Nil) => {
-          val matching = state.issues
-          val result = if (matching.isEmpty) "no issues found" :: Nil
-                      else matching.reverse.map(i => i.render)
-          t(result)
-        }
-
-        case Cmd(Some("?"), List(query)) => {
-          val matching = state.issues.filter(i => i.search(query))
-          val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
-                      else matching.reverse.map(i => i.render)
-          t(result)
-        }
-
-        case Cmd(Some(ref), List("-")) => {
-          synchronized {
-            val found = state.issues.find(_.ref == ref)
-            if (found.isDefined) {
-              state = state.copy(issues = state.issues.filterNot(i => i == found.get))
-              save(state)
-              t(s"- ${found.get.render}" :: Nil)
-            } else {
-              t(eh + " " + ref :: Nil)
-            }
-          }
-        }
-
-        case Cmd(Some(ref), List("/")) => {
-          synchronized {
-            val found = state.issues.find(_.ref == ref)
-            if (found.isDefined) {
-              val nextState = if (found.get.state.isEmpty) state.workflowStates.head
-                              else {
-                                val currentIndex = state.workflowStates.indexOf(found.get.state.get)
-                                val newIndex = if (currentIndex >= state.workflowStates.size-1) currentIndex else currentIndex + 1
-                                state.workflowStates(newIndex)
-                              }
-              val updated = found.get.copy(state = Some(nextState), by = Some(state.userToAka(who)))
-              val index = state.issues.indexOf(found.get)
-              state = state.copy(issues = state.issues.updated(index, updated))
-              save(state)
-              Present.board
-            } else {
-              t(eh + " " + ref :: Nil)
-            }
-          }
-        }
-
-        case Cmd(Some(ref), List(".")) => {
-          synchronized {
-            val found = state.issues.find(_.ref == ref)
-            if (found.isDefined) {
-              val nextState = if (found.get.state.isEmpty) None
-                              else {
-                                val currentIndex = state.workflowStates.indexOf(found.get.state.get)
-                                if (currentIndex <= 0) None else Some(state.workflowStates(currentIndex - 1))
-                              }
-              val updated = found.get.copy(state = nextState, by = Some(state.userToAka(who)))
-              val index = state.issues.indexOf(found.get)
-              state = state.copy(issues = state.issues.updated(index, updated))
-              save(state)
-              Present.board
-            } else {
-              t(eh + " " + ref :: Nil)
-            }
-          }
-        }
-
-        case Cmd(Some(ref), List("@")) => {
-          synchronized {
-            val found = state.issues.find(_.ref == ref)
-            if (found.isDefined) {
-              val updated = found.get.copy(by = Some(state.userToAka(who)))
-              val index = state.issues.indexOf(found.get)
-              state = state.copy(issues = state.issues.updated(index, updated))
-              save(state)
-              t(s"@ ${found.get.render}" :: Nil)
-            } else {
-              t(eh + " " + ref :: Nil)
-            }
-          }
-        }
-
-        case Cmd(Some("help"), Nil) => t(help(who))
-
-        case Cmd(Some(""), Nil) => Present.board
-
-        case Cmd(head, tail) => t(eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil)
-      }
+      //TODO: feels like this should take the state and return an update state (option) and presentation
+      //TODO: we can just sycronise around the whole thing
+      Commander.process(cmd, who)
 
       //TODO: next ..
       //id //
@@ -232,47 +242,52 @@ object Controller {
       //release
       //check for dupes when adding ...
 
-////      safeDoUpdate(who, key, value)
-////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
-//      t(value :: Nil)
+      ////      safeDoUpdate(who, key, value)
+      ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
+      //      t(value :: Nil)
     })
 
-//  def delete(who: String) = {
-//    safeDoUpdate(who, null, null, delete = true)
-//    t("- ok, " + who + " has now left the building" :: allAboutEveryone)
-//  }
+  //  def delete(who: String) = {
+  //    safeDoUpdate(who, null, null, delete = true)
+  //    t("- ok, " + who + " has now left the building" :: allAboutEveryone)
+  //  }
 
-//  private def allAboutEveryone = everyone.map(w => "- " + w + " is " + allAbout(w) ).toList
-//  private def allAbout(who: String) = whoToStatuses(who).keys.to.sorted.map(k => k + " " + whoToStatuses(who)(k)).mkString(", ")
+  //  private def allAboutEveryone = everyone.map(w => "- " + w + " is " + allAbout(w) ).toList
+  //  private def allAbout(who: String) = whoToStatuses(who).keys.to.sorted.map(k => k + " " + whoToStatuses(who)(k)).mkString(", ")
 
   //TODO: this should exclude me ...
-//  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
-//  private def everyone = whoToStatuses.keys.toList.sorted
-  private def knows_?(who: String) = state.userToAka.contains(who)
-//  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
+  //  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
+  //  private def everyone = whoToStatuses.keys.toList.sorted
+  def knows_?(who: String) = state.userToAka.contains(who)
 
-//  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
-//    def updateKey(who: String, key: String, value: String) {
-//      val state = keysFor(who)
-//      val newState: immutable.Map[String, String] = state.updated(key, value).toMap
-//      whoToStatuses.update(who, newState)
-//    }
-//
-//    def deleteKey(who: String, key: String) {
-//      val state = keysFor(who)
-//      val newState = state.-(key).toMap
-//      whoToStatuses.update(who, newState)
-//    }
-//
-//    def deleteAll(who: String) { whoToStatuses.remove(who) }
-//
-//    synchronized {
-//      if (delete) deleteAll(who)
-//      else if ("-" == value.trim) deleteKey(who, key)
-//      else updateKey(who, key, value)
-//      save(RimState(whoToStatuses.toMap))
-//    }
-//  }
+  //  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
+
+  //  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
+  //    def updateKey(who: String, key: String, value: String) {
+  //      val state = keysFor(who)
+  //      val newState: immutable.Map[String, String] = state.updated(key, value).toMap
+  //      whoToStatuses.update(who, newState)
+  //    }
+  //
+  //    def deleteKey(who: String, key: String) {
+  //      val state = keysFor(who)
+  //      val newState = state.-(key).toMap
+  //      whoToStatuses.update(who, newState)
+  //    }
+  //
+  //    def deleteAll(who: String) { whoToStatuses.remove(who) }
+  //
+  //    synchronized {
+  //      if (delete) deleteAll(who)
+  //      else if ("-" == value.trim) deleteKey(who, key)
+  //      else updateKey(who, key, value)
+  //      save(RimState(whoToStatuses.toMap))
+  //    }
+  //  }
+}
+
+object Persistence {
+  private val file = new File("rim.json")
 
   def load: RimState = {
     if (!file.exists()) {
@@ -285,7 +300,7 @@ object Controller {
     raw
   }
 
-  private def save(state: RimState) {
+  def save(state: RimState) {
     println("### save: " + state)
     val jsonAst = Json.serialise(state)
     Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
