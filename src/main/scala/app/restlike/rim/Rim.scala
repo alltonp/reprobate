@@ -244,18 +244,15 @@ object Controller {
 
 object Persistence {
   private val file = new File("rim.json")
+  private val defaultStatuses = List("next", "doing", "done")
 
   def load: RimState = {
-    if (!file.exists()) {
-      val defaultStatuses = List("next", "doing", "done")
-      save(RimState(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
-    }
+    if (!file.exists()) save(RimState(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
     Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
   }
 
   def save(state: RimState) {
-    val jsonAst = Json.serialise(state)
-    Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
+    Files.write(Paths.get(file.getName), pretty(render(Json.serialise(state))).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 }
