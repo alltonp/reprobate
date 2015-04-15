@@ -163,7 +163,7 @@ object Model {
           synchronized {
             state = state.copy(userToAka = state.userToAka.updated(who, aka.toUpperCase))
             save(state)
-            t(help(aka.toUpperCase()))
+            t(help(aka.toUpperCase))
           }
         }
 
@@ -171,9 +171,10 @@ object Model {
           synchronized {
             val ref = issueRef.next
             val description = args.mkString(" ")
-            state = state.copy(issues = Issue(ref, description, None, None) :: state.issues)
+            val created = Issue(ref, description, None, None)
+            state = state.copy(issues = created :: state.issues)
             save(state)
-            t(s"$ref: $description" :: Nil)
+            t(s"+ ${created.render}" :: Nil)
           }
         }
 
@@ -197,7 +198,7 @@ object Model {
             if (found.isDefined) {
               state = state.copy(issues = state.issues.filterNot(i => i == found.get))
               save(state)
-              t(s"deleted: $ref" :: Nil)
+              t(s"- ${found.get.render}" :: Nil)
             } else {
               t(eh + " " + ref :: Nil)
             }
