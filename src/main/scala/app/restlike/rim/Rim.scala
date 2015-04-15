@@ -129,7 +129,7 @@ object Commander {
   private def onFastBackwardIssue(who: String, ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
-      val updated = found.copy(status = newStatus, by = Some(currentState.userToAka(who)))
+      val updated = found.copy(status = newStatus, by = None)
       val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
