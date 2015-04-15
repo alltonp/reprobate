@@ -24,6 +24,7 @@ object Messages {
     "- add issue ⇒ 'rim + [the description]'",
     "- list issues ⇒ 'rim ? {query}'",
     "- delete issue ⇒ 'rim [ref] -'",
+    "- edit issue ⇒ 'rim [ref] ='",
     "- move issue forward ⇒ 'rim [ref] /'",
     "- move issue to end ⇒ 'rim [ref] //'",
     "- move issue backward ⇒ 'rim [ref] .'",
@@ -85,7 +86,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentState, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentState, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentState)
-      case i@In(Some(ref), "=" :: List(args)) => onEditIssue(ref, i.tail, currentState)
+      case i@In(Some(ref), "=" :: List(_)) => onEditIssue(ref, i.tail, currentState)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
