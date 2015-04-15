@@ -76,7 +76,6 @@ case class Issue(ref: String, description: String, state: Option[String], by: Op
 }
 
 case class RimState(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
-case class RimUpdate(value: String)
 
 object Commander {
 

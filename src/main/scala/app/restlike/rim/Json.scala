@@ -4,12 +4,14 @@ import net.liftweb.common.{Full, Box, Loggable}
 import net.liftweb.http.{LiftResponse, Req}
 import net.liftweb.json.JsonAST
 
+case class RimCommand(value: String)
+
 object RimRequestJson {
   import net.liftweb.json._
 
   def deserialise(json: String) = {
     implicit val formats = Serialization.formats(NoTypeHints)
-    parse(json).extract[RimUpdate]
+    parse(json).extract[RimCommand]
   }
 }
 
