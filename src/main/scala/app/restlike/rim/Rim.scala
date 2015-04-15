@@ -36,6 +36,10 @@ object Responder {
 //http://apple.stackexchange.com/questions/74777/echo-color-coding-stopped-working-in-mountain-lion
 //http://unix.stackexchange.com/questions/43408/printing-colored-text-using-echo
 //e.g. printf '%s \e[0;31m%s\e[0m %s\n' 'Some text' 'in color' 'no more color'
+//TODO: support curl
+//#MESSAGE="(Foo) Deployed ${VERSION} to ${MACHINE_NAME}"
+//#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
+//#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
 object Messages {
   val eh = "- eh?"
   val ok = "- ok"
