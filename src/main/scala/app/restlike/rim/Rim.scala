@@ -218,11 +218,6 @@ object Controller {
 
   println("### loaded:" + state)
 
-  //  def query(who: String, key: Option[String]) = t(
-  //    if (Model.knows_?(who)) key.fold(allAboutEveryone){k => aboutEveryone(k)}
-  //    else key.fold(help(who)){k => notAuthorised(who) }
-  //  )
-
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
@@ -241,49 +236,10 @@ object Controller {
       //id = x
       //release
       //check for dupes when adding ...
-
-      ////      safeDoUpdate(who, key, value)
-      ////      t("- ok, " + who + " is now " + allAbout(who) :: aboutEveryone(key))
-      //      t(value :: Nil)
     })
 
-  //  def delete(who: String) = {
-  //    safeDoUpdate(who, null, null, delete = true)
-  //    t("- ok, " + who + " has now left the building" :: allAboutEveryone)
-  //  }
-
-  //  private def allAboutEveryone = everyone.map(w => "- " + w + " is " + allAbout(w) ).toList
-  //  private def allAbout(who: String) = whoToStatuses(who).keys.to.sorted.map(k => k + " " + whoToStatuses(who)(k)).mkString(", ")
-
   //TODO: this should exclude me ...
-  //  private def aboutEveryone(key: String) = everyone.map(w => "- " + w + " is " + key + " " + whoToStatuses(w).getOrElse(key, "???") ).toList
-  //  private def everyone = whoToStatuses.keys.toList.sorted
   def knows_?(who: String) = state.userToAka.contains(who)
-
-  //  private def keysFor(who: String) = if (!whoToStatuses.contains(who)) mutable.Map.empty[String, String] else whoToStatuses(who)
-
-  //  private def safeDoUpdate(who: String, key: String, value: String, delete: Boolean = false) {
-  //    def updateKey(who: String, key: String, value: String) {
-  //      val state = keysFor(who)
-  //      val newState: immutable.Map[String, String] = state.updated(key, value).toMap
-  //      whoToStatuses.update(who, newState)
-  //    }
-  //
-  //    def deleteKey(who: String, key: String) {
-  //      val state = keysFor(who)
-  //      val newState = state.-(key).toMap
-  //      whoToStatuses.update(who, newState)
-  //    }
-  //
-  //    def deleteAll(who: String) { whoToStatuses.remove(who) }
-  //
-  //    synchronized {
-  //      if (delete) deleteAll(who)
-  //      else if ("-" == value.trim) deleteKey(who, key)
-  //      else updateKey(who, key, value)
-  //      save(RimState(whoToStatuses.toMap))
-  //    }
-  //  }
 }
 
 object Persistence {
@@ -294,14 +250,10 @@ object Persistence {
       val defaultStatuses = List("next", "doing", "done")
       save(RimState(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
     }
-    val raw = Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
-//    if (raw.isEmpty) mutable.Map[String, immutable.Map[String, String]]()
-//    else collection.mutable.Map(raw.toSeq: _*)
-    raw
+    Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
   }
 
   def save(state: RimState) {
-    println("### save: " + state)
     val jsonAst = Json.serialise(state)
     Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
