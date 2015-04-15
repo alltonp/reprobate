@@ -27,6 +27,7 @@ object Messages {
     "- move issue forward ⇒ 'rim [ref] /'",
     "- move issue to end ⇒ 'rim [ref] //'",
     "- move issue backward ⇒ 'rim [ref] .'",
+    "- move issue to backlog ⇒ 'rim [ref] ..'",
     "- own issue ⇒ 'rim [ref] @'",
     "- display this message ⇒ 'rim help'"
   )
@@ -77,6 +78,7 @@ object Commander {
   def process(cmd: In, who: String, currentState: Model): Out = {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
+    //TODO: be nice of the help could be driven off this ...
     cmd match {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
       case In(Some("+"), args) => onAddIssue(args, currentState)
@@ -86,6 +88,7 @@ object Commander {
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentState)
       case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentState)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
+      case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentState)
       case In(Some("help"), Nil) => ooHelp(who)
       case In(Some(""), Nil) => onShowBoard(currentState)
@@ -116,6 +119,16 @@ object Commander {
         val currentIndex = currentState.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
       }
+      val updated = found.copy(status = newStatus, by = Some(currentState.userToAka(who)))
+      val index = currentState.issues.indexOf(found)
+      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+      Out(Presentation.board(updatedState), Some(updatedState))
+    }
+  }
+
+  private def onFastBackwardIssue(who: String, ref: String, currentState: Model) = {
+    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newStatus = None
       val updated = found.copy(status = newStatus, by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
