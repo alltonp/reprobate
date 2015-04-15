@@ -76,15 +76,14 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 }
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue])
-
 case class In(head: Option[String], tail:List[String])
-case class Out(response: Box[LiftResponse], updatedState: Option[Model])
+case class Out(messages: List[String], updatedState: Option[Model])
 
 object Commander {
 
   //TODO: this return is definitely not right ....
   def process(cmd: In, who: String, currentState: Model): Out = {
-    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(t(Messages.notAuthorised(who)), None)
+    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     cmd match {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentState)
@@ -102,11 +101,11 @@ object Commander {
   }
 
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
-    Out(t(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil), None)
+    Out(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
   private def onShowBoard(currentState: Model) = Out(Presentation.board(currentState), None)
 
-  private def ooHelp(who: String) = Out(t(Messages.help(who)), None)
+  private def ooHelp(who: String) = Out(Messages.help(who), None)
 
   private def onOwnIssue(who: String, ref: String, currentState: Model) = {
     val found = currentState.issues.find(_.ref == ref)
@@ -114,9 +113,9 @@ object Commander {
       val updated = found.get.copy(by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
-      Out(t(s"@ ${found.get.render}" :: Nil), Some(updatedState))
+      Out(s"@ ${found.get.render}" :: Nil, Some(updatedState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil), None)
+      Out(Messages.eh + " " + ref :: Nil, None)
     }
   }
 
@@ -133,7 +132,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil), None)
+      Out(Messages.eh + " " + ref :: Nil, None)
     }
 }
 
@@ -151,7 +150,7 @@ object Commander {
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Presentation.board(updatedState), Some(updatedState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil), None)
+      Out(Messages.eh + " " + ref :: Nil, None)
     }
   }
 
@@ -159,9 +158,9 @@ object Commander {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
       val updatedState = currentState.copy(issues = currentState.issues.filterNot(i => i == found.get))
-      Out(t(s"- ${found.get.render}" :: Nil), Some(updatedState))
+      Out(s"- ${found.get.render}" :: Nil, Some(updatedState))
     } else {
-      Out(t(Messages.eh + " " + ref :: Nil), None)
+      Out(Messages.eh + " " + ref :: Nil, None)
     }
   }
 
@@ -170,7 +169,7 @@ object Commander {
     val matching = currentState.issues.filter(i => i.search(query))
     val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
     else matching.reverse.map(i => i.render)
-    Out(t(result), None)
+    Out(result, None)
   }
 
   //TODO: combine
@@ -178,7 +177,7 @@ object Commander {
     val matching = currentState.issues
     val result = if (matching.isEmpty) "no issues found" :: Nil
     else matching.reverse.map(i => i.render)
-    Out(t(result), None)
+    Out(result, None)
   }
 
   private def onAddIssue(args: List[String], currentState: Model) = {
@@ -186,24 +185,23 @@ object Commander {
     val description = args.mkString(" ")
     val created = Issue(ref, description, None, None)
     val updatedState = currentState.copy(issues = created :: currentState.issues)
-    Out(t(s"+ ${created.render}" :: Nil), Some(updatedState))
+    Out(s"+ ${created.render}" :: Nil, Some(updatedState))
   }
 
   private def onAka(who: String, aka: String, currentState: Model) = {
     val updatedState = currentState.copy(userToAka = currentState.userToAka.updated(who, aka.toUpperCase))
-    Out(t(Messages.help(aka.toUpperCase)), Some(updatedState))
+    Out(Messages.help(aka.toUpperCase), Some(updatedState))
   }
 }
 
 object Presentation {
   def board(state: Model) = {
     val stateToIssues = state.issues.groupBy(_.status)
-    val r = state.workflowStates.map(s => {
+    state.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
       val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
       s"$s: (${issuesForState.size})" + issues
     })
-    t(r)
   }
 }
 
@@ -224,7 +222,7 @@ object Controller {
           model = s
           Persistence.save(model)
         })
-        out.response
+        t(out.messages)
       }
 
       //TODO: next ..
