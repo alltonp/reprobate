@@ -67,8 +67,8 @@ case class IssueRef(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, state: Option[String], by: Option[String]) {
-  private val indexed = List(ref, description, state.getOrElse("")).mkString(" ")
+case class Issue(ref: String, description: String, status: Option[String], by: Option[String]) {
+  private val indexed = List(ref, description, status.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
   //TODO: ${state.fold("")(":" + _)}
@@ -123,12 +123,12 @@ object Commander {
   private def onBackwardIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      val nextState = if (found.get.state.isEmpty) None
+      val newStatus = if (found.get.status.isEmpty) None
       else {
-        val currentIndex = currentState.workflowStates.indexOf(found.get.state.get)
+        val currentIndex = currentState.workflowStates.indexOf(found.get.status.get)
         if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
       }
-      val updated = found.get.copy(state = nextState, by = Some(currentState.userToAka(who)))
+      val updated = found.get.copy(status = newStatus, by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
       val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Present.board(newState), Some(newState))
@@ -140,13 +140,13 @@ object Commander {
   private def onForwardIssue(who: String, ref: String, currentState: RimState) = {
     val found = currentState.issues.find(_.ref == ref)
     if (found.isDefined) {
-      val nextState = if (found.get.state.isEmpty) currentState.workflowStates.head
+      val newStatus = if (found.get.status.isEmpty) currentState.workflowStates.head
       else {
-        val currentIndex = currentState.workflowStates.indexOf(found.get.state.get)
+        val currentIndex = currentState.workflowStates.indexOf(found.get.status.get)
         val newIndex = if (currentIndex >= currentState.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentState.workflowStates(newIndex)
       }
-      val updated = found.get.copy(state = Some(nextState), by = Some(currentState.userToAka(who)))
+      val updated = found.get.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found.get)
       val newState = currentState.copy(issues = currentState.issues.updated(index, updated))
       Out(Present.board(newState), Some(newState))
@@ -197,7 +197,7 @@ object Commander {
 
 object Present {
   def board(state: RimState) = {
-    val stateToIssues = state.issues.groupBy(_.state)
+    val stateToIssues = state.issues.groupBy(_.status)
     val r = state.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
       val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
