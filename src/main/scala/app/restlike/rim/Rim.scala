@@ -12,21 +12,11 @@ import net.liftweb.json._
 import scala.collection.immutable
 import scala.io.Source
 
-//TODO: colourise
-//http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python?rq=1
-//http://apple.stackexchange.com/questions/74777/echo-color-coding-stopped-working-in-mountain-lion
-//http://unix.stackexchange.com/questions/43408/printing-colored-text-using-echo
-//e.g. printf '%s \e[0;31m%s\e[0m %s\n' 'Some text' 'in color' 'no more color'
-//TODO: support curl
-//#MESSAGE="(Foo) Deployed ${VERSION} to ${MACHINE_NAME}"
-//#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
-//#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
 object Messages {
   val eh = "- eh?"
   val ok = "- ok"
-//  def red(value: String) = s"\e[1;31m $value \e[0m"
 
-  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'") //s"OK - ${who} is ${key} ${value}"
+  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
 
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
@@ -80,8 +70,6 @@ case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String], updatedState: Option[Model])
 
 object Commander {
-
-  //TODO: this return is definitely not right ....
   def process(cmd: In, who: String, currentState: Model): Out = {
     if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
@@ -257,3 +245,15 @@ object Persistence {
 //TODO: be careful with aka .. they need to be unique
 //TODO: on update, don't show self in list of others and don't show anything if others are empty
 //TODO: make it possible to ask questions and force others to answer them
+//TODO: colourise
+//http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python?rq=1
+//http://apple.stackexchange.com/questions/74777/echo-color-coding-stopped-working-in-mountain-lion
+//http://unix.stackexchange.com/questions/43408/printing-colored-text-using-echo
+//e.g. printf '%s \e[0;31m%s\e[0m %s\n' 'Some text' 'in color' 'no more color'
+//  def red(value: String) = s"\e[1;31m $value \e[0m"
+
+//TODO: (maybe) support curl
+//#MESSAGE="(Foo) Deployed ${VERSION} to ${MACHINE_NAME}"
+//#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
+//#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
+
