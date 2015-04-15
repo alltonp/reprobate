@@ -21,18 +21,24 @@ object Messages {
 
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
-    "- show the release board ⇒ 'rim'",
-    "- set an aka ⇒ 'rim aka [initials]'",
-    "- add issue ⇒ 'rim + [the description]'",
-    "- list issues ⇒ 'rim ? {query}'",
-    "- delete issue ⇒ 'rim [ref] -'",
-    "- edit issue ⇒ 'rim [ref] ='",
-    "- move issue forward ⇒ 'rim [ref] /'",
-    "- move issue to end state ⇒ 'rim [ref] //'",
-    "- move issue backward ⇒ 'rim [ref] .'",
-    "- move issue to backlog ⇒ 'rim [ref] ..'",
-    "- own issue ⇒ 'rim [ref] @'",
-    "- display this message ⇒ 'rim help'"
+    "",
+    "issues:",
+    " - add issue ⇒ 'rim + [the description]'",
+    " - list issues ⇒ 'rim ? {query}'",
+    " - delete issue ⇒ 'rim [ref] -'",
+    " - edit issue ⇒ 'rim [ref] ='",
+    " - own issue ⇒ 'rim [ref] @'",
+    "",
+    "releases:",
+    " - show the board ⇒ 'rim'",
+    " - move issue forward ⇒ 'rim [ref] /'",
+    " - move issue to end state ⇒ 'rim [ref] //'",
+    " - move issue backward ⇒ 'rim [ref] .'",
+    " - move issue to backlog ⇒ 'rim [ref] ..'",
+    "",
+    "other:",
+    " - display this message ⇒ 'rim help'",
+    " - set an aka ⇒ 'rim aka [initials]'"
   )
 
   val install =
