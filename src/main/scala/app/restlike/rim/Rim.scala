@@ -179,16 +179,16 @@ object Model {
 
         case Cmd(Some("?"), Nil) => {
           val matching = state.issues
-          val found = if (matching.isEmpty) "no issues found" :: Nil
+          val result = if (matching.isEmpty) "no issues found" :: Nil
                       else matching.reverse.map(i => i.render)
-          t(found)
+          t(result)
         }
 
         case Cmd(Some("?"), List(query)) => {
           val matching = state.issues.filter(i => i.search(query))
-          val found = if (matching.isEmpty) s"no issues found for: $query" :: Nil
-          else matching.reverse.map(i => i.render)
-          t(found)
+          val result = if (matching.isEmpty) s"no issues found for: $query" :: Nil
+                      else matching.reverse.map(i => i.render)
+          t(result)
         }
 
         case Cmd(Some(ref), List("-")) => {
