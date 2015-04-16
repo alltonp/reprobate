@@ -90,7 +90,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render = s"$ref: $description${renderTags}${renderBy.toUpperCase}${renderStatus}"
+  def render(hideStatus: Boolean = false) = s"$ref: $description${renderTags}${renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
 }
 
 case class Release(tag: String, issues: List[Issue])
@@ -182,7 +182,7 @@ object Commander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"^- ${updatedIssue.render}" :: Nil, Some(updatedModel))
+      Out(s"^- ${updatedIssue.render()}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -191,7 +191,7 @@ object Commander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"^ ${updatedIssue.render}" :: Nil, Some(updatedModel))
+      Out(s"^ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -199,7 +199,7 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render}" :: Nil, Some(updatedModel))
+      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -253,14 +253,14 @@ object Commander {
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"= ${updatedIssue.render}" :: Nil, Some(updatedModel))
+      Out(s"= ${updatedIssue.render()}" :: Nil, Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(s"- ${found.render}" :: Nil, Some(updatedModel))
+      Out(s"- ${found.render()}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -268,14 +268,14 @@ object Commander {
   private def onQueryIssues(currentModel: Model, query: Option[String]) = {
     val matching = query.fold(currentModel.issues)(q => currentModel.issues.filter(i => i.search(q)))
     val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
-    else matching.reverse.map(i => i.render)
+    else matching.reverse.map(i => i.render())
     Out(result, None)
   }
 
   private def onAddIssue(args: List[String], currentModel: Model): Out = {
     if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
     val (created, updatedModel) = currentModel.createIssue(args)
-    Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
+    Out(s"+ ${created.render()}" :: Nil, Some(updatedModel))
   }
 
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model): Out = {
@@ -302,12 +302,12 @@ object Presentation {
     val stateToIssues = model.issues.groupBy(_.status)
     model.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
+      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
   
-  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render}")
+  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render()}")
 }
 
 object Controller {
