@@ -91,6 +91,14 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 case class Release(tag: String, issues: List[Issue])
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
+  def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None) = {
+    val newRef = Controller.issueRef.next
+    val description = args.mkString(" ")
+    val created = Issue(newRef, description, status, by)
+    val updatedModel = this.copy(issues = created :: this.issues)
+    (created, updatedModel)
+  }
+
   def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
@@ -237,19 +245,12 @@ object Commander {
   }
 
   private def onAddIssue(args: List[String], currentModel: Model) = {
-    val newRef = Controller.issueRef.next
-    val description = args.mkString(" ")
-    val created = Issue(newRef, description, None, None)
-    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
+    val (created, updatedModel) = currentModel.createIssue(args)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
-  //TODO: we need model.create(issue)
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
-    val newRef = Controller.issueRef.next
-    val description = args.mkString(" ")
-    val created = Issue(newRef, description, Some(currentModel.endState), Some(currentModel.aka(who)))
-    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
+    val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)))
     Out(Presentation.board(updatedModel), Some(updatedModel))
   }
 
