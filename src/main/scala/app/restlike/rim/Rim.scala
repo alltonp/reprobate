@@ -40,7 +40,7 @@ object Messages {
     "",
     "releases:",
     "  - create             ⇒ 'rim release [tag]'",
-//    "  - list               ⇒ 'rim releases '",
+    "  - list               ⇒ 'rim releases'",
     "",
     "other:",
     "  - set aka            ⇒ 'rim aka [initials]'",
@@ -122,6 +122,7 @@ object Commander {
       case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
+      case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -133,7 +134,12 @@ object Commander {
 
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
-  private def onRelease(tag: String, currentModel: Model) : Out = {
+  private def onShowReleases(currentModel: Model) = {
+    val all = currentModel.released.map(r => r.tag :: r.issues.map(_.render)).flatten
+    Out(all, None)
+  }
+
+  private def onRelease(tag: String, currentModel: Model): Out = {
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
 
