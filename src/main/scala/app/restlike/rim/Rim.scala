@@ -277,13 +277,13 @@ object Controller {
       }
 
       //TODO:
-      //release
       //releases
       //check for dupes when adding ...
       //log all commands somewhere
       //ref # tag
       //ref #- de-tag
       //# show tags
+      // add and done - quick mode
     })
 
   //TODO: this should exclude me ...
