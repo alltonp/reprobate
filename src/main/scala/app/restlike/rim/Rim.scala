@@ -32,7 +32,7 @@ object Messages {
     "  - list/search         ⇒ 'rim ? {query}'",
     "  - own                 ⇒ 'rim [ref] @'",
     "  - tag                 ⇒ 'rim [ref] ^ [tag]'",
-//    "  - detag               ⇒ 'rim [ref] ^- [tag]'",
+    "  - detag               ⇒ 'rim [ref] ^- [tag]'",
     "",
     "board:",
     "  - show                ⇒ 'rim'",
@@ -142,6 +142,7 @@ object Commander {
       case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == "^" => onTagIssue(ref, args.drop(1), currentModel)
+      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == "^-" => onDetagIssue(ref, args.drop(1), currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
@@ -173,6 +174,15 @@ object Commander {
     val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
 
     Out(Presentation.release(release), Some(updatedModel))
+  }
+
+  private def onDetagIssue(ref: String, args: List[String], currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newTags = found.tags -- args
+      val updatedIssue = found.copy(tags = newTags)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(s"^- ${updatedIssue.render}" :: Nil, Some(updatedModel))
+    }
   }
 
   private def onTagIssue(ref: String, args: List[String], currentModel: Model) = {
