@@ -272,8 +272,8 @@ object Controller {
 
       synchronized {
         val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model)
-        out.updatedModel.map(s => {
-          model = s
+        out.updatedModel.map(m => {
+          model = m
           Persistence.save(model)
         })
         t(out.messages)
