@@ -137,20 +137,7 @@ object Commander {
 
     val updatedModel = currentModel.copy(issues = remainder, released = Released(tag, releaseable) :: currentModel.released )
 
-    println(updatedModel)
-
-    Out("wip" :: Nil, Some(updatedModel))
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = if (found.status.isEmpty) None
-//      else {
-//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-//        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
-//      }
-//      val updated = found.copy(status = newStatus, by = Some(currentModel.userToAka(who)))
-//      val index = currentModel.issues.indexOf(found)
-//      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-//      Out(Presentation.board(updatedModel), Some(updatedModel))
-//    }
+    Out(s"released: $tag" :: releaseable.map(i => s"  ${i.render}"), Some(updatedModel))
   }
 
   private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
