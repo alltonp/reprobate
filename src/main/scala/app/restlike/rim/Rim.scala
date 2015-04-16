@@ -82,6 +82,9 @@ case class Released(tag: String, issues: List[Issue])
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Released]) {
   def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
+  def beginState = workflowStates.head
+  def endState = workflowStates.reverse.head
+  def releasableIssues = issues.filter(_.status == Some(endState))
 }
 
 case class In(head: Option[String], tail:List[String])
@@ -119,14 +122,11 @@ object Commander {
   private def onHelp(who: String, currentState: Model) = Out(Messages.help(currentState.aka(who)), None)
 
   private def onRelease(tag: String, currentState: Model) = {
-    val issuesByState = currentState.issues.groupBy(_.status.isDefined)
-    println(issuesByState)
+    val releaseable = currentState.releasableIssues
+    val remainder = currentState.issues diff releaseable
 
-    val inRelease = issuesByState.get(true)
-    val backlog = issuesByState.get(false)
-
-    println(inRelease)
-    println(backlog)
+    println(releaseable)
+    println(remainder)
 
 //    val updatedState = currentState.copy(issues = backlog)
 
@@ -179,7 +179,7 @@ object Commander {
 
   private def onForwardIssue(who: String, ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = if (found.status.isEmpty) currentState.workflowStates.head
+      val newStatus = if (found.status.isEmpty) currentState.beginState
       else {
         val currentIndex = currentState.workflowStates.indexOf(found.status.get)
         val newIndex = if (currentIndex >= currentState.workflowStates.size - 1) currentIndex else currentIndex + 1
@@ -194,7 +194,7 @@ object Commander {
 
   private def onFastForwardIssue(who: String, ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = currentState.workflowStates.reverse.head
+      val newStatus = currentState.beginState
       val updated = found.copy(status = Some(newStatus), by = Some(currentState.userToAka(who)))
       val index = currentState.issues.indexOf(found)
       val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
