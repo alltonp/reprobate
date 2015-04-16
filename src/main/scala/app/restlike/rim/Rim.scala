@@ -23,23 +23,23 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - add ⇒ 'rim + [the description]'",
-    "  - list ⇒ 'rim ? {query}'",
-    "  - delete ⇒ 'rim [ref] -'",
-    "  - edit ⇒ 'rim [ref] ='",
-    "  - own ⇒ 'rim [ref] @'",
+    "  - add                ⇒ 'rim + [the description]'",
+    "  - list               ⇒ 'rim ? {query}'",
+    "  - delete             ⇒ 'rim [ref] -'",
+    "  - edit               ⇒ 'rim [ref] ='",
+    "  - own                ⇒ 'rim [ref] @'",
     "",
-    "releases:",
-    "  - show board ⇒ 'rim'",
-    "  - add/move forward ⇒ 'rim [ref] /'",
-    "  - move to end ⇒ 'rim [ref] //'",
-    "  - move backward ⇒ 'rim [ref] .'",
-    "  - return to backlog ⇒ 'rim [ref] ..'",
+    "board:",
+    "  - show               ⇒ 'rim'",
+    "  - add/move forward   ⇒ 'rim [ref] /'",
+    "  - move to end        ⇒ 'rim [ref] //'",
+    "  - move backward      ⇒ 'rim [ref] .'",
+    "  - return to backlog  ⇒ 'rim [ref] ..'",
 //    "  - release ⇒ 'rim release [tag]'",
     "",
     "other:",
-    "  - set aka ⇒ 'rim aka [initials]'",
-    "  - get help ⇒ 'rim help'"
+    "  - set aka            ⇒ 'rim aka [initials]'",
+    "  - get help           ⇒ 'rim help'"
   )
 
   val install =
@@ -77,7 +77,9 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue]) {
+case class Released(tag: String, issues: List[Issue])
+
+case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Released]) {
   def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
 }
@@ -104,6 +106,7 @@ object Commander {
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentState)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentState)
+      case In(Some("release"), List(tag)) => onRelease(tag, currentState)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -114,6 +117,32 @@ object Commander {
   private def onShowBoard(currentState: Model) = Out(Presentation.board(currentState), None)
 
   private def onHelp(who: String, currentState: Model) = Out(Messages.help(currentState.aka(who)), None)
+
+  private def onRelease(tag: String, currentState: Model) = {
+    val issuesByState = currentState.issues.groupBy(_.status.isDefined)
+    println(issuesByState)
+
+    val inRelease = issuesByState.get(true)
+    val backlog = issuesByState.get(false)
+
+    println(inRelease)
+    println(backlog)
+
+//    val updatedState = currentState.copy(issues = backlog)
+
+    Out("wip" :: Nil, None)
+//    currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) None
+//      else {
+//        val currentIndex = currentState.workflowStates.indexOf(found.status.get)
+//        if (currentIndex <= 0) None else Some(currentState.workflowStates(currentIndex - 1))
+//      }
+//      val updated = found.copy(status = newStatus, by = Some(currentState.userToAka(who)))
+//      val index = currentState.issues.indexOf(found)
+//      val updatedState = currentState.copy(issues = currentState.issues.updated(index, updated))
+//      Out(Presentation.board(updatedState), Some(updatedState))
+//    }
+  }
 
   private def onOwnIssue(who: String, ref: String, currentState: Model) = {
     currentState.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -245,6 +274,7 @@ object Controller {
 
       //TODO:
       //release
+      //releases
       //check for dupes when adding ...
       //log all commands somewhere
       //ref # tag
@@ -261,7 +291,7 @@ object Persistence {
   private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
-    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue]()))
+    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Released]()))
     Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
   }
 
