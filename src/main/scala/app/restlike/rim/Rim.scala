@@ -47,9 +47,9 @@ object Messages {
 //    "  - tags               ⇒ 'rim tags'",
     "  - get help           ⇒ 'rim help'",
 //    "",
-//    "experts:",
+    "experts:",
 //    "  - create and add     ⇒ 'rim +/ description'",
-//    "  - create and end     ⇒ 'rim +// description'",
+    "  - create and end     ⇒ 'rim +// description'",
     ""
   )
 
@@ -100,7 +100,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 }
 
 case class In(head: Option[String], tail:List[String])
-case class Out(messages: List[String], updatedModel: Option[Model])
+case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
   def process(cmd: In, who: String, currentModel: Model): Out = {
@@ -112,6 +112,7 @@ object Commander {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel)
+      case In(Some("+//"), args) => onAddAndEndIssue(args, currentModel)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
@@ -241,6 +242,16 @@ object Commander {
     val created = Issue(newRef, description, None, None)
     val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
+  }
+
+  private def onAddAndEndIssue(args: List[String], currentModel: Model) = {
+//    val newRef = Controller.issueRef.next
+//    val description = args.mkString(" ")
+//    val created = Issue(newRef, description, None, None)
+//    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
+//    rendewr board
+    Out()
+//    Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
