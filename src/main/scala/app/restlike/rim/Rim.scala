@@ -112,7 +112,7 @@ object Commander {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel)
-      case In(Some("+//"), args) => onAddAndEndIssue(args, currentModel)
+      case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
@@ -244,14 +244,13 @@ object Commander {
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
-  private def onAddAndEndIssue(args: List[String], currentModel: Model) = {
-//    val newRef = Controller.issueRef.next
-//    val description = args.mkString(" ")
-//    val created = Issue(newRef, description, None, None)
-//    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
-//    rendewr board
-    Out()
-//    Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
+  //TODO: we need model.create(issue)
+  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
+    val newRef = Controller.issueRef.next
+    val description = args.mkString(" ")
+    val created = Issue(newRef, description, Some(currentModel.endState), Some(currentModel.aka(who)))
+    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
+    Out(Presentation.board(updatedModel), Some(updatedModel))
   }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
