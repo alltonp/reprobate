@@ -86,6 +86,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   def beginState = workflowStates.head
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
+  def releaseTags = released.map(_.tag)
 }
 
 case class In(head: Option[String], tail:List[String])
@@ -122,9 +123,9 @@ object Commander {
 
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
-  private def onRelease(tag: String, currentModel: Model) = {
-    //TODO: should we check that tag is unique?
+  private def onRelease(tag: String, currentModel: Model) : Out = {
     //TODO: check something to release
+    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
 
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
