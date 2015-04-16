@@ -87,7 +87,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, status.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render = s"$ref: $description${by.fold("")(" @" + _.toUpperCase)}${tags.map(t => s" #$t").mkString}"
+  def render = s"$ref: $description${by.fold("")(" @" + _.toUpperCase)}${tags.map(t => s" #$t").mkString.toUpperCase}"
 }
 
 case class Release(tag: String, issues: List[Issue])
