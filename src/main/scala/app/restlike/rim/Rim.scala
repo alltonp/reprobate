@@ -88,7 +88,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 }
 
 case class In(head: Option[String], tail:List[String])
-case class Out(messages: List[String], updatedState: Option[Model])
+case class Out(messages: List[String], updatedModel: Option[Model])
 
 object Commander {
   def process(cmd: In, who: String, currentModel: Model): Out = {
@@ -128,7 +128,7 @@ object Commander {
     println(releaseable)
     println(remainder)
 
-//    val updatedState = currentModel.copy(issues = backlog)
+//    val updatedModel = currentModel.copy(issues = backlog)
 
     Out("wip" :: Nil, None)
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -139,8 +139,8 @@ object Commander {
 //      }
 //      val updated = found.copy(status = newStatus, by = Some(currentModel.userToAka(who)))
 //      val index = currentModel.issues.indexOf(found)
-//      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-//      Out(Presentation.board(updatedState), Some(updatedState))
+//      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+//      Out(Presentation.board(updatedModel), Some(updatedModel))
 //    }
   }
 
@@ -148,8 +148,8 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updated = found.copy(by = Some(currentModel.userToAka(who)))
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(s"@ ${found.render}" :: Nil, Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(s"@ ${found.render}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -162,8 +162,8 @@ object Commander {
       }
       val updated = found.copy(status = newStatus, by = Some(currentModel.userToAka(who)))
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(Presentation.board(updatedState), Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
@@ -172,8 +172,8 @@ object Commander {
       val newStatus = None
       val updated = found.copy(status = newStatus, by = None)
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(Presentation.board(updatedState), Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
@@ -187,8 +187,8 @@ object Commander {
       }
       val updated = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(Presentation.board(updatedState), Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
@@ -197,8 +197,8 @@ object Commander {
       val newStatus = currentModel.beginState
       val updated = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(Presentation.board(updatedState), Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
@@ -207,15 +207,15 @@ object Commander {
       val newDescription = args.mkString(" ")
       val updated = found.copy(description = newDescription)
       val index = currentModel.issues.indexOf(found)
-      val updatedState = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(s"= ${updated.render}" :: Nil, Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      Out(s"= ${updated.render}" :: Nil, Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedState = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(s"- ${found.render}" :: Nil, Some(updatedState))
+      val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
+      Out(s"- ${found.render}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -231,14 +231,14 @@ object Commander {
     val newRef = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(newRef, description, None, None)
-    val updatedState = currentModel.copy(issues = created :: currentModel.issues)
-    Out(s"+ ${created.render}" :: Nil, Some(updatedState))
+    val updatedModel = currentModel.copy(issues = created :: currentModel.issues)
+    Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
     if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
-    val updatedState = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
-    Out(Messages.help(aka.toUpperCase), Some(updatedState))
+    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
+    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
   }
 }
 
@@ -265,7 +265,7 @@ object Controller {
 
       synchronized {
         val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model)
-        out.updatedState.map(s => {
+        out.updatedModel.map(s => {
           model = s
           Persistence.save(model)
         })
