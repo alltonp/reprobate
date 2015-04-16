@@ -37,7 +37,8 @@ object Messages {
     "  - return to backlog  ⇒ 'rim [ref] ..'",
     "",
     "releases:",
-    "  - release            ⇒ 'rim release [tag]'",
+    "  - create             ⇒ 'rim release [tag]'",
+//    "  - list               ⇒ 'rim releases '",
     "",
     "other:",
     "  - set aka            ⇒ 'rim aka [initials]'",
@@ -270,13 +271,8 @@ object Controller {
       }
 
       //TODO:
-      //releases
       //check for dupes when adding ...
       //log all commands somewhere
-      //ref # tag
-      //ref #- de-tag
-      //# show tags
-      // add and done - quick mode
     })
 
   //TODO: this should exclude me ...
