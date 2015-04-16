@@ -203,7 +203,7 @@ object Commander {
 
   private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = currentModel.beginState
+      val newStatus = currentModel.endState
       val updated = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
       val index = currentModel.issues.indexOf(found)
       val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
