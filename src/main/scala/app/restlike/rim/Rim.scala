@@ -124,14 +124,11 @@ object Commander {
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
   private def onRelease(tag: String, currentModel: Model) : Out = {
-    //TODO: check something to release
-    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
-
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
 
-    println(releaseable)
-    println(remainder)
+    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
+    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
 
     val updatedModel = currentModel.copy(issues = remainder, released = Released(tag, releaseable) :: currentModel.released )
 
@@ -307,6 +304,8 @@ object Persistence {
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 }
+
+//TODO: handle corrupted rim.json
 
 //TODO: protect against empty value
 //TODO: discover common keys and present them when updating
