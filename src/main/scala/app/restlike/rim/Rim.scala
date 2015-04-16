@@ -18,6 +18,7 @@ object Messages {
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
   def notFound(ref: String) = problem("issue not found: $ref")
+  def descriptionEmpty = problem(s"description is empty")
   def problem(message: String) = List(s"problem - $message")
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
@@ -246,22 +247,20 @@ object Commander {
     Out(result, None)
   }
 
-  //TODO: should barf on empty
   private def onAddIssue(args: List[String], currentModel: Model): Out = {
-    if (args.mkString("").trim.isEmpty) return Out(Messages.problem(s"description is empty"), None)
-
+    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
     val (created, updatedModel) = currentModel.createIssue(args)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
-  //TODO: should barf on empty
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model) = {
+  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model): Out = {
+    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
     val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)))
     Out(Presentation.board(updatedModel), Some(updatedModel))
   }
 
-  //TODO: should barf on empty
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
+  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model): Out = {
+    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
     val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)))
     Out(Presentation.board(updatedModel), Some(updatedModel))
   }
