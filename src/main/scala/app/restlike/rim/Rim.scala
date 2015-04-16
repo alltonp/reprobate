@@ -176,6 +176,7 @@ object Commander {
     }
   }
 
+  //TODO: use updateIssue
   private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) None
@@ -190,6 +191,7 @@ object Commander {
     }
   }
 
+  //TODO: use updateIssue
   private def onFastBackwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
@@ -200,6 +202,7 @@ object Commander {
     }
   }
 
+  //TODO: use updateIssue
   private def onForwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) currentModel.beginState
@@ -215,6 +218,7 @@ object Commander {
     }
   }
 
+  //TODO: use updateIssue
   private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = currentModel.endState
@@ -225,6 +229,7 @@ object Commander {
     }
   }
 
+  //TODO: use updateIssue
   private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newDescription = args.mkString(" ")
