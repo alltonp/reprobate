@@ -1,8 +1,8 @@
 package app.restlike.rim
 
-import java.io.File
+//import java.io.File
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Paths, StandardOpenOption}
+import java.nio.file.{Files, Path, Paths, StandardOpenOption}
 
 import app.restlike.rim.Responder._
 import net.liftweb.common._
@@ -10,7 +10,7 @@ import net.liftweb.http._
 import net.liftweb.json._
 
 import scala.collection.immutable
-import scala.io.Source
+import scala.reflect.io.File
 
 object Messages {
   val eh = "- eh?"
@@ -19,37 +19,38 @@ object Messages {
   def notFound(ref: String) = problem("issue not found: $ref")
   def problem(message: String) = List(s"problem - $message")
 
+  //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - create             ⇒ 'rim + [the description]'",
-    "  - update             ⇒ 'rim [ref] ='",
-    "  - delete             ⇒ 'rim [ref] -'",
-    "  - list/search        ⇒ 'rim ? {query}'",
-    "  - own                ⇒ 'rim [ref] @'",
-//    "  - tag                ⇒ 'rim [ref] ^ [tag]'",
-//    "  - detag              ⇒ 'rim [ref] ^- [tag]'",
+    "  - create              ⇒ 'rim + [the description]'",
+    "  - update              ⇒ 'rim [ref] ='",
+    "  - delete              ⇒ 'rim [ref] -'",
+    "  - list/search         ⇒ 'rim ? {query}'",
+    "  - own                 ⇒ 'rim [ref] @'",
+//    "  - tag                 ⇒ 'rim [ref] ^ [tag]'",
+//    "  - detag               ⇒ 'rim [ref] ^- [tag]'",
     "",
     "board:",
-    "  - show               ⇒ 'rim'",
-    "  - add/move forward   ⇒ 'rim [ref] /'",
-    "  - move to end        ⇒ 'rim [ref] //'",
-    "  - move backward      ⇒ 'rim [ref] .'",
-    "  - return to backlog  ⇒ 'rim [ref] ..'",
+    "  - show                ⇒ 'rim'",
+    "  - add/move forward    ⇒ 'rim [ref] /'",
+    "  - move to end         ⇒ 'rim [ref] //'",
+    "  - move backward       ⇒ 'rim [ref] .'",
+    "  - return to backlog   ⇒ 'rim [ref] ..'",
     "",
     "releases:",
-    "  - create             ⇒ 'rim release [tag]'",
-    "  - list               ⇒ 'rim releases'",
+    "  - create              ⇒ 'rim release [tag]'",
+    "  - list                ⇒ 'rim releases'",
     "",
     "other:",
-    "  - set aka            ⇒ 'rim aka [initials]'",
-//    "  - tags               ⇒ 'rim tags'",
-    "  - get help           ⇒ 'rim help'",
+    "  - set aka             ⇒ 'rim aka [initials]'",
+//    "  - tags                ⇒ 'rim tags'",
+    "  - get help            ⇒ 'rim help'",
 //    "",
     "experts:",
-    "  - create and add     ⇒ 'rim +/ description'",
-    "  - create and end     ⇒ 'rim +// description'",
+    "  - create and forward  ⇒ 'rim +/ description'",
+    "  - create and end      ⇒ 'rim +// description'",
     ""
   )
 
@@ -281,7 +282,10 @@ object Presentation {
 }
 
 object Controller {
+  println("### Rim init ..")
   private var model = Persistence.load
+  println(model)
+  println("### Rim init done ...")
   val issueRef = IssueRef(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
 
   def process(who: String, req: Req): Box[LiftResponse] =
@@ -304,6 +308,7 @@ object Controller {
       //log all commands somewhere
       //show count of issues
       //show count of releases
+      //store the when? (arguably it could be in the log)
     })
 
   //TODO: this should exclude me ...
@@ -311,19 +316,35 @@ object Controller {
 }
 
 object Persistence {
-  private val file = new File("rim.json")
+  private val file = Paths.get("rim.json")
   private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
-    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release]()))
-    Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
+    if (!file.toFile.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release]()))
+    Json.deserialise(Filepath.load(file))
   }
 
   def save(state: Model) {
-    Files.write(Paths.get(file.getName), pretty(render(Json.serialise(state))).getBytes(StandardCharsets.UTF_8),
-      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
+    Filepath.save(pretty(render(Json.serialise(state))), file)
   }
 }
+
+object Filepath {
+  def save(content: String, path: Path) = {
+    Files.write(path, content.getBytes(StandardCharsets.UTF_8),
+      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
+  }
+
+  def append(content: String, path: Path) = {
+    Files.write(path, content.getBytes(StandardCharsets.UTF_8),
+      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)
+  }
+
+  def load(path: Path) = File(path.toFile).slurp()
+
+  def create(path: Path) = Files.createFile(path)
+}
+
 
 //TODO: handle corrupted rim.json
 
