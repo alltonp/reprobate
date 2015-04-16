@@ -97,23 +97,17 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     val description = args.mkString(" ")
     val created = Issue(newRef, description, status, by)
     val updatedModel = this.copy(issues = created :: this.issues)
+    //TODO: use case class
     (created, updatedModel)
   }
 
   def updateIssue(updated: Issue) = {
     val index = this.issues.indexOf(findIssue(updated.ref).get)
-    println(index)
     this.copy(issues = this.issues.updated(index, updated))
   }
 
   def aka(who: String) = userToAka(who)
-  def findIssue(ref: String) = {
-    println(ref)
-    println(issues)
-    val r = issues.find(_.ref == ref)
-    println(r)
-    r
-  }
+  def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
@@ -223,8 +217,6 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = currentModel.endState
       val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
-      println(found)
-      println(updatedIssue)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
@@ -315,7 +307,6 @@ object Controller {
       //check for dupes when adding ...
       //show count of issues
       //show count of releases
-      //store the when? (arguably it could be in the log)
     })
 
   //TODO: this should exclude me ...

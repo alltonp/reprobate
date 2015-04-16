@@ -17,7 +17,7 @@ object Rim extends RestHelper {
 object Responder {
   def t(messages: List[String], downcase: Boolean = false) = {
     val response = messages.mkString("\n")
-    println("<= " + response)
+//    println("<= " + response)
     Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
   }
 }
