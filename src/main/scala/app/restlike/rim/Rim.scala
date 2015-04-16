@@ -31,7 +31,7 @@ object Messages {
     "  - delete              ⇒ 'rim [ref] -'",
     "  - list/search         ⇒ 'rim ? {query}'",
     "  - own                 ⇒ 'rim [ref] @'",
-//    "  - tag                 ⇒ 'rim [ref] ^ [tag]'",
+    "  - tag                 ⇒ 'rim [ref] ^ [tag]'",
 //    "  - detag               ⇒ 'rim [ref] ^- [tag]'",
     "",
     "board:",
@@ -49,7 +49,7 @@ object Messages {
     "  - set aka             ⇒ 'rim aka [initials]'",
 //    "  - tags                ⇒ 'rim tags'",
     "  - get help            ⇒ 'rim help'",
-//    "",
+    "",
     "experts:",
     "  - create and forward  ⇒ 'rim +/ description'",
     "  - create and end      ⇒ 'rim +// description'",
@@ -85,7 +85,7 @@ case class IssueRef(initial: Long) {
 
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty) {
   private def renderBy = by.fold("")(" @" + _)
-  private def renderTags = tags.map(t => s" #$t").mkString
+  private def renderTags = tags.toList.sorted.map(t => s" #$t").mkString
   private val indexed = List(ref, description, status.getOrElse(""), renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
