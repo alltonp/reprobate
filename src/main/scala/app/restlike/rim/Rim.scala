@@ -88,9 +88,9 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
-case class Released(tag: String, issues: List[Issue])
+case class Release(tag: String, issues: List[Issue])
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Released]) {
+case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
@@ -135,7 +135,7 @@ object Commander {
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
   private def onShowReleases(currentModel: Model) = {
-    val all = currentModel.released.map(r => s"${r.tag}:" :: r.issues.map(i => s"  ${i.render}")).flatten
+    val all = currentModel.released.map(Presentation.release(_)).flatten
     Out(all, None)
   }
 
@@ -146,9 +146,10 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
 
-    val updatedModel = currentModel.copy(issues = remainder, released = Released(tag, releaseable) :: currentModel.released )
+    val release = Release(tag, releaseable)
+    val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
 
-    Out(s"released: $tag" :: releaseable.map(i => s"  ${i.render}"), Some(updatedModel))
+    Out(Presentation.release(release), Some(updatedModel))
   }
 
   private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
@@ -258,6 +259,8 @@ object Presentation {
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
+  
+  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render}")
 }
 
 object Controller {
@@ -295,7 +298,7 @@ object Persistence {
   private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
-    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Released]()))
+    if (!file.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release]()))
     Json.deserialise(Source.fromFile(file).getLines().mkString("\n"))
   }
 
