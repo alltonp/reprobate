@@ -154,7 +154,9 @@ object Commander {
 
   private def onShowReleases(currentModel: Model) = {
     val all = currentModel.released.map(Presentation.release(_)).flatten
-    Out(all, None)
+    val result = if (all.isEmpty) s"no releases found" :: Nil
+    else all
+    Out(result, None)
   }
 
   private def onRelease(tag: String, currentModel: Model): Out = {
