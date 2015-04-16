@@ -89,7 +89,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, status.getOrElse(""), renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render = s"$ref: $description${renderBy.toUpperCase}${renderTags}"
+  def render = s"$ref: $description${renderTags}${renderBy.toUpperCase}"
 }
 
 case class Release(tag: String, issues: List[Issue])
