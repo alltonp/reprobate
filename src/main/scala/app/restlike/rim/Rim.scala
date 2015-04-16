@@ -359,6 +359,8 @@ object Tracker {
     val content = List(DateTime.now, who, what).mkString("|") + "\n"
     Filepath.append(content, file)
   }
+
+  def view = Filepath.load(file).split("\n").reverse.toList
 }
 
 //TODO: use the one in little instead
