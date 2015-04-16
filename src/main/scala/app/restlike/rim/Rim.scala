@@ -219,7 +219,7 @@ object Presentation {
     state.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
       val issues = issuesForState.map(i => s"\n  ${i.render}").mkString
-      s"$s: (${issuesForState.size})" + issues
+      s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
 }
@@ -247,6 +247,9 @@ object Controller {
       //release
       //check for dupes when adding ...
       //log all commands somewhere
+      //ref # tag
+      //ref #- de-tag
+      //# show tags
     })
 
   //TODO: this should exclude me ...
