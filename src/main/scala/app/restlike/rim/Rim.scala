@@ -101,12 +101,19 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   }
 
   def updateIssue(updated: Issue) = {
-    val index = issues.indexOf(updated)
+    val index = this.issues.indexOf(findIssue(updated.ref).get)
+    println(index)
     this.copy(issues = this.issues.updated(index, updated))
   }
 
   def aka(who: String) = userToAka(who)
-  def findIssue(ref: String) = issues.find(_.ref == ref)
+  def findIssue(ref: String) = {
+    println(ref)
+    println(issues)
+    val r = issues.find(_.ref == ref)
+    println(r)
+    r
+  }
   def beginState = workflowStates.head
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
@@ -176,7 +183,6 @@ object Commander {
     }
   }
 
-  //TODO: use updateIssue
   private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) None
@@ -184,25 +190,21 @@ object Commander {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
       }
-      val updated = found.copy(status = newStatus, by = Some(currentModel.userToAka(who)))
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      val updatedIssue = found.copy(status = newStatus, by = Some(currentModel.userToAka(who)))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
-  //TODO: use updateIssue
   private def onFastBackwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
-      val updated = found.copy(status = newStatus, by = None)
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      val updatedIssue = found.copy(status = newStatus, by = None)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
-  //TODO: use updateIssue
   private def onForwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) currentModel.beginState
@@ -211,32 +213,29 @@ object Commander {
         val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentModel.workflowStates(newIndex)
       }
-      val updated = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
-  //TODO: use updateIssue
   private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = currentModel.endState
-      val updated = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
+      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
+      println(found)
+      println(updatedIssue)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
   }
 
-  //TODO: use updateIssue
   private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newDescription = args.mkString(" ")
-      val updated = found.copy(description = newDescription)
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(s"= ${updated.render}" :: Nil, Some(updatedModel))
+      val updatedIssue = found.copy(description = newDescription)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(s"= ${updatedIssue.render}" :: Nil, Some(updatedModel))
     }
   }
 
@@ -255,16 +254,19 @@ object Commander {
     Out(result, None)
   }
 
+  //TODO: should barf on empty
   private def onAddIssue(args: List[String], currentModel: Model) = {
     val (created, updatedModel) = currentModel.createIssue(args)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
 
+  //TODO: should barf on empty
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model) = {
     val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)))
     Out(Presentation.board(updatedModel), Some(updatedModel))
   }
 
+  //TODO: should barf on empty
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
     val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)))
     Out(Presentation.board(updatedModel), Some(updatedModel))
