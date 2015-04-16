@@ -290,11 +290,11 @@ object Controller {
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
-      val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-      Tracker.track(who, value)
-      val bits = value.split(" ").map(_.trim)
-
       synchronized {
+        val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
+        Tracker.track(who, value)
+        val bits = value.split(" ").map(_.trim)
+
         val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model)
         out.updatedModel.map(m => {
           model = m
