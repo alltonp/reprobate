@@ -282,10 +282,7 @@ object Presentation {
 }
 
 object Controller {
-  println("### Rim init ..")
   private var model = Persistence.load
-  println(model)
-  println("### Rim init done ...")
   val issueRef = IssueRef(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
 
   def process(who: String, req: Req): Box[LiftResponse] =
@@ -329,6 +326,7 @@ object Persistence {
   }
 }
 
+//TODO: use the one in little instead
 object Filepath {
   def save(content: String, path: Path) = {
     Files.write(path, content.getBytes(StandardCharsets.UTF_8),
