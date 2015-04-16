@@ -247,7 +247,9 @@ object Commander {
   }
 
   //TODO: should barf on empty
-  private def onAddIssue(args: List[String], currentModel: Model) = {
+  private def onAddIssue(args: List[String], currentModel: Model): Out = {
+    if (args.mkString("").trim.isEmpty) return Out(Messages.problem(s"description is empty"), None)
+
     val (created, updatedModel) = currentModel.createIssue(args)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
   }
