@@ -35,7 +35,8 @@ object Messages {
     "  - move to end        ⇒ 'rim [ref] //'",
     "  - move backward      ⇒ 'rim [ref] .'",
     "  - return to backlog  ⇒ 'rim [ref] ..'",
-//    "  - release ⇒ 'rim release [tag]'",
+    "  - release            ⇒ 'rim release [tag]'",
+  //TODO: add releases section
     "",
     "other:",
     "  - set aka            ⇒ 'rim aka [initials]'",
@@ -123,6 +124,7 @@ object Commander {
 
   private def onRelease(tag: String, currentModel: Model) = {
     //TODO: should we check that tag is unique?
+    //TODO: check something to release
 
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
