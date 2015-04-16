@@ -83,7 +83,7 @@ case class IssueRef(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String]) {
+case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty) {
   private val indexed = List(ref, description, status.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
@@ -174,14 +174,12 @@ object Commander {
   }
 
   private def onTagIssue(ref: String, args: List[String], currentModel: Model) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newDescription = args.mkString(" ")
-//      val updatedIssue = found.copy(description = newDescription)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(s"= ${updatedIssue.render}" :: Nil, Some(updatedModel))
-//    }
-    println(args)
-    Out()
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newTags = found.tags ++ args
+      val updatedIssue = found.copy(tags = newTags)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(s"^ ${updatedIssue.render}" :: Nil, Some(updatedModel))
+    }
   }
 
   private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
