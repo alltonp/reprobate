@@ -84,10 +84,12 @@ case class IssueRef(initial: Long) {
 }
 
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty) {
-  private val indexed = List(ref, description, status.getOrElse("")).mkString(" ")
+  private def renderBy = by.fold("")(" @" + _)
+  private def renderTags = tags.map(t => s" #$t").mkString
+  private val indexed = List(ref, description, status.getOrElse(""), renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render = s"$ref: $description${by.fold("")(" @" + _.toUpperCase)}${tags.map(t => s" #$t").mkString.toUpperCase}"
+  def render = s"$ref: $description${renderBy.toUpperCase}${renderTags}"
 }
 
 case class Release(tag: String, issues: List[Issue])
