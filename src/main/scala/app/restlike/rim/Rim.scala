@@ -8,6 +8,7 @@ import app.restlike.rim.Responder._
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.json._
+import org.joda.time.DateTime
 
 import scala.collection.immutable
 import scala.reflect.io.File
@@ -287,8 +288,8 @@ object Controller {
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
-      val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim
-      println(s"=> $who: [${value}]")
+      val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
+      Tracker.track(who, value)
       val bits = value.split(" ").map(_.trim)
 
       synchronized {
@@ -323,6 +324,15 @@ object Persistence {
 
   def save(state: Model) {
     Filepath.save(pretty(render(Json.serialise(state))), file)
+  }
+}
+
+object Tracker {
+  private val file = Paths.get("tracking.txt")
+
+  def track(who: String, what: String) {
+    val content = List(DateTime.now, who, what).mkString("|") + "\n"
+    Filepath.append(content, file)
   }
 }
 
