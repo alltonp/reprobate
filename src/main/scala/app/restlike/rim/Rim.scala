@@ -23,10 +23,10 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - add                ⇒ 'rim + [the description]'",
+    "  - create             ⇒ 'rim + [the description]'",
     "  - list               ⇒ 'rim ? {query}'",
     "  - delete             ⇒ 'rim [ref] -'",
-    "  - edit               ⇒ 'rim [ref] ='",
+    "  - update             ⇒ 'rim [ref] ='",
     "  - own                ⇒ 'rim [ref] @'",
     "",
     "board:",
@@ -40,7 +40,12 @@ object Messages {
     "",
     "other:",
     "  - set aka            ⇒ 'rim aka [initials]'",
-    "  - get help           ⇒ 'rim help'"
+    "  - get help           ⇒ 'rim help'",
+//    "",
+//    "experts:",
+//    "  - create and add     ⇒ 'rim +/ description'",
+//    "  - create and end     ⇒ 'rim +// description'",
+    ""
   )
 
   val install =
