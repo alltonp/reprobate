@@ -100,6 +100,11 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     (created, updatedModel)
   }
 
+  def updateIssue(updated: Issue) = {
+    val index = issues.indexOf(updated)
+    this.copy(issues = this.issues.updated(index, updated))
+  }
+
   def aka(who: String) = userToAka(who)
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
@@ -165,10 +170,9 @@ object Commander {
 
   private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updated = found.copy(by = Some(currentModel.userToAka(who)))
-      val index = currentModel.issues.indexOf(found)
-      val updatedModel = currentModel.copy(issues = currentModel.issues.updated(index, updated))
-      Out(s"@ ${found.render}" :: Nil, Some(updatedModel))
+      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(s"@ ${updatedIssue.render}" :: Nil, Some(updatedModel))
     }
   }
 
