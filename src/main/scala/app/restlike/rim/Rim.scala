@@ -48,7 +48,7 @@ object Messages {
     "  - get help           ⇒ 'rim help'",
 //    "",
     "experts:",
-//    "  - create and add     ⇒ 'rim +/ description'",
+    "  - create and add     ⇒ 'rim +/ description'",
     "  - create and end     ⇒ 'rim +// description'",
     ""
   )
@@ -120,6 +120,7 @@ object Commander {
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel)
+      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel)
       case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
@@ -247,6 +248,11 @@ object Commander {
   private def onAddIssue(args: List[String], currentModel: Model) = {
     val (created, updatedModel) = currentModel.createIssue(args)
     Out(s"+ ${created.render}" :: Nil, Some(updatedModel))
+  }
+
+  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model) = {
+    val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)))
+    Out(Presentation.board(updatedModel), Some(updatedModel))
   }
 
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
