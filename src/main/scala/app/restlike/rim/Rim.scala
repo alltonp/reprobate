@@ -86,7 +86,6 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, status.getOrElse("")).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  //TODO: ${state.fold("")(":" + _)}
   def render = s"$ref: $description ${by.fold("")("@" + _.toUpperCase)}"
 }
 
@@ -303,7 +302,6 @@ object Controller {
 
       //TODO:
       //check for dupes when adding ...
-      //log all commands somewhere
       //show count of issues
       //show count of releases
       //store the when? (arguably it could be in the log)
