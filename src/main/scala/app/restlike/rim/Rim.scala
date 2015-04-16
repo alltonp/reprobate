@@ -135,7 +135,7 @@ object Commander {
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
   private def onShowReleases(currentModel: Model) = {
-    val all = currentModel.released.map(r => r.tag :: r.issues.map(_.render)).flatten
+    val all = currentModel.released.map(r => s"${r.tag}:" :: r.issues.map(i => s"  ${i.render}")).flatten
     Out(all, None)
   }
 
@@ -282,6 +282,8 @@ object Controller {
       //TODO:
       //check for dupes when adding ...
       //log all commands somewhere
+      //show count of issues
+      //show count of releases
     })
 
   //TODO: this should exclude me ...
