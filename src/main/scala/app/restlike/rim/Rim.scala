@@ -122,15 +122,19 @@ object Commander {
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
   private def onRelease(tag: String, currentModel: Model) = {
+    //TODO: should we check that tag is unique?
+
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
 
     println(releaseable)
     println(remainder)
 
-//    val updatedModel = currentModel.copy(issues = backlog)
+    val updatedModel = currentModel.copy(issues = remainder, released = Released(tag, releaseable) :: currentModel.released )
 
-    Out("wip" :: Nil, None)
+    println(updatedModel)
+
+    Out("wip" :: Nil, Some(updatedModel))
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
 //      val newStatus = if (found.status.isEmpty) None
 //      else {
