@@ -14,7 +14,7 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //FEATURE REQUESTS:
-//- franck wants: rim +/$ blah blah ^ migrations tech-backlog`
+//- franck wants: rim +/$ blah blah : migrations tech-backlog`
 //- add and doing ... +//
 //- add and tag
 //- make tags show as ^
@@ -56,7 +56,7 @@ object Messages {
     "board:",
     "  - show                ⇒ 'rim'",
     "  - add/move forward    ⇒ 'rim [ref] /'",
-    "  - move to end         ⇒ 'rim [ref] //'",
+    "  - move to end         ⇒ 'rim [ref] /$'",
     "  - move backward       ⇒ 'rim [ref] .'",
     "  - return to backlog   ⇒ 'rim [ref] ..'",
     "",
@@ -71,7 +71,7 @@ object Messages {
     "",
     "experts:",
     "  - create and forward  ⇒ 'rim +/ description'",
-    "  - create and end      ⇒ 'rim +// description'",
+    "  - create and end      ⇒ 'rim +/$ description'",
     ""
   )
 
@@ -163,7 +163,7 @@ object Commander {
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("//")) => onFastForwardIssue(who, ref, currentModel)
+      case In(Some(ref), List("/$")) => onFastForwardIssue(who, ref, currentModel)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
