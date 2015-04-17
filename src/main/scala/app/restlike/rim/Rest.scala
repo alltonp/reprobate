@@ -2,7 +2,7 @@ package app.restlike.rim
 
 import net.liftweb.common.Full
 import net.liftweb.http.rest.RestHelper
-import net.liftweb.http.{GetRequest, PlainTextResponse, PostRequest, Req}
+import net.liftweb.http._
 
 object Rim extends RestHelper {
   import app.restlike.rim.Messages._
@@ -11,6 +11,7 @@ object Rim extends RestHelper {
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
     case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker.view, downcase = false)
+    case r@Req("rim" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
   }
 }
