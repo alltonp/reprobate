@@ -208,6 +208,8 @@ object Commander {
     }
   }
 
+  //TODO: model.forwardAState
+  //TODO: model.backwardAState
   private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) None
@@ -305,6 +307,7 @@ object Commander {
   }
 }
 
+//TODO: add issue
 object Presentation {
   def board(model: Model) = {
     val stateToIssues = model.issues.groupBy(_.status)
@@ -338,7 +341,6 @@ object Controller {
       }
 
       //TODO:
-      //check for dupes when adding ...
       //show count of issues
       //show count of releases
     })
