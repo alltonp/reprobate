@@ -14,7 +14,8 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //FEATURE REQUESTS:
-//- franck wants: rim +/$ blah blah : migrations tech-backlog`
+//- Franck: rim +/$ blah blah : migrations tech-backlog`
+//- Franck: I’d like to tag multiple tasks in one go: `rim ref1 ref2 … refN ^ foo bar baz`
 //- add and doing ... +//
 //- add and tag
 //- make tags show as ^
