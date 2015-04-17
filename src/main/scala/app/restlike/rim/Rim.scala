@@ -13,6 +13,20 @@ import org.joda.time.DateTime
 import scala.collection.immutable
 import scala.reflect.io.File
 
+//FEATURE REQUESTS:
+//- franck wants: rim +/$ blah blah ^ migrations tech-backlog`
+//- add and doing ... +//
+//- add and tag
+//- make tags show as ^
+//- search for tags as ^
+//- move /^ start and +/^
+//- move /$ end and +^$
+//what does it mean for . ?
+//cosmetic:
+//- prefix release with "release "
+//later:
+//- private rims
+
 object Messages {
   val eh = "- eh?"
 
