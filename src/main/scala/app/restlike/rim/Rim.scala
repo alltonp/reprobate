@@ -29,6 +29,7 @@ import scala.reflect.io.File
 //tabs should be [a-z0-9\-]
 //actually this is better .! and /!
 //support multiple
+//be able to search on status !done ... which means using a different char ..
 
 //FUTURE:
 //- private rims
