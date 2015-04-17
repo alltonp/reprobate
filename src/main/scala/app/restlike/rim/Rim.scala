@@ -98,7 +98,8 @@ case class Release(tag: String, issues: List[Issue])
 case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
-  def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None): Either[String, IssueCreation] = {
+  def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None): Either[List[String], IssueCreation] = {
+    if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
     val newRef = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(newRef, description, status, by)
@@ -273,26 +274,23 @@ object Commander {
     Out(result, None)
   }
 
-  private def onAddIssue(args: List[String], currentModel: Model): Out = {
-    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
+  private def onAddIssue(args: List[String], currentModel: Model) = {
     currentModel.createIssue(args) match {
-      case Left(e) => Out(Messages.problem(e), None)
+      case Left(e) => Out(e, None)
       case Right(r) => Out(s"+ ${r.created.render()}" :: Nil, Some(r.updatedModel))
     }
   }
 
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model): Out = {
-    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
+  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model) = {
     currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who))) match {
-      case Left(e) => Out(Messages.problem(e), None)
+      case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
   }
 
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model): Out = {
-    if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
+  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
     currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who))) match {
-      case Left(e) => Out(Messages.problem(e), None)
+      case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
   }
