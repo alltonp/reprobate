@@ -44,7 +44,7 @@ object Messages {
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to rim - rudimental issue management © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to rim - rudimentary issue management © 2015 spabloshi ltd",
     "",
     "issues:",
     "  - create              ⇒ 'rim + [the description]'",
