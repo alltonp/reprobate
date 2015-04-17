@@ -19,6 +19,7 @@ object Messages {
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
   def notFound(ref: String) = problem("issue not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
+  def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
   def problem(message: String) = List(s"problem - $message")
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
@@ -100,8 +101,10 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
-    val newRef = Controller.issueRef.next
     val description = args.mkString(" ")
+    val maybeDupe = issues.find(i => i.description == description)
+    if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
+    val newRef = Controller.issueRef.next
     val created = Issue(newRef, description, status, by)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
