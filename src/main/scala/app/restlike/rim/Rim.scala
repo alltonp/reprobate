@@ -25,6 +25,8 @@ import scala.reflect.io.File
 //cosmetic:
 //- prefix release with "release "
 //don't own of its the initial state
+//consider * or : for tag
+//tabs should be [a-z0-9\-]
 
 //FUTURE:
 //- private rims
