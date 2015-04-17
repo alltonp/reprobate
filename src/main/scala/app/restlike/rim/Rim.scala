@@ -14,25 +14,24 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //FEATURE REQUESTS:
-//Franck: rim +/! blah blah : migrations tech-backlog`
-//Franck: I’d like to tag multiple tasks in one go: `rim ref1 ref2 … refN : foo bar baz`
+//Franck: add, do and tag: `rim +/! blah blah : migrations tech-backlog`
+//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 
 //So:
 //- support multiple / in /// and +///
 //- support multiple . in ...
 //- if adding and we find a ":" then treat as tags
-//- move / start and +/
-//- move /! end and +^!
+
 //cosmetic:
 //- prefix release with "release "
 //don't own issue if it ends up in the initial state (i.e. next)
 //tags should be [a-z0-9\-]
-//actually this is better .! and /!
-//support multiple
-//be able to search on status !done ... which means using a different char ..
+//be able to search on status !done ... which means using a different char and besides ! is used now ... _ or ^ maybe
+//consider swapping ^ and : around
 
 //FUTURE:
 //- private rims
+//- grim
 
 object Messages {
   val eh = "- eh?"
