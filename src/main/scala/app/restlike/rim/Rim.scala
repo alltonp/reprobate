@@ -95,14 +95,15 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
 case class Release(tag: String, issues: List[Issue])
 
+case class IssueCreation(created: Issue, updatedModel: Model)
+
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None) = {
     val newRef = Controller.issueRef.next
     val description = args.mkString(" ")
     val created = Issue(newRef, description, status, by)
     val updatedModel = this.copy(issues = created :: this.issues)
-    //TODO: use case class
-    (created, updatedModel)
+    IssueCreation(created, updatedModel)
   }
 
   def updateIssue(updated: Issue) = {
@@ -274,20 +275,20 @@ object Commander {
 
   private def onAddIssue(args: List[String], currentModel: Model): Out = {
     if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
-    val (created, updatedModel) = currentModel.createIssue(args)
-    Out(s"+ ${created.render()}" :: Nil, Some(updatedModel))
+    val result = currentModel.createIssue(args)
+    Out(s"+ ${result.created.render()}" :: Nil, Some(result.updatedModel))
   }
 
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model): Out = {
     if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
-    val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)))
-    Out(Presentation.board(updatedModel), Some(updatedModel))
+    val result = currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)))
+    Out(Presentation.board(result.updatedModel), Some(result.updatedModel))
   }
 
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model): Out = {
     if (args.mkString("").trim.isEmpty) return Out(Messages.descriptionEmpty, None)
-    val (_, updatedModel) = currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)))
-    Out(Presentation.board(updatedModel), Some(updatedModel))
+    val result = currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)))
+    Out(Presentation.board(result.updatedModel), Some(result.updatedModel))
   }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
