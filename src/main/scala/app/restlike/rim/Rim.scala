@@ -24,7 +24,9 @@ import scala.reflect.io.File
 //what does it mean for . ?
 //cosmetic:
 //- prefix release with "release "
-//later:
+//don't own of its the initial state
+
+//FUTURE:
 //- private rims
 
 object Messages {
