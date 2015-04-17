@@ -14,20 +14,19 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //FEATURE REQUESTS:
-//- Franck: rim +/$ blah blah : migrations tech-backlog`
-//- Franck: I’d like to tag multiple tasks in one go: `rim ref1 ref2 … refN ^ foo bar baz`
-//- add and doing ... +//
-//- add and tag
-//- make tags show as ^
-//- search for tags as ^
-//- move /^ start and +/^
-//- move /$ end and +^$
-//what does it mean for . ?
+//Franck: rim +/! blah blah : migrations tech-backlog`
+//Franck: I’d like to tag multiple tasks in one go: `rim ref1 ref2 … refN : foo bar baz`
+
+//So:
+//- support multiple / in /// and +///
+//- support multiple . in ...
+//- if adding and we find a ":" then treat as tags
+//- move / start and +/
+//- move /! end and +^!
 //cosmetic:
 //- prefix release with "release "
-//don't own of its the initial state
-//consider * or : for tag
-//tabs should be [a-z0-9\-]
+//don't own issue if it ends up in the initial state (i.e. next)
+//tags should be [a-z0-9\-]
 //actually this is better .! and /!
 //support multiple
 //be able to search on status !done ... which means using a different char ..
@@ -60,9 +59,9 @@ object Messages {
     "board:",
     "  - show                ⇒ 'rim'",
     "  - add/move forward    ⇒ 'rim [ref] /'",
-    "  - move to end         ⇒ 'rim [ref] /$'",
+    "  - move to end         ⇒ 'rim [ref] /!'",
     "  - move backward       ⇒ 'rim [ref] .'",
-    "  - return to backlog   ⇒ 'rim [ref] ..'",
+    "  - return to backlog   ⇒ 'rim [ref] .!'",
     "",
     "releases:",
     "  - create              ⇒ 'rim release [tag]'",
@@ -75,7 +74,7 @@ object Messages {
     "",
     "experts:",
     "  - create and forward  ⇒ 'rim +/ description'",
-    "  - create and end      ⇒ 'rim +/$ description'",
+    "  - create and end      ⇒ 'rim +/! description'",
     ""
   )
 
@@ -167,9 +166,9 @@ object Commander {
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("/$")) => onFastForwardIssue(who, ref, currentModel)
+      case In(Some(ref), List("/!")) => onFastForwardIssue(who, ref, currentModel)
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("..")) => onFastBackwardIssue(who, ref, currentModel)
+      case In(Some(ref), List(".!")) => onFastBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
