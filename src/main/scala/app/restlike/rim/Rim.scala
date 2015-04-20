@@ -101,12 +101,12 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
 
-  def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None): Either[List[String], IssueCreation] = {
+  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: IssueRef): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
     val description = args.mkString(" ")
     val maybeDupe = issues.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
-    val newRef = Controller.issueRef.next
+    val newRef = refProvider.next
     val created = Issue(newRef, description, status, by)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
@@ -129,7 +129,7 @@ case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
-  def process(cmd: In, who: String, currentModel: Model): Out = {
+  def process(cmd: In, who: String, currentModel: Model, refProvider: IssueRef): Out = {
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
@@ -137,9 +137,9 @@ object Commander {
       case In(Some(""), Nil) => onShowBoard(currentModel)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
-      case In(Some("+"), args) => onAddIssue(args, currentModel)
-      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel)
-      case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel)
+      case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
+      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
+      case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
@@ -281,22 +281,22 @@ object Commander {
     Out(result, None)
   }
 
-  private def onAddIssue(args: List[String], currentModel: Model) = {
-    currentModel.createIssue(args) match {
+  private def onAddIssue(args: List[String], currentModel: Model, refProvider: IssueRef) = {
+    currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(s"+ ${r.created.render()}" :: Nil, Some(r.updatedModel))
     }
   }
 
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model) = {
-    currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who))) match {
+  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: IssueRef) = {
+    currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
   }
 
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model) = {
-    currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who))) match {
+  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: IssueRef) = {
+    currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
@@ -334,7 +334,7 @@ object Controller {
         Tracker.track(who, value)
         val bits = value.split(" ").map(_.trim)
 
-        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model)
+        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model, issueRef)
         out.updatedModel.map(m => {
           model = m
           Persistence.save(model)

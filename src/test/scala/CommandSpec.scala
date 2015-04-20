@@ -1,4 +1,4 @@
-import app.restlike.rim.{Issue, Commander, In, Model}
+import app.restlike.rim._
 import org.scalatest.{MustMatchers, WordSpec}
 
 class CommandSpec extends WordSpec with MustMatchers {
@@ -27,16 +27,15 @@ class CommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("aka"), List("a"))
     val current = Model(Nil, Map.empty, Nil, Nil)
     val expected = current.copy(userToAka = Map("anon" -> "A"))
-    val out = Commander.process(cmd, "anon", current)
+    val out = Commander.process(cmd, "anon", current, IssueRef(0))
     out.updatedModel.mustEqual(Some(expected))
   }
 
   "+" in {
     val cmd = In(Some("+"), List("an", "item"))
     val current = Model(Nil, Map("anon" -> "A"), Nil, Nil)
-    val expected = current.copy(issues = List(Issue("10", "an item", None, None)))
-    val out = Commander.process(cmd, "anon", current)
-    println(out)
+    val expected = current.copy(issues = List(Issue("1", "an item", None, None)))
+    val out = Commander.process(cmd, "anon", current, IssueRef(0))
     out.updatedModel.mustEqual(Some(expected))
   }
 }
