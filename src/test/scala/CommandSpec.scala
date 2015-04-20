@@ -4,9 +4,10 @@ import org.scalatest.{MustMatchers, WordSpec}
 class CommandSpec extends WordSpec with MustMatchers {
 
   "aka" in {
-    val cmd = In(Some("aka"), List("pa"))
-    val model = Model(Nil, Map.empty, Nil, Nil)
-    val out = Commander.process(cmd, "anon", model)
-    out.updatedModel mustEqual(model)
+    val cmd = In(Some("aka"), List("a"))
+    val current = Model(Nil, Map.empty, Nil, Nil)
+    val expected = current.copy(userToAka = Map("anon" -> "A"))
+    val out = Commander.process(cmd, "anon", current)
+    out.updatedModel mustEqual(expected)
   }
 }
