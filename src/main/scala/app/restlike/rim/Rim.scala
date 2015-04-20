@@ -325,7 +325,7 @@ object Presentation {
 
 object Controller {
   private var model = Persistence.load
-  private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
+  private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref.toLong).max)
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
