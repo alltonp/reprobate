@@ -99,6 +99,8 @@ case class Release(tag: String, issues: List[Issue])
 case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
+  def knows_?(who: String) = userToAka.contains(who)
+
   def createIssue(args: List[String], status: Option[String] = None, by: Option[String] = None): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
     val description = args.mkString(" ")
@@ -128,7 +130,7 @@ case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
   def process(cmd: In, who: String, currentModel: Model): Out = {
-    if (!cmd.head.getOrElse("").equals("aka") && !Controller.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
@@ -344,9 +346,6 @@ object Controller {
       //show count of issues
       //show count of releases
     })
-
-  //TODO: this should exclude me ...
-  def knows_?(who: String) = model.userToAka.contains(who)
 }
 
 object Persistence {
