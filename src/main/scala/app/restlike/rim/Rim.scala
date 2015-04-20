@@ -37,7 +37,7 @@ object Messages {
   val eh = "- eh?"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
-  def notFound(ref: String) = problem("issue not found: $ref")
+  def notFound(ref: String) = problem(s"issue not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
   def problem(message: String) = List(s"problem - $message")
