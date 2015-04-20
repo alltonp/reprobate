@@ -75,7 +75,7 @@ object Messages {
     """).stripMargin.split("\n").toList
 }
 
-case class IssueRef(initial: Long) {
+case class RefProvider(initial: Long) {
   private var count = initial
 
   def next = synchronized {
@@ -101,7 +101,7 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
 
-  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: IssueRef): Either[List[String], IssueCreation] = {
+  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
     val description = args.mkString(" ")
     val maybeDupe = issues.find(i => i.description == description)
@@ -129,7 +129,7 @@ case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
-  def process(cmd: In, who: String, currentModel: Model, refProvider: IssueRef): Out = {
+  def process(cmd: In, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
@@ -281,21 +281,21 @@ object Commander {
     Out(result, None)
   }
 
-  private def onAddIssue(args: List[String], currentModel: Model, refProvider: IssueRef) = {
+  private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(s"+ ${r.created.render()}" :: Nil, Some(r.updatedModel))
     }
   }
 
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: IssueRef) = {
+  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
   }
 
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: IssueRef) = {
+  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
@@ -325,7 +325,7 @@ object Presentation {
 
 object Controller {
   private var model = Persistence.load
-  val issueRef = IssueRef(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
+  private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref).max.toLong)
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
@@ -334,7 +334,7 @@ object Controller {
         Tracker.track(who, value)
         val bits = value.split(" ").map(_.trim)
 
-        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model, issueRef)
+        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model, refProvider)
         out.updatedModel.map(m => {
           model = m
           Persistence.save(model)

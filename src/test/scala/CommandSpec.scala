@@ -27,7 +27,7 @@ class CommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("aka"), List("a"))
     val current = Model(Nil, Map.empty, Nil, Nil)
     val expected = current.copy(userToAka = Map("anon" -> "A"))
-    val out = Commander.process(cmd, "anon", current, IssueRef(0))
+    val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
 
@@ -35,7 +35,7 @@ class CommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("+"), List("an", "item"))
     val current = Model(Nil, Map("anon" -> "A"), Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", None, None)))
-    val out = Commander.process(cmd, "anon", current, IssueRef(0))
+    val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
 }
