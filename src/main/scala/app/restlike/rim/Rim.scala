@@ -28,6 +28,7 @@ import scala.reflect.io.File
 //tags should be [a-z0-9\-]
 //be able to search on status !done ... which means using a different char and besides ! is used now ... _ or ^ maybe
 //consider swapping ^ and : around
+//when doing +/ etc .. show the both the created ref and the new board
 
 //FUTURE:
 //- private rims
