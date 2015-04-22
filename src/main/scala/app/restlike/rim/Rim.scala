@@ -161,7 +161,7 @@ object Commander {
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
-      case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
+      case In(Some("+/!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
