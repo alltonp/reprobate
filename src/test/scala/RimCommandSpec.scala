@@ -71,7 +71,16 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "move back (into backlog)" in {
+  "move back a step" in {
+    val cmd = In(Some("1"), List("."))
+    val issue = Issue("1", "an item", Some("doing"), None)
+    val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
+    val expected = current.copy(issues = List(issue.copy(status = Some("next"), by = Some("A"))))
+    val out = Commander.process(cmd, "anon", current, RefProvider(0))
+    out.updatedModel.mustEqual(Some(expected))
+  }
+
+  "move back a step (into backlog)" in {
     val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some("next"), None)
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
@@ -79,4 +88,5 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
+
 }
