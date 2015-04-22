@@ -64,6 +64,7 @@ object Messages {
     "  - list/search         ⇒ 'rim ? {query}'",
     "  - own                 ⇒ 'rim [ref] @'",
 //    "  - disown                 ⇒ 'rim [ref] @-'",
+//    "  - assign                 ⇒ 'rim [ref] @='",
     "  - tag                 ⇒ 'rim [ref] : [tag]'",
     "  - detag               ⇒ 'rim [ref] :- [tag]'",
     "",
