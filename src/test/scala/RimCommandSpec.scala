@@ -6,8 +6,6 @@ class RimCommandSpec extends WordSpec with MustMatchers {
 //TODO: start with happy path
 //  case In(Some(""), Nil) => onShowBoard(currentModel)
 //  case In(Some("help"), Nil) => onHelp(who, currentModel)
-//  case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
-//  case In(Some("+//"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
 //  case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
 //  case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
 //  case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
