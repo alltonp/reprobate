@@ -62,6 +62,13 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   //
 
   "move forward one state" in {
+    val issue = Issue("1", "an item", Some(doing), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(status = Some(done), by = Some(aka))))
+    runAndExpect("1 /", current, expected)
+  }
+
+  "move forward one state (from backlog to begin)" in {
     val issue = Issue("1", "an item", None, None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some(aka))))
@@ -90,6 +97,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .", current, expected)
   }
 
+  //TODO: we should unset the by
   "move back a state (into backlog)" in {
     val issue = Issue("1", "an item", Some(next), None)
     val current = modelWithIssue(issue)
