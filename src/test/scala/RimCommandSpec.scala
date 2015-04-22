@@ -52,4 +52,14 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
+
+  "id /" in {
+    val cmd = In(Some("1"), List("/"))
+    val issue = Issue("1", "an item", None, None)
+    val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
+    val expected = current.copy(issues = List(issue.copy(status = Some("next"), by = Some("A"))))
+    val out = Commander.process(cmd, "anon", current, RefProvider(0))
+    out.updatedModel.mustEqual(Some(expected))
+  }
+
 }
