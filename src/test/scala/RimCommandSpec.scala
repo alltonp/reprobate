@@ -1,6 +1,7 @@
 import app.restlike.rim._
 import org.scalatest.{MustMatchers, WordSpec}
 
+
 class RimCommandSpec extends WordSpec with MustMatchers {
 
 //TODO: start with happy path
@@ -25,7 +26,8 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   private val doing = "doing"
   private val done = "done"
   private val workflowStates = List(next, doing, done)
-  private val usersToAka = Map("anon" -> "A")
+  private val aka = "A"
+  private val usersToAka = Map("anon" -> aka)
 
   "set aka" in {
     val cmd = In(Some("aka"), List("a"))
@@ -46,7 +48,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   "add and move forward one state" in {
     val cmd = In(Some("+/"), List("an", "item"))
     val current = Model(workflowStates, usersToAka, Nil, Nil)
-    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some("A"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
@@ -54,7 +56,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   "add and move forward to end state" in {
     val cmd = In(Some("+/!"), List("an", "item"))
     val current = Model(workflowStates, usersToAka, Nil, Nil)
-    val expected = current.copy(issues = List(Issue("1", "an item", Some(done), Some("A"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", Some(done), Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
@@ -63,7 +65,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("1"), List("/"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
-    val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some("A"))))
+    val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
@@ -72,7 +74,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("1"), List("/!"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
-    val expected = current.copy(issues = List(issue.copy(status = Some(done), by = Some("A"))))
+    val expected = current.copy(issues = List(issue.copy(status = Some(done), by = Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
@@ -81,7 +83,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some(doing), None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
-    val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some("A"))))
+    val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
@@ -90,7 +92,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some(next), None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
-    val expected = current.copy(issues = List(issue.copy(status = None, by = Some("A"))))
+    val expected = current.copy(issues = List(issue.copy(status = None, by = Some(aka))))
     val out = Commander.process(cmd, "anon", current, RefProvider(0))
     out.updatedModel.mustEqual(Some(expected))
   }
