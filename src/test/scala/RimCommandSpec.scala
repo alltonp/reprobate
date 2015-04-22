@@ -1,7 +1,6 @@
 import app.restlike.rim._
 import org.scalatest.{MustMatchers, WordSpec}
 
-
 class RimCommandSpec extends WordSpec with MustMatchers {
 
 //TODO: start with happy path
@@ -30,63 +29,55 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   private val usersToAka = Map("anon" -> aka)
 
   "set aka" in {
-    val cmd = In(Some("aka"), List("a"))
     val current = Model(Nil, Map.empty, Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("aka"), List("a")), current, expected)
   }
 
   "add issue" in {
-    val cmd = In(Some("+"), List("an", "item"))
     val current = Model(Nil, usersToAka, Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", None, None)))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("+"), List("an", "item")), current, expected)
   }
 
   "add and move forward one state" in {
-    val cmd = In(Some("+/"), List("an", "item"))
     val current = Model(workflowStates, usersToAka, Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("+/"), List("an", "item")), current, expected)
   }
 
   "add and move forward to end state" in {
-    val cmd = In(Some("+/!"), List("an", "item"))
     val current = Model(workflowStates, usersToAka, Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", Some(done), Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("+/!"), List("an", "item")), current, expected)
   }
 
   "move forward one state" in {
-    val cmd = In(Some("1"), List("/"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
     val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("1"), List("/")), current, expected)
   }
 
   "move forward to end state" in {
-    val cmd = In(Some("1"), List("/!"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
     val expected = current.copy(issues = List(issue.copy(status = Some(done), by = Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("1"), List("/!")), current, expected)
   }
 
   "move back a state" in {
-    val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some(doing), None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
     val expected = current.copy(issues = List(issue.copy(status = Some(next), by = Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("1"), List(".")), current, expected)
   }
 
   "move back a state (into backlog)" in {
-    val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some(next), None)
     val current = Model(workflowStates, usersToAka, List(issue), Nil)
     val expected = current.copy(issues = List(issue.copy(status = None, by = Some(aka))))
-    runAndExpect(cmd, current, expected)
+    runAndExpect(In(Some("1"), List(".")), current, expected)
   }
 
   private def runAndExpect(cmd: In, current: Model, expected: Model) {
