@@ -40,6 +40,12 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("+ an item", current, expected)
   }
 
+  "add issue (ignoring surplus noise)" in {
+    val current = Model(workflowStates, usersToAka, Nil, Nil)
+    val expected = current.copy(issues = List(Issue("1", "an item", None, None)))
+    runAndExpect("+ an   item  ", current, expected)
+  }
+
   "add and move forward one state" in {
     val current = Model(workflowStates, usersToAka, Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some(aka))))

@@ -152,7 +152,7 @@ case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
-    val bits = value.split(" ").map(_.trim)
+    val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, bits.tail.toList)
 
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
