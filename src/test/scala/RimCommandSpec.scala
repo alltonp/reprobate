@@ -97,6 +97,13 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .", current, expected)
   }
 
+  "move back to begin state (into backlog)" in {
+    val issue = Issue("1", "an item", Some(done), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(status = None, by = None)))
+    runAndExpect("1 .!", current, expected)
+  }
+
   private def runAndExpect(in: String, current: Model, expected: Model) {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
   }
