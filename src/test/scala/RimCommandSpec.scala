@@ -21,7 +21,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
 //  case In(Some("releases"), Nil) => onShowReleases(currentModel)
 //  case In(head, tail) => onUnknownCommand(head, tail)
 
-  "aka" in {
+  "set aka" in {
     val cmd = In(Some("aka"), List("a"))
     val current = Model(Nil, Map.empty, Nil, Nil)
     val expected = current.copy(userToAka = Map("anon" -> "A"))
@@ -29,7 +29,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "+" in {
+  "add issue" in {
     val cmd = In(Some("+"), List("an", "item"))
     val current = Model(Nil, Map("anon" -> "A"), Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", None, None)))
@@ -37,7 +37,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "+/" in {
+  "add and move forward one state" in {
     val cmd = In(Some("+/"), List("an", "item"))
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", Some("next"), Some("A"))))
@@ -45,7 +45,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "+/!" in {
+  "add and move forward to end state" in {
     val cmd = In(Some("+/!"), List("an", "item"))
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), Nil, Nil)
     val expected = current.copy(issues = List(Issue("1", "an item", Some("done"), Some("A"))))
@@ -53,7 +53,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "move forward" in {
+  "move forward one state" in {
     val cmd = In(Some("1"), List("/"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
@@ -62,7 +62,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "move forward to end" in {
+  "move forward to end state" in {
     val cmd = In(Some("1"), List("/!"))
     val issue = Issue("1", "an item", None, None)
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
@@ -71,7 +71,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "move back a step" in {
+  "move back a state" in {
     val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some("doing"), None)
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
@@ -80,7 +80,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     out.updatedModel.mustEqual(Some(expected))
   }
 
-  "move back a step (into backlog)" in {
+  "move back a state (into backlog)" in {
     val cmd = In(Some("1"), List("."))
     val issue = Issue("1", "an item", Some("next"), None)
     val current = Model(List("next", "doing", "done"), Map("anon" -> "A"), List(issue), Nil)
