@@ -151,7 +151,10 @@ case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 object Commander {
-  def process(cmd: In, who: String, currentModel: Model, refProvider: RefProvider): Out = {
+  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
+    val bits = value.split(" ").map(_.trim)
+    val cmd = In(bits.headOption, bits.tail.toList)
+
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
@@ -354,9 +357,7 @@ object Controller {
       synchronized {
         val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker.track(who, value)
-        val bits = value.split(" ").map(_.trim)
-
-        val out = Commander.process(In(bits.headOption, bits.tail.toList), who, model, refProvider)
+        val out = Commander.process(value, who, model, refProvider)
         out.updatedModel.map(m => {
           model = m
           Persistence.save(model)
