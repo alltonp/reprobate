@@ -1,7 +1,7 @@
 import app.restlike.rim._
 import org.scalatest.{MustMatchers, WordSpec}
 
-class CommandSpec extends WordSpec with MustMatchers {
+class RimCommandSpec extends WordSpec with MustMatchers {
 
 //TODO: start with happy path
 //  case In(Some(""), Nil) => onShowBoard(currentModel)
