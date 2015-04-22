@@ -34,6 +34,12 @@ import scala.reflect.io.File
 //- private rims
 //- grim
 
+//more features from CAS
+//-releases should not show status (of course they were all done)
+//show space between releases
+//store when released (eek, data change - so make it an option)
+//spartan bubble ui
+
 object Messages {
   val eh = "- eh?"
 
