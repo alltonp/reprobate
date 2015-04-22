@@ -29,6 +29,7 @@ import scala.reflect.io.File
 //be able to search on status !done ... which means using a different char and besides ! is used now ... _ or ^ maybe
 //consider swapping ^ and : around
 //when doing +/ etc .. show the both the created ref and the new board
+//.sh needs a better message when not running
 
 //FUTURE:
 //- private rims
@@ -39,6 +40,9 @@ import scala.reflect.io.File
 //show space between releases
 //store when released (eek, data change - so make it an option)
 //spartan bubble ui
+
+//event later
+//split and merge {}
 
 object Messages {
   val eh = "- eh?"
@@ -59,6 +63,7 @@ object Messages {
     "  - delete              ⇒ 'rim [ref] -'",
     "  - list/search         ⇒ 'rim ? {query}'",
     "  - own                 ⇒ 'rim [ref] @'",
+//    "  - disown                 ⇒ 'rim [ref] @-'",
     "  - tag                 ⇒ 'rim [ref] : [tag]'",
     "  - detag               ⇒ 'rim [ref] :- [tag]'",
     "",
