@@ -14,10 +14,7 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //FEATURE REQUESTS:
-//Franck: add, do and tag: `rim +/! blah blah : migrations tech-backlog`
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
-
-//So:
 //- support multiple / in /// and +///
 //- support multiple . in ...
 
@@ -25,8 +22,6 @@ import scala.reflect.io.File
 //- prefix release with "release "
 //don't own issue if it ends up in the initial state (i.e. next)
 //tags should be [a-z0-9\-]
-//be able to search on status !done ... which means using a different char and besides ! is used now ... _ or ^ maybe
-//consider swapping ^ and : around
 //when doing +/ etc .. show the both the created ref and the new board
 //.sh needs a better message when not running
 
@@ -34,13 +29,11 @@ import scala.reflect.io.File
 //- private rims
 //- grim
 
-//more features from CAS
-//-releases should not show status (of course they were all done)
 //show space between releases
 //store when released (eek, data change - so make it an option)
 //spartan bubble ui
 
-//event later
+//even later/maybe
 //split and merge {}
 
 object Messages {
