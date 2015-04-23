@@ -112,6 +112,15 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .!", current, expected)
   }
 
+  "show board" in {
+    (pending) //TODO: need to start asserting the Out().messages
+    val issue = Issue("1", "an item", Some(done), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(status = None, by = None)))
+    runAndExpect("", current, expected)
+  }
+
+
   private def runAndExpect(in: String, current: Model, expected: Model) {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
   }
