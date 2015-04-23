@@ -137,11 +137,25 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
-    val description = args.mkString(" ")
+
+    //TODO: this is well shonky!
+    var descriptionBits = List.empty[String]
+    var tagBits = List.empty[String]
+    var tagging = false
+
+    args.foreach(a => {
+      if (a == ":") tagging = true
+      else {
+        if (tagging) tagBits = a :: tagBits
+        else descriptionBits = a :: descriptionBits
+      }
+    })
+
+    val description = descriptionBits.reverse.mkString(" ")
     val maybeDupe = issues.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by)
+    val created = Issue(newRef, description, status, by, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
