@@ -123,7 +123,7 @@ case class RefProvider(initial: Long) {
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty) {
   private val renderBy = by.fold("")(" @" + _)
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
-  private val renderStatus = status.fold("")(" !" + _)
+  private val renderStatus = status.fold("")(" ^" + _)
   private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
