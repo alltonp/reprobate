@@ -159,6 +159,13 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 @= b", current, expected)
   }
 
+  "assign (invalid aka)" in {
+    val issue = Issue("1", "an item", Some(next), Some(aka))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(by = Some(aka2))))
+    runAndExpect("1 @= c", current, expected)
+  }
+
   // show
 
   "show board" in {

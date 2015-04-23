@@ -266,7 +266,8 @@ object Commander {
     }
   }
 
-  private def onAssignIssue(assignee: String, ref: String, currentModel: Model) = {
+  private def onAssignIssue(assignee: String, ref: String, currentModel: Model): Out = {
+    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
