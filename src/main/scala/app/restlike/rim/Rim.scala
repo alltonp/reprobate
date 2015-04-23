@@ -20,7 +20,6 @@ import scala.reflect.io.File
 //So:
 //- support multiple / in /// and +///
 //- support multiple . in ...
-//- if adding and we find a ":" then treat as tags
 
 //cosmetic:
 //- prefix release with "release "
@@ -71,8 +70,10 @@ object Messages {
     "board:",
     "  - show                ⇒ 'rim'",
     "  - add/move forward    ⇒ 'rim [ref] /'",
+    "  - add/move forward many    ⇒ 'rim [ref] //'",
     "  - move to end         ⇒ 'rim [ref] /!'",
     "  - move backward       ⇒ 'rim [ref] .'",
+//    "  - move backward many      ⇒ 'rim [ref] ..'",
     "  - return to backlog   ⇒ 'rim [ref] .!'",
     "",
     "releases:",
@@ -87,6 +88,7 @@ object Messages {
     "",
     "experts:",
     "  - create and forward  ⇒ 'rim +/ description'",
+//    "  - create and forward multiple ⇒ 'rim +// description'",
     "  - create and end      ⇒ 'rim +/! description'",
     ""
   )
