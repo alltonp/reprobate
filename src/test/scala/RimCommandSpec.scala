@@ -26,7 +26,8 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   private val done = "done"
   private val workflowStates = List(next, doing, done)
   private val aka = "A"
-  private val usersToAka = Map("anon" -> aka)
+  private val aka2 = "B"
+  private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
   private val emptyModelWithWorkflow = Model(workflowStates, usersToAka, Nil, Nil)
 
   "set aka" in {
@@ -135,7 +136,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .!", current, expected)
   }
 
-  // others
+  // owning
 
   "own" in {
     val issue = Issue("1", "an item", Some(next), None)
@@ -149,6 +150,13 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(by = None)))
     runAndExpect("1 @-", current, expected)
+  }
+
+  "assign" in {
+    val issue = Issue("1", "an item", Some(next), Some(aka))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(by = Some(aka2))))
+    runAndExpect("1 @= b", current, expected)
   }
 
   // show
