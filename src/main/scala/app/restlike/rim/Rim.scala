@@ -13,6 +13,9 @@ import org.joda.time.DateTime
 import scala.collection.immutable
 import scala.reflect.io.File
 
+//priority
+//don't own issue if it ends up in the initial state (i.e. next)
+
 //FEATURE REQUESTS:
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 //- support multiple / in /// and +///
@@ -20,7 +23,6 @@ import scala.reflect.io.File
 
 //cosmetic:
 //- prefix release with "release "
-//don't own issue if it ends up in the initial state (i.e. next)
 //tags should be [a-z0-9\-]
 //when doing +/ etc .. show the both the created ref and the new board
 //.sh needs a better message when not running
