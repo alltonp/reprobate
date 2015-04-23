@@ -55,8 +55,8 @@ object Messages {
     "  - delete              ⇒ 'rim [ref] -'",
     "  - list/search         ⇒ 'rim ? {query}'",
     "  - own                 ⇒ 'rim [ref] @'",
-//    "  - disown                 ⇒ 'rim [ref] @-'",
-//    "  - assign                 ⇒ 'rim [ref] @='",
+    "  - disown                 ⇒ 'rim [ref] @-'",
+//    "  - assign                 ⇒ 'rim [ref] @= [aka]'",
     "  - tag                 ⇒ 'rim [ref] : [tag]'",
     "  - detag               ⇒ 'rim [ref] :- [tag]'",
     "",
@@ -195,6 +195,7 @@ object Commander {
       case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List(".!")) => onFastBackwardIssue(who, ref, currentModel)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
+      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
@@ -251,6 +252,14 @@ object Commander {
   private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+    }
+  }
+
+  private def onDisownIssue(who: String, ref: String, currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val updatedIssue = found.copy(by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
     }

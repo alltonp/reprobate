@@ -135,6 +135,17 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .!", current, expected)
   }
 
+  // others
+
+  "disown" in {
+    val issue = Issue("1", "an item", Some(next), Some(aka))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(by = None)))
+    runAndExpect("1 @-", current, expected)
+  }
+
+  // show
+
   "show board" in {
     (pending) //TODO: need to start asserting the Out().messages
     val issue = Issue("1", "an item", Some(done), None)
