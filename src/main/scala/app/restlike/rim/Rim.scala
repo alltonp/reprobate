@@ -187,7 +187,7 @@ object Commander {
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-      case In(Some(""), Nil) => onShowBoard(currentModel)
+      case In(None, Nil) => onShowBoard(currentModel)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
