@@ -373,7 +373,7 @@ object Presentation {
     })
   }
   
-  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render()}")
+  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render(hideStatus = true)}")
 }
 
 object Controller {
