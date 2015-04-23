@@ -31,7 +31,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   private val emptyModelWithWorkflow = Model(workflowStates, usersToAka, Nil, Nil)
 
   "set aka" in {
-    val current = Model(Nil, Map.empty, Nil, Nil)
+    val current = Model(Nil, Map("anon2" -> aka2), Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
     runAndExpect("aka a", current, expected)
   }
@@ -160,6 +160,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
   }
 
   "assign (invalid aka)" in {
+    (pending) //TODO: TODO: need to start asserting the Out().messages
     val issue = Issue("1", "an item", Some(next), Some(aka))
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(by = Some(aka2))))
