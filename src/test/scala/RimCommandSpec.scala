@@ -50,10 +50,9 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("+ an   item  ", current, expected)
   }
 
-  //TODO: by should be None
   "add and move forward to begin state" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some(aka))))
+    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), None)))
     runAndExpect("+/ an item", current, expected)
   }
 
@@ -69,10 +68,9 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("+ an item : tag1 tag2", current, expected)
   }
 
-  //TODO: by should be None
   "add and move forward to begin state with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), Some(aka), Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), None, Set("tag1", "tag2"))))
     runAndExpect("+/ an item : tag1 tag2", current, expected)
   }
 

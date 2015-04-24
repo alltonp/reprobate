@@ -357,7 +357,7 @@ object Commander {
   }
 
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.beginState), Some(currentModel.aka(who)), refProvider) match {
+    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
