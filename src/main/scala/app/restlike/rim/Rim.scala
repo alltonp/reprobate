@@ -13,9 +13,6 @@ import org.joda.time.DateTime
 import scala.collection.immutable
 import scala.reflect.io.File
 
-//priority
-//don't own issue if it ends up in the initial state (i.e. next)
-
 //FEATURE REQUESTS:
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 //- support multiple / in /// and +///
@@ -70,6 +67,7 @@ object Messages {
     "  - move backward       ⇒ 'rim [ref] .'",
 //    "  - move backward many      ⇒ 'rim [ref] ..'",
     "  - return to backlog   ⇒ 'rim [ref] .!'",
+  //TODO: do we need return to backlog
     "",
     "releases:",
     "  - create              ⇒ 'rim release [tag]'",
