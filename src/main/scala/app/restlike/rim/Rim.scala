@@ -34,6 +34,9 @@ import scala.reflect.io.File
 //even later/maybe
 //split and merge {}
 
+//support
+//rim ? ??? ... to show unassigned issues only, i.e. the true backlog, whereas ? is search all
+
 object Messages {
   val eh = "- eh?"
 
