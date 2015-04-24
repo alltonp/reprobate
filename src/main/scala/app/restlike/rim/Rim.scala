@@ -163,6 +163,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   }
 
   def aka(who: String) = userToAka(who)
+  def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
   def endState = workflowStates.reverse.head
@@ -229,14 +230,14 @@ object Commander {
   }
 
   private def onShowWhoIsDoingWhat(currentModel: Model) = {
-    val akas = currentModel.userToAka.values
+    val akas = currentModel.akas
     val all = akas.map(aka => {
       val issues = currentModel.issues.filter(_.by == Some(aka))
       Presentation.issuesForUser(aka, issues)
     })
 
     val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
-    else all.flatten.toList
+    else all.flatten
     Out(result, None)
   }
 
