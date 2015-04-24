@@ -56,7 +56,7 @@ object Messages {
     "  - disown                   ⇒ 'rim [ref] @-'",
     "  - assign                   ⇒ 'rim [ref] @= [aka]'",
     "  - tag                      ⇒ 'rim [ref] : [tag1] [tag2] [tagX]'",
-    "  - detag                    ⇒ 'rim [ref] :- [tag]'",
+    "  - detag                    ⇒ 'rim [ref] :- [tag1] [tag2] [tagX]'",
     "",
     "board:",
     "  - show                     ⇒ 'rim'",
