@@ -49,7 +49,7 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimentary issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - create              ⇒ 'rim + [the description]'",
+    "  - create              ⇒ 'rim + [the description] {: tag1 tag2}'",
     "  - update              ⇒ 'rim [ref] ='",
     "  - delete              ⇒ 'rim [ref] -'",
     "  - list/search         ⇒ 'rim ? {query}'",
@@ -80,9 +80,11 @@ object Messages {
     "  - get help            ⇒ 'rim help'",
     "",
     "experts:",
-    "  - create and forward  ⇒ 'rim +/ description'",
+    "  - create and forward  ⇒ 'rim +/ description {: tag1 tag2}'",
 //    "  - create and forward multiple ⇒ 'rim +// description'",
-    "  - create and end      ⇒ 'rim +/! description'",
+    "  - create and end      ⇒ 'rim +/! description {: tag1 tag2}'",
+    "",
+    "where: [arg] = mandatory, {arg} = optional",
     ""
   )
 
