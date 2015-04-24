@@ -76,7 +76,7 @@ object Messages {
     "other:",
     "  - set aka             ⇒ 'rim aka [initials]'",
     "  - list tags           ⇒ 'rim :'",
-//    "  - list owners         ⇒ 'rim @'",
+    "  - who is doing what   ⇒ 'rim @'",
     "  - get help            ⇒ 'rim help'",
     "",
     "experts:",
@@ -204,7 +204,7 @@ object Commander {
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
-      
+      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
@@ -225,6 +225,18 @@ object Commander {
     val all = currentModel.released.map(Presentation.release(_)).flatten
     val result = if (all.isEmpty) s"no releases found" :: Nil
     else all
+    Out(result, None)
+  }
+
+  private def onShowWhoIsDoingWhat(currentModel: Model) = {
+    val akas = currentModel.userToAka.values
+    val all = akas.map(a => {
+      val myIssues = currentModel.issues.filter(_.by == Some(a))
+      s"$a: ${myIssues.mkString(", ")}"
+    })
+
+    val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
+    else all.toList
     Out(result, None)
   }
 
