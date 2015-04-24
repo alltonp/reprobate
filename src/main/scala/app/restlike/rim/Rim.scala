@@ -75,7 +75,7 @@ object Messages {
     "",
     "other:",
     "  - set aka             ⇒ 'rim aka [initials]'",
-//    "  - list tags           ⇒ 'rim :'",
+    "  - list tags           ⇒ 'rim :'",
 //    "  - list owners         ⇒ 'rim @'",
     "  - get help            ⇒ 'rim help'",
     "",
@@ -168,6 +168,11 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
+
+  def tags = {
+    val allIssues = released.map(_.issues).flatten ++ issues
+    allIssues.map(_.tags).flatten.distinct.sorted
+  }
 }
 
 case class In(head: Option[String], tail:List[String])
@@ -199,8 +204,10 @@ object Commander {
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
+      
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
+      case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
@@ -218,6 +225,13 @@ object Commander {
     val all = currentModel.released.map(Presentation.release(_)).flatten
     val result = if (all.isEmpty) s"no releases found" :: Nil
     else all
+    Out(result, None)
+  }
+
+  private def onShowTags(currentModel: Model) = {
+    val all = currentModel.tags
+    val result = if (all.isEmpty) s"no tags found" :: Nil
+    else ": " + all.mkString(", ") :: Nil
     Out(result, None)
   }
 
