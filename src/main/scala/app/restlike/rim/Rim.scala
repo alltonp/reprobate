@@ -122,7 +122,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render(hideStatus: Boolean = false) = s"$ref: $description${renderTags}${renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
+  def render(hideStatus: Boolean = false, hideBy: Boolean = false) = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
 }
 
 case class Release(tag: String, issues: List[Issue])
@@ -416,7 +416,7 @@ object Presentation {
   }
   
   def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render(hideStatus = true)}")
-  def issuesForUser(aka: String, issues: List[Issue]) = s"${aka}:" :: issues.map(i => s"  ${i.render()}")
+  def issuesForUser(aka: String, issues: List[Issue]) = s"${aka}:" :: issues.map(i => s"  ${i.render(hideBy = true)}")
 }
 
 object Controller {
