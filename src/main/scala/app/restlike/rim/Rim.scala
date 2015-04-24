@@ -69,7 +69,7 @@ object Messages {
   //TODO: do we need return to backlog
     "",
     "releases:",
-    "  - create                   ⇒ 'rim release [tag]'",
+    "  - create                   ⇒ 'rim release [label]'",
     "  - list                     ⇒ 'rim releases'",
     "",
     "other:",
