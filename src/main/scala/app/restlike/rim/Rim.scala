@@ -12,30 +12,29 @@ import org.joda.time.DateTime
 import scala.collection.immutable
 import scala.reflect.io.File
 
-//FEATURE REQUESTS:
+//NEXT:
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
-//- support multiple / in /// and +///
-//- support multiple . in ...
-
-//cosmetic:
-//- prefix release with "release "
+//support multiple / in /// and +///
+//support multiple . in ...
 //tags should be [a-z0-9\-]
-//when doing +/ etc .. show the both the created ref and the new board
 //.sh needs a better message when not running
+//rim ? ??? ... to show unassigned issues only, i.e. the true backlog, whereas ? is search all
+//store when released (eek, data change - so make it an option)
+
+//COSMETIC:
+//show space between releases
+//show space between whos doing
+//show counts on both releases and who's doing
+//prefix release with "release "
+//when doing +/ etc .. show the both the created ref and the new board
 
 //FUTURE:
 //- private rims
 //- grim
-
-//show space between releases
-//store when released (eek, data change - so make it an option)
 //spartan bubble ui
 
-//even later/maybe
+//SOMEDAY/MAYBE:
 //split and merge {}
-
-//support
-//rim ? ??? ... to show unassigned issues only, i.e. the true backlog, whereas ? is search all
 
 object Messages {
   val eh = "- eh?"
