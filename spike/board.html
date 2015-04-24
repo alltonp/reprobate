@@ -6,6 +6,79 @@
 
     <style>
 
+        @import url(http://fonts.googleapis.com/css?family=Fredericka+the+Great);
+
+        body {
+        text-align: center;
+        padding-top: 20px;
+        color: white;
+        color: rgba(255,255,255,0.8);
+        background-color: #323232;
+        background: url(http://www.jackiejohnston.us/iceharbor/bg-body.jpg) no-repeat center center fixed;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        }
+
+        h1{
+        font-family: 'Fredericka the Great', cursive;
+        font-weight: 400;
+        font-size: 3em;
+        }
+
+
+        ////
+
+        .taped-up {
+        display: inline-block; /* displays element as an inline element similar to <span> */
+  padding: 15px; /* size of the white border */
+  margin: 25px; /* position image with other page elements */
+  /* give the border's background color a gradient */
+  /* depending on the colors you give you can make it look new or old and faded */
+  background: #F5EEE1; /*default color for browsers that don't support gradients*/
+  background: -webkit-linear-gradient(left top, #F5EEE1 , #FAFAF9); /* For Safari */
+  background: -o-linear-gradient(bottom right, #F5EEE1, #FAFAF9); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom right, #F5EEE1, #FAFAF9); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom right, #F5EEE1 , #FAFAF9); /* Standard syntax (should be last) */
+  /* give the image a drop shadow */
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.75);
+  /* give the image a slight rotation for a realistic effect */
+  -ms-transform:rotate(3deg); /* IE 9 */
+  -webkit-transform:rotate(3deg); /* Safari and Chrome */
+  transform:rotate(3deg); /* Standard syntax (should be last) */
+  /* Cleans up the jagged edges caused by the rotation a bit */
+  -webkit-backface-visibility:hidden; /* Chrome and Safari */
+  -moz-backface-visibility:hidden; /* Firefox */
+  -ms-backface-visibility:hidden; /* Internet Explorer */
+  backface-visibility:hidden; /* Standard syntax (should be last) */
+  position: relative; /* lets us later position the tape relative to the box */
+}
+
+.taped-up:before {
+  content: ''; /* create an empty psuedo element */
+  position: absolute; /* positions the tape relative to the box created above rather than the whole page */
+  background-color: rgba(255,255,255,0.4); /* using rgba for the color lets us make the tape transparent */
+  height: 26px; /* height of the tape */
+  /* using :before places the tape on the left of the div */
+  left:100px; /* position from the left edge of the .taped-up div edge */
+  top: -14px; /* position from the top edge of the .taped-up div edge */
+  width: 95px; /* width of the tape */
+  /*rotate the tape 5 degrees counter-clockwise*/
+  -ms-transform:rotate(-5deg); /* IE 9 */
+  -webkit-transform:rotate(-5deg); /* Safari and Chrome */
+  transform:rotate(-5deg); /* Standard syntax (should be last) */
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.1); /* give the tape a slight drop shadow */
+  /* giving the tape an almost transparent dotted border on the right and left gives it a nicely perforated-look at the edges */
+  border-style: dotted;
+  border-color: rgba(0,0,0,0.1);
+  border-width: 0 2px; /* border only on right and left sides */
+}
+
+
+        ////
+
+
         body {
         //background-image: http://localhost:8473/images/chalkboard-black.jpg;
         background-color: black;
@@ -110,9 +183,22 @@
 <!--Blue Chalk Hex: #94c0cc-->
 <!--White Chalk Hex: #f6f4f1-->
 
+<!--possibly useful-->
+<!--http://stackoverflow.com/questions/21817695/how-do-i-make-text-and-other-items-look-like-chalk-without-a-specialized-font-us-->
+
+<!--another way-->
+<!--http://www.jackiejohnston.us/blog/tape-up-your-photos-with-css3/-->
+
+<!--chalk fonts-->
+<!--http://info.webtoolhub.com/kb-a274-42-free-chalk-fonts-to-brighten-your-designs.aspx-->
+
 <div>
     <div class="pictures">
-        <div><h1 style="color: #ed7777;">Hello there</h1></div>
+        <div><h1>hello</h1>
+            <div class="taped-up">
+            <h1 style="color: #ed7777;">Hello there</h1>
+            </div>
+        </div>
         <div>Hello</div>
         <div>Hello</div>
     </div>
