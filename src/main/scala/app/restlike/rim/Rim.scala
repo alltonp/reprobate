@@ -230,13 +230,13 @@ object Commander {
 
   private def onShowWhoIsDoingWhat(currentModel: Model) = {
     val akas = currentModel.userToAka.values
-    val all = akas.map(a => {
-      val myIssues = currentModel.issues.filter(_.by == Some(a))
-      s"$a: ${myIssues.mkString(", ")}"
+    val all = akas.map(aka => {
+      val issues = currentModel.issues.filter(_.by == Some(aka))
+      Presentation.issuesForUser(aka, issues)
     })
 
     val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
-    else all.toList
+    else all.flatten.toList
     Out(result, None)
   }
 
@@ -416,6 +416,7 @@ object Presentation {
   }
   
   def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render(hideStatus = true)}")
+  def issuesForUser(aka: String, issues: List[Issue]) = s"${aka}:" :: issues.map(i => s"  ${i.render()}")
 }
 
 object Controller {
