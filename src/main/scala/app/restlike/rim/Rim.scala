@@ -286,7 +286,7 @@ object Commander {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
       }
-      val by = if (newStatus.isEmpty) None else Some(currentModel.userToAka(who))
+      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
