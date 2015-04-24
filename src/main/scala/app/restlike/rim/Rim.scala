@@ -309,7 +309,8 @@ object Commander {
         val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentModel.workflowStates(newIndex)
       }
-      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
+      val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
+      val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel), Some(updatedModel))
     }
