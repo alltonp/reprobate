@@ -24,6 +24,7 @@ import scala.reflect.io.File
 
 //COSMETIC:
 //when doing +/ etc .. show the both the created ref and the new board
+//show count next to tags
 
 //FUTURE:
 //- private rims
