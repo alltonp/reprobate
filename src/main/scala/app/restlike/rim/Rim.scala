@@ -13,24 +13,27 @@ import scala.collection.immutable
 import scala.reflect.io.File
 
 //NEXT:
+//when doing +/ etc .. show the both the created ref and the new board
+//show usage count next to tags (inc released)
+//consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
+//more expert mode options ...
+//rim / - show begin
+//rim // - show nth state
+//rim ! - show end state
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
-//support multiple / in /// and +///
-//support multiple . in ...
+//properly support multiple / in /// and +///
+//properly support multiple . in ...
 //tags should be [a-z0-9\-]
 //.sh needs a better message when not running
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
 //show how long since aka X updated rim
-//consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
-
-//COSMETIC:
-//when doing +/ etc .. show the both the created ref and the new board
-//show count next to tags
 
 //FUTURE:
 //- private rims
 //- grim
 //- spartan bubble ui
+//- hosted
 
 //SOMEDAY/MAYBE:
 //split and merge {}
