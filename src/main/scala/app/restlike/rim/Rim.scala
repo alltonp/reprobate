@@ -21,6 +21,7 @@ import scala.reflect.io.File
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
 //show how long since aka X updated rim
+//consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
 
 //COSMETIC:
 //when doing +/ etc .. show the both the created ref and the new board
