@@ -18,20 +18,17 @@ import scala.reflect.io.File
 //support multiple . in ...
 //tags should be [a-z0-9\-]
 //.sh needs a better message when not running
-//rim ? ??? ... to show unassigned issues only, i.e. the true backlog, whereas ? is search all
 //store when released (eek, data change - so make it an option)
+//show how long things have been in certain states
+//show how long since aka X updated rim
 
 //COSMETIC:
-//show space between releases
-//show space between whos doing
-//show counts on both releases and who's doing
-//prefix release with "release "
 //when doing +/ etc .. show the both the created ref and the new board
 
 //FUTURE:
 //- private rims
 //- grim
-//spartan bubble ui
+//- spartan bubble ui
 
 //SOMEDAY/MAYBE:
 //split and merge {}
