@@ -165,6 +165,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
+  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
@@ -192,6 +193,7 @@ object Commander {
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
+      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
       case In(Some("+/!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
@@ -393,6 +395,13 @@ object Commander {
 
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
+      case Left(e) => Out(e, None)
+      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+    }
+  }
+
+  private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+    currentModel.createIssue(args, Some(currentModel.state(1)), None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
