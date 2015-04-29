@@ -72,7 +72,7 @@ object Messages {
     "  - releases                 ⇒ 'rim releases'",
     "  - tags                     ⇒ 'rim :'",
     "  - who is doing what        ⇒ 'rim @'",
-    "  - show help                ⇒ 'rim help'",
+    "  - help                     ⇒ 'rim help'",
     "",
     "other:",
     "  - set aka                  ⇒ 'rim aka [initials]'",
