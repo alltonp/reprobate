@@ -80,7 +80,7 @@ object Messages {
     "",
     "experts:",
     "  - create, forward and tag       ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
-    "  - create, forward many and tag  ⇒ 'rim +// description'",
+    "  - create, forward many and tag  ⇒ 'rim +// description {: tag1 tag2 tagX}'",
     "  - create, end and tag           ⇒ 'rim +/! description {: tag1 tag2 tagX}'",
     "",
     "where: [arg] = mandatory, {arg} = optional",
