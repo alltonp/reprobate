@@ -27,6 +27,7 @@ import scala.reflect.io.File
 //.sh needs a better message when not running
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
+//show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
 
 //FUTURE:
