@@ -239,7 +239,7 @@ object Commander {
     })
 
     val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
-    else all.flatten
+    else all
     Out(result, None)
   }
 
@@ -432,8 +432,14 @@ object Presentation {
     })
   }
   
-  def release(release: Release) = s"${release.tag}:" :: release.issues.map(i => s"  ${i.render(hideStatus = true)}")
-  def issuesForUser(aka: String, issues: List[Issue]) = s"${aka}:" :: issues.map(i => s"  ${i.render(hideBy = true)}")
+  def release(release: Release) = {
+    s"${release.tag}:" :: release.issues.map(i => s"  ${i.render(hideStatus = true)}")
+  }
+
+  def issuesForUser(aka: String, issues: List[Issue]) = {
+    val r = issues.map(i => s"\n  ${i.render(hideBy = true)}").mkString
+    s"${aka}: (${issues.size})" + r + "\n"
+  }
 }
 
 object Controller {
