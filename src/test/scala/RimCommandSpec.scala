@@ -79,6 +79,14 @@ class RimCommandSpec extends WordSpec with MustMatchers {
     runAndExpect("1 /", current, expected)
   }
 
+  //TODO: this is not completely trivial, e.g. going past done etc
+//  "move forward two states" in {
+//    val issue = Issue("1", "an item", Some(doing), None)
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(done), by = Some(aka))))
+//    runAndExpect("1 //", current, expected)
+//  }
+
   "move forward to an initial leaves disowned" in {
     val issue = Issue("1", "an item", None, None)
     val current = modelWithIssue(issue)

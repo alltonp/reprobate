@@ -59,7 +59,7 @@ object Messages {
     "  - tag                           ⇒ 'rim [ref] : [tag1] [tag2] [tagX]'",
     "  - detag                         ⇒ 'rim [ref] :- [tag1] [tag2] [tagX]'",
     "  - move forward                  ⇒ 'rim [ref] /'",
-    //    "  - add/move forward many    ⇒ 'rim [ref] //'",
+//    "  - move forward many             ⇒ 'rim [ref] //'",
     "  - move to end                   ⇒ 'rim [ref] /!'",
     "  - move backward                 ⇒ 'rim [ref] .'",
     //    "  - move backward many      ⇒ 'rim [ref] ..'",
