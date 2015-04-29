@@ -74,6 +74,9 @@ object Messages {
     "  - create                   ⇒ 'rim release [label]'",
     "  - list                     ⇒ 'rim releases'",
     "",
+    "backlog:",
+    "  - show                     ⇒ 'rim .'",
+    "",
     "other:",
     "  - set aka                  ⇒ 'rim aka [initials]'",
     "  - list tags                ⇒ 'rim :'",
@@ -197,6 +200,7 @@ object Commander {
       case In(Some("+/!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
+      case In(Some("."), Nil) => onShowBacklog(currentModel)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
@@ -374,6 +378,13 @@ object Commander {
   private def onQueryIssues(currentModel: Model, query: Option[String]) = {
     val matching = query.fold(currentModel.issues)(q => currentModel.issues.filter(i => i.search(q)))
     val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
+    else matching.reverse.map(i => i.render())
+    Out(result, None)
+  }
+
+  private def onShowBacklog(currentModel: Model) = {
+    val matching = currentModel.issues.filter(i => i.status.isEmpty)
+    val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.reverse.map(i => i.render())
     Out(result, None)
   }
