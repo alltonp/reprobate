@@ -147,7 +147,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     args.foreach(a => {
       if (a == ":") tagging = true
       else {
-        if (tagging) tagBits = a :: tagBits
+        if (tagging) tagBits = a.replaceAll(":", "") :: tagBits
         else descriptionBits = a :: descriptionBits
       }
     })
