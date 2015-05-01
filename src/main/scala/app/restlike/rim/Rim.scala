@@ -14,7 +14,7 @@ import scala.reflect.io.File
 
 //NEXT:
 //when doing +/ etc .. show the both the created ref and the new board
-//show usage count next to tags (inc released)
+//show usage count next to tags (inc released), order by most used, most recent etc
 //consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
 //more expert mode options ...
 //rim / - show begin
@@ -29,6 +29,7 @@ import scala.reflect.io.File
 //show how long things have been in certain states
 //show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
+//help should have an 'issues' section for working with multiples on =, : etc
 
 //FUTURE:
 //- private rims
