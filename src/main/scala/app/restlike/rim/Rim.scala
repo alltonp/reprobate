@@ -29,8 +29,6 @@ import scala.reflect.io.File
 //show how long things have been in certain states
 //show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
-//remove : from tags
-//kill the :vg tag
 
 //FUTURE:
 //- private rims
