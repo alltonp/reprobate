@@ -1,30 +1,29 @@
 package app.agent
 
 import app.model.ChecksHistory
-import im.mange.jetboot.bootstrap3.Bootstrap
-import im.mange.jetboot.widget.table.{TableRow, TableHeader, TableHeaders}
-import im.mange.jetboot.{R, Renderable}
-import im.mange.jetboot.widget._
 import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
-import Bootstrap._
-import SimpleTable._
+import im.mange.jetboot.bootstrap3.Bootstrap._
+import im.mange.jetboot.widget.SimpleTable._
+import im.mange.jetboot.widget._
+import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
+import im.mange.jetboot.{R, Renderable}
 
 //TODO: consider making this live and encode the status in the row colour for inactive, open etc
 //TODO: maybe ENV first
 //TODO: have a message when no checks configured
 case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Renderable {
   def render = {
-    val h = TableHeaders(List(
-      TableHeader(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
-      TableHeader(R("Environment")).styles(width("9%")),
-      TableHeader(R("Active Period")).styles(width("9%")),
-      TableHeader(R("Defcon")).styles(width("9%")),
-      TableHeader(R("Executed")).styles(width("9%")),
-      TableHeader(R("Failed")).styles(width("9%")),
-      TableHeader(R("Inactive")).styles(width("9%")),
-      TableHeader(R("Incidents")).styles(width("9%")),
-      TableHeader(R("Raw")).styles(width("9%"))
+    val h = headers(List(
+      header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
+      header(R("Environment")).styles(width("9%")),
+      header(R("Active Period")).styles(width("9%")),
+      header(R("Defcon")).styles(width("9%")),
+      header(R("Executed")).styles(width("9%")),
+      header(R("Failed")).styles(width("9%")),
+      header(R("Inactive")).styles(width("9%")),
+      header(R("Incidents")).styles(width("9%")),
+      header(R("Raw")).styles(width("9%"))
     ))
 
     val r = rows ::: List(totalRow)

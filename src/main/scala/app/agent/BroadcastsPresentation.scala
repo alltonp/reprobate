@@ -6,7 +6,7 @@ import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
 import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.widget._
-import im.mange.jetboot.widget.table.{TableHeader, TableHeaders, TableRow}
+import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
 import im.mange.jetboot.{R, Renderable}
 
 import scala.xml.Unparsed
@@ -20,9 +20,9 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
   def render = if (broadcasts.isEmpty) R("There are currently no broadcasts").render else renderTable
 
   private def renderTable = {
-    val h = TableHeaders(List(
-      TableHeader(span(None, "Broadcasts: " + broadcasts.size).styles(color("#0088cc"))).styles(width("25%")),
-      TableHeader(R("Message")) //.styles(width("10%"))
+    val h = headers(List(
+      header(span(None, "Broadcasts: " + broadcasts.size).styles(color("#0088cc"))).styles(width("25%")),
+      header(R("Message")) //.styles(width("10%"))
     ))
 
     val r = rows

@@ -9,9 +9,8 @@ import im.mange.jetboot._
 import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.bootstrap3.GridSystem
 import im.mange.jetboot.bootstrap3.GridSystem._
-import im.mange.jetboot.widget._
-import im.mange.jetboot.widget.table.{TableRow, TableHeader, TableHeaders}
-import SimpleTable._
+import im.mange.jetboot.widget.SimpleTable._
+import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
 
 import scala.xml.Unparsed
 
@@ -30,19 +29,19 @@ case class IncidentsAgent() extends Renderable {
   //TODO: pull out presentation
   private def render(open: List[Incident], closed: List[Incident]) = {
     Composite(
-      if (!open.isEmpty) tablify(headers("Open Incidents: " + open.size), rows(open)) else R(),
-      if (!closed.isEmpty) tablify(headers("Closed Incidents: " + closed.size), rows(closed)) else R())
+      if (!open.isEmpty) tablify(tableHeaders("Open Incidents: " + open.size), rows(open)) else R(),
+      if (!closed.isEmpty) tablify(tableHeaders("Closed Incidents: " + closed.size), rows(closed)) else R())
   }
 
   //TODO: ideally lets give 1 and 3 more room
-  private def headers(prefix: String) = TableHeaders(List(
-    TableHeader(span(None, prefix).styles(color("#0088cc"))).styles(width("27%")),
-    TableHeader(R("Ref")).styles(width("7%")),
-    TableHeader(R("Env")).styles(width("7%")),
-    TableHeader(R("Reason")).styles(width("27%")),
-    TableHeader(R("Opened")).styles(width("12%")),
-    TableHeader(R("Closed")).styles(width("12%")),
-    TableHeader(R("Duration")).styles(width("8%"))
+  private def tableHeaders(prefix: String) = headers(List(
+    header(span(None, prefix).styles(color("#0088cc"))).styles(width("27%")),
+    header(R("Ref")).styles(width("7%")),
+    header(R("Env")).styles(width("7%")),
+    header(R("Reason")).styles(width("27%")),
+    header(R("Opened")).styles(width("12%")),
+    header(R("Closed")).styles(width("12%")),
+    header(R("Duration")).styles(width("8%"))
   ))
 
   private def rows(incidents: List[Incident]) = incidents.map(i => TableRow(None, List(
