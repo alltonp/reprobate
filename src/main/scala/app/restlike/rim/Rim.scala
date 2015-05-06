@@ -405,7 +405,7 @@ object RimCommander {
   }
 
   private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.state(1)), None, refProvider) match {
+    currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
     }
