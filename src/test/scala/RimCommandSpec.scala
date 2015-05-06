@@ -42,7 +42,7 @@ class RimCommandSpec extends WordSpec with MustMatchers {
 
   "add and move forward to second state" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", Some(doing), None)))
+    val expected = current.copy(issues = List(Issue("1", "an item", Some(doing), Some(aka))))
     runAndExpect("+// an item", current, expected)
   }
 
