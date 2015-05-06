@@ -2,11 +2,13 @@ package app.agent
 
 import app.model.ChecksHistory
 import im.mange.jetboot.bootstrap3.Bootstrap
+import im.mange.jetboot.widget.table.{TableRow, TableHeader, TableHeaders}
 import im.mange.jetboot.{R, Renderable}
 import im.mange.jetboot.widget._
 import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
 import Bootstrap._
+import SimpleTable._
 
 //TODO: consider making this live and encode the status in the row colour for inactive, open etc
 //TODO: maybe ENV first
@@ -14,7 +16,7 @@ import Bootstrap._
 case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Renderable {
   def render = {
     val h = TableHeaders(List(
-      TableHeader(span("Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
+      TableHeader(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
       TableHeader(R("Environment")).styles(width("9%")),
       TableHeader(R("Active Period")).styles(width("9%")),
       TableHeader(R("Defcon")).styles(width("9%")),
@@ -30,7 +32,7 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
     tablify(h, r).styles(fontSize(smaller)).render
   }
 
-  private def totalRow = TableRow(List(
+  private def totalRow = TableRow(None, List(
     R("Total"),
     R("-"),
     R("-"),
@@ -42,7 +44,7 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
     R("-")
   ))
 
-  private def rows = checks.map(p => TableRow(List(
+  private def rows = checks.map(p => TableRow(None, List(
     R(p.probe.description),
     R(p.probe.env),
     R(p.probe.activePeriod.startHour + "-" + p.probe.activePeriod.finishHour),
@@ -71,5 +73,5 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(SimpleTable(TableModel(h, r)).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, simpleTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
 }

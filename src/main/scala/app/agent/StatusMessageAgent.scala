@@ -8,7 +8,7 @@ import im.mange.jetboot.{R, Renderable}
 
 //TODO: is there a widget here ... something with a body div that we fill, empty etc ContainerAgent perhaps?
 case class StatusMessageAgent() extends Renderable {
-  private val body = div(id = "statusMessageBody").styles(float(left), paddingBottom("10px"))
+  private val body = div(id = Some("statusMessageBody")).styles(float(left), paddingBottom("10px"))
   private val panel = span(body)
 
   def render = panel.render

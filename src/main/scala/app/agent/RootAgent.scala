@@ -8,7 +8,7 @@ import app.server.AllRunsStatusUpdate
 import app.server.ProbeFailure
 import app.server.CurrentRunStatusUpdate
 import app.model.{Broadcast, Probe}
-import im.mange.jetboot.{Renderable, Composite}
+import im.mange.jetboot.{Js, Renderable, Composite}
 import app.server.ProbeStatusUpdate
 
 //TODO:
@@ -45,10 +45,10 @@ import app.server.ProbeStatusUpdate
 
 case class RootAgent(subscriber: Subscriber) extends Renderable {
   import im.mange.jetboot.Html._
-  import im.mange.jetboot.js.JsCmdFactory._
+  import Js._
   import GridSystem._
 
-  private val allProbesStatus = div(id = "allProbesStatus")
+  private val allProbesStatus = div(id = Some("allProbesStatus"))
   private val checksProgressAgent = ChecksProgressAgent()
   private val checksSummaryAgent = ChecksSummaryAgent()
   private val incidentsAgent = IncidentsAgent()

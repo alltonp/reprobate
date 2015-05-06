@@ -7,7 +7,7 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot.Renderable
 
 case class ChecksConfigAgent() extends Renderable {
-  private val holder = div("checksConfig").classes("hidden").styles(marginTop("5px"))
+  private val holder = div(Some("checksConfig")).classes("hidden").styles(marginTop("5px"))
 
   def render = holder.render
   def requestConfig = holder.show & holder.fill(BigSpinner("checksConfigSpinner", "Loading checks..."))

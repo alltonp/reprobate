@@ -1,17 +1,17 @@
 package app.agent
 
 import app.DateFormatForHumans
-import im.mange.jetboot.{R, Renderable, Css}
+import im.mange.jetboot._
 import Css._
-import im.mange.jetboot.Html._
-import im.mange.jetboot.js.JsCmdFactory._
+import Js._
+import Html._
 import java.util.UUID
 import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast
 import scala.xml.Unparsed
 
 case class BroadcastFlashAgent() extends Renderable {
-  private val body = div(id = "broadcastFlash").styles(float(left))
+  private val body = div(id = Some("broadcastFlash")).styles(float(left))
   private val panel = span(body)
 
   def render = panel.render
@@ -23,5 +23,5 @@ case class BroadcastFlashAgent() extends Renderable {
   }
 
   private def broadcast(id: String, broadcast: Broadcast) =
-    div(id = id, R(<p><strong>{DateFormatForHumans.format(broadcast.when)}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>)).classes("alert", "alert-info").render
+    div(id = Some(id), R(<p><strong>{DateFormatForHumans.format(broadcast.when)}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>)).classes("alert", "alert-info").render
 }

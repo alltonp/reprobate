@@ -6,7 +6,7 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot._
 
 case class ChecksProgressAgent() extends Renderable {
-  private val body = div(id = "checksProgress")
+  private val body = div(id = Some("checksProgress"))
   private val panel = div(body).styles(marginBottom("10px"))
 
   def render = panel.render
@@ -18,7 +18,7 @@ case class ChecksProgressAgent() extends Renderable {
   def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) = body.fill(progressBar(update))
 
   private def progressBar(update: CurrentRunStatusUpdate) =
-    div(id = "progress", R(
+    div(id = Some("progress"), R(
       <div class="progress-bar progress-bar-success" style={"width: " + update.successPercent + "%"}>
           <span class="sr-only"> {update.successPercent}% Success</span>
         </div>

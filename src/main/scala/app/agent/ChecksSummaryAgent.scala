@@ -10,7 +10,7 @@ import im.mange.jetboot.bootstrap3.Bootstrap._
 
 case class ChecksSummaryAgent() extends Renderable {
   private val formatter = new DecimalFormat( "#,###,###,###" )
-  private val body = div(id = "checksSummary").styles(display(inlineBlock))
+  private val body = div(id = Some("checksSummary")).styles(display(inlineBlock))
   private val panel = div(body).classes(textCenter, "center-block").styles(marginBottom("10px"))
 
   def render = panel.render

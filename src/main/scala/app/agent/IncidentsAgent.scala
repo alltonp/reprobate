@@ -10,12 +10,14 @@ import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.bootstrap3.GridSystem
 import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.widget._
+import im.mange.jetboot.widget.table.{TableRow, TableHeader, TableHeaders}
+import SimpleTable._
 
 import scala.xml.Unparsed
 
 //TODO: mouse over to see incident details ... start/finish etc
 case class IncidentsAgent() extends Renderable {
-  private val body = div(id = "incidentsBody").styles(fontSize(smaller))
+  private val body = div(id = Some("incidentsBody")).styles(fontSize(smaller))
   private val panel = div(body).styles(marginTop("15px"))
 
   def render = panel.render
@@ -34,7 +36,7 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: ideally lets give 1 and 3 more room
   private def headers(prefix: String) = TableHeaders(List(
-    TableHeader(span(prefix).styles(color("#0088cc"))).styles(width("27%")),
+    TableHeader(span(None, prefix).styles(color("#0088cc"))).styles(width("27%")),
     TableHeader(R("Ref")).styles(width("7%")),
     TableHeader(R("Env")).styles(width("7%")),
     TableHeader(R("Reason")).styles(width("27%")),
@@ -43,7 +45,7 @@ case class IncidentsAgent() extends Renderable {
     TableHeader(R("Duration")).styles(width("8%"))
   ))
 
-  private def rows(incidents: List[Incident]) = incidents.map(i => TableRow(List(
+  private def rows(incidents: List[Incident]) = incidents.map(i => TableRow(None, List(
     R(i.probe.description),
     R(s"IN-${i.id}"),
     R(i.probe.env),
@@ -55,5 +57,5 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(SimpleTable(TableModel(h, r)).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, simpleTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
 }

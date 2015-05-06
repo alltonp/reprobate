@@ -4,8 +4,7 @@ import app.ServiceFactory.probeProviderActor
 import app.agent.RootAgent
 import app.model.Broadcast
 import app.server._
-import im.mange.jetboot.js.JsCmdFactory
-import JsCmdFactory._
+import im.mange.jetboot.Js._
 
 //TODO: push probeProviderActor into the Agent (and rename the agent)
 class AppCometActor extends MessageCapturingCometActor with ExceptionHandlingActor {
