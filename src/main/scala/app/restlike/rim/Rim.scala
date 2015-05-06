@@ -183,7 +183,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
-object Commander {
+object RimCommander {
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
@@ -456,7 +456,7 @@ object Controller {
       synchronized {
         val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker.track(who, value)
-        val out = Commander.process(value, who, model, refProvider)
+        val out = RimCommander.process(value, who, model, refProvider)
         out.updatedModel.map(m => {
           model = m
           Persistence.save(model)
