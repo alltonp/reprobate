@@ -30,6 +30,7 @@ import scala.reflect.io.File
 //show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
 //help should have an 'issues' section for working with multiples on =, : etc
+//rim . foo => should probably search the backlog for foo
 
 //FUTURE:
 //- private rims
