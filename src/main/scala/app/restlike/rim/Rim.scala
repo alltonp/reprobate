@@ -4,13 +4,16 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths, StandardOpenOption}
 
 import app.restlike.rim.Responder._
+import im.mange.little.file.Filepath
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.json._
 import org.joda.time.DateTime
 
 import scala.collection.immutable
-import scala.reflect.io.File
+//import scala.reflect.io.File
+
+//TODO: depend on little instead of File
 
 //NEXT:
 //when doing +/ etc .. show the both the created ref and the new board
@@ -495,24 +498,6 @@ object Tracker {
 
   def view = Filepath.load(file).split("\n").reverse.toList
 }
-
-//TODO: use the one in little instead
-object Filepath {
-  def save(content: String, path: Path) = {
-    Files.write(path, content.getBytes(StandardCharsets.UTF_8),
-      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
-  }
-
-  def append(content: String, path: Path) = {
-    Files.write(path, content.getBytes(StandardCharsets.UTF_8),
-      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)
-  }
-
-  def load(path: Path) = File(path.toFile).slurp()
-
-  def create(path: Path) = Files.createFile(path)
-}
-
 
 //TODO: handle corrupted rim.json
 
