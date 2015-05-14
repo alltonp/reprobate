@@ -117,7 +117,12 @@ object Messages {
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |printf "\n$RESPONSE\n\n"
+      |if [ $? -ne 0 ]; then
+      |  printf "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
+      |else
+      |  printf "\n$RESPONSE\n\n"
+      |fi
+      |
       |
     """).stripMargin.split("\n").toList
 }
@@ -131,7 +136,7 @@ case class RefProvider(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty) {
+case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty, history: Seq[History] = Seq.empty) {
   private val renderBy = by.fold("")(" @" + _)
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
   private val renderStatus = status.fold("")(" ^" + _)
@@ -140,6 +145,8 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def search(query: String) = indexed.contains(query)
   def render(hideStatus: Boolean = false, hideBy: Boolean = false) = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
 }
+
+case class History(who: String, command: String)
 
 case class Release(tag: String, issues: List[Issue])
 
