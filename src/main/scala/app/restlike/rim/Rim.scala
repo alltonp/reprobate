@@ -34,6 +34,15 @@ import scala.collection.immutable
 //show how long since aka X updated rim
 //help should have an 'issues' section for working with multiples on =, : etc
 //rim . foo => should probably search the backlog for foo
+//when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
+//might be nice to have rim audit (or track) and see the last x items from the history
+
+//audit stuff
+//might be good to capture who added the issue
+//might be good to capture who last updated the issue
+//actually if we just store the updates by id then we will get that for free
+//store only things that result in a change
+//rim [ref] history
 
 //FUTURE:
 //- private rims
