@@ -1,7 +1,6 @@
 package app.restlike.rim
 
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths, StandardOpenOption}
+import java.nio.file.Paths
 
 import app.restlike.rim.Responder._
 import im.mange.little.file.Filepath
@@ -27,7 +26,6 @@ import scala.collection.immutable
 //properly support multiple / in /// and +///
 //properly support multiple . in ...
 //tags should be [a-z0-9\-]
-//.sh needs a better message when not running
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
 //show stats about akas ... entries, last used etc (top 5)
