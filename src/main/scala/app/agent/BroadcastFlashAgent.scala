@@ -26,13 +26,13 @@ case class BroadcastFlashAgent() extends Renderable {
   }
 
   private def broadcast(id: String, broadcast: Broadcast) = {
-    div(id = Some(id), span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")),
-      R(
-      <p><strong>{DateFormatForHumans.format(broadcast.when)} {broadcast.env}</strong>
-        <br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}
-      </p>))
-      .styles(float(left), margin("10px"))
-      .classes("alert", "alert-info").render
+//    div(id = Some(id), span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")),
+//      R(
+//      <p><strong>{DateFormatForHumans.format(broadcast.when)} {broadcast.env}</strong>
+//        <br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}
+//      </p>))
+//      .styles(float(left), margin("10px"))
+//      .classes("alert", "alert-info").render
 
     div(id = Some(id),
       topRow(broadcast),
@@ -51,9 +51,11 @@ case class BroadcastFlashAgent() extends Renderable {
     div(None, failures(broadcast).classes(pullLeft), ref(broadcast).classes(pullRight)).styles(clear(both), paddingTop("7px"), paddingBottom("7px"))
 
   private def bottomRow(broadcast: Broadcast) = div(remedy(broadcast).classes(pullLeft)).styles(clear(both))
-//
-  private def description(broadcast: Broadcast) = div(None, span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
-    span(None, DateFormatForHumans.format(broadcast.when))).styles(fontWeight(bold))
+
+  private def description(broadcast: Broadcast) = div(None,
+    span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
+    span(None, DateFormatForHumans.format(broadcast.when)).styles(fontSize(smaller))
+  ).styles(fontWeight(bold))
 
   private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))
   private def ref(broadcast: Broadcast) = span(/*Badge(value = "I123")*/).styles(fontSize(smaller))
