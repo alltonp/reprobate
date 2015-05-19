@@ -16,14 +16,14 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
   def render = {
     val h = headers(List(
       header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("27%")),
-      header(R("Environment")).styles(width("9%")),
-      header(R("Active Period")).styles(width("9%")),
+      header(R("Environment")).styles(width("10%")),
+      header(R("Active Period")).styles(width("10%")),
       header(R("Defcon")).styles(width("9%")),
       header(R("Executed")).styles(width("9%")),
       header(R("Failed")).styles(width("9%")),
       header(R("Inactive")).styles(width("9%")),
       header(R("Incidents")).styles(width("9%")),
-      header(R("Raw")).styles(width("10%"))
+      header(R("Raw")).styles(width("8%"))
     ))
 
     val r = rows ::: List(totalRow)
