@@ -35,19 +35,19 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: ideally lets give 1 and 3 more room
   private def tableHeaders(prefix: String) = headers(List(
-    header(span(None, prefix).styles(color("#0088cc"))).styles(width("27%")),
-    header(R("Ref")).styles(width("7%")),
-    header(R("Env")).styles(width("7%")),
-    header(R("Reason")).styles(width("27%")),
-    header(R("Opened")).styles(width("12%")),
-    header(R("Closed")).styles(width("12%")),
-    header(R("Duration")).styles(width("8%"))
+    header(span(None, prefix).styles(color("#0088cc"))).styles(width("25%")),
+    header(R("Environment")).styles(width("9%")),
+//    header(R("Ref")).styles(width("7%")),
+    header(R("Reason")).styles(width("30%")),
+    header(R("Opened")).styles(width("13%")),
+    header(R("Closed")).styles(width("13%")),
+    header(R("Duration")).styles(width("10%"))
   ))
 
   private def rows(incidents: List[Incident]) = incidents.map(i => TableRow(None, List(
     R(i.probe.description),
-    R(s"IN-${i.id}"),
     R(i.probe.env),
+//    R(s"IN-${i.id}"),
     R(Unparsed(i.failures.mkString("<br/>"))),
     R(DateFormatForHumans.format(i.start)),
     R(i.finish.fold("-"){DateFormatForHumans.format(_)}),

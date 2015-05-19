@@ -22,8 +22,9 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
 
   private def renderTable = {
     val h = headers(List(
-      header(span(None, "Broadcasts: " + broadcasts.size).styles(color("#0088cc"))).styles(width("27%")),
-      header(R("Message")).styles(width("73%"))
+      header(span(None, "Broadcasts: " + broadcasts.size).styles(color("#0088cc"))).styles(width("25%")),
+      header(R("Environment")).styles(width("9%")),
+      header(R("Message")).styles(width("66%"))
     ))
 
     val r = rows
@@ -33,6 +34,7 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
 
   private def rows = broadcasts.map(b => TableRow(None, List(
     R(standardTimeFormat.print(b.start) + " to " + format(b.finish)),
+    R(b.env),
     R(Unparsed(b.messages.mkString("<br/>")))
   )))
 
