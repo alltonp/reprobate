@@ -40,7 +40,7 @@ object BroadcastRequestJson {
 }
 
 //TODO: durationSeconds should be non-optional
-case class BroadcastFlash(messages: List[String], env: String, durationSeconds: Option[Long])
+case class BroadcastFlash(messages: List[String], env: String, durationSeconds: Option[Int])
 
 case object BroadcastMessage {
   def send(req: Req) = {

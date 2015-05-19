@@ -1,9 +1,14 @@
 package app.model
 
-import org.joda.time.{Hours, LocalDateTime}
+import org.joda.time.{Interval, Hours, LocalDateTime}
 import app.ServiceFactory.systemClock
 
-case class Broadcast(messages: List[String], env: String, duration: Long, when: LocalDateTime = systemClock().localDateTime)
+case class Broadcast(messages: List[String], env: String, durationSeconds: Int, when: LocalDateTime = systemClock().localDateTime) {
+  def isWithinWindow(now: LocalDateTime) = {
+    val interval = new Interval(when.toDateTime, now.plusSeconds(durationSeconds).toDateTime)
+    interval.contains(now.toDateTime)
+  }
+}
 
 case class BroadcastLog() {
   private var broadcasts = List[Broadcast]()
@@ -19,6 +24,7 @@ case class BroadcastLog() {
   }
 
   def notInAReleaseWindow(probe: Probe) = {
-    false
+    val now = systemClock().localDateTime
+    broadcasts.find(b => b.isWithinWindow(now) && b.env == probe.env).isEmpty
   }
 }

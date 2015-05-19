@@ -22,7 +22,7 @@ case class BroadcastFlashAgent() extends Renderable {
   def onBroadcast(message: Broadcast) = {
     import net.liftweb.util.Helpers._
     val id = UUID.randomUUID().toString
-    appendElement(body.id, broadcast(id, message)) & FadeOut(id, message.duration millis, 1 second)
+    appendElement(body.id, broadcast(id, message)) & FadeOut(id, message.durationSeconds millis, 1 second)
   }
 
   private def broadcast(id: String, broadcast: Broadcast) = {

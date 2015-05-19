@@ -166,7 +166,7 @@ class ProbeProviderActor extends LiftActor {
 
   private def onBroadcast(flash: BroadcastFlash) {
     //TODO: make me a config - default broadcast duration
-    val durationOrDefaultInSeconds: Long = flash.durationSeconds.getOrElse(120)
+    val durationOrDefaultInSeconds: Int = flash.durationSeconds.getOrElse(120)
     val broadcast = Broadcast(flash.messages, flash.env, durationOrDefaultInSeconds * 1000)
     broadcastLog.update(broadcast)
     subscribers.foreach(_ ! broadcast)
