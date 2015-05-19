@@ -1,6 +1,7 @@
 package app.agent
 
 import app.DateFormatForHumans
+import app.DateFormatForHumans._
 import app.model.Broadcast
 import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
@@ -31,7 +32,7 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
   }
 
   private def rows = broadcasts.map(b => TableRow(None, List(
-    R(DateFormatForHumans.format(b.start)),
+    R(standardTimeFormat.print(b.start) + " to " + format(b.finish)),
     R(Unparsed(b.messages.mkString("<br/>")))
   )))
 
