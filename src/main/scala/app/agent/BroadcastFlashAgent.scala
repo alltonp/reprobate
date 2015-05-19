@@ -23,5 +23,5 @@ case class BroadcastFlashAgent() extends Renderable {
   }
 
   private def broadcast(id: String, broadcast: Broadcast) =
-    div(id = Some(id), R(<p><strong>{DateFormatForHumans.format(broadcast.when)}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>)).classes("alert", "alert-info").render
+    div(id = Some(id), R(<p><strong>{DateFormatForHumans.format(broadcast.when)} {broadcast.env}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>)).classes("alert", "alert-info").render
 }

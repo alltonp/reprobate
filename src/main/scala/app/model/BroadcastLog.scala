@@ -3,7 +3,7 @@ package app.model
 import org.joda.time.{Hours, LocalDateTime}
 import app.ServiceFactory.systemClock
 
-case class Broadcast(messages: List[String], duration: Long, when: LocalDateTime = systemClock().localDateTime)
+case class Broadcast(messages: List[String], env: String, duration: Long, when: LocalDateTime = systemClock().localDateTime)
 
 case class BroadcastLog() {
   private var broadcasts = List[Broadcast]()

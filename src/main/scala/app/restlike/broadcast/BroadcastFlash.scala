@@ -39,9 +39,7 @@ object BroadcastRequestJson {
   }
 }
 
-//TODO: add (optionally): env
-//TODO: maybe add (optionally): env
-case class BroadcastFlash(messages: List[String], duration: Option[Long])
+case class BroadcastFlash(messages: List[String], env: String, duration: Option[Long])
 
 case object BroadcastMessage {
   def send(req: Req) = {
