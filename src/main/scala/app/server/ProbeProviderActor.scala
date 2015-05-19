@@ -111,19 +111,23 @@ class ProbeProviderActor extends LiftActor {
   //TODO: why does probe took too long kill later probes
   //http://stackoverflow.com/questions/13097754/asynchronous-io-in-scala-with-futures
   //TODO: the message seems out of whack ... it's the not the one we actually checking ...
+  //TODO: this is little-server in disguise
   private def doRunRun(probe: Probe): ProbeStatus = {
     try {
       //OR blocking
       val f = future { blocking {
         //TODO: should probably be scheduled
+        //begin move this out ..
         Thread.sleep(1000) //TODO: make me a config - sleep between probes
         if (probe.isActive) unsafeRun(probe) else ProbeInactive }
+        //end move this out
       }
       f onSuccess { case status => status }
       f onFailure { case e => probeFailed(exceptionMessage(e), probe) }
       //TODO: make timeout be configurable
       Await.result(f, Duration(30, SECONDS))
     } catch {
+      //TODO: might need to have a handler for this
       case e: TimeoutException => {
         println("### e:" + e + " with " + probe.description)
         probeFailed("Probe took too long", probe)
