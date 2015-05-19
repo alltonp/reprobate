@@ -15,7 +15,7 @@ import im.mange.jetboot.{R, Renderable}
 case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Renderable {
   def render = {
     val h = headers(List(
-      header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("28%")),
+      header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("27%")),
       header(R("Environment")).styles(width("9%")),
       header(R("Active Period")).styles(width("9%")),
       header(R("Defcon")).styles(width("9%")),
@@ -23,7 +23,7 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
       header(R("Failed")).styles(width("9%")),
       header(R("Inactive")).styles(width("9%")),
       header(R("Incidents")).styles(width("9%")),
-      header(R("Raw")).styles(width("9%"))
+      header(R("Raw")).styles(width("10%"))
     ))
 
     val r = rows ::: List(totalRow)

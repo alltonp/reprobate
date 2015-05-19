@@ -23,7 +23,7 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
   private def renderTable = {
     val h = headers(List(
       header(span(None, "Broadcasts: " + broadcasts.size).styles(color("#0088cc"))).styles(width("27%")),
-      header(R("Message")) //.styles(width("10%"))
+      header(R("Message")).styles(width("73%"))
     ))
 
     val r = rows
