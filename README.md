@@ -58,6 +58,9 @@
 
 ### All my checks fail when I deploy new versions of my stack...
 - have your deployment scripts send a broadcast message to reprobate
+- supply a message, environment and duration (in seconds) for the deploment
+- reprobate will disable any probes running against that environment for the duration of the release
+- e.g.
 
     ```
 	APP="app"
@@ -67,12 +70,12 @@
 	MESSAGE="(${APP}) ${VERSION} deployed to ${MACHINE_NAME} by ${DEPLOYER}"
 
 	wget --timeout=15 --no-proxy -O- --header=Content-Type:application/json
-		--post-data="{\"messages\":[\"${MESSAGE}\"]}" "http://localhost:8473/broadcast"
+		--post-data="{\"messages\":[\"${MESSAGE}\"] \"env\":\"UAT\" \"durationSeconds\": 30}" "http://localhost:8473/broadcast"
 
 	Or
 
 	curl --connect-timeout 15 -H "Content-Type: application/json"
-		-d "{\"messages\":[\"${MESSAGE}\"]}" http://localhost:8473/broadcast
+		-d "{\"messages\":[\"${MESSAGE}\"] \"env\":\"UAT\" \"durationSeconds\": 30}" http://localhost:8473/broadcast
 
     ```
 
