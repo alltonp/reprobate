@@ -18,12 +18,12 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
       header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("25%")),
       header(R("Environment")).styles(width("9%")),
       header(R("Raw")).styles(width("6%")),
-      header(R("Active Period")).styles(width("10%")),
       header(R("Defcon")).styles(width("10%")),
       header(R("Executed")).styles(width("10%")),
       header(R("Failed")).styles(width("10%")),
       header(R("Inactive")).styles(width("10%")),
-      header(R("Incidents")).styles(width("10%"))
+      header(R("Incidents")).styles(width("10%")),
+      header(R("Active Period")).styles(width("10%"))
     ))
 
     val r = rows ::: List(totalRow)
@@ -36,11 +36,11 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
     R("-"),
     R("-"),
     R("-"),
-    R("-"),
     R(checks.map(_.executedCount).sum.toString),
     R(checks.map(_.failedCount).sum.toString),
     R(checks.map(_.inactiveCount).sum.toString),
-    R(checks.map(_.incidentCount).sum.toString)
+    R(checks.map(_.incidentCount).sum.toString),
+    R("-")
   ))
 
   private def rows = checks.map(p => TableRow(None, List(
