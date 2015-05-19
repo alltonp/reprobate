@@ -11,7 +11,7 @@ import app.model.Broadcast
 import scala.xml.Unparsed
 
 case class BroadcastFlashAgent() extends Renderable {
-  private val body = div(id = Some("broadcastFlash")).styles(float(left))
+  private val body = div(id = Some("broadcastFlash"))//.styles(float(left))
   private val panel = span(body)
 
   def render = panel.render
@@ -23,5 +23,7 @@ case class BroadcastFlashAgent() extends Renderable {
   }
 
   private def broadcast(id: String, broadcast: Broadcast) =
-    div(id = Some(id), R(<p><strong>{DateFormatForHumans.format(broadcast.when)} {broadcast.env}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>)).classes("alert", "alert-info").render
+    div(id = Some(id), R(<p><strong>{DateFormatForHumans.format(broadcast.when)} {broadcast.env}</strong><br/>{Unparsed(broadcast.messages.map("- " + _).mkString("<br/>"))}</p>))
+      .styles(float(left), margin("10px"))
+      .classes("alert", "alert-info").render
 }
