@@ -35,8 +35,8 @@ case class BroadcastFlashAgent() extends Renderable {
       .classes("alert", "alert-info").render
 
     div(id = Some(id),
-      topRow(broadcast)//,
-//      middleRow(broadcast),
+      topRow(broadcast),
+      middleRow(broadcast)//,
 //      bottomRow(broadcast)
     )
     .classes(alert, "alert-info")
@@ -47,16 +47,16 @@ case class BroadcastFlashAgent() extends Renderable {
   private def topRow(broadcast: Broadcast) =
     div(None, description(broadcast).classes(pullLeft)).styles(clear(both), marginTop("0px"))
 
-//  private def middleRow(broadcast: Broadcast) =
-//    div(None, failures(broadcast).classes(pullLeft), ref(broadcast).classes(pullRight)).styles(clear(both), paddingTop("7px"), paddingBottom("7px"))
-//
+  private def middleRow(broadcast: Broadcast) =
+    div(None, failures(broadcast).classes(pullLeft), ref(broadcast).classes(pullRight)).styles(clear(both), paddingTop("7px"), paddingBottom("7px"))
+
 //  private def bottomRow(failure: Broadcast) = div(remedy.classes(pullLeft)).styles(clear(both))
 //
   private def description(broadcast: Broadcast) = div(None, span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
     span(None, DateFormatForHumans.format(broadcast.when))).styles(fontWeight(bold))
 
-  private def failures(failure: ProbeFailure) = span(None, failure.failures.head + "... (see incident log for details)").styles(fontSize(smaller))
-  private def ref(failure: ProbeFailure) = span(/*Badge(value = "I123")*/).styles(fontSize(smaller))
+  private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))
+  private def ref(broadcast: Broadcast) = span(/*Badge(value = "I123")*/).styles(fontSize(smaller))
 //  private def remedy = span(None, probe.remedy).styles(fontWeight(bold))
 
 }
