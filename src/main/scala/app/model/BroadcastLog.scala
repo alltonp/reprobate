@@ -17,4 +17,8 @@ case class BroadcastLog() {
     val now = systemClock().localDateTime
     broadcasts.filter(b => Hours.hoursBetween(b.when, now).getHours < 24)
   }
+
+  def notInAReleaseWindow(probe: Probe) = {
+    false
+  }
 }

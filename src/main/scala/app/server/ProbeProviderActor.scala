@@ -119,7 +119,7 @@ class ProbeProviderActor extends LiftActor {
         //TODO: should probably be scheduled
         //begin move this out ..
         Thread.sleep(1000) //TODO: make me a config - sleep between probes
-        if (probe.isActive) unsafeRun(probe) else ProbeInactive }
+        if (probe.isActive && broadcastLog.notInAReleaseWindow(probe)) unsafeRun(probe) else ProbeInactive }
         //end move this out
       }
       f onSuccess { case status => status }
