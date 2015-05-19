@@ -17,12 +17,12 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
     val h = headers(List(
       header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("25%")),
       header(R("Environment")).styles(width("9%")),
-      header(R("Raw")).styles(width("6%")),
+      header(R("Executed")).styles(width("9%")),
+      header(R("Failed")).styles(width("9%")),
+      header(R("Inactive")).styles(width("9%")),
+      header(R("Incidents")).styles(width("9%")),
+      header(R("Raw")).styles(width("10%")),
       header(R("Defcon")).styles(width("10%")),
-      header(R("Executed")).styles(width("10%")),
-      header(R("Failed")).styles(width("10%")),
-      header(R("Inactive")).styles(width("10%")),
-      header(R("Incidents")).styles(width("10%")),
       header(R("Active Period")).styles(width("10%"))
     ))
 
@@ -34,25 +34,25 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
   private def totalRow = TableRow(None, List(
     R("Total"),
     R("-"),
-    R("-"),
-    R("-"),
     R(checks.map(_.executedCount).sum.toString),
     R(checks.map(_.failedCount).sum.toString),
     R(checks.map(_.inactiveCount).sum.toString),
     R(checks.map(_.incidentCount).sum.toString),
+    R("-"),
+    R("-"),
     R("-")
   ))
 
   private def rows = checks.map(p => TableRow(None, List(
     R(p.probe.description),
     R(p.probe.env),
-    openInBrowser(p.probe.url),
-    R(p.probe.activePeriod.startHour + "-" + p.probe.activePeriod.finishHour),
-    R(p.probe.defcon.level),
     R(p.executedCount.toString),
     R(p.failedCount.toString),
     R(p.inactiveCount.toString),
-    R(p.incidentCount.toString)
+    R(p.incidentCount.toString),
+    openInBrowser(p.probe.url),
+    R(p.probe.defcon.level),
+    R(p.probe.activePeriod.startHour + "-" + p.probe.activePeriod.finishHour)
   )))
 
   //TODO: defo can do less formatting here ...
