@@ -39,7 +39,7 @@ object BroadcastRequestJson {
   }
 }
 
-case class BroadcastFlash(messages: List[String], env: String, duration: Option[Long])
+case class BroadcastFlash(messages: List[String], env: String, durationSeconds: Option[Long])
 
 case object BroadcastMessage {
   def send(req: Req) = {
