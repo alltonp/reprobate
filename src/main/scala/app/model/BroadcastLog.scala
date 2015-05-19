@@ -5,8 +5,10 @@ import app.ServiceFactory.systemClock
 
 case class Broadcast(messages: List[String], env: String, durationSeconds: Int, when: LocalDateTime = systemClock().localDateTime) {
   def isWithinWindow(now: LocalDateTime) = {
-    val interval = new Interval(when.toDateTime, now.plusSeconds(durationSeconds).toDateTime)
-    interval.contains(now.toDateTime)
+    val interval = new Interval(when.toDateTime, when.plusSeconds(durationSeconds).toDateTime)
+    val nowDT = now.toDateTime
+//    println(s"$nowDT in $interval")
+    interval.contains(nowDT)
   }
 }
 
@@ -25,6 +27,8 @@ case class BroadcastLog() {
 
   def notInAReleaseWindow(probe: Probe) = {
     val now = systemClock().localDateTime
-    broadcasts.find(b => b.isWithinWindow(now) && b.env == probe.env).isEmpty
+    val found = broadcasts.find(b => b.isWithinWindow(now) && b.env == probe.env)
+//    println(found)
+    found.isEmpty
   }
 }
