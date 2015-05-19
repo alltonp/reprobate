@@ -9,6 +9,7 @@ import im.mange.jetboot.Html._
 import java.util.UUID
 import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.widget.Spacer
+import im.mange.little.string.Strings
 import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast
 import scala.xml.Unparsed
@@ -43,7 +44,7 @@ case class BroadcastFlashAgent() extends Renderable {
   private def middleRow(broadcast: Broadcast) =
     div(None, failures(broadcast).classes(pullLeft), ref(broadcast).classes(pullRight)).styles(clear(both), paddingTop("7px"), paddingBottom("7px"))
 
-  private def bottomRow(broadcast: Broadcast) = div(remedy(broadcast).classes(pullLeft)).styles(clear(both))
+  private def bottomRow(broadcast: Broadcast) = div(message(broadcast).classes(pullLeft)).styles(clear(both))
 
   private def description(broadcast: Broadcast) = div(None,
     span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
@@ -52,6 +53,8 @@ case class BroadcastFlashAgent() extends Renderable {
 
   private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))
   private def ref(broadcast: Broadcast) = span(/*Badge(value = "I123")*/).styles(fontSize(smaller))
-  private def remedy(broadcast: Broadcast) = span(None, broadcast.messages.head).styles(fontWeight(bold))
 
+  //TODO: should probably head option this to avoid blowing up when clients send rubbish ...
+  private def message(broadcast: Broadcast) =
+    span(None, Strings.titleCase(broadcast.messages.head)).styles(fontWeight(bold))
 }
