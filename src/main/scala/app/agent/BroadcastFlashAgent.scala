@@ -48,7 +48,7 @@ case class BroadcastFlashAgent() extends Renderable {
 
   private def description(broadcast: Broadcast) = div(None,
     span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
-    span(None, DateFormatForHumans.format(broadcast.when)).styles(fontSize(smaller))
+    span(None, DateFormatForHumans.format(broadcast.start)).styles(fontSize(smaller))
   ).styles(fontWeight(bold))
 
   private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))

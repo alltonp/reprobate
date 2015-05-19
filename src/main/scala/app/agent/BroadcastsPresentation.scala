@@ -31,7 +31,7 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
   }
 
   private def rows = broadcasts.map(b => TableRow(None, List(
-    R(DateFormatForHumans.format(b.when)),
+    R(DateFormatForHumans.format(b.start)),
     R(Unparsed(b.messages.mkString("<br/>")))
   )))
 

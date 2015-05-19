@@ -3,13 +3,13 @@ package app.model
 import org.joda.time.{Interval, Hours, LocalDateTime}
 import app.ServiceFactory.systemClock
 
-case class Broadcast(messages: List[String], env: String, durationSeconds: Int, when: LocalDateTime = systemClock().localDateTime) {
-  def isWithinWindow(now: LocalDateTime) = {
-    val interval = new Interval(when.toDateTime, when.plusSeconds(durationSeconds).toDateTime)
-    val nowDT = now.toDateTime
-//    println(s"$nowDT in $interval")
-    interval.contains(nowDT)
-  }
+case class Broadcast(messages: List[String], env: String, durationSeconds: Int) {
+  val start = systemClock().localDateTime
+  val finish = start.plusSeconds(durationSeconds)
+
+  private val interval = new Interval(start.toDateTime, finish.toDateTime)
+
+  def isWithinWindow(now: LocalDateTime) = interval.contains(now.toDateTime)
 }
 
 case class BroadcastLog() {
@@ -22,13 +22,11 @@ case class BroadcastLog() {
   //TODO: ideally we would remove the broadcasts from memory
   def mostRecent = {
     val now = systemClock().localDateTime
-    broadcasts.filter(b => Hours.hoursBetween(b.when, now).getHours < 24)
+    broadcasts.filter(b => Hours.hoursBetween(b.start, now).getHours < 24)
   }
 
   def notInAReleaseWindow(probe: Probe) = {
     val now = systemClock().localDateTime
-    val found = broadcasts.find(b => b.isWithinWindow(now) && b.env == probe.env)
-//    println(found)
-    found.isEmpty
+    broadcasts.find(b => b.isWithinWindow(now) && b.env == probe.env).isEmpty
   }
 }
