@@ -10,7 +10,6 @@ import im.mange.jetboot.Html._
 import java.util.UUID
 import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.widget.Spacer
-import im.mange.little.string.Strings
 import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast
 import scala.xml.Unparsed
@@ -56,5 +55,9 @@ case class BroadcastFlashAgent() extends Renderable {
 
   //TODO: should probably head option this to avoid blowing up when clients send rubbish ...
   private def message(broadcast: Broadcast) =
-    span(None, Strings.titleCase(broadcast.messages.head)).styles(fontWeight(bold))
+    span(None, Strings.sentenceCase(broadcast.messages.head)).styles(fontWeight(bold))
+}
+
+object Strings {
+  def sentenceCase(value: String) = value.head.toUpper + value.drop(1)
 }
