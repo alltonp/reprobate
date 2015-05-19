@@ -1,6 +1,7 @@
 package app.agent
 
 import app.DateFormatForHumans
+import app.DateFormatForHumans._
 import app.server.ProbeFailure
 import im.mange.jetboot._
 import Css._
@@ -37,7 +38,6 @@ case class BroadcastFlashAgent() extends Renderable {
     .render
   }
 
-  //TODO: show: 11:27:50 to 11:29:50 Today
   private def topRow(broadcast: Broadcast) =
     div(None, description(broadcast).classes(pullLeft)).styles(clear(both), marginTop("0px"))
 
@@ -48,7 +48,7 @@ case class BroadcastFlashAgent() extends Renderable {
 
   private def description(broadcast: Broadcast) = div(None,
     span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
-    span(None, DateFormatForHumans.format(broadcast.start)).styles(fontSize(smaller))
+    span(None, standardTimeFormat.print(broadcast.start) + " to " + format(broadcast.finish)).styles(fontSize(smaller))
   ).styles(fontWeight(bold))
 
   private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))

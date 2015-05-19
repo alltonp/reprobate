@@ -7,7 +7,7 @@ import org.joda.time.format.PeriodFormatterBuilder
 import org.joda.time.{Interval, LocalDateTime, Period}
 
 object DateFormatForHumans {
-  private val standardTimeFormat = forPattern("HH:mm:ss").withZone(UTC)
+  val standardTimeFormat = forPattern("HH:mm:ss").withZone(UTC)
   private val standardDateTimeFormat = forPattern("HH:mm:ss EEE dd MMM yyyy").withZone(UTC)
   private val todayDateTimeFormat = forPattern("HH:mm:ss 'Today'").withZone(UTC)
   private val thisYearDateTimeFormat = forPattern("HH:mm:ss EEE dd MMM").withZone(UTC)
