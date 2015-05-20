@@ -397,14 +397,14 @@ object RimCommander {
   private def onQueryIssues(currentModel: Model, query: Option[String]) = {
     val matching = query.fold(currentModel.issues)(q => currentModel.issues.filter(i => i.search(q)))
     val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
-    else matching.reverse.map(i => i.render())
+    else matching.reverseMap(i => i.render())
     Out(result, None)
   }
 
   private def onShowBacklog(currentModel: Model) = {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.reverse.map(i => i.render())
+    else matching.reverseMap(i => i.render())
     Out(result, None)
   }
 
@@ -475,7 +475,7 @@ object Controller {
         val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker.track(who, value)
         val out = RimCommander.process(value, who, model, refProvider)
-        out.updatedModel.map(m => {
+        out.updatedModel.foreach(m => {
           model = m
           Persistence.save(model)
         })
