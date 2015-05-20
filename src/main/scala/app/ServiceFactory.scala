@@ -7,6 +7,7 @@ import org.joda.time.{DateTime, LocalDateTime, LocalDate}
 import org.joda.time.DateTimeZone._
 
 trait Clock {
+  //TODO: I *think* the localX are the ones we don't want ....
   def localDate: LocalDate
   def localDateTime: LocalDateTime
   def date: LocalDate

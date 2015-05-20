@@ -21,7 +21,7 @@ case class IncidentLog(historicIncidentsReported: Long) {
 
   //TODO: ideally we would remove the incidents from memory
   def closed = {
-    val now = systemClock().localDateTime
+    val now = systemClock().dateTime
     incidents.filterNot(_.isOpen).filter(i => Hours.hoursBetween(i.finish.get, now).getHours < 24)
   }
 
@@ -37,7 +37,7 @@ case class IncidentLog(historicIncidentsReported: Long) {
   }
 
   private def closeIncidentIfThereIsOne(probe: Probe) {
-    currentOpenIncident(probe).map(i => { i.finish = Some(systemClock().localDateTime) })
+    currentOpenIncident(probe).map(i => { i.finish = Some(systemClock().dateTime) })
     IncidentRegistry.updateIncidents(incidents)
   }
 
@@ -51,7 +51,7 @@ case class IncidentLog(historicIncidentsReported: Long) {
     IncidentRegistry.updateIncidents(incidents)
   }
 
-  private def newIncident(id: Long, probe: Probe, failure: ProbeFailure) = Incident(id, probe, systemClock().localDateTime, None, failure.failures)
+  private def newIncident(id: Long, probe: Probe, failure: ProbeFailure) = Incident(id, probe, systemClock().dateTime, None, failure.failures)
   private def firstTimeFailed(probe: Probe) = currentOpenIncident(probe).isEmpty
 
   private def incidentOpenTooLong(probe: Probe) = {
