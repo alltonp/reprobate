@@ -35,6 +35,8 @@ import scala.collection.immutable
 //when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
 //might be nice to have rim audit (or track) and see the last x items from the history
 //rim @ should sort/breakdown by status, so you can easily what you are doing/have done
+//add examples to rim query e.g. rim ? :tag, rim ? ^status, rim ? text, rim ? @aka
+//how do we handle rim releases getting too long?
 
 //audit stuff
 //might be good to capture who added the issue
