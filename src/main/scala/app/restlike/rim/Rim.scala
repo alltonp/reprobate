@@ -38,6 +38,15 @@ import scala.collection.immutable
 //add examples to rim query e.g. rim ? :tag, rim ? ^status, rim ? text, rim ? @aka
 //how do we handle rim releases getting too long?
 
+//feedback from team
+//Meta tags? Or mark some tags as private or business
+
+//Emails release notes
+//- no person, grouped by business tag
+
+//Explain by any tag
+//- show what we have ever done
+
 //audit stuff
 //might be good to capture who added the issue
 //might be good to capture who last updated the issue
