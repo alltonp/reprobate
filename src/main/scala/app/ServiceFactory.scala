@@ -17,8 +17,8 @@ trait Clock {
 object RealClock extends Clock {
   def localDate = new LocalDate()
   def localDateTime: LocalDateTime = new LocalDateTime()
-  def date = new LocalDate(UTC)
-  def dateTime = new DateTime(UTC)
+  def date = new LocalDate()
+  def dateTime = new DateTime()
 }
 
 object ServiceFactory extends Factory {
