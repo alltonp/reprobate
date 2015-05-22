@@ -16,6 +16,7 @@ case class TimeAgent() extends Renderable {
   def render = panel.render
 
   def onMessage(message: Message) = body.fill(R(
-    span(R(<small>{"now"}</small>), Spacer(), R(dateFormats().shortDateTimeFormat.print(systemClock().dateTime))).classes("h3")
+    span(R(<small>{"updated"}</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime)))
+      .classes("h4")
   ))
 }

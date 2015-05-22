@@ -17,9 +17,9 @@ case class ChecksSummaryAgent() extends Renderable {
 
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = body.fill(Composite(
     div(
-      span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h3").styles(padding("40px")),
-      span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h3").styles(padding("40px")),
-      span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h3").styles(padding("40px"))
+      span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h4").styles(padding("40px")),
+      span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h4").styles(padding("40px")),
+      span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px"))
     )
   ))
 }
