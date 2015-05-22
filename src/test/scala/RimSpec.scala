@@ -205,6 +205,7 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("tag1 := tagX", current, expected)
   }
 
+  //migrate?
   "edit tag in released" in {
     val issue = Issue("1", "an item", Some(next), None, tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithReleasedIssue(issue)

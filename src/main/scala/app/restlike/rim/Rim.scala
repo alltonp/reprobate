@@ -316,9 +316,16 @@ object RimCommander {
 
     def migrate(tags: Set[String]) = tags - oldTag + newTag
 
-    val updatedModel = currentModel.copy(issues = currentModel.issues.map(i => {
-      i.copy(tags = if (i.tags.contains(oldTag)) migrate(i.tags) else i.tags )
-    }))
+    def migrate2(i: Issue): Issue = {
+      i.copy(tags = if (i.tags.contains(oldTag)) migrate(i.tags) else i.tags)
+    }
+
+    val updatedModel = currentModel.copy(
+      issues = currentModel.issues.map(i => { migrate2(i) } ),
+      released = currentModel.released.map(r => {
+        r.copy(issues = r.issues.map(i => migrate2(i)))
+      } )
+    )
 
     //find all issues, including released
     //where oldTag exists, remove and add newTag
