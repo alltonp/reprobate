@@ -10,9 +10,6 @@ import net.liftweb.json._
 import org.joda.time.DateTime
 
 import scala.collection.immutable
-//import scala.reflect.io.File
-
-//TODO: depend on little instead of File
 
 //NEXT:
 //when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
