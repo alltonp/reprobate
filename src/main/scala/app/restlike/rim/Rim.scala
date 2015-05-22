@@ -108,6 +108,7 @@ object Messages {
     "expert mode:",
     "  - create, forward and tag       ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
     "  - create, forward many and tag  ⇒ 'rim +// description {: tag1 tag2 tagX}'",
+    //TODO: could just be +! .. but not consistent with /! and .!
     "  - create, end and tag           ⇒ 'rim +/! description {: tag1 tag2 tagX}'",
     "",
     "where: [arg] = mandatory, {arg} = optional",
@@ -467,7 +468,7 @@ object Presentation {
   }
   
   def release(release: Release) = {
-    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
+    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true, hideBy = true)}").mkString
     s"${release.tag}: (${release.issues.size})" + r + "\n"
   }
 
