@@ -55,7 +55,7 @@ case class IncidentLog(historicIncidentsReported: Long) {
   private def firstTimeFailed(probe: Probe) = currentOpenIncident(probe).isEmpty
 
   private def incidentOpenTooLong(probe: Probe) = {
-    val startOfToday = systemClock().localDate.toDateTimeAtStartOfDay
+    val startOfToday = systemClock().date.toDateTimeAtStartOfDay
     currentOpenIncident(probe).fold(false)(i => { startOfToday.isAfter(i.start.toDateTime) })
   }
 }

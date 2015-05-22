@@ -24,17 +24,10 @@ object DateFormatForHumans {
     .appendSuffix("s")
     .toFormatter
 
-  def format(when: LocalDateTime) = formatFor(when).print(when)
   def format(when: DateTime) = formatFor(when).print(when)
   def ago(when: LocalDateTime) = agoFormat.print(new Interval(when.toDateTime, today.toDateTime).toPeriod)
   def ago(period: Period) = agoFormat.print(period)
   def timeNow = standardTimeFormat.print(today)
-
-  private def formatFor(when: LocalDateTime) = {
-    if (isToday(when)) todayDateTimeFormat
-    else if (isThisYear(when)) thisYearDateTimeFormat
-    else standardDateTimeFormat
-  }
 
   private def formatFor(when: DateTime) = {
     if (isToday(when)) todayDateTimeFormat
@@ -42,21 +35,13 @@ object DateFormatForHumans {
     else standardDateTimeFormat
   }
 
-  private def isToday(when: LocalDateTime) = isSameDay(when, localToday)
-  private def isThisYear(when: LocalDateTime) = when.isAfter(localToday.minusYears(1))
   private def isToday(when: DateTime) = isSameDay(when, today)
   private def isThisYear(when: DateTime) = when.isAfter(today.minusYears(1))
-
-  private def isSameDay(when: LocalDateTime, as: LocalDateTime) =
-    when.getYear == as.getYear &&
-    when.getMonthOfYear == as.getMonthOfYear &&
-    when.getDayOfMonth == as.getDayOfMonth
 
   private def isSameDay(when: DateTime, as: DateTime) =
     when.getYear == as.getYear &&
     when.getMonthOfYear == as.getMonthOfYear &&
     when.getDayOfMonth == as.getDayOfMonth
 
-  private def localToday = systemClock().localDateTime
   private def today = systemClock().dateTime
 }

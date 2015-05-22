@@ -1,12 +1,12 @@
 package app.model
 
 import app.server.{ProbeInactive, ProbeSuccess, ProbeStatus}
-import org.joda.time.LocalDateTime
+import org.joda.time.{DateTime, LocalDateTime}
 import app.ServiceFactory._
 import scala.Some
 import app.server.ProbeFailure
 
-case class ProbeRun(probes: List[Probe], when: LocalDateTime = systemClock().localDateTime) {
+case class ProbeRun(probes: List[Probe], when: DateTime = systemClock().dateTime) {
   private var results = Map[Probe, ProbeStatus]()
 
   def failureCount = results.values.collect{case ProbeFailure(_) =>()}.size

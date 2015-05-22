@@ -25,7 +25,7 @@ case class Probe(id: String, config: String) {
   val defcon = Defcons(defconLevel)
   val needsProxy = false
 
-  def isActive = activePeriod.includes(systemClock().localDateTime)
+  def isActive = activePeriod.includes(systemClock().dateTime)
 
   private def parseActive(active: String) = {
     val bits = active.split("-")

@@ -51,14 +51,14 @@ case object FlipFloppingProbe extends Check {
 case object OddFailureEvenSuccessMinuteProbe extends Check {
   def run = if (isEven) success else failure(List("Every other minute I feel odd, then I let myself down: " + minute))
 
-  private def minute = systemClock().localDateTime.getMinuteOfHour
+  private def minute = systemClock().dateTime.getMinuteOfHour
   private def isEven = minute % 2 == 0
 }
 
 case object OddFailureEvenSuccessHourProbe extends Check {
   def run = if (isEven) success else failure(List("Every other hour I feel odd, then I let myself down: " + hour))
 
-  private def hour = systemClock().localDateTime.getHourOfDay
+  private def hour = systemClock().dateTime.getHourOfDay
   private def isEven = hour % 2 == 0
 }
 
