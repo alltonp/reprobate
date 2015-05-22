@@ -91,7 +91,7 @@ object Messages {
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
   //TODO: pull out to be under tags section?
-    "  - rename tag                     ⇒ 'rim [oldtag] :- [newtag]'",
+    "  - migrate tag                    ⇒ 'rim [oldtag] :- [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
 //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
@@ -256,7 +256,7 @@ object RimCommander {
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
-      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onRenameTag(oldTag, args.drop(1).head, currentModel)
+      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
@@ -310,34 +310,22 @@ object RimCommander {
     Out(Presentation.release(release) :: Nil, Some(updatedModel))
   }
 
-  private def onRenameTag(oldTag: String, newTag: String, currentModel: Model) = {
+  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
     println(oldTag)
     println(newTag)
+    //TODO: nice message on missing old
 
-    def migrate(tags: Set[String]) = tags - oldTag + newTag
-
-    def migrate2(i: Issue): Issue = {
-      i.copy(tags = if (i.tags.contains(oldTag)) migrate(i.tags) else i.tags)
-    }
+    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
+    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
     val updatedModel = currentModel.copy(
-      issues = currentModel.issues.map(i => { migrate2(i) } ),
+      issues = currentModel.issues.map(i => { migrateIssue(i) } ),
       released = currentModel.released.map(r => {
-        r.copy(issues = r.issues.map(i => migrate2(i)))
+        r.copy(issues = r.issues.map(i => migrateIssue(i)))
       } )
     )
 
-    //find all issues, including released
-    //where oldTag exists, remove and add newTag
-    //be
-//    currentModel.
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newTags = found.tags -- args
-//      val updatedIssue = found.copy(tags = newTags)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(s":- ${updatedIssue.render()}" :: Nil, Some(updatedModel))
-//    }
-    Out(Nil, Some(updatedModel))
+    Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
   }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model) = {
