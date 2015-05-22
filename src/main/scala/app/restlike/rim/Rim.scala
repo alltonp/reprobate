@@ -27,6 +27,8 @@ import scala.collection.immutable
 
 //properly support multiple / in /// and +///
 //properly support multiple . in ...
+
+//dates:
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
 //show stats about akas ... entries, last used etc (top 5)
