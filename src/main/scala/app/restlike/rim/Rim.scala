@@ -13,20 +13,25 @@ import scala.collection.immutable
 
 //NEXT:
 //when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
-//show usage count next to tags (inc released), order by most used, most recent etc
+
+//tags:
+//show tags by most recent etc (maybe)
 //consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
-//more expert mode options ...
+//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
+//tags should be [a-z0-9\-]
+
+//more expert mode options:
 //rim / - show begin
 //rim // - show nth state
 //rim ! - show end state
-//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
+
 //properly support multiple / in /// and +///
 //properly support multiple . in ...
-//tags should be [a-z0-9\-]
 //store when released (eek, data change - so make it an option)
 //show how long things have been in certain states
 //show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
+
 //help should have an 'issues' section for working with multiples on =, : etc
 //rim . foo => should probably search the backlog for foo
 //when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
