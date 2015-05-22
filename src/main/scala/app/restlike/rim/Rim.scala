@@ -159,6 +159,8 @@ case class Release(tag: String, issues: List[Issue])
 
 case class IssueCreation(created: Issue, updatedModel: Model)
 
+case class Tag(name: String, count: Int)
+
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
 
@@ -203,7 +205,9 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 
   def tags = {
     val allIssues = released.map(_.issues).flatten ++ issues
-    allIssues.map(_.tags).flatten.distinct.sorted
+    val allTheTags = allIssues.map(_.tags).flatten
+    val uniqueTags = allTheTags.distinct
+    uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
   }
 }
 
@@ -277,7 +281,7 @@ object RimCommander {
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
     val result = if (all.isEmpty) s"no tags found" :: Nil
-    else ": " + all.mkString(", ") :: Nil
+    else Presentation.tags(all)
     Out(result, None)
   }
 
@@ -471,6 +475,12 @@ object Presentation {
   def issuesForUser(aka: String, issues: List[Issue]) = {
     val r = issues.map(i => s"\n  ${i.render(hideBy = true)}").mkString
     s"${aka}: (${issues.size})" + r + "\n"
+  }
+
+  def tags(all: Seq[Tag]) = {
+//    println(moo)
+//    uniqueTags.sorted
+    ": " + all.mkString(", ") :: Nil
   }
 }
 
