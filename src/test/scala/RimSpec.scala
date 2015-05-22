@@ -49,7 +49,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "add and move forward to end state" in {
     val current = emptyModelWithWorkflow
     val expected = current.copy(issues = List(Issue("1", "an item", Some(done), Some(aka))))
-    runAndExpect("+/! an item", current, expected)
+    runAndExpect("+! an item", current, expected)
   }
 
   "add with tags" in {
@@ -73,7 +73,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "add and move forward to end state with tags" in {
     val current = emptyModelWithWorkflow
     val expected = current.copy(issues = List(Issue("1", "an item", Some(done), Some(aka), Set("tag1", "tag2"))))
-    runAndExpect("+/! an item : tag1 tag2", current, expected)
+    runAndExpect("+! an item : tag1 tag2", current, expected)
   }
 
   //moving

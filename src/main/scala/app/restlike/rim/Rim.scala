@@ -120,8 +120,7 @@ object Messages {
     "expert mode:",
     "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
     "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
-    //TODO: could just be +! .. but not consistent with /! and .!
-    "  - create, end and tag            ⇒ 'rim +/! description {: tag1 tag2 tagX}'",
+    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
     "",
     "where: [arg] = mandatory, {arg} = optional",
     ""
@@ -245,7 +244,7 @@ object RimCommander {
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
       case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
-      case In(Some("+/!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
+      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
       case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
       case In(Some("."), Nil) => onShowBacklog(currentModel)
