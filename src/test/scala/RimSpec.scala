@@ -198,6 +198,13 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 : tag1 tag2 tagN", current, expected)
   }
 
+  "edit tag" in {
+    val issue = Issue("1", "an item", Some(next), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
+    runAndExpect("tag1 := tagX", current, expected)
+  }
+
   //show
 
   "show board" in {
