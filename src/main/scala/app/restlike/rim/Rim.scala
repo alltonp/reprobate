@@ -530,7 +530,7 @@ object Presentation {
   }
 
   def tags(all: Seq[Tag]) = {
-    val sorted = all.sortBy(t => (-t.count, t.name))(Ordering[(Int, String)].reverse).reverse.map(t => s"${t.name} (${t.count})")
+    val sorted = all.sortBy(t => (-t.count, t.name)).map(t => s"${t.name} (${t.count})")
     ": " + sorted.mkString(", ") :: Nil
   }
 }
