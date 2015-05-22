@@ -19,12 +19,14 @@ import scala.collection.immutable
 //show tags by most recent etc (maybe)
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 //tags should be [a-z0-9\-]
+//should 'rim [tag] :-' remove tag .. (dicey)
 
 //more expert mode options:
 //rim / - show begin
 //rim // - show nth state
 //rim ! - show end state
 
+//gaps:
 //properly support multiple / in /// and +///
 //properly support multiple . in ...
 
@@ -35,8 +37,7 @@ import scala.collection.immutable
 //show how long since aka X updated rim
 
 //query:
-//rim ? foo => should probably include released issues
-//rim . foo => should probably search the backlog for foo
+//rim . foo => should probably search the backlog for foo ... ov maybe not because 'and' might cover it ... although how do oyu search on no status
 //rim ? foo bar => should 'and' terms
 
 //???:
