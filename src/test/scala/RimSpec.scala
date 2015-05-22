@@ -1,7 +1,7 @@
 import app.restlike.rim._
 import org.scalatest.{MustMatchers, WordSpec}
 
-class RimCommandSpec extends WordSpec with MustMatchers {
+class RimSpec extends WordSpec with MustMatchers {
 
   //TODO: work out what examples are missing
 

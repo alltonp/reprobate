@@ -1,2 +1,0 @@
-package app.restlike.rim
-
