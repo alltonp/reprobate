@@ -144,7 +144,7 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 .!", current, expected)
   }
 
-  // owning
+  //owning
 
   "own" in {
     val issue = Issue("1", "an item", Some(next), None)
@@ -175,7 +175,23 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 @= c", current, expected)
   }
 
-  // show
+  //tagging
+
+  "tag" in {
+    val issue = Issue("1", "an item", Some(next), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(tags = Set("tag"))))
+    runAndExpect("1 : tag", current, expected)
+  }
+
+  "detag" in {
+    val issue = Issue("1", "an item", Some(next), None, Set("tag"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(tags = Set.empty)))
+    runAndExpect("1 :- tag", current, expected)
+  }
+
+  //show
 
   "show board" in {
     (pending) //TODO: need to start asserting the Out().messages
