@@ -45,7 +45,9 @@ import scala.collection.immutable
 //Meta tags? Or mark some tags as private or business
 
 //Emails release notes
-//- no person, grouped by business tag
+//- no id, grouped by business tag
+//- should be a a rim note [release-tag]
+//- in which restore the by in the standard view
 
 //Explain by any tag
 //- show what we have ever done
