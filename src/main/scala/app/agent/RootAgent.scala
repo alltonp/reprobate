@@ -53,7 +53,6 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private val checksSummaryAgent = ChecksSummaryAgent()
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
-  private val timeAgent = TimeAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
   private val checksConfigAgent = ChecksConfigAgent()
   private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
@@ -79,7 +78,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = container(
-    row(col(12, Composite(broadcastButton, configButton, statusMessageAgent, timeAgent))),
+    row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
     row(col(12, checksProgressAgent)),
     row(col(12, checksSummaryAgent)),
     row(col(12, broadcastFlashAgent)),
@@ -109,7 +108,7 @@ case class RootAgent(subscriber: Subscriber) extends Renderable {
   def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
-  def onMessage(message: Message) = statusMessageAgent.onMessage(message) & timeAgent.onMessage(message)
+  def onMessage(message: Message) = statusMessageAgent.onMessage(message)
   def onBroadcast(broadcast: Broadcast) = broadcastFlashAgent.onBroadcast(broadcast)
 
   def cleanup() {}
