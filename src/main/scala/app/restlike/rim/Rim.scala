@@ -49,12 +49,13 @@ import scala.collection.immutable
 //feedback from team
 //Meta tags? Or mark some tags as private or business
 
-//Emails release notes
+//release notes
 //- no id, no by and grouped by business tag
 //- should be a 'rim note [release]' or 'rim [release] note'
 
-//Explain by any tag
-//- show what we have ever done
+//explain all for any tag
+//- 'rim : [tag]'
+//- show what we have ever done (group by status)
 
 //audit stuff
 //might be good to capture who added the issue
@@ -71,6 +72,13 @@ import scala.collection.immutable
 
 //SOMEDAY/MAYBE:
 //split and merge {}
+
+//think about:
+//would be nice to have a symbol for release ... it could be: ±
+//so then show = 'rim ±' or _ .. as in draw a line under it
+//so then create = 'rim ± [name]'
+//so then notes = 'rim [name] ±' ... need something to differentiate from adding
+//so maybe: '_+ [name]' to add, '_' to show, '[name] _' for notes
 
 object Messages {
   val eh = "- eh?"
@@ -94,7 +102,7 @@ object Messages {
     "  - assign                         ⇒ 'rim [ref] @= [aka]'",
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-  //TODO: pull out to be under tags section?
+  //TODO: pull out to be under 'tags' section?
     "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
 //    "  - move forward many              ⇒ 'rim [ref] //'",
@@ -106,12 +114,15 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
     "  - releases                       ⇒ 'rim releases'",
     "  - tags                           ⇒ 'rim :'",
     "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rim help'",
     "",
+    "search:",
+    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
+    "",
+    //TODO: this will ultimately be 'config' once we also have 'releases'
     "other:",
     "  - set aka                        ⇒ 'rim aka [initials]'",
     "  - create release                 ⇒ 'rim release [label]'",
