@@ -199,7 +199,7 @@ class RimSpec extends WordSpec with MustMatchers {
   }
 
   "edit tag" in {
-    val issue = Issue("1", "an item", Some(next), None)
+    val issue = Issue("1", "an item", Some(next), None, tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
     runAndExpect("tag1 := tagX", current, expected)

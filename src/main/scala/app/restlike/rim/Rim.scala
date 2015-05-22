@@ -90,6 +90,8 @@ object Messages {
     "  - assign                         ⇒ 'rim [ref] @= [aka]'",
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
+  //TODO: pull out to be under tags section?
+    "  - rename tag                     ⇒ 'rim [oldtag] :- [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
 //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
@@ -254,6 +256,7 @@ object RimCommander {
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
+      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onRenameTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
@@ -305,6 +308,29 @@ object RimCommander {
     val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
 
     Out(Presentation.release(release) :: Nil, Some(updatedModel))
+  }
+
+  private def onRenameTag(oldTag: String, newTag: String, currentModel: Model) = {
+    println(oldTag)
+    println(newTag)
+
+    def migrate(tags: Set[String]) = tags - oldTag + newTag
+
+    val updatedModel = currentModel.copy(issues = currentModel.issues.map(i => {
+      i.copy(tags = if (i.tags.contains(oldTag)) migrate(i.tags) else i.tags )
+    }))
+
+    //find all issues, including released
+    //where oldTag exists, remove and add newTag
+    //be
+//    currentModel.
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newTags = found.tags -- args
+//      val updatedIssue = found.copy(tags = newTags)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(s":- ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+//    }
+    Out(Nil, Some(updatedModel))
   }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model) = {
