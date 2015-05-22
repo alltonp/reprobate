@@ -311,21 +311,20 @@ object RimCommander {
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
-    println(oldTag)
-    println(newTag)
-    //TODO: nice message on missing old
-
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
     def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
-    val updatedModel = currentModel.copy(
-      issues = currentModel.issues.map(i => { migrateIssue(i) } ),
-      released = currentModel.released.map(r => {
-        r.copy(issues = r.issues.map(i => migrateIssue(i)))
-      } )
-    )
-
-    Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
+    if (currentModel.tags.map(_.name).contains(oldTag)) {
+      val updatedModel = currentModel.copy(
+        issues = currentModel.issues.map(i => {
+          migrateIssue(i)
+        }),
+        released = currentModel.released.map(r => {
+          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+        })
+      )
+      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
+    } else Out(Messages.problem(s"$oldTag does not exist"))
   }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model) = {
