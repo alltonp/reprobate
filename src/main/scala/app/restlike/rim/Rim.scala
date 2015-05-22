@@ -541,3 +541,78 @@ object Tracker {
 //#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
 //#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
 
+///Json
+
+import net.liftweb.common.{Full, Box, Loggable}
+import net.liftweb.http.{LiftResponse, Req}
+import net.liftweb.json.JsonAST
+
+case class RimCommand(value: String)
+
+object RimRequestJson {
+  import net.liftweb.json._
+
+  def deserialise(json: String) = {
+    implicit val formats = Serialization.formats(NoTypeHints)
+    parse(json).extract[RimCommand]
+  }
+}
+
+object JsonRequestHandler extends Loggable {
+  import app.restlike.rim.Responder._
+
+  def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
+    try {
+      req.json match {
+        case Full(json) ⇒ process(json, req)
+        case o ⇒ println(req.json); t(List(s"unexpected item in the bagging area ${o}"))
+      }
+    } catch {
+      case e: Exception ⇒ println("### Error handling request: " + req + " - " + e.getMessage); t(List(e.getMessage))
+    }
+  }
+}
+
+object Json {
+  import net.liftweb.json.Serialization._
+  import net.liftweb.json._
+
+  private val iamFormats = Serialization.formats(NoTypeHints)
+
+  def deserialise(json: String) = {
+    implicit val formats = iamFormats
+    parse(json).extract[Model]
+  }
+
+  def serialise(response: Model) = {
+    implicit val formats = iamFormats
+    JsonParser.parse(write(response))
+  }
+}
+
+///Rest
+
+import net.liftweb.common.Full
+import net.liftweb.http.rest.RestHelper
+import net.liftweb.http._
+
+object Rim extends RestHelper {
+  import app.restlike.rim.Messages._
+  import app.restlike.rim.Responder._
+
+  serve {
+    case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
+    case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker.view, downcase = false)
+    case r@Req("rim" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
+    case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
+  }
+}
+
+object Responder {
+  def t(messages: List[String], downcase: Boolean = false) = {
+    val response = messages.mkString("\n")
+    //    println("<= " + response)
+    Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
+  }
+}
+
