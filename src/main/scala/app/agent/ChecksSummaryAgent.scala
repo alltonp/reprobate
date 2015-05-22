@@ -1,5 +1,6 @@
 package app.agent
 
+import app.ServiceFactory._
 import im.mange.jetboot.widget.Spacer
 import im.mange.jetboot.{Composite, R, Renderable}
 import im.mange.jetboot.Html._
@@ -19,7 +20,8 @@ case class ChecksSummaryAgent() extends Renderable {
     div(
       span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h4").styles(padding("40px")),
       span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h4").styles(padding("40px")),
-      span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px"))
+      span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px")),
+      span(R(<small>{"updated"}</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime))).classes("h4").styles(padding("40px"))
     )
   ))
 }
