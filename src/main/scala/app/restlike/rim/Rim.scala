@@ -152,7 +152,7 @@ case class RefProvider(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty, history: Seq[History] = Seq.empty) {
+case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private val renderBy = by.fold("")(" @" + _)
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
   private val renderStatus = status.fold("")(" ^" + _)
