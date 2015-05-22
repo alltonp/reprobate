@@ -21,7 +21,7 @@ case class ChecksSummaryAgent() extends Renderable {
       span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h4").styles(padding("40px")),
       span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h4").styles(padding("40px")),
       span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px")),
-      span(R(<small>{"updated"}</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime))).classes("h4").styles(padding("40px"))
+      span(R(<small>last updated</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime))).classes("h4").styles(padding("40px"))
     )
   ))
 }
