@@ -52,7 +52,7 @@ import scala.collection.immutable
 
 //Emails release notes
 //- no id, no by and grouped by business tag
-//- should be a a rim note [release-tag]
+//- should be a 'rim note [release]' or 'rim [release] note'
 
 //Explain by any tag
 //- show what we have ever done
