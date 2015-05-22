@@ -16,7 +16,6 @@ import scala.collection.immutable
 
 //tags:
 //show tags by most recent etc (maybe)
-//consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 //tags should be [a-z0-9\-]
 
