@@ -132,7 +132,7 @@ object Messages {
       |else
       |  printf "\n$RESPONSE\n\n"
       |fi
-      |
+      |`wget -qO.rim.bak $RIM_HOST/rim/state`
       |
     """).stripMargin.split("\n").toList
 }
