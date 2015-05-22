@@ -480,7 +480,8 @@ object Presentation {
   def tags(all: Seq[Tag]) = {
 //    println(moo)
 //    uniqueTags.sorted
-    ": " + all.mkString(", ") :: Nil
+    val sorted = all.sortBy(_.count).reverse.map(t => s"${t.name} (${t.count})")
+    ": " + sorted.mkString(", ") :: Nil
   }
 }
 
