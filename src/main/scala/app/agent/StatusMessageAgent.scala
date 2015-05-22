@@ -14,6 +14,6 @@ case class StatusMessageAgent() extends Renderable {
   def render = panel.render
 
   def onMessage(message: Message) = body.fill(
-    span(R(<small>{message.subject}</small>), Spacer(), R(message.detail)).classes("h4")
+    span(R(<small>{message.subject}</small>), Spacer(), R(message.detail)).classes("h3")
   )
 }
