@@ -3,7 +3,7 @@ package app.server
 import java.io.FileNotFoundException
 import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
-import app.DateFormatForHumans
+import app.ServiceFactory._
 import app.comet.{Init, Subscriber}
 import app.model._
 import app.probe.HttpClient
@@ -78,7 +78,7 @@ class ProbeProviderActor extends LiftActor {
 
   //TODO: progress still iffy on the first run ...
   private def onPreExecuteProbe(probe: Probe) {
-    println("### " + DateFormatForHumans.timeNow + " - checking: " + probe.name)
+    println("### " + dateFormats().timeNow + " - checking: " + probe.name)
 
     this ! createCurrentRunStatusUpdate
     this ! createMessageUpdate("checking", probe.name)
@@ -171,12 +171,12 @@ class ProbeProviderActor extends LiftActor {
   }
 
   private def onSubscribe(subscriber: Subscriber) {
-    println("### " + DateFormatForHumans.timeNow + " - onSubscribe: " + subscriber)
+    println("### " + dateFormats().timeNow + " - onSubscribe: " + subscriber)
     if (!subscribers.contains(subscriber)) {
       subscribers = subscribers + subscriber
-      println("### " + DateFormatForHumans.timeNow + " - new subscriber, now have: " + subscribers.size)
+      println("### " + dateFormats().timeNow + " - new subscriber, now have: " + subscribers.size)
     } else {
-      println("### " + DateFormatForHumans.timeNow + " - existing subscriber, still have: " + subscribers.size)
+      println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
     }
 
     subscriber ! Init(currentRun.probes)
@@ -184,9 +184,9 @@ class ProbeProviderActor extends LiftActor {
   }
 
   private def onUnsubscribe(subscriber: Subscriber) {
-    println("### " + DateFormatForHumans.timeNow + " - onUnsubscribe: " + subscriber)
+    println("### " + dateFormats().timeNow + " - onUnsubscribe: " + subscriber)
     subscribers = subscribers - subscriber
-    println("### " + DateFormatForHumans.timeNow + " - subscriber removed, now have: " + subscribers.size)
+    println("### " + dateFormats().timeNow + " - subscriber removed, now have: " + subscribers.size)
   }
 
   private def onProbeConfigRequest(subscriber: Subscriber) {

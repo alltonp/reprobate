@@ -1,7 +1,6 @@
 package app.agent
 
-import app.DateFormatForHumans
-import app.DateFormatForHumans._
+import app.ServiceFactory.dateFormats
 import app.server.ProbeFailure
 import im.mange.jetboot._
 import Css._
@@ -47,7 +46,7 @@ case class BroadcastFlashAgent() extends Renderable {
 
   private def description(broadcast: Broadcast) = div(None,
     span(None, broadcast.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
-    span(None, standardTimeFormat.print(broadcast.start) + " to " + format(broadcast.finish)).styles(fontSize(smaller))
+    span(None, dateFormats().standardTimeFormat.print(broadcast.start) + " to " + dateFormats().today(broadcast.finish)).styles(fontSize(smaller))
   ).styles(fontWeight(bold))
 
   private def failures(broadcast: Broadcast) = span(None, broadcast.messages.head + "").styles(fontSize(smaller))

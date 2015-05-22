@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormat._
 import org.joda.time.format.PeriodFormatterBuilder
 import org.joda.time.{DateTime, Interval, LocalDateTime, Period}
 
-object DateFormatForHumans {
+object DateFormatForHumansOld {
   val standardTimeFormat = forPattern("HH:mm:ss")//.withZone(UTC)
   val standardDateTimeFormat = forPattern("HH:mm:ss EEE dd MMM yyyy")//.withZone(UTC)
   private val todayDateTimeFormat = forPattern("HH:mm:ss 'Today'")//.withZone(UTC)

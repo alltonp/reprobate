@@ -1,6 +1,6 @@
 package app.agent
 
-import app.DateFormatForHumans
+import app.ServiceFactory.dateFormats
 import app.model.Incident
 import app.server.AllRunsStatusUpdate
 import im.mange.jetboot.Css._
@@ -49,9 +49,9 @@ case class IncidentsAgent() extends Renderable {
     R(i.probe.env),
 //    R(s"IN-${i.id}"),
     R(Unparsed(i.failures.mkString("<br/>"))),
-    R(DateFormatForHumans.format(i.start)),
-    R(i.finish.fold("-"){DateFormatForHumans.format(_)}),
-    R(DateFormatForHumans.ago(i.openDuration))
+    R(dateFormats().today(i.start)),
+    R(i.finish.fold("-"){dateFormats().today(_)}),
+    R(dateFormats().ago(i.openDuration))
   )))
 
   //TODO: pull out a widget
