@@ -37,8 +37,7 @@ import scala.collection.immutable
 //show how long since aka X updated rim
 
 //query:
-//rim . foo => should probably search the backlog for foo ... ov maybe not because 'and' might cover it ... although how do oyu search on no status
-//rim ? foo bar => should 'and' terms
+//rim . foo => should maybe search like ? does, but just for the backlog for foo ... ov maybe not because 'and' might cover it ... although how do oyu search on no status
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
@@ -107,7 +106,7 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - all issues                     ⇒ 'rim ? {query}' - e.g. 'rim ? :tag', 'rim ? ^status', 'rim ? @aka', 'rim ? text'",
+    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
     "  - releases                       ⇒ 'rim releases'",
     "  - tags                           ⇒ 'rim :'",
     "  - who is doing what              ⇒ 'rim @'",
@@ -245,8 +244,8 @@ object RimCommander {
       case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
       case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
       case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
-      case In(Some("?"), Nil) => onQueryIssues(currentModel, None)
-      case In(Some("?"), List(query)) => onQueryIssues(currentModel, Some(query))
+      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
+      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
       case In(Some("."), Nil) => onShowBacklog(currentModel)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
@@ -440,11 +439,18 @@ object RimCommander {
   }
 
   //TODO: add search to Model
-  private def onQueryIssues(currentModel: Model, query: Option[String]) = {
+  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+    def query(issues: List[Issue], terms: List[String]): List[Issue] = {
+      terms match {
+        case Nil => issues
+        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+      }
+    }
+
     //TODO: add allIssues to model and tidy
     val allIssues = currentModel.issues ::: currentModel.released.flatMap(_.issues)
-    val matching = query.fold(allIssues)(q => allIssues.filter(i => i.search(q)))
-    val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
+    val matching = query(allIssues, terms)
+    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
     Out(result, None)
   }
