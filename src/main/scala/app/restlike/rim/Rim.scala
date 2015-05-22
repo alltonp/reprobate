@@ -15,7 +15,7 @@ import scala.collection.immutable
 //TODO: depend on little instead of File
 
 //NEXT:
-//when doing +/ etc .. show the both the created ref and the new board
+//when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
 //show usage count next to tags (inc released), order by most used, most recent etc
 //consolidate tags - e.g. bugs -> bug e.g. rim bugs := bug
 //more expert mode options ...
@@ -35,7 +35,6 @@ import scala.collection.immutable
 //when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
 //might be nice to have rim audit (or track) and see the last x items from the history
 //rim @ should sort/breakdown by status, so you can easily what you are doing/have done
-//add examples to rim query e.g. rim ? :tag, rim ? ^status, rim ? text, rim ? @aka
 //how do we handle rim releases getting too long?
 
 //feedback from team
@@ -77,39 +76,39 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimentary issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - create                        ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
-    "  - update                        ⇒ 'rim [ref] ='",
-    "  - delete                        ⇒ 'rim [ref] -'",
-    "  - own                           ⇒ 'rim [ref] @'",
-    "  - disown                        ⇒ 'rim [ref] @-'",
-    "  - assign                        ⇒ 'rim [ref] @= [aka]'",
-    "  - tag                           ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
-    "  - detag                         ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-    "  - move forward                  ⇒ 'rim [ref] /'",
-//    "  - move forward many             ⇒ 'rim [ref] //'",
-    "  - move to end                   ⇒ 'rim [ref] /!'",
-    "  - move backward                 ⇒ 'rim [ref] .'",
-    //    "  - move backward many      ⇒ 'rim [ref] ..'",
-    "  - return to backlog             ⇒ 'rim [ref] .!'",
+    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
+    "  - update                         ⇒ 'rim [ref] ='",
+    "  - delete                         ⇒ 'rim [ref] -'",
+    "  - own                            ⇒ 'rim [ref] @'",
+    "  - disown                         ⇒ 'rim [ref] @-'",
+    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
+    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
+    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
+    "  - move forward                   ⇒ 'rim [ref] /'",
+//    "  - move forward many              ⇒ 'rim [ref] //'",
+    "  - move to end                    ⇒ 'rim [ref] /!'",
+    "  - move backward                  ⇒ 'rim [ref] .'",
+    //    "  - move backward many         ⇒ 'rim [ref] ..'",
+    "  - return to backlog              ⇒ 'rim [ref] .!'",
     "",
     "show:",
-    "  - board                         ⇒ 'rim'",
-    "  - backlog                       ⇒ 'rim .'",
-    "  - all issues                    ⇒ 'rim ? {query}'",
-    "  - releases                      ⇒ 'rim releases'",
-    "  - tags                          ⇒ 'rim :'",
-    "  - who is doing what             ⇒ 'rim @'",
-    "  - help                          ⇒ 'rim help'",
+    "  - board                          ⇒ 'rim'",
+    "  - backlog                        ⇒ 'rim .'",
+    "  - all issues                     ⇒ 'rim ? {query}' - e.g. 'rim ? :tag', 'rim ? ^status', 'rim ? @aka', 'rim ? text'",
+    "  - releases                       ⇒ 'rim releases'",
+    "  - tags                           ⇒ 'rim :'",
+    "  - who is doing what              ⇒ 'rim @'",
+    "  - help                           ⇒ 'rim help'",
     "",
     "other:",
-    "  - set aka                       ⇒ 'rim aka [initials]'",
-    "  - create release                ⇒ 'rim release [label]'",
+    "  - set aka                        ⇒ 'rim aka [initials]'",
+    "  - create release                 ⇒ 'rim release [label]'",
     "",
     "expert mode:",
-    "  - create, forward and tag       ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
-    "  - create, forward many and tag  ⇒ 'rim +// description {: tag1 tag2 tagX}'",
+    "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
+    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
     //TODO: could just be +! .. but not consistent with /! and .!
-    "  - create, end and tag           ⇒ 'rim +/! description {: tag1 tag2 tagX}'",
+    "  - create, end and tag            ⇒ 'rim +/! description {: tag1 tag2 tagX}'",
     "",
     "where: [arg] = mandatory, {arg} = optional",
     ""
