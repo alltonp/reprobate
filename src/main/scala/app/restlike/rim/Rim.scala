@@ -51,9 +51,8 @@ import scala.collection.immutable
 //Meta tags? Or mark some tags as private or business
 
 //Emails release notes
-//- no id, grouped by business tag
+//- no id, no by and grouped by business tag
 //- should be a a rim note [release-tag]
-//- in which restore the by in the standard view
 
 //Explain by any tag
 //- show what we have ever done
@@ -504,7 +503,7 @@ object Presentation {
   }
   
   def release(release: Release) = {
-    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true, hideBy = true)}").mkString
+    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
     s"${release.tag}: (${release.issues.size})" + r + "\n"
   }
 
