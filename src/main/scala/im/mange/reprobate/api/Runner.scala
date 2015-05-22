@@ -4,6 +4,7 @@ import im.mange.shoreditch.api.{Check, CheckResponse}
 import net.liftweb.common.Full
 import net.liftweb.http.JsonResponse
 
+//TODO: should we use the one in shoreditch-api-liftweb intstead?
 object Runner {
   def run(p: Check) = {
     val r = try { p.run }
@@ -12,6 +13,7 @@ object Runner {
   }
 }
 
+//TODO: should we use the one in shoreditch-api-liftweb intstead?
 object Json {
   import net.liftweb.json.Serialization._
   import net.liftweb.json._
