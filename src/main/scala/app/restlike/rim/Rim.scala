@@ -33,8 +33,13 @@ import scala.collection.immutable
 //show stats about akas ... entries, last used etc (top 5)
 //show how long since aka X updated rim
 
-//help should have an 'issues' section for working with multiples on =, : etc
+//query:
+//rim ? foo => should probably include released issues
 //rim . foo => should probably search the backlog for foo
+//rim ? foo bar => should 'and' terms
+
+//???:
+//help should have an 'issues' section for working with multiples on =, : etc
 //when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
 //might be nice to have rim audit (or track) and see the last x items from the history
 //rim @ should sort/breakdown by status, so you can easily what you are doing/have done
@@ -90,7 +95,7 @@ object Messages {
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
   //TODO: pull out to be under tags section?
-    "  - migrate tag                    ⇒ 'rim [oldtag] :- [newtag]'",
+    "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
 //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
