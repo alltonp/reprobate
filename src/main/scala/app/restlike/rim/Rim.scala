@@ -1,5 +1,6 @@
 package app.restlike.rim
 
+import java.io.Serializable
 import java.nio.file.Paths
 
 import app.restlike.rim.Responder._
@@ -441,9 +442,11 @@ object RimCommander {
 
   //TODO: add search to Model
   private def onQueryIssues(currentModel: Model, query: Option[String]) = {
-    val matching = query.fold(currentModel.issues)(q => currentModel.issues.filter(i => i.search(q)))
+    //TODO: add allIssues to model and tidy
+    val allIssues = currentModel.issues ::: currentModel.released.flatMap(_.issues)
+    val matching = query.fold(allIssues)(q => allIssues.filter(i => i.search(q)))
     val result = if (matching.isEmpty) (s"no issues found" + (if (query.isDefined) s" for: ${query.get}" else "")) :: Nil
-    else matching.reverseMap(i => i.render())
+    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
     Out(result, None)
   }
 
