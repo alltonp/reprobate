@@ -13,39 +13,6 @@ import org.joda.time.DateTime
 import scala.collection.immutable
 
 //NEXT:
-//when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
-
-//tags:
-//show tags by most recent etc (maybe)
-//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
-//tags should be [a-z0-9\-]
-//should 'rim [tag] :-' remove tag .. (dicey)
-
-//more expert mode options:
-//rim / - show begin
-//rim // - show nth state
-//rim ! - show end state
-
-//gaps:
-//properly support multiple / in /// and +///
-//properly support multiple . in ...
-
-//dates:
-//store when released (eek, data change - so make it an option)
-//show how long things have been in certain states
-//show stats about akas ... entries, last used etc (top 5)
-//show how long since aka X updated rim
-
-//query:
-//rim . foo => should maybe search like ? does, but just for the backlog for foo ... ov maybe not because 'and' might cover it ... although how do oyu search on no status
-
-//???:
-//help should have an 'issues' section for working with multiples on =, : etc
-//when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
-//might be nice to have rim audit (or track) and see the last x items from the history
-//rim @ should sort/breakdown by status, so you can easily what you are doing/have done
-//how do we handle rim releases getting too long?
-
 //feedback from team
 //Meta tags? Or mark some tags as private or business
 
@@ -56,6 +23,40 @@ import scala.collection.immutable
 //explain all for any tag
 //- 'rim : [tag]'
 //- show what we have ever done (group by status)
+
+//when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
+
+//tags:
+//show tags by most recent etc (maybe)
+//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
+//tags should be [a-z0-9\-]
+//should 'rim [tag] :-' remove tag .. (dicey) .. should be to detag all issues with that tag
+
+//more view options:
+//rim / - show begin
+//rim // - show nth state
+//rim ! - show end state
+
+//gaps:
+//properly support multiple / in /// and +///
+//properly support multiple . in ...
+
+//dates: (not yet)
+//store when released (eek, data change - so make it an option)
+//show how long things have been in certain states
+//show stats about akas ... entries, last used etc (top 5)
+//show how long since aka X updated rim
+
+//query:
+//rim . foo => should maybe search like ? does, but just for the backlog for foo ...
+//or maybe not because 'and' might cover it ... although how do you search for no status
+
+//???:
+//help should have an 'issues' section for working with multiples on =, : etc
+//when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
+//might be nice to have rim audit (or track) and see the last x items from the history
+//rim @ should sort/breakdown by status, so you can easily what you are doing/have done
+//how do we handle rim releases getting too long?
 
 //audit stuff
 //might be good to capture who added the issue
