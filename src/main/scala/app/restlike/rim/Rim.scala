@@ -32,6 +32,11 @@ import scala.collection.immutable
 //tags should be [a-z0-9\-]
 //should 'rim [tag] :-' remove tag .. (dicey) .. should be to detag all issues with that tag
 
+//operations to support on many:
+//rim 1 2 N .
+//rim 1 2 N :
+//rim 1 2 N :-
+
 //more view options:
 //rim / - show begin
 //rim // - show nth state
@@ -51,6 +56,7 @@ import scala.collection.immutable
 //rim . foo => should maybe search like ? does, but just for the backlog for foo ...
 //or maybe not because 'and' might cover it ... although how do you search for no status
 //rim ? should group by status so we can see what is done, next etc
+//why is 'rim .' sorted backwards from 'rim ?'
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
