@@ -42,6 +42,9 @@ import scala.collection.immutable
 //rim // - show nth state
 //rim ! - show end state
 
+//colouring
+//colorise what changed ..
+
 //gaps:
 //properly support multiple / in /// and +///
 //properly support multiple . in ...
