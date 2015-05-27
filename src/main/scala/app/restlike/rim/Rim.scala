@@ -50,6 +50,7 @@ import scala.collection.immutable
 //query:
 //rim . foo => should maybe search like ? does, but just for the backlog for foo ...
 //or maybe not because 'and' might cover it ... although how do you search for no status
+//rim ? should group by status so we can see what is done, next etc
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
