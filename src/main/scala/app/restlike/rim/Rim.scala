@@ -60,6 +60,7 @@ import scala.collection.immutable
 //or maybe not because 'and' might cover it ... although how do you search for no status
 //rim ? should group by status so we can see what is done, next etc
 //why is 'rim .' sorted backwards from 'rim ?'
+//rim @ should group by status too (after aka)
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
