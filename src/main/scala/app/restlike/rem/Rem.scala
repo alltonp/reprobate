@@ -12,6 +12,17 @@ import org.joda.time.DateTime
 
 import scala.collection.immutable
 
+//TODO: Next
+//update key
+//update value
+//tag
+//detag
+//other standard tagging stuff
+
+//TODO: Then
+//store things per user (think about globlal id vs user id)
+//tidy up everything about status, ownership and releases
+
 object Messages {
   val eh = "- eh?"
 
