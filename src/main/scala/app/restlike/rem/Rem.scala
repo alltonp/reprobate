@@ -141,7 +141,9 @@ case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[Stri
 
     val description = descriptionBits.reverse.mkString(" ")
     val keyValueBits = description.split(" = ").map(_.trim)
-    //TODO: validate there is min 1, max 2
+    //TODO: validate there is min 1
+    //TODO: validate there is max 2
+    //TODO: validate key is not already used
     val maybeDupe = things.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
