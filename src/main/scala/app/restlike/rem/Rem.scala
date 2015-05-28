@@ -53,10 +53,10 @@ object Messages {
 //    "",
 //    "search:",
 //    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
-//    "",
+    "",
 //    //TODO: this will ultimately be 'config' once we also have 'releases'
-//    "other:",
-//    "  - set aka                        ⇒ 'rim aka [initials]'",
+    "other:",
+    "  - set aka                        ⇒ 'rem aka [initials]'",
 //    "  - create release                 ⇒ 'rim release [label]'",
 //    "",
 //    "expert mode:",
@@ -180,12 +180,12 @@ object RemCommander {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
-//    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
 //      case In(None, Nil) => onShowBoard(currentModel)
-//      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
+      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
