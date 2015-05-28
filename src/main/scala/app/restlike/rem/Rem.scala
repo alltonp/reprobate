@@ -3,7 +3,7 @@ package app.restlike.rem
 import java.io.Serializable
 import java.nio.file.Paths
 
-import app.restlike.rim.Responder._
+import app.restlike.rem.Responder._
 import im.mange.little.file.Filepath
 import net.liftweb.common._
 import net.liftweb.http._
@@ -12,90 +12,10 @@ import org.joda.time.DateTime
 
 import scala.collection.immutable
 
-//NEXT:
-//feedback from team
-//Meta tags? Or mark some tags as private or business
-
-//release notes
-//- no id, no by and grouped by business tag
-//- should be a 'rim note [release]' or 'rim [release] note'
-
-//explain all for any tag
-//- 'rim : [tag]'
-//- show what we have ever done (group by status)
-
-//when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
-
-//tags:
-//show tags by most recent etc (maybe)
-//Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
-//tags should be [a-z0-9\-]
-//should 'rim [tag] :-' remove tag .. (dicey) .. should be to detag all issues with that tag
-
-//operations to support on many:
-//rim 1 2 N .
-//rim 1 2 N :
-//rim 1 2 N :-
-
-//more view options:
-//rim / - show begin
-//rim // - show nth state
-//rim ! - show end state
-
-//colouring
-//colorise what changed ..
-
-//gaps:
-//properly support multiple / in /// and +///
-//properly support multiple . in ...
-
-//dates: (not yet)
-//store when released (eek, data change - so make it an option)
-//show how long things have been in certain states
-//show stats about akas ... entries, last used etc (top 5)
-//show how long since aka X updated rim
-
-//query:
-//rim . foo => should maybe search like ? does, but just for the backlog for foo ...
-//or maybe not because 'and' might cover it ... although how do you search for no status
-//rim ? should group by status so we can see what is done, next etc
-//why is 'rim .' sorted backwards from 'rim ?'
-//rim @ should group by status too (after aka)
-
-//???:
-//help should have an 'issues' section for working with multiples on =, : etc
-//when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
-//might be nice to have rim audit (or track) and see the last x items from the history
-//rim @ should sort/breakdown by status, so you can easily what you are doing/have done
-//how do we handle rim releases getting too long?
-
-//audit stuff
-//might be good to capture who added the issue
-//might be good to capture who last updated the issue
-//actually if we just store the updates by id then we will get that for free
-//store only things that result in a change
-//rim [ref] history
-
-//FUTURE:
-//- private rims
-//- grim
-//- spartan bubble ui
-//- hosted
-
-//SOMEDAY/MAYBE:
-//split and merge {}
-
-//think about:
-//would be nice to have a symbol for release ... it could be: ±
-//so then show = 'rim ±' or _ .. as in draw a line under it
-//so then create = 'rim ± [name]'
-//so then notes = 'rim [name] ±' ... need something to differentiate from adding
-//so maybe: '_+ [name]' to add, '_' to show, '[name] _' for notes
-
 object Messages {
   val eh = "- eh?"
 
-  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
+  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rem aka pa'")
   def notFound(ref: String) = problem(s"issue not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
@@ -103,70 +23,70 @@ object Messages {
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to rim - rudimentary issue management © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to rem - the rememberer © 2015 spabloshi ltd",
     "",
-    "issues:",
-    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
-    "  - update                         ⇒ 'rim [ref] ='",
-    "  - delete                         ⇒ 'rim [ref] -'",
-    "  - own                            ⇒ 'rim [ref] @'",
-    "  - disown                         ⇒ 'rim [ref] @-'",
-    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
-    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
-    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-  //TODO: pull out to be under 'tags' section?
-    "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
-    "  - move forward                   ⇒ 'rim [ref] /'",
-//    "  - move forward many              ⇒ 'rim [ref] //'",
-    "  - move to end                    ⇒ 'rim [ref] /!'",
-    "  - move backward                  ⇒ 'rim [ref] .'",
-    //    "  - move backward many         ⇒ 'rim [ref] ..'",
-    "  - return to backlog              ⇒ 'rim [ref] .!'",
-    "",
+//    "issues:",
+//    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
+//    "  - update                         ⇒ 'rim [ref] ='",
+//    "  - delete                         ⇒ 'rim [ref] -'",
+//    "  - own                            ⇒ 'rim [ref] @'",
+//    "  - disown                         ⇒ 'rim [ref] @-'",
+//    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
+//    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
+//    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
+//  //TODO: pull out to be under 'tags' section?
+//    "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
+//    "  - move forward                   ⇒ 'rim [ref] /'",
+////    "  - move forward many              ⇒ 'rim [ref] //'",
+//    "  - move to end                    ⇒ 'rim [ref] /!'",
+//    "  - move backward                  ⇒ 'rim [ref] .'",
+//    //    "  - move backward many         ⇒ 'rim [ref] ..'",
+//    "  - return to backlog              ⇒ 'rim [ref] .!'",
+//    "",
     "show:",
-    "  - board                          ⇒ 'rim'",
-    "  - backlog                        ⇒ 'rim .'",
-    "  - releases                       ⇒ 'rim releases'",
-    "  - tags                           ⇒ 'rim :'",
-    "  - who is doing what              ⇒ 'rim @'",
+//    "  - board                          ⇒ 'rim'",
+//    "  - backlog                        ⇒ 'rim .'",
+//    "  - releases                       ⇒ 'rim releases'",
+//    "  - tags                           ⇒ 'rim :'",
+//    "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rim help'",
-    "",
-    "search:",
-    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
-    "",
-    //TODO: this will ultimately be 'config' once we also have 'releases'
-    "other:",
-    "  - set aka                        ⇒ 'rim aka [initials]'",
-    "  - create release                 ⇒ 'rim release [label]'",
-    "",
-    "expert mode:",
-    "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
-    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
-    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
-    "",
-    "where: [arg] = mandatory, {arg} = optional",
+//    "",
+//    "search:",
+//    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
+//    "",
+//    //TODO: this will ultimately be 'config' once we also have 'releases'
+//    "other:",
+//    "  - set aka                        ⇒ 'rim aka [initials]'",
+//    "  - create release                 ⇒ 'rim release [label]'",
+//    "",
+//    "expert mode:",
+//    "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
+//    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
+//    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
+//    "",
+//    "where: [arg] = mandatory, {arg} = optional",
     ""
   )
 
   val install =
     (s"""#!/bin/bash
       |#INSTALLATION:
-      |#- alias rim='{path to}/rim.sh'
+      |#- alias rem='{path to}/rem.sh'
       |#- that's it!
       |
-      |RIM_HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
+      |REM_HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
       |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
-      |BASE="rim/$WHO"
-      |REQUEST="$OPTIONS $RIM_HOST/$BASE"
+      |BASE="rem/$WHO"
+      |REQUEST="$OPTIONS $REM_HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |if [ $? -ne 0 ]; then
-      |  printf "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
+      |  printf "\nsorry, rem seems to be unavailable right now, please try again later\n\n"
       |else
       |  printf "\n$RESPONSE\n\n"
       |fi
-      |`wget -qO.rim.bak $RIM_HOST/rim/state`
+      |`wget -qO.rem.bak $REM_HOST/rem/state`
       |
     """).stripMargin.split("\n").toList
 }
@@ -251,7 +171,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 case class In(head: Option[String], tail:List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
-object RimCommander {
+object RemCommander {
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
@@ -554,9 +474,9 @@ object Controller {
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
-        val value = RimRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
+        val value = RemRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker.track(who, value)
-        val out = RimCommander.process(value, who, model, refProvider)
+        val out = RemCommander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
           model = m
           Persistence.save(model)
@@ -571,7 +491,7 @@ object Controller {
 }
 
 object Persistence {
-  private val file = Paths.get("rim.json")
+  private val file = Paths.get("rem.json")
   private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
@@ -595,7 +515,7 @@ object Tracker {
   def view = Filepath.load(file).split("\n").reverse.toList
 }
 
-//TODO: handle corrupted rim.json
+//TODO: handle corrupted rem.json
 
 //TODO: protect against empty value
 //TODO: discover common keys and present them when updating
@@ -620,19 +540,19 @@ import net.liftweb.common.{Full, Box, Loggable}
 import net.liftweb.http.{LiftResponse, Req}
 import net.liftweb.json.JsonAST
 
-case class RimCommand(value: String)
+case class RemCommand(value: String)
 
-object RimRequestJson {
+object RemRequestJson {
   import net.liftweb.json._
 
   def deserialise(json: String) = {
     implicit val formats = Serialization.formats(NoTypeHints)
-    parse(json).extract[RimCommand]
+    parse(json).extract[RemCommand]
   }
 }
 
 object JsonRequestHandler extends Loggable {
-  import app.restlike.rim.Responder._
+  import app.restlike.rem.Responder._
 
   def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
     try {
@@ -670,8 +590,8 @@ import net.liftweb.http.rest.RestHelper
 import net.liftweb.http._
 
 object Rem extends RestHelper {
-  import app.restlike.rim.Messages._
-  import app.restlike.rim.Responder._
+  import app.restlike.rem.Messages._
+  import app.restlike.rem.Responder._
 
   serve {
     case r@Req("rem" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
