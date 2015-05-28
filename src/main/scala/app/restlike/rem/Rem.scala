@@ -50,9 +50,9 @@ object Messages {
 //    "  - tags                           ⇒ 'rim :'",
 //    "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rem help'",
-//    "",
-//    "search:",
-//    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
+    "",
+    "search:",
+    "  - all issues                     ⇒ 'rem ? {term1 term2 termX}'                      ⇒ e.g. 'rem ? :tag text'",
     "",
 //    //TODO: this will ultimately be 'config' once we also have 'releases'
     "other:",
@@ -193,8 +193,8 @@ object RemCommander {
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
 //      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
-//      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
-//      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
+      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
+      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
 //      case In(Some("."), Nil) => onShowBacklog(currentModel)
 //      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
@@ -388,21 +388,21 @@ object RemCommander {
   }
 
   //TODO: add search to Model
-//  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
-//    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
-//      terms match {
-//        case Nil => issues
-//        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
-//      }
-//    }
-//
-//    //TODO: add allIssues to model and tidy
-//    val allIssues = currentModel.things ::: currentModel.released.flatMap(_.issues)
-//    val matching = query(allIssues, terms)
-//    val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-//    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
-//    Out(result, None)
-//  }
+  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
+      terms match {
+        case Nil => issues
+        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+      }
+    }
+
+    //TODO: add allIssues to model and tidy
+    val allIssues = currentModel.things// ::: currentModel.released.flatMap(_.issues)
+    val matching = query(allIssues, terms)
+    val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
+    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+    Out(result, None)
+  }
 
 //  private def onShowBacklog(currentModel: Model) = {
 //    val matching = currentModel.things.filter(i => i.status.isEmpty)
