@@ -23,10 +23,10 @@ object Messages {
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to rem - the rememberer © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to rem - the thing rememberer © 2015 spabloshi ltd",
     "",
-//    "issues:",
-//    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
+    "things:",
+    "  - create                         ⇒ 'rem + [key] = {value}'"/* {: tag1 tag2 tagX}'"*/,
 //    "  - update                         ⇒ 'rim [ref] ='",
 //    "  - delete                         ⇒ 'rim [ref] -'",
 //    "  - own                            ⇒ 'rim [ref] @'",
@@ -49,7 +49,7 @@ object Messages {
 //    "  - releases                       ⇒ 'rim releases'",
 //    "  - tags                           ⇒ 'rim :'",
 //    "  - who is doing what              ⇒ 'rim @'",
-    "  - help                           ⇒ 'rim help'",
+    "  - help                           ⇒ 'rem help'",
 //    "",
 //    "search:",
 //    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
@@ -64,7 +64,7 @@ object Messages {
 //    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
 //    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
 //    "",
-//    "where: [arg] = mandatory, {arg} = optional",
+    "where: [arg] = mandatory, {arg} = optional",
     ""
   )
 
@@ -100,25 +100,27 @@ case class RefProvider(initial: Long) {
   }
 }
 
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
-  private val renderBy = by.fold("")(" @" + _)
+case class Thing(ref: String, key: String, value: String, tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+  val description = s"$key = $value"
+//  description: String, status: Option[String], by: Option[String]
+//  private val renderBy = by.fold("")(" @" + _)
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
-  private val renderStatus = status.fold("")(" ^" + _)
-  private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
+//  private val renderStatus = status.fold("")(" ^" + _)
+  private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render(hideStatus: Boolean = false, hideBy: Boolean = false) = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
+  def render() = s"$ref: $key = $value ${renderTags}"
 }
 
-case class History(who: String, command: String)
+//case class History(who: String, command: String)
 
-case class Release(tag: String, issues: List[Issue])
+//case class Release(tag: String, issues: List[Thing])
 
-case class IssueCreation(created: Issue, updatedModel: Model)
+case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
+case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[String, String], things: List[Thing]/*, released: List[Release]*/) {
   def knows_?(who: String) = userToAka.contains(who)
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
@@ -138,30 +140,32 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     })
 
     val description = descriptionBits.reverse.mkString(" ")
-    val maybeDupe = issues.find(i => i.description == description)
+    val keyValueBits = description.split(" = ").map(_.trim)
+    //TODO: validate there is min 1, max 2
+    val maybeDupe = things.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by, tagBits.toSet)
-    val updatedModel = this.copy(issues = created :: this.issues)
+    val created = Thing(newRef, keyValueBits.head, keyValueBits.drop(1).headOption.getOrElse(""), tagBits.toSet)
+    val updatedModel = this.copy(things = created :: this.things)
     Right(IssueCreation(created, updatedModel))
   }
 
-  def updateIssue(updated: Issue) = {
-    val index = this.issues.indexOf(findIssue(updated.ref).get)
-    this.copy(issues = this.issues.updated(index, updated))
+  def updateIssue(updated: Thing) = {
+    val index = this.things.indexOf(findIssue(updated.ref).get)
+    this.copy(things = this.things.updated(index, updated))
   }
 
   def aka(who: String) = userToAka(who)
   def akas = userToAka.values.toList.distinct
-  def findIssue(ref: String) = issues.find(_.ref == ref)
-  def beginState = workflowStates.head
-  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
-  def endState = workflowStates.reverse.head
-  def releasableIssues = issues.filter(_.status == Some(endState))
-  def releaseTags = released.map(_.tag)
+  def findIssue(ref: String) = things.find(_.ref == ref)
+//  def beginState = workflowStates.head
+//  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
+//  def endState = workflowStates.reverse.head
+//  def releasableIssues = things.filter(_.status == Some(endState))
+//  def releaseTags = released.map(_.tag)
 
   def tags = {
-    val allIssues = released.map(_.issues).flatten ++ issues
+    val allIssues = /*released.map(_.issues).flatten ++*/ things
     val allTheTags = allIssues.map(_.tags).flatten
     val uniqueTags = allTheTags.distinct
     uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
@@ -176,36 +180,36 @@ object RemCommander {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
-    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+//    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-      case In(None, Nil) => onShowBoard(currentModel)
-      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
+//      case In(None, Nil) => onShowBoard(currentModel)
+//      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
-      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
-      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
-      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
-      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
-      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
-      case In(Some("."), Nil) => onShowBacklog(currentModel)
-      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
-      case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("/!")) => onFastForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
-      case In(Some(ref), List(".!")) => onFastBackwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
-      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
-      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
-      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
-      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
-      case In(Some(":"), Nil) => onShowTags(currentModel)
-      case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
-      case In(Some("releases"), Nil) => onShowReleases(currentModel)
+//      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
+//      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
+//      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
+//      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
+//      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
+//      case In(Some("."), Nil) => onShowBacklog(currentModel)
+//      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
+//      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
+//      case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
+//      case In(Some(ref), List("/!")) => onFastForwardIssue(who, ref, currentModel)
+//      case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
+//      case In(Some(ref), List(".!")) => onFastBackwardIssue(who, ref, currentModel)
+//      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
+//      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
+//      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
+//      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
+//      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
+//      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
+//      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
+//      case In(Some(":"), Nil) => onShowTags(currentModel)
+//      case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
+//      case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -213,28 +217,28 @@ object RemCommander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
+//  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
-  private def onShowReleases(currentModel: Model) = {
-    val all = currentModel.released.map(Presentation.release(_))
-    val result = if (all.isEmpty) s"no releases found" :: Nil
-    else all
-    Out(result, None)
-  }
+//  private def onShowReleases(currentModel: Model) = {
+//    val all = currentModel.released.map(Presentation.release(_))
+//    val result = if (all.isEmpty) s"no releases found" :: Nil
+//    else all
+//    Out(result, None)
+//  }
 
-  private def onShowWhoIsDoingWhat(currentModel: Model) = {
-    val akas = currentModel.akas
-    val all = akas.map(aka => {
-      val issues = currentModel.issues.filter(_.by == Some(aka))
-      Presentation.issuesForUser(aka, issues)
-    })
-
-    val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
-    else all
-    Out(result, None)
-  }
+//  private def onShowWhoIsDoingWhat(currentModel: Model) = {
+//    val akas = currentModel.akas
+//    val all = akas.map(aka => {
+//      val issues = currentModel.things.filter(_.by == Some(aka))
+//      Presentation.issuesForUser(aka, issues)
+//    })
+//
+//    val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
+//    else all
+//    Out(result, None)
+//  }
 
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
@@ -243,35 +247,35 @@ object RemCommander {
     Out(result, None)
   }
 
-  private def onRelease(tag: String, currentModel: Model): Out = {
-    val releaseable = currentModel.releasableIssues
-    val remainder = currentModel.issues diff releaseable
+//  private def onRelease(tag: String, currentModel: Model): Out = {
+//    val releaseable = currentModel.releasableIssues
+//    val remainder = currentModel.things diff releaseable
+//
+//    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
+//    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
+//
+//    val release = Release(tag, releaseable)
+//    val updatedModel = currentModel.copy(things = remainder, released = release :: currentModel.released )
+//
+//    Out(Presentation.release(release) :: Nil, Some(updatedModel))
+//  }
 
-    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
-    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
-
-    val release = Release(tag, releaseable)
-    val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
-
-    Out(Presentation.release(release) :: Nil, Some(updatedModel))
-  }
-
-  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
-    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
-
-    if (currentModel.tags.map(_.name).contains(oldTag)) {
-      val updatedModel = currentModel.copy(
-        issues = currentModel.issues.map(i => {
-          migrateIssue(i)
-        }),
-        released = currentModel.released.map(r => {
-          r.copy(issues = r.issues.map(i => migrateIssue(i)))
-        })
-      )
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
-    } else Out(Messages.problem(s"$oldTag does not exist"))
-  }
+//  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
+//    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
+//    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//
+//    if (currentModel.tags.map(_.name).contains(oldTag)) {
+//      val updatedModel = currentModel.copy(
+//        things = currentModel.things.map(i => {
+//          migrateIssue(i)
+//        }),
+//        released = currentModel.released.map(r => {
+//          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+//        })
+//      )
+//      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
+//    } else Out(Messages.problem(s"$oldTag does not exist"))
+//  }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -291,119 +295,119 @@ object RemCommander {
     }
   }
 
-  private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
-    }
-  }
+//  private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+//    }
+//  }
 
-  private def onDisownIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = None)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
-    }
-  }
+//  private def onDisownIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = None)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+//    }
+//  }
 
-  private def onAssignIssue(assignee: String, ref: String, currentModel: Model): Out = {
-    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = Some(assignee))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
-    }
-  }
+//  private def onAssignIssue(assignee: String, ref: String, currentModel: Model): Out = {
+//    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = Some(assignee))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+//    }
+//  }
 
   //TODO: model.forwardAState
   //TODO: model.backwardAState
-  private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = if (found.status.isEmpty) None
-      else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
-      }
-      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
-      val updatedIssue = found.copy(status = newStatus, by = by)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
-    }
-  }
+//  private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) None
+//      else {
+//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
+//        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
+//      }
+//      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
+//      val updatedIssue = found.copy(status = newStatus, by = by)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel), Some(updatedModel))
+//    }
+//  }
 
-  private def onFastBackwardIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = None
-      val updatedIssue = found.copy(status = newStatus, by = None)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
-    }
-  }
+//  private def onFastBackwardIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = None
+//      val updatedIssue = found.copy(status = newStatus, by = None)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel), Some(updatedModel))
+//    }
+//  }
 
-  private def onForwardIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = if (found.status.isEmpty) currentModel.beginState
-      else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
-        currentModel.workflowStates(newIndex)
-      }
-      val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
-      val updatedIssue = found.copy(status = Some(newStatus), by = by)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
-    }
-  }
+//  private def onForwardIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) currentModel.beginState
+//      else {
+//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
+//        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
+//        currentModel.workflowStates(newIndex)
+//      }
+//      val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
+//      val updatedIssue = found.copy(status = Some(newStatus), by = by)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel), Some(updatedModel))
+//    }
+//  }
 
-  private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = currentModel.endState
-      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
-    }
-  }
+//  private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = currentModel.endState
+//      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel), Some(updatedModel))
+//    }
+//  }
 
-  private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newDescription = args.mkString(" ")
-      val updatedIssue = found.copy(description = newDescription)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"= ${updatedIssue.render()}" :: Nil, Some(updatedModel))
-    }
-  }
+//  private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newDescription = args.mkString(" ")
+//      val updatedIssue = found.copy(description = newDescription)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(s"= ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+//    }
+//  }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
+      val updatedModel = currentModel.copy(things = currentModel.things.filterNot(i => i == found))
       Out(s"- ${found.render()}" :: Nil, Some(updatedModel))
     }
   }
 
   //TODO: add search to Model
-  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
-    def query(issues: List[Issue], terms: List[String]): List[Issue] = {
-      terms match {
-        case Nil => issues
-        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
-      }
-    }
+//  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+//    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
+//      terms match {
+//        case Nil => issues
+//        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+//      }
+//    }
+//
+//    //TODO: add allIssues to model and tidy
+//    val allIssues = currentModel.things ::: currentModel.released.flatMap(_.issues)
+//    val matching = query(allIssues, terms)
+//    val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
+//    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+//    Out(result, None)
+//  }
 
-    //TODO: add allIssues to model and tidy
-    val allIssues = currentModel.issues ::: currentModel.released.flatMap(_.issues)
-    val matching = query(allIssues, terms)
-    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
-    Out(result, None)
-  }
-
-  private def onShowBacklog(currentModel: Model) = {
-    val matching = currentModel.issues.filter(i => i.status.isEmpty)
-    val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.reverseMap(i => i.render())
-    Out(result, None)
-  }
+//  private def onShowBacklog(currentModel: Model) = {
+//    val matching = currentModel.things.filter(i => i.status.isEmpty)
+//    val result = if (matching.isEmpty) s"backlog is empty" :: Nil
+//    else matching.reverseMap(i => i.render())
+//    Out(result, None)
+//  }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
@@ -412,26 +416,26 @@ object RemCommander {
     }
   }
 
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
-    }
-  }
-
-  private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
-    }
-  }
-
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
-    }
-  }
+//  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+//    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+//    }
+//  }
+//
+//  private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+//    currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+//    }
+//  }
+//
+//  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+//    currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+//    }
+//  }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
     if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
@@ -442,24 +446,24 @@ object RemCommander {
 
 //TODO: add issue
 object Presentation {
-  def board(model: Model) = {
-    val stateToIssues = model.issues.groupBy(_.status)
-    model.workflowStates.map(s => {
-      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
-      s"$s: (${issuesForState.size})" + issues + "\n"
-    })
-  }
+//  def board(model: Model) = {
+//    val stateToIssues = model.things.groupBy(_.status)
+//    model.workflowStates.map(s => {
+//      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+//      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
+//      s"$s: (${issuesForState.size})" + issues + "\n"
+//    })
+//  }
   
-  def release(release: Release) = {
-    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
-    s"${release.tag}: (${release.issues.size})" + r + "\n"
-  }
+//  def release(release: Release) = {
+//    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
+//    s"${release.tag}: (${release.issues.size})" + r + "\n"
+//  }
 
-  def issuesForUser(aka: String, issues: List[Issue]) = {
-    val r = issues.map(i => s"\n  ${i.render(hideBy = true)}").mkString
-    s"${aka}: (${issues.size})" + r + "\n"
-  }
+//  def issuesForUser(aka: String, issues: List[Thing]) = {
+//    val r = issues.map(i => s"\n  ${i.render(hideBy = true)}").mkString
+//    s"${aka}: (${issues.size})" + r + "\n"
+//  }
 
   def tags(all: Seq[Tag]) = {
     val sorted = all.sortBy(t => (-t.count, t.name)).map(t => s"${t.name} (${t.count})")
@@ -469,7 +473,7 @@ object Presentation {
 
 object Controller {
   private var model = Persistence.load
-  private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref.toLong).max)
+  private val refProvider = RefProvider(if (model.things.isEmpty) 0 else model.things.map(_.ref.toLong).max)
 
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
@@ -495,7 +499,7 @@ object Persistence {
   private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
-    if (!file.toFile.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release]()))
+    if (!file.toFile.exists()) save(Model(/*defaultStatuses,*/ immutable.Map[String, String](), List[Thing]()/*, List[Release]()*/))
     Json.deserialise(Filepath.load(file))
   }
 

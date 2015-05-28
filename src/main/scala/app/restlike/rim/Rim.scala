@@ -473,7 +473,7 @@ object RimCommander {
     //TODO: add allIssues to model and tidy
     val allIssues = currentModel.issues ::: currentModel.released.flatMap(_.issues)
     val matching = query(allIssues, terms)
-    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
+    val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
     Out(result, None)
   }
