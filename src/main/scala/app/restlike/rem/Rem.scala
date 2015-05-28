@@ -42,7 +42,7 @@ object Messages {
 //    "  - move backward                  ⇒ 'rim [ref] .'",
 //    //    "  - move backward many         ⇒ 'rim [ref] ..'",
 //    "  - return to backlog              ⇒ 'rim [ref] .!'",
-//    "",
+    "",
     "show:",
 //    "  - board                          ⇒ 'rim'",
 //    "  - backlog                        ⇒ 'rim .'",
@@ -63,7 +63,7 @@ object Messages {
 //    "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
 //    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
 //    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
-//    "",
+    "",
     "where: [arg] = mandatory, {arg} = optional",
     ""
   )
