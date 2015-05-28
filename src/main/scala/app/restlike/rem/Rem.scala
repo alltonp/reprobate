@@ -44,7 +44,7 @@ object Messages {
 //    "  - return to backlog              ⇒ 'rim [ref] .!'",
     "",
     "show:",
-//    "  - board                          ⇒ 'rim'",
+    "  - all                            ⇒ 'rem'",
 //    "  - backlog                        ⇒ 'rim .'",
 //    "  - releases                       ⇒ 'rim releases'",
 //    "  - tags                           ⇒ 'rim :'",
@@ -100,16 +100,16 @@ case class RefProvider(initial: Long) {
   }
 }
 
-case class Thing(ref: String, key: String, value: String, tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Thing(ref: String, key: String, value: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   val description = s"$key = $value"
 //  description: String, status: Option[String], by: Option[String]
 //  private val renderBy = by.fold("")(" @" + _)
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
 //  private val renderStatus = status.fold("")(" ^" + _)
-  private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value, renderTags).mkString(" ")
+  private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value.getOrElse(""), renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render() = s"$ref: $key = $value${renderTags}"
+  def render() = s"$ref: $key${value.fold("")(v => s" = $v")}${renderTags}"
 }
 
 //case class History(who: String, command: String)
@@ -123,7 +123,7 @@ case class Tag(name: String, count: Int)
 case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[String, String], things: List[Thing]/*, released: List[Release]*/) {
   def knows_?(who: String) = userToAka.contains(who)
 
-  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
+  def createThing(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
 
     //TODO: this is well shonky!
@@ -147,7 +147,7 @@ case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[Stri
     val maybeDupe = things.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Thing(newRef, keyValueBits.head, keyValueBits.drop(1).headOption.getOrElse(""), tagBits.toSet)
+    val created = Thing(newRef, keyValueBits.head, keyValueBits.drop(1).headOption, tagBits.toSet)
     val updatedModel = this.copy(things = created :: this.things)
     Right(IssueCreation(created, updatedModel))
   }
@@ -186,10 +186,12 @@ object RemCommander {
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
+      //TODO: should propbably show somehting more useful, like most popular etc
 //      case In(None, Nil) => onShowBoard(currentModel)
+      case In(None, Nil) => onQueryIssues(currentModel, Nil)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
-      case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
+      case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
 //      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
@@ -411,8 +413,8 @@ object RemCommander {
 //    Out(result, None)
 //  }
 
-  private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, None, None, refProvider) match {
+  private def onAddThing(args: List[String], currentModel: Model, refProvider: RefProvider) = {
+    currentModel.createThing(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(s"+ ${r.created.render()}" :: Nil, Some(r.updatedModel))
     }
