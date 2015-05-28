@@ -3,6 +3,7 @@ package bootstrap.liftweb
 import app.Control._
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.demo.Demo
+import app.restlike.rem.Rem
 import app.restlike.rim.Rim
 import app.view.AppView
 import app.{ServiceFactory}
@@ -46,6 +47,7 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(Demo)
     LiftRules.statelessDispatch.append(Iam)
     LiftRules.statelessDispatch.append(Rim)
+    LiftRules.statelessDispatch.append(Rem)
 
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
