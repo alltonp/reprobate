@@ -28,7 +28,7 @@ object Messages {
     "things:",
     "  - create                         ⇒ 'rem + [key] = {value} {: tag1 tag2 tagX}'",
 //    "  - update                         ⇒ 'rim [ref] ='",
-//    "  - delete                         ⇒ 'rim [ref] -'",
+    "  - delete                         ⇒ 'rem [ref] -'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
@@ -196,7 +196,7 @@ object RemCommander {
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
 //      case In(Some("."), Nil) => onShowBacklog(currentModel)
-//      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
+      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
 //      case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
 //      case In(Some(ref), List("/!")) => onFastForwardIssue(who, ref, currentModel)
