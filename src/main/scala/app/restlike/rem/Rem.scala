@@ -26,7 +26,7 @@ object Messages {
     s"hello ${who}, welcome to rem - the thing rememberer © 2015 spabloshi ltd",
     "",
     "things:",
-    "  - create                         ⇒ 'rem + [key] = {value}'"/* {: tag1 tag2 tagX}'"*/,
+    "  - create                         ⇒ 'rem + [key] = {value} {: tag1 tag2 tagX}'",
 //    "  - update                         ⇒ 'rim [ref] ='",
 //    "  - delete                         ⇒ 'rim [ref] -'",
 //    "  - own                            ⇒ 'rim [ref] @'",
@@ -109,7 +109,7 @@ case class Thing(ref: String, key: String, value: String, tags: Set[String] = Se
   private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render() = s"$ref: $key = $value ${renderTags}"
+  def render() = s"$ref: $key = $value${renderTags}"
 }
 
 //case class History(who: String, command: String)
