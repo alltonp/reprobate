@@ -123,7 +123,7 @@ case class Thing(ref: String, key: String, value: Option[String], tags: Set[Stri
   private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value.getOrElse(""), renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render() = s"$ref: $key${value.fold("")(v => s" = $v")}${renderTags}"
+  def render() = s"$ref: ${Colours.orange(key)}${value.fold("")(v => s" = ${Colours.cyan(v)}")}${renderTags}"
 }
 
 //case class History(who: String, command: String)
@@ -416,7 +416,7 @@ object RemCommander {
     val allIssues = currentModel.things// ::: currentModel.released.flatMap(_.issues)
     val matching = query(allIssues, terms)
     val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => Colours.orange(i.render()))
+    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
     Out(result, None)
   }
 
@@ -631,11 +631,16 @@ object Responder {
   }
 }
 
+//TIP: http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
 object Colours {
+  val BLUE = "\033[0;34m"
+  val CYAN = "\033[0;36m"
   val GREEN = "\033[1;92m"
   val ORANGE="\033[0;38;5;208m"
   val RED="\033[1;31m"
   val END="\033[0m"
 
+  def blue(value: String) = s"$BLUE$value$END"
+  def cyan(value: String) = s"$CYAN$value$END"
   def orange(value: String) = s"$ORANGE$value$END"
 }
