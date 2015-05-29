@@ -1,3 +1,4 @@
+import app.restlike.common.RefProvider
 import app.restlike.rem.RemCommander
 import app.restlike.rem._
 import org.scalatest.{MustMatchers, WordSpec}

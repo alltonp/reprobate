@@ -3,7 +3,7 @@ package app.restlike.rem
 import java.io.Serializable
 import java.nio.file.Paths
 
-import app.restlike.common.{CliRequestJson, CliCommand, JsonRequestHandler, Colours}
+import app.restlike.common._
 import Colours._
 import app.restlike.common.Responder._
 import im.mange.little.file.Filepath
@@ -109,15 +109,6 @@ object Messages {
       |`wget -qO.rem.bak $REM_HOST/rem/state`
       |
     """).stripMargin.split("\n").toList
-}
-
-case class RefProvider(initial: Long) {
-  private var count = initial
-
-  def next = synchronized {
-    count += 1
-    s"$count"
-  }
 }
 
 case class Thing(ref: String, key: String, value: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
