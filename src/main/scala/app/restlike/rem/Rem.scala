@@ -29,13 +29,13 @@ import scala.collection.immutable
 //TODO: implememt slack style tokens
 
 object Messages {
-  val eh = "- eh?"
+  val eh = "eh?"
 
-  def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rem aka pa'")
+  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rem aka pa'")
   def notFound(ref: String) = problem(s"issue not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
-  def problem(message: String) = List(s"problem - $message")
+  def problem(message: String) = List(red(s"problem: ") + message)
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
@@ -235,7 +235,7 @@ object RemCommander {
   }
 
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
-    Out(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
+    Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
 //  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 
