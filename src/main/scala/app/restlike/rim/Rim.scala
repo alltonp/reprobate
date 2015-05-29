@@ -3,9 +3,9 @@ package app.restlike.rim
 import java.io.Serializable
 import java.nio.file.Paths
 
-import app.restlike.common.Colours
+import app.restlike.common.{Responder, Colours}
 import app.restlike.common.Colours._
-import app.restlike.rim.Responder._
+import Responder._
 import im.mange.little.file.Filepath
 import net.liftweb.common._
 import net.liftweb.http._
@@ -635,7 +635,7 @@ object RimRequestJson {
 }
 
 object JsonRequestHandler extends Loggable {
-  import app.restlike.rim.Responder._
+  import Responder._
 
   def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
     try {
@@ -674,7 +674,7 @@ import net.liftweb.http._
 
 object Rim extends RestHelper {
   import app.restlike.rim.Messages._
-  import app.restlike.rim.Responder._
+  import Responder._
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
@@ -684,12 +684,5 @@ object Rim extends RestHelper {
   }
 }
 
-//TODO: this should be in common
-object Responder {
-  def t(messages: List[String], downcase: Boolean = false) = {
-    val response = messages.mkString("\n")
-    //    println("<= " + response)
-    Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
-  }
-}
+
 

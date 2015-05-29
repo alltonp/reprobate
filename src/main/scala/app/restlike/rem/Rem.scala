@@ -5,7 +5,7 @@ import java.nio.file.Paths
 
 import app.restlike.common.Colours
 import Colours._
-import app.restlike.rem.Responder._
+import app.restlike.common.Responder._
 import im.mange.little.file.Filepath
 import net.liftweb.common._
 import net.liftweb.http._
@@ -581,7 +581,7 @@ object RemRequestJson {
 }
 
 object JsonRequestHandler extends Loggable {
-  import app.restlike.rem.Responder._
+  import app.restlike.common.Responder._
 
   def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
     try {
@@ -620,7 +620,7 @@ import net.liftweb.http._
 
 object Rem extends RestHelper {
   import app.restlike.rem.Messages._
-  import app.restlike.rem.Responder._
+  import app.restlike.common.Responder._
 
   serve {
     case r@Req("rem" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
@@ -629,14 +629,3 @@ object Rem extends RestHelper {
     case r@Req("rem" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
   }
 }
-
-//TODO: this should be in common
-object Responder {
-  def t(messages: List[String], downcase: Boolean = false) = {
-    val response = messages.mkString("\n")
-    //    println("<= " + response)
-    Full(PlainTextResponse(if (downcase) response.toLowerCase else response))
-  }
-}
-
-
