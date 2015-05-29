@@ -23,6 +23,9 @@ import scala.collection.immutable
 //store things per user (think about globlal id vs user id)
 //tidy up everything about status, ownership and releases
 
+//TODO: could it be more about creating entities and add KV pairs to them
+//TODO: implememt slack style tokens
+
 object Messages {
   val eh = "- eh?"
 
@@ -199,15 +202,15 @@ object RemCommander {
     cmd match {
       //TODO: should propbably show somehting more useful, like most popular etc
 //      case In(None, Nil) => onShowBoard(currentModel)
-      case In(None, Nil) => onQueryIssues(currentModel, Nil)
+      case In(None, Nil) => onQueryThings(currentModel, Nil)
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
 //      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
-      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
-      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
+      case In(Some("?"), Nil) => onQueryThings(currentModel, Nil)
+      case In(Some("?"), terms) => onQueryThings(currentModel, terms)
 //      case In(Some("."), Nil) => onShowBacklog(currentModel)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
@@ -401,7 +404,7 @@ object RemCommander {
   }
 
   //TODO: add search to Model
-  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+  private def onQueryThings(currentModel: Model, terms: List[String]) = {
     def query(issues: List[Thing], terms: List[String]): List[Thing] = {
       terms match {
         case Nil => issues
@@ -413,7 +416,7 @@ object RemCommander {
     val allIssues = currentModel.things// ::: currentModel.released.flatMap(_.issues)
     val matching = query(allIssues, terms)
     val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+    else matching.sortBy(_.ref.toInt).reverseMap(i => Colours.orange(i.render()))
     Out(result, None)
   }
 
@@ -628,3 +631,11 @@ object Responder {
   }
 }
 
+object Colours {
+  val GREEN = "\033[1;92m"
+  val ORANGE="\033[0;38;5;208m"
+  val RED="\033[1;31m"
+  val END="\033[0m"
+
+  def orange(value: String) = s"$ORANGE$value$END"
+}
