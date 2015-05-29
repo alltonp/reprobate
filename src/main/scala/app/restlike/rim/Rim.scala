@@ -3,6 +3,8 @@ package app.restlike.rim
 import java.io.Serializable
 import java.nio.file.Paths
 
+import app.restlike.common.Colours
+import app.restlike.common.Colours._
 import app.restlike.rim.Responder._
 import im.mange.little.file.Filepath
 import net.liftweb.common._
@@ -93,7 +95,7 @@ import scala.collection.immutable
 //so maybe: '_+ [name]' to add, '_' to show, '[name] _' for notes
 
 object Messages {
-  val eh = "- eh?"
+  val eh = "eh?"
 
   def notAuthorised(who: String) = List(s"- easy ${who}, please set your initials first ⇒ 'rim aka pa'")
   def notFound(ref: String) = problem(s"issue not found: $ref")
@@ -291,7 +293,7 @@ object RimCommander {
   }
 
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
-    Out(Messages.eh + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
+    Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
   private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 
