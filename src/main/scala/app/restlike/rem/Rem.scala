@@ -20,6 +20,7 @@ import scala.collection.immutable
 //tag
 //detag
 //other standard tagging stuff
+//stop using white .. it won't play well on white backgrounds - could have an inverse user setting?
 
 //TODO: Then
 //store things per user (think about globlal id vs user id)
