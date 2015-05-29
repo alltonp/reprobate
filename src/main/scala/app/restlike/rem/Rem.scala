@@ -3,7 +3,7 @@ package app.restlike.rem
 import java.io.Serializable
 import java.nio.file.Paths
 
-import app.restlike.common.{JsonRequestHandler, Colours}
+import app.restlike.common.{CliRequestJson, CliCommand, JsonRequestHandler, Colours}
 import Colours._
 import app.restlike.common.Responder._
 import im.mange.little.file.Filepath
@@ -502,7 +502,7 @@ object Controller {
   def process(who: String, req: Req): Box[LiftResponse] =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
-        val value = RemRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
+        val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker.track(who, value)
         val out = RemCommander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
@@ -568,17 +568,6 @@ object Tracker {
 import net.liftweb.common.{Full, Box, Loggable}
 import net.liftweb.http.{LiftResponse, Req}
 import net.liftweb.json.JsonAST
-
-case class RemCommand(value: String)
-
-object RemRequestJson {
-  import net.liftweb.json._
-
-  def deserialise(json: String) = {
-    implicit val formats = Serialization.formats(NoTypeHints)
-    parse(json).extract[RemCommand]
-  }
-}
 
 object Json {
   import net.liftweb.json.Serialization._
