@@ -10,7 +10,7 @@ object Colours {
   private val DARKGREY ="\033[1;30m"
   private val LIGHTGREY ="\033[0;37m"
   private val ORANGE ="\033[0;38;5;208m"
-  private val RED ="\033[1;31m"
+  private val RED ="\033[0;31m"
   private val WHITE ="\033[1;37m"
   private val END ="\033[0m"
 
