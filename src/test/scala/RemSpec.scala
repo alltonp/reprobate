@@ -6,10 +6,6 @@ class RemSpec extends WordSpec with MustMatchers {
 
   //TODO: work out what examples are missing
 
-  private val next = "next"
-  private val doing = "doing"
-  private val done = "done"
-  private val workflowStates = List(next, doing, done)
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
