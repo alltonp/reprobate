@@ -28,6 +28,10 @@ import scala.collection.immutable
 //TODO: could it be more about creating entities and add KV pairs to them
 //TODO: implememt slack style tokens
 
+//TODO: de-dupe
+//pull out a clitools jar
+//can we share serialisers and persistence? (put in common) .. might be hard
+
 object Messages {
   val eh = "eh?"
 
