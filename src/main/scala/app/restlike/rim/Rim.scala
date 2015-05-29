@@ -684,6 +684,7 @@ object Rim extends RestHelper {
   }
 }
 
+//TODO: this should be in common
 object Responder {
   def t(messages: List[String], downcase: Boolean = false) = {
     val response = messages.mkString("\n")
