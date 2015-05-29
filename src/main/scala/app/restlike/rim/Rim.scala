@@ -586,6 +586,7 @@ object Persistence {
   }
 }
 
+//TODO: this should be in common
 object Tracker {
   private val file = Paths.get("rim.tracking")
 

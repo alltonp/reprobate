@@ -520,7 +520,7 @@ object Controller {
 
 object Persistence {
   private val file = Paths.get("rem.json")
-  private val defaultStatuses = List("next", "doing", "done")
+//  private val defaultStatuses = List("next", "doing", "done")
 
   def load: Model = {
     if (!file.toFile.exists()) save(Model(/*defaultStatuses,*/ immutable.Map[String, String](), List[Thing]()/*, List[Release]()*/))
@@ -532,6 +532,7 @@ object Persistence {
   }
 }
 
+//TODO: this should be in common
 object Tracker {
   private val file = Paths.get("rem.tracking")
 
