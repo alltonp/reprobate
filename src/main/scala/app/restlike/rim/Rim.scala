@@ -44,7 +44,10 @@ import scala.collection.immutable
 //rim // - show nth state
 //rim ! - show end state
 
-//colouring
+//releases:
+//store when we released .. useful for really simple tracking
+
+//colouring:
 //colorise what changed ..
 
 //gaps:
