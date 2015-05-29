@@ -3,7 +3,7 @@ package app.restlike.rim
 import java.io.Serializable
 import java.nio.file.Paths
 
-import app.restlike.common.{Responder, Colours}
+import app.restlike.common.{JsonRequestHandler, Responder, Colours}
 import app.restlike.common.Colours._
 import Responder._
 import im.mange.little.file.Filepath
@@ -631,21 +631,6 @@ object RimRequestJson {
   def deserialise(json: String) = {
     implicit val formats = Serialization.formats(NoTypeHints)
     parse(json).extract[RimCommand]
-  }
-}
-
-object JsonRequestHandler extends Loggable {
-  import Responder._
-
-  def handle(req: Req)(process: (JsonAST.JValue, Req) ⇒ Box[LiftResponse]) = {
-    try {
-      req.json match {
-        case Full(json) ⇒ process(json, req)
-        case o ⇒ println(req.json); t(List(s"unexpected item in the bagging area ${o}"))
-      }
-    } catch {
-      case e: Exception ⇒ println("### Error handling request: " + req + " - " + e.getMessage); t(List(e.getMessage))
-    }
   }
 }
 
