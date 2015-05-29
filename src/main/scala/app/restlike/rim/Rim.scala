@@ -587,7 +587,7 @@ object Persistence {
 }
 
 object Tracker {
-  private val file = Paths.get("tracking.txt")
+  private val file = Paths.get("rim.tracking")
 
   def track(who: String, what: String) {
     val content = List(DateTime.now, who, what).mkString("|") + "\n"
