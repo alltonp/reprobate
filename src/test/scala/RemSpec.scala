@@ -191,6 +191,7 @@ class RemSpec extends WordSpec with MustMatchers {
   //tagging
 
   "tag" in {
+    (pending)
     val issue = Thing("1", "key", None)
     val current = modelWithIssue(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tag"))))
@@ -198,6 +199,7 @@ class RemSpec extends WordSpec with MustMatchers {
   }
 
   "detag" in {
+    (pending)
     val issue = Thing("1", "key", None, Set("tag"))
     val current = modelWithIssue(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set.empty)))
@@ -205,6 +207,7 @@ class RemSpec extends WordSpec with MustMatchers {
   }
 
   "tag multi" in {
+    (pending)
     val issue = Thing("1", "key", None)
     val current = modelWithIssue(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
@@ -212,6 +215,7 @@ class RemSpec extends WordSpec with MustMatchers {
   }
 
   "edit tag" in {
+    (pending)
     val issue = Thing("1", "key", None, tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithIssue(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
