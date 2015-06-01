@@ -22,10 +22,6 @@ import scala.collection.immutable
 //- no id, no by and grouped by business tag
 //- should be a 'rim note [release]' or 'rim [release] note'
 
-//explain all for any tag
-//- 'rim : [tag]'
-//- show what we have ever done (group by status)
-
 //when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
 
 //tags:
@@ -563,6 +559,18 @@ object Presentation {
   }
 
   private def groupByStatus(issues: Seq[Issue], currentModel: Model, changed: Seq[String], aka: Option[String]) = {
+    val stateToIssues = issues.groupBy(_.status)
+    currentModel.workflowStates.map(s => {
+      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+      val issues = issuesForState.map(i => s"\n  ${
+        i.render(
+          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
+      }").mkString
+      s"$s: (${issuesForState.size})" + issues + "\n"
+    })
+  }
+
+  private def groupByTag(tags: Seq[String], issues: Seq[Issue], currentModel: Model) = {
     val stateToIssues = issues.groupBy(_.status)
     currentModel.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
