@@ -183,7 +183,11 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render(hideStatus: Boolean = false, hideBy: Boolean = false) = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
+
+  def render(hideStatus: Boolean = false, hideBy: Boolean = false, highlight: Boolean = false) = {
+    val r = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
+    if (highlight) orange(r) else r
+  }
 }
 
 case class History(who: String, command: String)
@@ -522,7 +526,7 @@ object Presentation {
     val stateToIssues = model.issues.groupBy(_.status)
     model.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
+      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true, highlight = changed.contains(i.ref))}").mkString
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
