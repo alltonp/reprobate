@@ -105,7 +105,8 @@ object Messages {
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
   def problem(message: String) = List(red(s"problem: ") + message)
-  def success(what: String) = List(orange(what))
+  def success(what: String) = List(what)
+  def successfulUpdate(what: String) = List(orange(what))
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
@@ -350,6 +351,7 @@ object RimCommander {
           r.copy(issues = r.issues.map(i => migrateIssue(i)))
         })
       )
+      //TODO: should show the issues that have changed as a result
       Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
     } else Out(Messages.problem(s"$oldTag does not exist"))
   }
@@ -359,7 +361,7 @@ object RimCommander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s":- ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s":- ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -368,7 +370,7 @@ object RimCommander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s": ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s": ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -376,7 +378,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -384,7 +386,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -393,7 +395,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -451,14 +453,14 @@ object RimCommander {
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.success(s"= ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"= ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(Messages.success(s"- ${found.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"- ${found.render()}"), Some(updatedModel))
     }
   }
 
@@ -476,7 +478,6 @@ object RimCommander {
     val matching = query(allIssues, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
-    //TODO: use Messages.success()
     Out(result, None)
   }
 
@@ -484,14 +485,13 @@ object RimCommander {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.reverseMap(i => i.render())
-    //TODO: use Messages.success()
     Out(result, None)
   }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Messages.success(s"+ ${r.created.render()}"), Some(r.updatedModel))
+      case Right(r) => Out(Messages.successfulUpdate(s"+ ${r.created.render()}"), Some(r.updatedModel))
     }
   }
 
