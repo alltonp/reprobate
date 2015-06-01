@@ -265,27 +265,26 @@ object RimCommander {
 
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
-    val aka = currentModel.aka(who)
-    //TODO: stop passing who through
+    def aka = currentModel.aka(who)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
       case In(None, Nil) => onShowBoard(currentModel, aka)
       case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
-      case In(Some("help"), Nil) => onHelp(who, currentModel)
+      case In(Some("help"), Nil) => onHelp(currentModel, aka)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
-      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
-      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
-      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
+      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
+      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
+      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
       case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
-      case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List("/!")) => onFastForwardIssue(who, ref, currentModel)
-      case In(Some(ref), List(".")) => onBackwardIssue(who, ref, currentModel)
-      case In(Some(ref), List(".!")) => onFastBackwardIssue(who, ref, currentModel)
+      case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
+      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
+      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
+      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
@@ -305,7 +304,7 @@ object RimCommander {
 
   private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
 
-  private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
+  private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
   private def onShowReleases(currentModel: Model) = {
     val all = currentModel.released.flatMap(Presentation.release(_))
@@ -409,30 +408,30 @@ object RimCommander {
 
   //TODO: model.forwardAState
   //TODO: model.backwardAState
-  private def onBackwardIssue(who: String, ref: String, currentModel: Model) = {
+  private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) None
       else {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
       }
-      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
+      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
   }
 
-  private def onFastBackwardIssue(who: String, ref: String, currentModel: Model) = {
+  private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
       val updatedIssue = found.copy(status = newStatus, by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
   }
 
-  private def onForwardIssue(who: String, ref: String, currentModel: Model) = {
+  private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = if (found.status.isEmpty) currentModel.beginState
       else {
@@ -440,19 +439,19 @@ object RimCommander {
         val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentModel.workflowStates(newIndex)
       }
-      val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
+      val by = if (newStatus == currentModel.beginState) None else Some(aka)
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
   }
 
-  private def onFastForwardIssue(who: String, ref: String, currentModel: Model) = {
+  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = currentModel.endState
-      val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
+      val updatedIssue = found.copy(status = Some(newStatus), by = Some(aka))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
   }
 
@@ -501,24 +500,24 @@ object RimCommander {
     }
   }
 
-  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+  private def onAddAndBeginIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
     currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
     }
   }
 
-  private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
+  private def onAddAndForwardIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
+    currentModel.createIssue(args, Some(currentModel.state(1)), Some(aka), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
     }
   }
 
-  private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
+  private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
+    currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
     }
   }
 
