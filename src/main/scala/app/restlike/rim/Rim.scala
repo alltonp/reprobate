@@ -299,8 +299,8 @@ object RimCommander {
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
   private def onShowReleases(currentModel: Model) = {
-    val all = currentModel.released.map(Presentation.release(_))
-    val result = if (all.isEmpty) s"no releases found" :: Nil
+    val all = currentModel.released.flatMap(Presentation.release(_))
+    val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
     Out(result, None)
   }
@@ -312,14 +312,14 @@ object RimCommander {
       Presentation.issuesForUser(aka, issues)
     })
 
-    val result = if (all.isEmpty) s"nobody is doing anything" :: Nil
+    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
     else all
     Out(result, None)
   }
 
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
-    val result = if (all.isEmpty) s"no tags found" :: Nil
+    val result = if (all.isEmpty) Messages.success(s"no tags found")
     else Presentation.tags(all)
     Out(result, None)
   }
@@ -334,7 +334,7 @@ object RimCommander {
     val release = Release(tag, releaseable)
     val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
 
-    Out(Presentation.release(release) :: Nil, Some(updatedModel))
+    Out(Presentation.release(release), Some(updatedModel))
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
@@ -359,7 +359,7 @@ object RimCommander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s":- ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s":- ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -368,7 +368,7 @@ object RimCommander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s": ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s": ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -376,7 +376,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -384,7 +384,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -393,7 +393,7 @@ object RimCommander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"@ ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s"@ ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -451,14 +451,14 @@ object RimCommander {
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(s"= ${updatedIssue.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s"= ${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(s"- ${found.render()}" :: Nil, Some(updatedModel))
+      Out(Messages.success(s"- ${found.render()}"), Some(updatedModel))
     }
   }
 
@@ -476,6 +476,7 @@ object RimCommander {
     val matching = query(allIssues, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+    //TODO: use Messages.success()
     Out(result, None)
   }
 
@@ -483,6 +484,7 @@ object RimCommander {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.reverseMap(i => i.render())
+    //TODO: use Messages.success()
     Out(result, None)
   }
 
@@ -534,7 +536,7 @@ object Presentation {
   
   def release(release: Release) = {
     val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
-    s"${release.tag}: (${release.issues.size})" + r + "\n"
+    s"${release.tag}: (${release.issues.size})" + r + "\n" :: Nil
   }
 
   def issuesForUser(aka: String, issues: List[Issue]) = {
