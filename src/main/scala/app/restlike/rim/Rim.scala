@@ -342,8 +342,8 @@ object RimCommander {
 
   private def onShowReleaseNote(release: String, currentModel: Model) = {
     val maybeRelease = currentModel.released.find(_.tag == release)
-    val result = if (maybeRelease.isEmpty) Messages.success(s"no release found for: $release")
-    else Presentation.releaseNotes(release, maybeRelease.get.issues, currentModel)
+    val result = if (maybeRelease.isEmpty) Messages.problem(s"no release found for: $release")
+    else Presentation.releaseNotes(release, maybeRelease.get.issues, currentModel).toList
     Out(result, None)
   }
 
@@ -568,8 +568,11 @@ object Presentation {
     groupByStatus(issues, currentModel, Nil, None)
   }
 
+  //TODO: render or remove release
   def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
-    groupByStatus(issues, currentModel, Nil, None)
+    val tagNames = issues.flatMap(_.tags)
+    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
+    sieveByTag(sortedByPopularity(tags), issues, currentModel)
   }
 
   private def groupByStatus(issues: Seq[Issue], currentModel: Model, changed: Seq[String], aka: Option[String]) = {
@@ -584,16 +587,21 @@ object Presentation {
     })
   }
 
-  private def sieveByTag(tags: Seq[String], issues: Seq[Issue], currentModel: Model) = {
-//    val stateToIssues = issues.groupBy(_.status)
-//    currentModel.workflowStates.map(s => {
-//      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-//      val issues = issuesForState.map(i => s"\n  ${
-//        i.render(
-//          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
-//      }").mkString
-//      s"$s: (${issuesForState.size})" + issues + "\n"
-//    })
+  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model) = {
+    var remainingIssues = issues
+    tags.map(t => {
+      val issuesForTag = remainingIssues.filter(_.tags.contains(t.name))
+      remainingIssues = remainingIssues.diff(issuesForTag)
+      renderTagAndIssues(t.name, issuesForTag)
+    }) ++ Seq(renderTagAndIssues("?", remainingIssues))
+  }
+
+  private def renderTagAndIssues(tag: String, issuesForTag: Seq[Issue]): String = {
+    val issues = issuesForTag.map(i => s"\n  ${
+      i.render(
+        hideStatus = true, hideBy = true)
+    }").mkString
+    s"$tag: (${issuesForTag.size})" + issues + "\n"
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
