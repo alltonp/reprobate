@@ -105,6 +105,7 @@ object Messages {
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
   def problem(message: String) = List(red(s"problem: ") + message)
+  def success(what: String) = List(orange(what))
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
@@ -488,7 +489,7 @@ object RimCommander {
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(s"+ ${r.created.render()}" :: Nil, Some(r.updatedModel))
+      case Right(r) => Out(Messages.success(s"+ ${r.created.render()}"), Some(r.updatedModel))
     }
   }
 
