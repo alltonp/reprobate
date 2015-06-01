@@ -554,10 +554,8 @@ object Presentation {
     s"${aka}: (${issues.size})" + r + "\n"
   }
 
-  def tags(all: Seq[Tag]) = {
-    val sorted = sortedByPopularity(all).map(t => s"${t.name} (${t.count})")
-    ": " + sorted.mkString(", ") :: Nil
-  }
+  def tags(all: Seq[Tag]) =
+    ": " + sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil
 
   //TODO: we should include the released on the board too
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
