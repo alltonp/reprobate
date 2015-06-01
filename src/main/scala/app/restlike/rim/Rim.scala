@@ -575,7 +575,6 @@ object Presentation {
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
-
 }
 
 object Controller {
