@@ -167,7 +167,7 @@ object Messages {
       |BASE="rim/$WHO"
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
       |MESSAGE="${@:1}"
-      |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
+      |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |if [ $? -ne 0 ]; then
       |  printf "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
       |else
@@ -179,15 +179,20 @@ object Messages {
 }
 
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
-  private val renderBy = by.fold("")(" @" + _)
+  private def renderBy(highlightAka: Option[String]) = {
+    (by, highlightAka) match {
+      case (Some(b), a) => val r = " @" + b; if (b == a.getOrElse("")) orange(r) else r
+      case (None, _) => ""
+    }
+  }
   private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
   private val renderStatus = status.fold("")(" ^" + _)
-  private val indexed = List(ref, description, renderStatus, renderBy.toLowerCase, renderTags).mkString(" ")
+  private val indexed = List(ref, description, renderStatus, renderBy(None).toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
-  def render(hideStatus: Boolean = false, hideBy: Boolean = false, highlight: Boolean = false) = {
-    val r = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy.toUpperCase}${if (hideStatus) "" else renderStatus}"
+  def render(hideStatus: Boolean = false, hideBy: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
+    val r = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy(highlightAka).toUpperCase}${if (hideStatus) "" else renderStatus}"
     if (highlight) orange(r) else r
   }
 }
