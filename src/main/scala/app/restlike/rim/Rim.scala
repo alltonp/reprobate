@@ -265,17 +265,20 @@ object RimCommander {
 
     if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
+    val aka = currentModel.aka(who)
+    //TODO: stop passing who through
+
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-      case In(None, Nil) => onShowBoard(currentModel, currentModel.aka(who))
-      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
+      case In(None, Nil) => onShowBoard(currentModel, aka)
+      case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
       case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
       case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
-      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
-      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
+      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
+      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
       case In(Some("."), Nil) => onShowBacklog(currentModel)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
@@ -470,7 +473,7 @@ object RimCommander {
   }
 
   //TODO: add search to Model
-  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+  private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
     def query(issues: List[Issue], terms: List[String]): List[Issue] = {
       terms match {
         case Nil => issues
@@ -480,7 +483,7 @@ object RimCommander {
 
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
