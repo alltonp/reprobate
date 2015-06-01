@@ -580,8 +580,7 @@ object Presentation {
     currentModel.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
       val issues = issuesForState.map(i => s"\n  ${
-        i.render(
-          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
+        i.render(hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
@@ -598,8 +597,7 @@ object Presentation {
 
   private def renderTagAndIssues(tag: String, issuesForTag: Seq[Issue]): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(
-        hideStatus = true, hideBy = true)
+      i.render(hideStatus = true, hideBy = true)
     }").mkString
     s"$tag: (${issuesForTag.size})" + issues + "\n"
   }
