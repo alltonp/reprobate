@@ -181,7 +181,7 @@ object Messages {
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
-      case (Some(b), a) => val r = " @" + b; if (b == a.getOrElse("")) orange(r) else r
+      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) cyan(r) else r
       case (None, _) => ""
     }
   }
@@ -192,7 +192,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def search(query: String) = indexed.contains(query)
 
   def render(hideStatus: Boolean = false, hideBy: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
-    val r = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy(highlightAka).toUpperCase}${if (hideStatus) "" else renderStatus}"
+    val r = s"$ref: $description${renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus}"
     if (highlight) orange(r) else r
   }
 }
@@ -267,7 +267,7 @@ object RimCommander {
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-      case In(None, Nil) => onShowBoard(currentModel)
+      case In(None, Nil) => onShowBoard(currentModel, currentModel.aka(who))
       case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
@@ -300,7 +300,7 @@ object RimCommander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel, Nil), None)
+  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
 
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
@@ -416,7 +416,7 @@ object RimCommander {
       val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
     }
   }
 
@@ -425,7 +425,7 @@ object RimCommander {
       val newStatus = None
       val updatedIssue = found.copy(status = newStatus, by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
     }
   }
 
@@ -440,7 +440,7 @@ object RimCommander {
       val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
     }
   }
 
@@ -449,7 +449,7 @@ object RimCommander {
       val newStatus = currentModel.endState
       val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), currentModel.aka(who)), Some(updatedModel))
     }
   }
 
@@ -501,21 +501,21 @@ object RimCommander {
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
     }
   }
 
   private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
     }
   }
 
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), currentModel.aka(who)), Some(r.updatedModel))
     }
   }
 
@@ -528,11 +528,12 @@ object RimCommander {
 
 //TODO: add issue
 object Presentation {
-  def board(model: Model, changed: Seq[String]) = {
+  def board(model: Model, changed: Seq[String], aka: String) = {
     val stateToIssues = model.issues.groupBy(_.status)
     model.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${i.render(hideStatus = true, highlight = changed.contains(i.ref))}").mkString
+      val issues = issuesForState.map(i => s"\n  ${i.render(
+        hideStatus = true, highlight = changed.contains(i.ref), highlightAka = Some(aka)) }").mkString
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
   }
