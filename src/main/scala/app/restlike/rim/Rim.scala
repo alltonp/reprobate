@@ -241,10 +241,10 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
   def endState = workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
+  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 
   def tags = {
-    val allIssues = released.map(_.issues).flatten ++ issues
-    val allTheTags = allIssues.map(_.tags).flatten
+    val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten
     val uniqueTags = allTheTags.distinct
     uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
   }
@@ -473,9 +473,7 @@ object RimCommander {
       }
     }
 
-    //TODO: add allIssues to model and tidy
-    val allIssues = currentModel.issues ::: currentModel.released.flatMap(_.issues)
-    val matching = query(allIssues, terms)
+    val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
     Out(result, None)
