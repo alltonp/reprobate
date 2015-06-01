@@ -289,7 +289,7 @@ object RimCommander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
+  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel, Nil), None)
 
   private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
 
@@ -404,7 +404,7 @@ object RimCommander {
       val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(currentModel.userToAka(who))
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }
 
@@ -413,7 +413,7 @@ object RimCommander {
       val newStatus = None
       val updatedIssue = found.copy(status = newStatus, by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }
 
@@ -428,7 +428,7 @@ object RimCommander {
       val by = if (newStatus == currentModel.beginState) None else Some(currentModel.userToAka(who))
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }
 
@@ -437,7 +437,7 @@ object RimCommander {
       val newStatus = currentModel.endState
       val updatedIssue = found.copy(status = Some(newStatus), by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }
 
@@ -491,21 +491,21 @@ object RimCommander {
   private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
     }
   }
 
   private def onAddAndForwardIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.state(1)), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
     }
   }
 
   private def onAddAndEndIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(currentModel.endState), Some(currentModel.aka(who)), refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
     }
   }
 
@@ -518,7 +518,7 @@ object RimCommander {
 
 //TODO: add issue
 object Presentation {
-  def board(model: Model) = {
+  def board(model: Model, changed: Seq[String]) = {
     val stateToIssues = model.issues.groupBy(_.status)
     model.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
