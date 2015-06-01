@@ -47,8 +47,9 @@ import scala.collection.immutable
 //releases:
 //store when we released .. useful for really simple tracking
 
-//colouring:
-//colorise what changed ..
+//colouring: (orange = updated, cyan = me, ? = context)
+//colorise what changed .. (could be property specific)
+//when doing 'rim @' consider highlight what exactly is being done
 
 //gaps:
 //properly support multiple / in /// and +///
@@ -135,6 +136,7 @@ object Messages {
     "  - backlog                        ⇒ 'rim .'",
     "  - releases                       ⇒ 'rim releases'",
     "  - tags                           ⇒ 'rim :'",
+    "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rim help'",
     "",
@@ -293,6 +295,7 @@ object RimCommander {
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
       case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
+      case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
@@ -329,6 +332,13 @@ object RimCommander {
     val all = currentModel.tags
     val result = if (all.isEmpty) Messages.success(s"no tags found")
     else Presentation.tags(all)
+    Out(result, None)
+  }
+
+  private def onShowAllForTag(tag: String, currentModel: Model) = {
+    val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
+    val result = if (issuesWithTag.isEmpty) Messages.success(s"no issue found for tag: $tag")
+    else Presentation.tagDetail(tag, issuesWithTag, currentModel)
     Out(result, None)
   }
 
@@ -531,13 +541,7 @@ object RimCommander {
 //TODO: add issue
 object Presentation {
   def board(model: Model, changed: Seq[String], aka: String) = {
-    val stateToIssues = model.issues.groupBy(_.status)
-    model.workflowStates.map(s => {
-      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${i.render(
-        hideStatus = true, highlight = changed.contains(i.ref), highlightAka = Some(aka)) }").mkString
-      s"$s: (${issuesForState.size})" + issues + "\n"
-    })
+    groupByStatus(model.issues, model, changed, Some(aka))
   }
   
   def release(release: Release) = {
@@ -554,6 +558,24 @@ object Presentation {
     val sorted = all.sortBy(t => (-t.count, t.name)).map(t => s"${t.name} (${t.count})")
     ": " + sorted.mkString(", ") :: Nil
   }
+
+  //TODO: we should include the released on the board too
+  def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
+    groupByStatus(issues, currentModel, Nil, None)
+  }
+
+  private def groupByStatus(issues: Seq[Issue], currentModel: Model, changed: Seq[String], aka: Option[String]) = {
+    val stateToIssues = issues.groupBy(_.status)
+    currentModel.workflowStates.map(s => {
+      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+      val issues = issuesForState.map(i => s"\n  ${
+        i.render(
+          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
+      }").mkString
+      s"$s: (${issuesForState.size})" + issues + "\n"
+    })
+  }
+
 }
 
 object Controller {
