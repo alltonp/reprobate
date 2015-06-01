@@ -279,7 +279,7 @@ object RimCommander {
       case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
-      case In(Some("."), Nil) => onShowBacklog(currentModel)
+      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(who, ref, currentModel)
@@ -487,10 +487,10 @@ object RimCommander {
     Out(result, None)
   }
 
-  private def onShowBacklog(currentModel: Model) = {
+  private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.reverseMap(i => i.render())
+    else matching.reverseMap(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
