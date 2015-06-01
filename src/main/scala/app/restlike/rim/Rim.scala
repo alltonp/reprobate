@@ -131,6 +131,7 @@ object Messages {
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
     "  - releases                       ⇒ 'rim releases'",
+    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - who is doing what              ⇒ 'rim @'",
@@ -294,6 +295,7 @@ object RimCommander {
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
+      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -333,8 +335,15 @@ object RimCommander {
 
   private def onShowAllForTag(tag: String, currentModel: Model) = {
     val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
-    val result = if (issuesWithTag.isEmpty) Messages.success(s"no issue found for tag: $tag")
+    val result = if (issuesWithTag.isEmpty) Messages.success(s"no issues found for tag: $tag")
     else Presentation.tagDetail(tag, issuesWithTag, currentModel)
+    Out(result, None)
+  }
+
+  private def onShowReleaseNote(release: String, currentModel: Model) = {
+    val maybeRelease = currentModel.released.find(_.tag == release)
+    val result = if (maybeRelease.isEmpty) Messages.success(s"no release found for: $release")
+    else Presentation.releaseNotes(release, maybeRelease.get.issues, currentModel)
     Out(result, None)
   }
 
@@ -554,7 +563,12 @@ object Presentation {
     ": " + sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil
 
   //TODO: we should include the released on the board too
+  //TODO: render or remove tag
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
+    groupByStatus(issues, currentModel, Nil, None)
+  }
+
+  def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
     groupByStatus(issues, currentModel, Nil, None)
   }
 
@@ -570,16 +584,16 @@ object Presentation {
     })
   }
 
-  private def groupByTag(tags: Seq[String], issues: Seq[Issue], currentModel: Model) = {
-    val stateToIssues = issues.groupBy(_.status)
-    currentModel.workflowStates.map(s => {
-      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
-      val issues = issuesForState.map(i => s"\n  ${
-        i.render(
-          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
-      }").mkString
-      s"$s: (${issuesForState.size})" + issues + "\n"
-    })
+  private def sieveByTag(tags: Seq[String], issues: Seq[Issue], currentModel: Model) = {
+//    val stateToIssues = issues.groupBy(_.status)
+//    currentModel.workflowStates.map(s => {
+//      val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
+//      val issues = issuesForState.map(i => s"\n  ${
+//        i.render(
+//          hideStatus = true, highlight = changed.contains(i.ref), highlightAka = aka)
+//      }").mkString
+//      s"$s: (${issuesForState.size})" + issues + "\n"
+//    })
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
