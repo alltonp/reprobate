@@ -3,7 +3,7 @@ package app.restlike.rim
 import app.restlike.common.Colours._
 import app.restlike.common._
 
-object RimCommander {
+object Commander {
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)

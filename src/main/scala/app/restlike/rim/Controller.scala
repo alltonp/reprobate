@@ -17,7 +17,7 @@ object Controller {
       synchronized {
         val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
         Tracker("rim.tracking").track(who, value)
-        val out = RimCommander.process(value, who, model, refProvider)
+        val out = Commander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
           model = m
           Persistence.save(model)
