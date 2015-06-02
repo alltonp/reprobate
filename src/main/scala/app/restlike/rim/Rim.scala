@@ -17,6 +17,7 @@ import scala.collection.immutable
 //NEXT:
 //feedback from team
 //Meta tags? Or mark some tags as private or business
+//clear screen each time?
 
 //release notes
 //- no id, no by and grouped by business tag
