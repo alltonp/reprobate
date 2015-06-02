@@ -11,7 +11,7 @@ object Script {
       |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
       |BASE="""" + app + """/$WHO"
-      |REQUEST="$OPTIONS HOST/$BASE"
+      |REQUEST="$OPTIONS $HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |echo
