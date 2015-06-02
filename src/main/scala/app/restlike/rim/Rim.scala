@@ -623,7 +623,7 @@ object Controller {
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
         val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-        Tracker.track(who, value)
+        Tracker("rim.tracking").track(who, value)
         val out = RimCommander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
           model = m
@@ -653,8 +653,8 @@ object Persistence {
 }
 
 //TODO: this should be in common
-object Tracker {
-  private val file = Paths.get("rim.tracking")
+case class Tracker(filename: String) {
+  private val file = Paths.get(filename)
 
   def track(who: String, what: String) {
     val content = List(DateTime.now, who, what).mkString("|") + "\n"
@@ -718,7 +718,7 @@ object Rim extends RestHelper {
 
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker.view, downcase = false)
+    case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker("rim.tracking").view, downcase = false)
     case r@Req("rim" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
   }
