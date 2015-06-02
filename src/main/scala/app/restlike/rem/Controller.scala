@@ -12,7 +12,7 @@ object Controller {
   //TODO: needs to include the released max ref as weel
   private val refProvider = RefProvider(if (model.things.isEmpty) 0 else model.things.map(_.ref.toLong).max)
 
-  def process(who: String, req: Req): Box[LiftResponse] =
+  def process(who: String, req: Req) =
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
         val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
