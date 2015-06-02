@@ -162,32 +162,7 @@ object Messages {
   )
 }
 
-object Script {
-  //TODO: parameterise and pull out
-  def install(app: String) =
-    (s"""#!/bin/bash
-      |#INSTALLATION:
-      |#- alias $app='{path to}/$app.sh'
-      |#- that's it!
-      |
-      |HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
-      |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
-      |WHO=`id -u -n`
-      |BASE=""" + app + """/$WHO"
-      |REQUEST="$OPTIONS HOST/$BASE"
-      |MESSAGE="${@:1}"
-      |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |echo
-      |if [ $? -ne 0 ]; then
-      |  echo "\nsorry, """ + app + """ seems to be unavailable right now, please try again later\n\n"
-      |else
-      |  echo "$RESPONSE"
-      |fi
-      |echo
-      |`wget -qO.""" + app + """.bak $HOST/""" + app + """rim/state`
-      |
-    """).stripMargin.split("\n").toList
-}
+
 
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
