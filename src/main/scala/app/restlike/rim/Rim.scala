@@ -99,11 +99,17 @@ object Messages {
   val eh = "eh?"
 
   def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rim aka pa'")
+
   def notFound(ref: String) = problem(s"issue not found: $ref")
+
   def descriptionEmpty = problem(s"description is empty")
+
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
+
   def problem(message: String) = List(red(s"problem: ") + message)
+
   def success(what: String) = List(what)
+
   def successfulUpdate(what: String) = List(orange(what))
 
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
@@ -119,10 +125,10 @@ object Messages {
     "  - assign                         ⇒ 'rim [ref] @= [aka]'",
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-  //TODO: pull out to be under 'tags' section?
+    //TODO: pull out to be under 'tags' section?
     "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
-//    "  - move forward many              ⇒ 'rim [ref] //'",
+    //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
     "  - move backward                  ⇒ 'rim [ref] .'",
     //    "  - move backward many         ⇒ 'rim [ref] ..'",
@@ -154,29 +160,31 @@ object Messages {
     "where: [arg] = mandatory, {arg} = optional",
     ""
   )
+}
 
+object Script {
   //TODO: parameterise and pull out
-  val install =
+  def install(app: String) =
     (s"""#!/bin/bash
       |#INSTALLATION:
-      |#- alias rim='{path to}/rim.sh'
+      |#- alias $app='{path to}/$app.sh'
       |#- that's it!
       |
-      |RIM_HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
+      |HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
       |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
       |WHO=`id -u -n`
-      |BASE="rim/$WHO"
-      |REQUEST="$OPTIONS $RIM_HOST/$BASE"
+      |BASE=""" + app + """/$WHO"
+      |REQUEST="$OPTIONS HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |echo
       |if [ $? -ne 0 ]; then
-      |  echo "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
+      |  echo "\nsorry, """ + app + """ seems to be unavailable right now, please try again later\n\n"
       |else
       |  echo "$RESPONSE"
       |fi
       |echo
-      |`wget -qO.rim.bak $RIM_HOST/rim/state`
+      |`wget -qO.""" + app + """.bak $HOST/""" + app + """rim/state`
       |
     """).stripMargin.split("\n").toList
 }
@@ -705,7 +713,7 @@ object Rim extends RestHelper {
   import Responder._
 
   serve {
-    case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
+    case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(Script.install("rim"), downcase = false)
     case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker("rim.tracking").view, downcase = false)
     case r@Req("rim" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
     case r@Req("rim" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
