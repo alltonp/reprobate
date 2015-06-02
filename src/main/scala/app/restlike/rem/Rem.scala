@@ -89,6 +89,7 @@ object Messages {
     ""
   )
 
+  //TODO: parameterise and pull out
   val install =
     (s"""#!/bin/bash
       |#INSTALLATION:
@@ -102,11 +103,13 @@ object Messages {
       |REQUEST="$OPTIONS $REM_HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
+      |echo
       |if [ $? -ne 0 ]; then
-      |  printf "\nsorry, rem seems to be unavailable right now, please try again later\n\n"
+      |  echo "\nsorry, rem seems to be unavailable right now, please try again later\n\n"
       |else
-      |  printf "\n$RESPONSE\n\n"
+      |  echo "$RESPONSE"
       |fi
+      |echo
       |`wget -qO.rem.bak $REM_HOST/rem/state`
       |
     """).stripMargin.split("\n").toList

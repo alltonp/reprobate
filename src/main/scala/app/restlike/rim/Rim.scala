@@ -155,6 +155,7 @@ object Messages {
     ""
   )
 
+  //TODO: parameterise and pull out
   val install =
     (s"""#!/bin/bash
       |#INSTALLATION:
@@ -168,11 +169,13 @@ object Messages {
       |REQUEST="$OPTIONS $RIM_HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
+      |echo
       |if [ $? -ne 0 ]; then
-      |  printf "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
+      |  echo "\nsorry, rim seems to be unavailable right now, please try again later\n\n"
       |else
-      |  printf "\n$RESPONSE\n\n"
+      |  echo "$RESPONSE"
       |fi
+      |echo
       |`wget -qO.rim.bak $RIM_HOST/rim/state`
       |
     """).stripMargin.split("\n").toList
