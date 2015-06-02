@@ -652,18 +652,6 @@ object Persistence {
   }
 }
 
-//TODO: this should be in common
-case class Tracker(filename: String) {
-  private val file = Paths.get(filename)
-
-  def track(who: String, what: String) {
-    val content = List(DateTime.now, who, what).mkString("|") + "\n"
-    Filepath.append(content, file)
-  }
-
-  def view = Filepath.load(file).split("\n").reverse.toList
-}
-
 //TODO: handle corrupted rim.json
 
 //TODO: protect against empty value
