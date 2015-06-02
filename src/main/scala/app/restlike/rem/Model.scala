@@ -1,16 +1,7 @@
 package app.restlike.rem
 
-import java.io.Serializable
-import java.nio.file.Paths
-
+import app.restlike.common.Colours._
 import app.restlike.common._
-import Colours._
-import app.restlike.common.Responder._
-import im.mange.little.file.Filepath
-import net.liftweb.common._
-import net.liftweb.http._
-import net.liftweb.json._
-import org.joda.time.DateTime
 
 import scala.collection.immutable
 
@@ -32,8 +23,6 @@ import scala.collection.immutable
 //TODO: de-dupe
 //pull out a clitools jar
 //can we share serialisers and persistence? (put in common) .. might be hard
-
-
 
 case class Thing(ref: String, key: String, value: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   val description = s"$key = $value"
@@ -131,12 +120,6 @@ case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 //#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
 //#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
 
-///Json
-
-import net.liftweb.common.{Full, Box, Loggable}
-import net.liftweb.http.{LiftResponse, Req}
-import net.liftweb.json.JsonAST
-
 object Json {
   import net.liftweb.json.Serialization._
   import net.liftweb.json._
@@ -153,9 +136,3 @@ object Json {
     JsonParser.parse(write(response))
   }
 }
-
-import net.liftweb.common.Full
-import net.liftweb.http.rest.RestHelper
-import net.liftweb.http._
-
-
