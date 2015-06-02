@@ -184,20 +184,3 @@ case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 //#MESSAGE="(Foo) Deployed ${VERSION} to ${MACHINE_NAME}"
 //#curl --connect-timeout 15 -H "Content-Type: application/json" -d "{\"message\":\"${MESSAGE}\"}" http://localhost:8765/broadcast
 //#wget --timeout=15 --no-proxy -O- --post-data="{\"message\":\"${MESSAGE}\"}" --header=Content-Type:application/json "http://localhost:8765/broadcast"
-
-object Json {
-  import net.liftweb.json.Serialization._
-  import net.liftweb.json._
-
-  private val iamFormats = Serialization.formats(NoTypeHints)
-
-  def deserialise(json: String) = {
-    implicit val formats = iamFormats
-    parse(json).extract[Model]
-  }
-
-  def serialise(response: Model) = {
-    implicit val formats = iamFormats
-    JsonParser.parse(write(response))
-  }
-}
