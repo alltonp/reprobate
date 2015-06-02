@@ -24,9 +24,5 @@ object Controller {
         })
         t(out.messages)
       }
-
-      //TODO:
-      //show count of issues
-      //show count of releases
     })
 }
