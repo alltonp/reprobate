@@ -571,7 +571,8 @@ object Presentation {
 
   //TODO: render or remove release
   def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
-    val tagNames = issues.flatMap(_.tags)
+    val tagNames = issues.flatMap(_.tags).distinct
+    println(tagNames)
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
     sieveByTag(sortedByPopularity(tags), issues, currentModel)
   }
@@ -588,12 +589,17 @@ object Presentation {
   }
 
   private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model) = {
+    case class TagAndIssues(tag: String, issues: Seq[Issue])
+//    println(tags.mkString(", "))
     var remainingIssues = issues
-    tags.map(t => {
+    val r = tags.map(t => {
       val issuesForTag = remainingIssues.filter(_.tags.contains(t.name))
+//      println(s"\n$t: $issuesForTag")
       remainingIssues = remainingIssues.diff(issuesForTag)
-      renderTagAndIssues(t.name, issuesForTag)
-    }) ++ Seq(renderTagAndIssues("?", remainingIssues))
+//      renderTagAndIssues(t.name, issuesForTag)
+      TagAndIssues(t.name, issuesForTag)
+    }) ++ Seq(TagAndIssues("?", remainingIssues))
+    r.filterNot(_.issues.isEmpty).sortBy(_.issues.size).reverseMap(tai => renderTagAndIssues(tai.tag, tai.issues))
   }
 
   private def renderTagAndIssues(tag: String, issuesForTag: Seq[Issue]): String = {
