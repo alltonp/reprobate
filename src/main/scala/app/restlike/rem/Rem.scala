@@ -88,31 +88,6 @@ object Messages {
     "where: [arg] = mandatory, {arg} = optional",
     ""
   )
-
-  //TODO: parameterise and pull out
-  val install =
-    (s"""#!/bin/bash
-      |#INSTALLATION:
-      |#- alias rem='{path to}/rem.sh'
-      |#- that's it!
-      |
-      |REM_HOST="http://${java.net.InetAddress.getLocalHost.getHostName}:8473"
-      |""" + """OPTIONS="--timeout=15 --no-proxy -qO-"
-      |WHO=`id -u -n`
-      |BASE="rem/$WHO"
-      |REQUEST="$OPTIONS $REM_HOST/$BASE"
-      |MESSAGE="${@:1}"
-      |RESPONSE=`wget $REQUEST --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |echo
-      |if [ $? -ne 0 ]; then
-      |  echo "\nsorry, rem seems to be unavailable right now, please try again later\n\n"
-      |else
-      |  echo "$RESPONSE"
-      |fi
-      |echo
-      |`wget -qO.rem.bak $REM_HOST/rem/state`
-      |
-    """).stripMargin.split("\n").toList
 }
 
 case class Thing(ref: String, key: String, value: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
@@ -492,6 +467,8 @@ object Presentation {
 
 object Controller {
   private var model = Persistence.load
+  //TODO: this is wrong .. if you have everything release the counter will return to 0 (after a restart)
+  //TODO: needs to include the released max ref as weel
   private val refProvider = RefProvider(if (model.things.isEmpty) 0 else model.things.map(_.ref.toLong).max)
 
   def process(who: String, req: Req): Box[LiftResponse] =

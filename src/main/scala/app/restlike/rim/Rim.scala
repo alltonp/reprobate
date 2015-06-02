@@ -162,8 +162,6 @@ object Messages {
   )
 }
 
-
-
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
@@ -600,6 +598,8 @@ object Presentation {
 
 object Controller {
   private var model = Persistence.load
+  //TODO: this is wrong .. if you have everything release the counter will return to 0 (after a restart)
+  //TODO: needs to include the released max ref as weel
   private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref.toLong).max)
 
   def process(who: String, req: Req): Box[LiftResponse] =
