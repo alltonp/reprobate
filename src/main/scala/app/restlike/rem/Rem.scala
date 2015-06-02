@@ -498,7 +498,7 @@ object Controller {
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
         val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-        Tracker.track(who, value)
+        Tracker("rem.tracking").track(who, value)
         val out = RemCommander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
           model = m
@@ -525,18 +525,6 @@ object Persistence {
   def save(state: Model) {
     Filepath.save(pretty(render(Json.serialise(state))), file)
   }
-}
-
-//TODO: this should be in common
-object Tracker {
-  private val file = Paths.get("rem.tracking")
-
-  def track(who: String, what: String) {
-    val content = List(DateTime.now, who, what).mkString("|") + "\n"
-    Filepath.append(content, file)
-  }
-
-  def view = Filepath.load(file).split("\n").reverse.toList
 }
 
 //TODO: handle corrupted rem.json
@@ -593,7 +581,7 @@ object Rem extends RestHelper {
 
   serve {
     case r@Req("rem" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(install, downcase = false)
-    case r@Req("rem" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker.view, downcase = false)
+    case r@Req("rem" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker("rem.tracking").view, downcase = false)
     case r@Req("rem" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
     case r@Req("rem" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
   }
