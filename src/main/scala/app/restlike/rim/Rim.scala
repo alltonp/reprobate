@@ -677,8 +677,6 @@ object Json {
   }
 }
 
-///Rest
-
 import net.liftweb.common.Full
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http._
@@ -687,6 +685,7 @@ object Rim extends RestHelper {
   import app.restlike.rim.Messages._
   import Responder._
 
+  //TODO: extract app name
   serve {
     case r@Req("rim" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(Script.install("rim"), downcase = false)
     case r@Req("rim" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker("rim.tracking").view, downcase = false)
