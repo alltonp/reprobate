@@ -9,6 +9,7 @@ class RimSpec extends WordSpec with MustMatchers {
   private val next = "next"
   private val doing = "doing"
   private val done = "done"
+  private val released = "released"
   private val workflowStates = List(next, doing, done)
   private val aka = "A"
   private val aka2 = "B"
@@ -235,7 +236,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "releasing moves done issue and status to released" in {
     val issue = Issue("1", "an item", Some(done), None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(done))))))
+    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))))))
     runAndExpect("release a", current, expected)
   }
 
