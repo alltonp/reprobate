@@ -225,7 +225,7 @@ class RimSpec extends WordSpec with MustMatchers {
   }
 
   "migrate tag in released" in {
-    val issue = Issue("1", "an item", Some(next), None, tags = Set("tag1", "tag2", "tagN"))
+    val issue = Issue("1", "an item", Some(done), None, tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithReleasedIssue(issue)
     val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))))
     runAndExpect("tag1 := tagX", current, expected)
@@ -246,6 +246,14 @@ class RimSpec extends WordSpec with MustMatchers {
     val issue = Issue("1", "an item", Some(doing), None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue), released = Nil)
+    runAndExpect("release a", current, expected)
+  }
+
+  "migrate legacy 'done' to 'released'" in {
+    (pending) // fails presumably because nothing to release
+    val issue = Issue("1", "an item", Some(done), None)
+    val current = modelWithReleasedIssue(issue)
+    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some("released"))))))
     runAndExpect("release a", current, expected)
   }
 
