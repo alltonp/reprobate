@@ -4,6 +4,10 @@ package app.restlike.rim
 //rim @ - should be sorted by status
 //rim ± - might look quite similar to rim @, but be tag instead
 //colourise the statuses
+//consider and nice 4 blue for what youve just changed
+//and then you traffic lights for status, light blue for
+
+//think about limiting WIP
 
 //feedback from team
 //Meta tags? Or mark some tags as private or business
