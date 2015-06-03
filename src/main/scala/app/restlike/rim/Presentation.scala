@@ -35,7 +35,6 @@ object Presentation {
 
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
-  //TODO: should probably have a hideEmptyStatus sections option
   private def groupByStatus(includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
@@ -45,8 +44,8 @@ object Presentation {
       val issues = issuesForState.map(i => s"\n  ${
         i.render(hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
-      s"$s: (${issuesForState.size})" + issues + "\n"
-    })
+      if (issuesForState.isEmpty) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+    }).flatten
   }
 
   private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model) = {
