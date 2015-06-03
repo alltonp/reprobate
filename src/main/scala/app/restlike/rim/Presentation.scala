@@ -3,7 +3,7 @@ package app.restlike.rim
 //TODO: add issue
 object Presentation {
   def board(model: Model, changed: Seq[String], aka: String) = {
-    groupByStatus(includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
+    groupByStatus(includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
   def release(release: Release) = {
@@ -22,7 +22,7 @@ object Presentation {
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
-    groupByStatus(includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
+    groupByStatus(includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
   //TODO: render or remove release
@@ -34,10 +34,12 @@ object Presentation {
   }
 
   //TODO: introduce a DisplayOptions()
-  private def groupByStatus(includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
+  //TODO: this is getting well shonky
+  //TODO: should probably have a hideEmptyStatus sections option
+  private def groupByStatus(includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
-    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates
+    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
     interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)
       val issues = issuesForState.map(i => s"\n  ${

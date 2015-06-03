@@ -101,6 +101,7 @@ object Commander {
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
 
     val release = Release(tag, releaseable.map(_.copy(status = Some("released"))))
+    //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
