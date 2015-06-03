@@ -16,7 +16,7 @@ object Controller {
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       synchronized {
         val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-        Tracker("rem.tracking").track(who, value)
+        Tracker(s"${Rem.appName}.tracking").track(who, value)
         val out = Commander.process(value, who, model, refProvider)
         out.updatedModel.foreach(m => {
           model = m

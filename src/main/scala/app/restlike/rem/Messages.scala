@@ -11,6 +11,7 @@ object Messages {
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
   def problem(message: String) = List(red(s"problem: ") + message)
 
+  //TODO: use appName everywhere
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
     s"hello ${who}, welcome to rem - the thing rememberer © 2015 spabloshi ltd",
