@@ -13,7 +13,7 @@ package app.restlike.rem
 //tidy up everything about status, ownership and releases
 
 //TODO: could it be more about creating entities and add KV pairs to them
-//TODO: implememt slack style tokens
+//TODO: implement slack style tokens
 
 //TODO: de-dupe
 //pull out a clitools jar
