@@ -6,7 +6,8 @@ package app.restlike.rim
 //clear screen each time? (see below)
 //rim = should parse tags
 //rim !: show untagged
-//give released the released status
+//always show the incoming command > and the response =>
+//if something changes the board, then show the board (too)
 
 //TIP: http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 //rim ± = option shift equals .. iteration/management summary
