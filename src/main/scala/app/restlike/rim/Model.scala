@@ -5,6 +5,7 @@ import app.restlike.common._
 
 import scala.collection.immutable
 
+//TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
@@ -13,7 +14,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
     }
   }
   private val renderTags = dullYellow(tags.toList.sorted.map(t => s" :$t").mkString)
-  private val renderStatus = dullMagenta(status.fold("")(" ^" + _))
+  private val renderStatus = dullMagenta(status.fold("")(" •" + _))
   private val indexed = List(ref, description, renderStatus, renderBy(None).toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
