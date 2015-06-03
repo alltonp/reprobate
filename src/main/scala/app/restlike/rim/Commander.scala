@@ -100,8 +100,9 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
 
-    val release = Release(tag, releaseable)
-    val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released )
+    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))))
+    val everythingThatsReleased = release :: currentModel.released
+    val updatedModel = currentModel.copy(issues = remainder, released = everythingThatsReleased )
 
     Out(Presentation.release(release), Some(updatedModel))
   }
