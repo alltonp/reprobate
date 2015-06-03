@@ -4,7 +4,7 @@ package app.restlike.common
 //but some of the names are wrong, light often means bold
 //OR;
 //http://misc.flogisoft.com/bash/tip_colors_and_formatting
-//TIP: 1 seems to be bold, 0 normal
+//TIP: 2=dim, 1=bold, 0=normal
 object Colours {
   private val BLUE = "\033[0;34m"
   private val CYAN = "\033[0;36m"
@@ -13,6 +13,7 @@ object Colours {
   private val LIGHTGREY ="\033[0;37m"
   private val LIGHTMAGENTA ="\033[0;95m"
   private val MAGENTA = "\033[0;35m"
+  //TIP: 38 and 5 = this is special from the colour chart of 256
   private val ORANGE ="\033[0;38;5;208m"
   private val RED ="\033[0;31m"
   private val WHITE ="\033[1;37m"
