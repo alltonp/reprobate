@@ -240,6 +240,15 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("release a", current, expected)
   }
 
+  "releasing ignores other states" in {
+    (pending) // fails presumably because nothing to release
+    //TODO: need modelWithIssues
+    val issue = Issue("1", "an item", Some(doing), None)
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue), released = Nil)
+    runAndExpect("release a", current, expected)
+  }
+
   //show
 
   "show board" in {
