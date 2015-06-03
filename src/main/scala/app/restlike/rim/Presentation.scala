@@ -3,7 +3,7 @@ package app.restlike.rim
 //TODO: add issue
 object Presentation {
   def board(model: Model, changed: Seq[String], aka: String) = {
-    groupByStatus(model.issues, model, changed, Some(aka))
+    groupByStatus(hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
   def release(release: Release) = {
@@ -22,7 +22,7 @@ object Presentation {
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
-    groupByStatus(issues, currentModel, Nil, None)
+    groupByStatus(hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
   //TODO: render or remove release
@@ -33,12 +33,12 @@ object Presentation {
     sieveByTag(sortedByPopularity(tags), issues, currentModel)
   }
 
-  private def groupByStatus(issues: Seq[Issue], currentModel: Model, changed: Seq[String], aka: Option[String]) = {
+  private def groupByStatus(hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model, changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status)
     currentModel.workflowStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(Some(s), Nil)
       val issues = issuesForState.map(i => s"\n  ${
-        i.render(hideStatus = true, hideBy = true, hideTags = true, highlight = changed.contains(i.ref), highlightAka = aka)
+        i.render(hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
       s"$s: (${issuesForState.size})" + issues + "\n"
     })
