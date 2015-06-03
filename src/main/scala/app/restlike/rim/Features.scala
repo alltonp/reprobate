@@ -85,6 +85,9 @@ package app.restlike.rim
 //so then notes = 'rim [name] ±' ... need something to differentiate from adding
 //so maybe: '_+ [name]' to add, '_' to show, '[name] _' for notes
 
+//UI clearing
+//show the command that was entered =>
+
 //TODO: handle corrupted rim.json
 
 //TODO: protect against empty value
