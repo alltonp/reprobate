@@ -46,7 +46,7 @@ object Messages {
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
     "  - releases                       ⇒ 'rim releases'",
-    "  - release notes                  ⇒ 'rim note [release]'",
+//    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - who is doing what              ⇒ 'rim @'",
