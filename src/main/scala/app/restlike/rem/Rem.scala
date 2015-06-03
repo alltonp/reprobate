@@ -8,11 +8,12 @@ import net.liftweb.http._
 object Rem extends RestHelper {
   import app.restlike.common.Responder._
 
-  //TODO: extract app name
+  val appName = "rem"
+
   serve {
-    case r@Req("rem" :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(Script.install("rem"), downcase = false)
-    case r@Req("rem" :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker("rem.tracking").view, downcase = false)
-    case r@Req("rem" :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
-    case r@Req("rem" :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
+    case r@Req(`appName` :: "install" :: Nil, _, GetRequest) ⇒ () ⇒ t(Script.install(appName), downcase = false)
+    case r@Req(`appName` :: "tracking" :: Nil, _, GetRequest) ⇒ () ⇒ t(Tracker(s"${appName}.tracking").view, downcase = false)
+    case r@Req(`appName` :: "state" :: Nil, _, GetRequest) ⇒ () ⇒ Full(JsonResponse(Json.serialise(Persistence.load)))
+    case r@Req(`appName` :: who :: Nil, _, PostRequest) ⇒ () ⇒ Controller.process(who, r)
   }
 }
