@@ -3,11 +3,13 @@ package app.restlike.rim
 //NEXT:
 //feedback from team
 //Meta tags? Or mark some tags as private or business
-//clear screen each time?
+//clear screen each time? (see below)
 //rim = should parse tags
+//rim !: show untagged
+//give released the released status
 
 //TIP: http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-//± = option shift equals
+//rim ± = option shift equals .. iteration/management summary
 
 //release notes
 //- no id, no by and grouped by business tag
