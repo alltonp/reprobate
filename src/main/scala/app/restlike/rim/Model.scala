@@ -12,7 +12,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
       case (None, _) => ""
     }
   }
-  private val renderTags = tags.toList.sorted.map(t => s" :$t").mkString
+  private val renderTags = magenta(tags.toList.sorted.map(t => s" :$t").mkString)
   private val renderStatus = status.fold("")(" ^" + _)
   private val indexed = List(ref, description, renderStatus, renderBy(None).toLowerCase, renderTags).mkString(" ")
 
