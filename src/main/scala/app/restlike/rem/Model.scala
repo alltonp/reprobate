@@ -98,7 +98,7 @@ case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[Stri
   }
 }
 
-case class In(head: Option[String], tail:List[String])
+case class In(head: Option[String], tail: List[String])
 case class Out(messages: List[String] = Nil, updatedModel: Option[Model] = None)
 
 //TODO: handle corrupted rem.json
