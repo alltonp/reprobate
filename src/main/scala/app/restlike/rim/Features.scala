@@ -8,9 +8,14 @@ package app.restlike.rim
 //and then you traffic lights for status, light blue for
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
+//consider a colour blob next to the status (like a rag status), could be round or reverse video
+
+//for phm .. just supply the list
+//the problem with ^ for pointy is that its also used for status .. revert to ±
 
 //exclude tags that we have already fallen through (or just exclude them all)
 //consider collapse non * tags in phb view
+//should we sort by importance and then size - need to seperate important first
 
 ///pointy head reporting
 //(1) we have done
@@ -19,6 +24,7 @@ package app.restlike.rim
 //show the board when:
 //'rim =' and issue is on the board
 //'rim @=' and issue is on the board
+//'rim [ref] :' and issue is on the board
 
 //feedback from team
 //Meta tags? Or mark some tags as private or business
