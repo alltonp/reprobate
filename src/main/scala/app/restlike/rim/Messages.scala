@@ -33,8 +33,6 @@ object Messages {
     "  - assign                         ⇒ 'rim [ref] @= [aka]'",
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-    //TODO: pull out to be under 'tags' section?
-    "  - migrate tag                    ⇒ 'rim [oldtag] := [newtag]'",
     "  - move forward                   ⇒ 'rim [ref] /'",
     //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
@@ -51,6 +49,9 @@ object Messages {
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rim help'",
+    "",
+    "tags:",
+    "  - migrate                        ⇒ 'rim [oldtag] := [newtag]'",
     "",
     "search:",
     "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
