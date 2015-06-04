@@ -47,6 +47,7 @@ object Messages {
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
     "  - all for tag                    ⇒ 'rim : [tag]'",
+    "  - untagged                       ⇒ 'rim :-'",
     "  - who is doing what              ⇒ 'rim @'",
     "  - help                           ⇒ 'rim help'",
     "",

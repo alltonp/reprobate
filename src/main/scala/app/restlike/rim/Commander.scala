@@ -39,6 +39,7 @@ object Commander {
       case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
+      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
       case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
       case In(Some("releases"), Nil) => onShowReleases(currentModel)
       case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
@@ -83,6 +84,13 @@ object Commander {
     val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
     val result = if (issuesWithTag.isEmpty) Messages.success(s"no issues found for tag: $tag")
     else Presentation.tagDetail(tag, issuesWithTag, currentModel)
+    Out(result, None)
+  }
+
+  private def onShowUntagged(currentModel: Model, aka: String) = {
+    val untagged = currentModel.allIssuesIncludingReleased.filter(_.tags.isEmpty)
+    val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
+    else untagged.map(_.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
