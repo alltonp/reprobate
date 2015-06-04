@@ -129,7 +129,8 @@ object Commander {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
     def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
-    if (currentModel.tags.map(_.name).contains(oldTag)) {
+    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
+    else if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
         issues = currentModel.issues.map(i => {
           migrateIssue(i)
