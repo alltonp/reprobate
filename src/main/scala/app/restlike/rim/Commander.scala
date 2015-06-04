@@ -261,7 +261,7 @@ object Commander {
   private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.reverseMap(i => i.render(highlightAka = Some(aka)))
+    else matching.map(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
