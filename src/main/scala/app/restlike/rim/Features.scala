@@ -8,6 +8,8 @@ package app.restlike.rim
 //and then you traffic lights for status, light blue for
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
+
+//exclude tags that we have already fallen through (or just exclude them all)
 //consider collapse non * tags in phb view
 
 ///pointy head reporting
