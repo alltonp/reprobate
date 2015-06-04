@@ -262,7 +262,7 @@ object Commander {
 
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else SortByStatus(matching, currentModel).reverseMap(i => i.render(highlightAka = Some(aka)))
+    else SortByStatus(matching, currentModel).map(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
