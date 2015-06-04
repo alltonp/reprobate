@@ -74,15 +74,6 @@ object Commander {
     Out(result, None)
   }
 
-  //TODO: move this out
-  object SortByStatus {
-    def apply(issues: Seq[Issue], currentModel: Model) = {
-      val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
-      println(statusToIndex)
-      issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
-    }
-  }
-
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
     val result = if (all.isEmpty) Messages.success(s"no tags found")
@@ -322,3 +313,13 @@ object Commander {
     Out(Messages.help(aka.toUpperCase), Some(updatedModel))
   }
 }
+
+//TODO: move this out
+object SortByStatus {
+  def apply(issues: Seq[Issue], currentModel: Model) = {
+    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
+    println(statusToIndex)
+    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
+  }
+}
+

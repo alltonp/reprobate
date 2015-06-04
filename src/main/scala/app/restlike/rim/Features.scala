@@ -10,6 +10,10 @@ package app.restlike.rim
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider collapse non * tags in phb view
 
+///pointy head reporting
+//(1) we have done
+//(2) next we are doing
+
 //show the board when:
 //'rim =' and issue is on the board
 //'rim @=' and issue is on the board
