@@ -5,8 +5,8 @@ package app.restlike.rim
 //colourise the statuses
 //consider and nice 4 blue for what youve just changed
 //and then you traffic lights for status, light blue for
-//rim ? should group by status so we can see what is done, next etc
-
+//rim ? should be sorted by status so we can see what is done, next etc
+//rim :- should be sorted by status too
 //think about limiting WIP
 
 //show the board when:
