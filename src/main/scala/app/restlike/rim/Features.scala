@@ -9,8 +9,8 @@ package app.restlike.rim
 //think about limiting WIP
 
 //show the board when:
-//'rim =' and its on the board
-//'rim @=' and its on the board
+//'rim =' and issue is on the board
+//'rim @=' and issue is on the board
 
 //feedback from team
 //Meta tags? Or mark some tags as private or business
@@ -66,7 +66,6 @@ package app.restlike.rim
 //or maybe not because 'and' might cover it ... although how do you search for no status
 //rim ? should group by status so we can see what is done, next etc
 //why is 'rim .' sorted backwards from 'rim ?'
-//rim @ should group by status too (after aka)
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
