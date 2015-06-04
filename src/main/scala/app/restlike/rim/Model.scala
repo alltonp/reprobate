@@ -14,7 +14,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
     }
   }
   private val renderTags = dullYellow(tags.toList.sorted.map(t => s" :$t").mkString)
-  private val renderStatus = dullMagenta(status.fold("")(" •" + _))
+  private val renderStatus = dullMagenta(status.fold("")(" ^" + _))  //•
   private val indexed = List(ref, description, renderStatus, renderBy(None).toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)

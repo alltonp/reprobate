@@ -6,7 +6,6 @@ package app.restlike.rim
 //consider and nice 4 blue for what youve just changed
 //and then you traffic lights for status, light blue for
 //rim ? should group by status so we can see what is done, next etc
-//why is 'rim .' sorted backwards from 'rim ?'
 
 //think about limiting WIP
 
@@ -22,7 +21,7 @@ package app.restlike.rim
 //if something changes the board, then show the board (too)
 
 //TIP: http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-//rim ± = option shift equals .. iteration/management summary
+//rim ± = option shift equals .. iteration/management summary .. or use pointy hat symbol ^
 
 //release notes
 //- no id, no by and grouped by business tag
