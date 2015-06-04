@@ -63,9 +63,10 @@ object Commander {
 
   private def onShowWhoIsDoingWhat(currentModel: Model) = {
     val akas = currentModel.akas
+    val statusToIndex = currentModel.workflowStates.zipWithIndex.toMap
     val all = akas.map(aka => {
       val issues = currentModel.issues.filter(_.by == Some(aka))
-      Presentation.issuesForUser(aka, issues)
+      Presentation.issuesForUser(aka, issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1)))
     })
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")

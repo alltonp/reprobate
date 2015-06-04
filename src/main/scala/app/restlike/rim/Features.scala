@@ -1,7 +1,6 @@
 package app.restlike.rim
 
 //NEXT:
-//rim @ - should be sorted by status
 //rim ± - might look quite similar to rim @, but be tag instead
 //colourise the statuses
 //consider and nice 4 blue for what youve just changed
