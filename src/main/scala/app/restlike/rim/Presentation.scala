@@ -11,7 +11,7 @@ object Presentation {
     s"${release.tag}: (${release.issues.size})" + r + "\n" :: Nil
   }
 
-  def issuesForUser(aka: String, issues: List[Issue]) = {
+  def issuesForUser(aka: String, issues: Seq[Issue]) = {
     val r = issues.map(i => s"\n  ${i.render(hideBy = true)}").mkString
     s"${aka}: (${issues.size})" + r + "\n"
   }
