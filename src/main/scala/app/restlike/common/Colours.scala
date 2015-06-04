@@ -8,6 +8,7 @@ package app.restlike.common
 object Colours {
   private val BLUE = "\033[0;34m"
   private val CYAN = "\033[0;36m"
+  private val DULLCYAN = "\033[2;36m"
   private val GREEN = "\033[1;92m"
   private val DARKGREY ="\033[1;30m"
   private val LIGHTGREY ="\033[0;37m"
@@ -24,6 +25,7 @@ object Colours {
   def cyan(value: String) = s"$CYAN$value$END"
   def darkGrey(value: String) = s"$DARKGREY$value$END"
   def dullMagenta(value: String) = s"$MAGENTA$value$END"
+  def dullCyan(value: String) = s"$DULLCYAN$value$END"
   def dullYellow(value: String) = s"$YELLOW$value$END"
   def lightGrey(value: String) = s"$LIGHTGREY$value$END"
   def brightMagenta(value: String) = s"$LIGHTMAGENTA$value$END"
