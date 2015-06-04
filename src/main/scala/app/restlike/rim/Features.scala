@@ -12,6 +12,9 @@ package app.restlike.rim
 
 //for phm .. just supply the list
 //the problem with ^ for pointy is that its also used for status .. revert to ±
+//probably want 'rim ± [release]`
+//remove the old release note option
+//might want modifier to rim ± to exclude things e.g. tags and id's (it's like you want to fix it and then produce it)
 
 //exclude tags that we have already fallen through (or just exclude them all)
 //consider collapse non * tags in phb view
