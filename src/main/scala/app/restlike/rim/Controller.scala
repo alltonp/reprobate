@@ -9,7 +9,7 @@ import net.liftweb.json._
 object Controller {
   private var model = Persistence.load
   //TODO: this is wrong .. if you have everything release the counter will return to 0 (after a restart)
-  //TODO: needs to include the released max ref as weel
+  //TODO: needs to include the released max ref as well
   private val refProvider = RefProvider(if (model.issues.isEmpty) 0 else model.issues.map(_.ref.toLong).max)
 
   def process(who: String, req: Req) =
@@ -22,7 +22,7 @@ object Controller {
           model = m
           Persistence.save(model)
         })
-        t(s"> rim $value" :: "" :: out.messages)
+        t(s"> rim $value" :: "" :: out.messages.toList)
       }
     })
 }

@@ -76,7 +76,8 @@ object Commander {
   //TODO: move this out
   object SortByStatus {
     def apply(issues: Seq[Issue], currentModel: Model) = {
-      val statusToIndex = ("" :: currentModel.workflowStates :: "released" :: Nil).zipWithIndex.toMap
+      val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
+      println(statusToIndex)
       issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
     }
   }
@@ -261,7 +262,7 @@ object Commander {
 
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render(highlightAka = Some(aka)))
+    else SortByStatus(matching, currentModel).reverseMap(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
   }
 
