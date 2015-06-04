@@ -16,8 +16,7 @@ object Presentation {
     s"${aka}: (${issues.size})" + r + "\n"
   }
 
-  def tags(all: Seq[Tag]) =
-    ": " + sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil
+  def tags(all: Seq[Tag]) = sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil
 
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
