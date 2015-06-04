@@ -8,6 +8,7 @@ package app.restlike.rim
 //and then you traffic lights for status, light blue for
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
+//consider collapse non * tags in phb view
 
 //show the board when:
 //'rim =' and issue is on the board
