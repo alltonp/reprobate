@@ -24,6 +24,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
       case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
+      case In(Some("^"), Nil) => onShowManagementSummary(currentModel, aka)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
@@ -272,6 +273,19 @@ object Commander {
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.map(i => i.render(highlightAka = Some(aka)))
     Out(result, None)
+  }
+
+  private def onShowManagementSummary(currentModel: Model, aka: String) = {
+    val matching = currentModel.issues.filterNot(i => i.status.isEmpty)
+    val result = if (matching.isEmpty) s"board is empty" :: Nil
+//    else matching.map(i => i.render(highlightAka = Some(aka)))
+    else Presentation.releaseNotes2("release", matching, currentModel).toList
+    Out(result, None)
+
+//    val maybeRelease = currentModel.released.find(_.tag == release)
+//    val result = if (maybeRelease.isEmpty) Messages.problem(s"no release found for: $release")
+//    else Presentation.releaseNotes(release, maybeRelease.get.issues, currentModel).toList
+//    Out(result, None)
   }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {

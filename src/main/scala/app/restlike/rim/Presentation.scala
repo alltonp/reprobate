@@ -32,6 +32,14 @@ object Presentation {
     sieveByTag(sortedByPopularity(tags), issues, currentModel)
   }
 
+  //TODO: render or remove release
+  def releaseNotes2(release: String, issues: Seq[Issue], currentModel: Model) = {
+    val tagNames = issues.flatMap(_.tags).distinct
+    println(tagNames)
+    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
+    sieveByTag(sortedByImportance(tags), issues, currentModel)
+  }
+
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
   private def groupByStatus(includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
@@ -57,16 +65,17 @@ object Presentation {
       remainingIssues = remainingIssues.diff(issuesForTag)
 //      renderTagAndIssues(t.name, issuesForTag)
       TagAndIssues(t.name, issuesForTag)
-    }) ++ Seq(TagAndIssues("?", remainingIssues))
-    r.filterNot(_.issues.isEmpty).sortBy(_.issues.size).reverseMap(tai => renderTagAndIssues(tai.tag, tai.issues))
+    }) ++ Seq(TagAndIssues("n/a", remainingIssues))
+    r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai => renderTagAndIssues(hideStatus = false, tai.tag, tai.issues))
   }
 
-  private def renderTagAndIssues(tag: String, issuesForTag: Seq[Issue]): String = {
+  private def renderTagAndIssues(hideStatus: Boolean, tag: String, issuesForTag: Seq[Issue]): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(hideStatus = true, hideBy = true)
+      i.render(hideStatus = hideStatus, hideBy = true)
     }").mkString
     s"$tag: (${issuesForTag.size})" + issues + "\n"
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
+  private def sortedByImportance(all: Seq[Tag]) = all.sortBy(_.name)
 }
