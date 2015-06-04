@@ -9,11 +9,14 @@ package app.restlike.rim
 
 //think about limiting WIP
 
+//show the board when:
+//'rim =' and its on the board
+//'rim @=' and its on the board
+
 //feedback from team
 //Meta tags? Or mark some tags as private or business
 //clear screen each time? (see below)
 //rim = should parse tags
-//rim !: show untagged
 //always show the incoming command > and the response =>
 //if something changes the board, then show the board (too)
 
