@@ -14,7 +14,7 @@ object Script {
       |REQUEST="$OPTIONS $HOST/$BASE"
       |MESSAGE="${@:1}"
       |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
-      |echo
+      |clear
       |if [ $? -ne 0 ]; then
       |  echo "sorry, """ + app + """ seems to be unavailable right now, please try again later"
       |else

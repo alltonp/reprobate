@@ -131,7 +131,7 @@ object Commander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s":- ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -140,7 +140,7 @@ object Commander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s": ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -148,7 +148,7 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -156,7 +156,7 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -165,7 +165,7 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"@ ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
@@ -223,14 +223,14 @@ object Commander {
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"= ${updatedIssue.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(Messages.successfulUpdate(s"- ${found.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${found.render()}"), Some(updatedModel))
     }
   }
 
@@ -259,7 +259,7 @@ object Commander {
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Messages.successfulUpdate(s"+ ${r.created.render()}"), Some(r.updatedModel))
+      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render()}"), Some(r.updatedModel))
     }
   }
 

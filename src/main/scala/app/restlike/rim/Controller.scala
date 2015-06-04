@@ -22,7 +22,7 @@ object Controller {
           model = m
           Persistence.save(model)
         })
-        t(out.messages)
+        t(s"> rim $value" :: "" :: out.messages)
       }
     })
 }
