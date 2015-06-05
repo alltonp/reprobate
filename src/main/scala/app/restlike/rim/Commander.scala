@@ -24,7 +24,7 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
       case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
-      case In(Some("±"), Nil) => onShowManagementSummary(currentModel, aka)
+      case In(Some("^"), Nil) => onShowManagementSummary(currentModel, aka)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
