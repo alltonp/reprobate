@@ -237,7 +237,7 @@ class RimSpec extends WordSpec with MustMatchers {
     val issue = Issue("1", "an item", Some(done), None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))))))
-    runAndExpect("release a", current, expected)
+    runAndExpect("± a", current, expected)
   }
 
   "releasing ignores other states" in {
@@ -246,7 +246,7 @@ class RimSpec extends WordSpec with MustMatchers {
     val issue = Issue("1", "an item", Some(doing), None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue), released = Nil)
-    runAndExpect("release a", current, expected)
+    runAndExpect("± a", current, expected)
   }
 
   "migrate legacy 'done' to 'released'" in {
@@ -254,7 +254,7 @@ class RimSpec extends WordSpec with MustMatchers {
     val issue = Issue("1", "an item", Some(done), None)
     val current = modelWithReleasedIssue(issue)
     val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some("released"))))))
-    runAndExpect("release a", current, expected)
+    runAndExpect("± a", current, expected)
   }
 
   //show

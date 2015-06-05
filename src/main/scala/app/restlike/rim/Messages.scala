@@ -46,7 +46,7 @@ object Messages {
     "  - backlog                        ⇒ 'rim .'",
     "  - phb board summary              ⇒ 'rim ^{_} {tag1 tag2 tagX}'                         ⇒ i.e. in tag priority order",
     "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",
-    "  - releases                       ⇒ 'rim releases'",
+    "  - releases                       ⇒ 'rim ±'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
 //  TODO: should probably support sanitise
@@ -64,7 +64,7 @@ object Messages {
     "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
     "",
     "releases:",
-    "  - create                         ⇒ 'rim release [label]'",
+    "  - create                         ⇒ 'rim ± [label]'",
     "",
     "config:",
     "  - set aka                        ⇒ 'rim aka [initials]'",

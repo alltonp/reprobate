@@ -44,8 +44,8 @@ object Commander {
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
-      case In(Some("release"), List(tag)) => onRelease(tag, currentModel)
-      case In(Some("releases"), Nil) => onShowReleases(currentModel)
+      case In(Some("±"), List(tag)) => onRelease(tag, currentModel)
+      case In(Some("±"), Nil) => onShowReleases(currentModel)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
