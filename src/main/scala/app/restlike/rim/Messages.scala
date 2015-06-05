@@ -43,7 +43,7 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - phb board summary              ⇒ 'rim ^ {tag1 tag2 tagX}'                         ⇒ i.e. in order of tag priority",
+    "  - phb board summary              ⇒ 'rim ^ {tag1 tag2 tagX}'                         ⇒ i.e. in tag priority order",
     "  - phb release summary            ⇒ 'rim [release] ^ {tag1 tag2 tagX}'",
     "  - releases                       ⇒ 'rim releases'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
@@ -55,6 +55,8 @@ object Messages {
     "",
     "tags:",
     "  - migrate                        ⇒ 'rim [oldtag] := [newtag]'",
+  //TODO: support delete tag ... show what will go and have the user type yes on the end
+//    "  - delete                         ⇒ 'rim [tag] :- yes'",
     "",
     "search:",
     "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",

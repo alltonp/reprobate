@@ -31,6 +31,10 @@ package app.restlike.rim
 //'rim @=' and issue is on the board
 //'rim [ref] :' and issue is on the board
 
+//in "rim :"
+//consider highlighting tags that are only in released, might indicate dead ... but oy probably wouldnt delete
+
+
 //collect stats on command usage
 
 //feedback from team
