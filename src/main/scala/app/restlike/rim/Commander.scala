@@ -24,8 +24,8 @@ object Commander {
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
       case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
-      case In(Some("^"), blessedTags) => onShowBoardManagementSummary(currentModel, blessedTags, aka, sanitise = false)
-      case In(Some("^_"), blessedTags) => onShowBoardManagementSummary(currentModel, blessedTags, aka, sanitise = true)
+      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
+      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
       case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
       case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
@@ -269,20 +269,21 @@ object Commander {
     Out(result, None)
   }
 
-  private def onShowBoardManagementSummary(currentModel: Model, blessedTags: List[String], aka: String, sanitise: Boolean) = {
+  private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
     val matching = currentModel.issues.filterNot(i => i.status.isEmpty)
-    onShowManagementSummary(matching, currentModel, blessedTags, aka, sanitise)
+    onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
   }
 
-  private def onShowReleaseManagementSummary(release: String, currentModel: Model, blessedTags: List[String], aka: String, sanitise: Boolean) = {
+  private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
     val maybeRelease = currentModel.released.find(_.tag == release)
     maybeRelease match {
       case None => Out(Messages.problem(s"release $release does not exist"), None)
-      case Some(r) => onShowManagementSummary(r.issues, currentModel, blessedTags, aka, sanitise)
+      case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)
     }
   }
 
-  private def onShowManagementSummary(matching: List[Issue], currentModel: Model, blessedTags: List[String], aka: String, sanitise: Boolean) = {
+  private def onShowManagementSummary(matching: List[Issue], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
+    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
     //TODO: this string will be wrong when we support releases - or maybe not
     val result = if (matching.isEmpty) s"board is empty" :: Nil
     else Presentation.releaseNotes2("release", matching, blessedTags, currentModel, sanitise).toList
