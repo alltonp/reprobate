@@ -19,6 +19,7 @@ package app.restlike.rim
 //in "rim :"
 //consider highlighting tags that are only in released, might indicate dead ... but oy probably wouldnt delete
 
+//colourise help
 
 //collect stats on command usage
 
