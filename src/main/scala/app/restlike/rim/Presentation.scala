@@ -43,6 +43,7 @@ object Presentation {
 
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
+  //TODO: this should show a nice "there is nothing to see" if that is the case
   private def groupByStatus(includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
