@@ -65,7 +65,7 @@ object Presentation {
       remainingIssues = remainingIssues.diff(issuesForTag)
 //      renderTagAndIssues(t.name, issuesForTag)
       TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => i.copy(tags = i.tags.-(t.name))), currentModel))
-    }) ++ Seq(TagAndIssues("n/a", SortByStatus(remainingIssues, currentModel)))
+    }) ++ Seq(TagAndIssues("", SortByStatus(remainingIssues, currentModel)))
     r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai => renderTagAndIssues(hideStatus = false, tai.tag, tai.issues))
   }
 
