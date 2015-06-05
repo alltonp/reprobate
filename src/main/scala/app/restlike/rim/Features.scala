@@ -10,16 +10,8 @@ package app.restlike.rim
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
 
-//for phm .. just supply the list
-//the problem with ^ for pointy is that its also used for status .. revert to ±
-//probably want 'rim ± [release]`
 //remove the old release note option
 //might want modifier to rim ± to exclude things e.g. tags and id's (it's like you want to fix it and then produce it)
-
-///
-// ..... actually how about ! for status, because that fits with ./! (! could be coloroised)
-//       then ^ and be pointy again, which is easier to type
-//       be sure to change search and help too ...
 
 // ..... how about . instead of : for less interesting tags, or even :; (winky tags)
 
@@ -27,18 +19,19 @@ package app.restlike.rim
 
 //consider * for collapse non blessed tags
 
-//exclude tags that we have already fallen through (or just exclude them all)
 //consider collapse non * tags in phb view
-//should we sort by importance and then size - need to seperate important first
+//should we sort by importance and then size
 
 ///pointy head reporting
-//(1) we have done
-//(2) next we are doing
+//(1) we have done a b c
+//(2) next we are doing d e f
 
 //show the board when:
 //'rim =' and issue is on the board
 //'rim @=' and issue is on the board
 //'rim [ref] :' and issue is on the board
+
+//collect stats on command usage
 
 //feedback from team
 //Meta tags? Or mark some tags as private or business
