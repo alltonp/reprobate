@@ -1,0 +1,29 @@
+### TIP: we can run and capture the output of this
+
+#create
+rim + an issue
+#show the board empty
+rim
+#show the backlog, its there
+rim .
+#move it onto the board
+rim 40 /
+#move along the board
+rim 40 /
+#until it's done
+rim 40 /
+
+#tag it
+
+#create another, this time with tags
+
+#create another with tags and move forwards
+
+#at some point do a release
+
+#then show some reports
+
+#do some searching etc
+
+////
+then ownership etc
