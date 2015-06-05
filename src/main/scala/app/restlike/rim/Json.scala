@@ -1,5 +1,7 @@
 package app.restlike.rim
 
+import im.mange.little.json.LittleSerialisers
+
 object Json {
   import net.liftweb.json.Serialization._
   import net.liftweb.json._

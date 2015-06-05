@@ -1,5 +1,6 @@
 package app.restlike.rim
 
+import app.ServiceFactory.systemClock
 import app.restlike.common.Colours._
 import app.restlike.common._
 
@@ -114,7 +115,7 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
 
-    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))))
+    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
     //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )

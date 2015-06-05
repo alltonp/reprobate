@@ -2,6 +2,7 @@ package app.restlike.rim
 
 import app.restlike.common.Colours._
 import app.restlike.common._
+import org.joda.time.DateTime
 
 import scala.collection.immutable
 
@@ -25,9 +26,9 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   }
 }
 
-case class History(who: String, command: String)
+//case class History(who: String, command: String)
 
-case class Release(tag: String, issues: List[Issue])
+case class Release(tag: String, issues: List[Issue], when: Option[DateTime])
 
 case class IssueCreation(created: Issue, updatedModel: Model)
 

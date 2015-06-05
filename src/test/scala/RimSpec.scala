@@ -1,8 +1,14 @@
+import app.ServiceFactory
+import app.ServiceFactory._
 import app.restlike.common.RefProvider
 import app.restlike.rim._
+import im.mange.little.clock.FrozenClock
+import org.joda.time.DateTime
 import org.scalatest.{MustMatchers, WordSpec}
 
 class RimSpec extends WordSpec with MustMatchers {
+  //TOOD: this is naughty
+  ServiceFactory.systemClock.default.set(FrozenClock(new DateTime()))
 
   //TODO: work out what examples are missing
 
@@ -250,7 +256,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "releasing moves done issue and status to released" in {
     val issue = Issue("1", "an item", Some(done), None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))))))
+    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime))))
     runAndExpect("± a", current, expected)
   }
 
@@ -290,5 +296,7 @@ class RimSpec extends WordSpec with MustMatchers {
 
   private def modelWithTags(tags: List[String]) = Model(workflowStates, usersToAka, Nil, Nil, tags)
   private def modelWithIssue(issue: Issue) = Model(workflowStates, usersToAka, List(issue), Nil, Nil)
-  private def modelWithReleasedIssue(issue: Issue) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))), Nil)
+
+  private def modelWithReleasedIssue(issue: Issue) =
+    Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))), Nil)
 }
