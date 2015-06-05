@@ -33,11 +33,11 @@ object Presentation {
   }
 
   //TODO: render or remove release
-  def releaseNotes2(release: String, issues: Seq[Issue], currentModel: Model) = {
+  def releaseNotes2(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model) = {
     val tagNames = issues.flatMap(_.tags).distinct
     println(tagNames)
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByImportance(tags), issues, currentModel)
+    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel)
   }
 
   //TODO: introduce a DisplayOptions()
@@ -77,5 +77,9 @@ object Presentation {
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
-  private def sortedByImportance(all: Seq[Tag]) = all.sortBy(_.name)
+  private def sortedByImportance(all: Seq[Tag], blessedTags: List[String]) = {
+    val blessed = blessedTags.flatMap(bt => all.find(_.name == bt))
+    val remainder = all.diff(blessed).sortBy(_.name)
+    blessed ++ remainder
+  }
 }
