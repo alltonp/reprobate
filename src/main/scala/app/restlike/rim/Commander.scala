@@ -46,8 +46,8 @@ object Commander {
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
-      case In(Some("±"), List(tag)) => onRelease(tag, currentModel)
-      case In(Some("±"), Nil) => onShowReleases(currentModel)
+      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
+      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
@@ -60,8 +60,8 @@ object Commander {
 
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
-  private def onShowReleases(currentModel: Model) = {
-    val all = currentModel.released.flatMap(Presentation.release(_))
+  private def onShowReleases(currentModel: Model, aka: String) = {
+    val all = currentModel.released.flatMap(Presentation.release(_, Some(aka)))
     val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
     Out(result, None)
@@ -107,7 +107,7 @@ object Commander {
 //    Out(result, None)
 //  }
 
-  private def onRelease(tag: String, currentModel: Model): Out = {
+  private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
 
@@ -119,7 +119,7 @@ object Commander {
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
-    Out(Presentation.release(release), Some(updatedModel))
+    Out(Presentation.release(release, Some(aka)), Some(updatedModel))
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {

@@ -6,8 +6,8 @@ object Presentation {
     groupByStatus(includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
-  def release(release: Release) = {
-    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true)}").mkString
+  def release(release: Release, highlightAka: Option[String]) = {
+    val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true, highlightAka = highlightAka)}").mkString
     s"${release.tag}: (${release.issues.size})" + r + "\n" :: Nil
   }
 
