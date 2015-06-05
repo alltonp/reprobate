@@ -5,7 +5,7 @@ import app.ServiceFactory.dateFormats
 //TODO: add issue
 object Presentation {
   def board(model: Model, changed: Seq[String], aka: String) = {
-    groupByStatus(includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
+    groupByStatus(compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
   def release(release: Release, highlightAka: Option[String]) = {
@@ -23,7 +23,7 @@ object Presentation {
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
-    groupByStatus(includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
+    groupByStatus(compressEmptyStates = true, includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
   //TODO: render or remove release
@@ -37,7 +37,7 @@ object Presentation {
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
   //TODO: this should show a nice "there is nothing to see" if that is the case
-  private def groupByStatus(includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
+  private def groupByStatus(compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
     val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
@@ -46,7 +46,7 @@ object Presentation {
       val issues = issuesForState.map(i => s"\n  ${
         i.render(hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
-      if (issuesForState.isEmpty) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
     }).flatten
   }
 
