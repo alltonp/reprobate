@@ -43,7 +43,8 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - pointy haired boss summary     ⇒ 'rim ^'",
+    "  - phb board summary              ⇒ 'rim ^ {tag1 tag2 tagX}'                         ⇒ i.e. in order of tag priority",
+    "  - phb release summary            ⇒ 'rim [release] ^ {tag1 tag2 tagX}'",
     "  - releases                       ⇒ 'rim releases'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
@@ -68,7 +69,7 @@ object Messages {
     "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
     "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
     "",
-    "where: [arg] = mandatory, {arg} = optional",
+    "where: [arg] = mandatory, {arg} = optional, phb = pointy haired boss",
     ""
   )
 }
