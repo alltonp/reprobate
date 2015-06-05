@@ -43,7 +43,7 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - phb summary                    ⇒ 'rim ^'",
+    "  - pointy haired boss summary     ⇒ 'rim ^'",
     "  - releases                       ⇒ 'rim releases'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
