@@ -21,6 +21,8 @@ package app.restlike.rim
 
 //colourise help
 
+//'rim ±' - does not highlight users own issue
+
 //collect stats on command usage
 
 //annoying issues:
