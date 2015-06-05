@@ -25,6 +25,8 @@ package app.restlike.rim
 
 // ..... can/should we lose some the extra : on id's and labels within rim, make it a bit cleaner
 
+//consider * for collapse non blessed tags
+
 //exclude tags that we have already fallen through (or just exclude them all)
 //consider collapse non * tags in phb view
 //should we sort by importance and then size - need to seperate important first
