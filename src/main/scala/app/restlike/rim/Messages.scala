@@ -40,6 +40,7 @@ object Messages {
     //    "  - move backward many         ⇒ 'rim [ref] ..'",
     "  - return to backlog              ⇒ 'rim [ref] .!'",
     "",
+    //is this 'reports'
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
@@ -48,7 +49,7 @@ object Messages {
     "  - releases                       ⇒ 'rim releases'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
-//  TODO: shoudl probably support sanitise
+//  TODO: should probably support sanitise
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - untagged                       ⇒ 'rim :-'",
     "  - who is doing what              ⇒ 'rim @'",
@@ -62,10 +63,11 @@ object Messages {
     "search:",
     "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
     "",
-    //TODO: this will ultimately be 'config' once we also have 'releases'
-    "other:",
+    "releases:",
+    "  - create                         ⇒ 'rim release [label]'",
+    "",
+    "config:",
     "  - set aka                        ⇒ 'rim aka [initials]'",
-    "  - create release                 ⇒ 'rim release [label]'",
     "",
     "expert mode:",
     "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
