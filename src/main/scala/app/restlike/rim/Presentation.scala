@@ -10,7 +10,7 @@ object Presentation {
 
   def release(release: Release, highlightAka: Option[String]) = {
     val r = release.issues.map(i => s"\n  ${i.render(hideStatus = true, highlightAka = highlightAka)}").mkString
-    s"${release.tag}: (${release.issues.size}) ${release.when.fold("")(dateFormats().today(_))}" + r + "\n" :: Nil
+    s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
   }
 
   def issuesForUser(aka: String, issues: Seq[Issue]) = {
