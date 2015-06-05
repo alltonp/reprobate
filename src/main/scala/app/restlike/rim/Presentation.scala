@@ -24,20 +24,19 @@ object Presentation {
     groupByStatus(includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
-  //TODO: render or remove release
-  def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
-    val tagNames = issues.flatMap(_.tags).distinct
-    println(tagNames)
-    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByPopularity(tags), issues, currentModel)
-  }
+//  //TODO: render or remove release
+//  def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
+//    val tagNames = issues.flatMap(_.tags).distinct
+//    println(tagNames)
+//    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
+//    sieveByTag(sortedByPopularity(tags), issues, currentModel)
+//  }
 
   //TODO: render or remove release
-  def releaseNotes2(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model) = {
+  def releaseNotes2(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean) = {
     val tagNames = issues.flatMap(_.tags).distinct
-    println(tagNames)
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel)
+    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise)
   }
 
   //TODO: introduce a DisplayOptions()
@@ -55,7 +54,7 @@ object Presentation {
     }).flatten
   }
 
-  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model) = {
+  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, sanitise: Boolean) = {
     case class TagAndIssues(tag: String, issues: Seq[Issue])
 //    println(tags.mkString(", "))
     var remainingIssues = issues
@@ -66,12 +65,14 @@ object Presentation {
 //      renderTagAndIssues(t.name, issuesForTag)
       TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => i.copy(tags = i.tags.-(t.name))), currentModel))
     }) ++ Seq(TagAndIssues("", SortByStatus(remainingIssues, currentModel)))
-    r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai => renderTagAndIssues(hideStatus = false, tai.tag, tai.issues))
+    r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai =>
+      renderTagAndIssues(sanitise, tai.tag, tai.issues)
+    )
   }
 
-  private def renderTagAndIssues(hideStatus: Boolean, tag: String, issuesForTag: Seq[Issue]): String = {
+  private def renderTagAndIssues(sanitise: Boolean, tag: String, issuesForTag: Seq[Issue]): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(hideStatus = hideStatus, hideBy = true)
+      i.render(hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise)
     }").mkString
     s"$tag: (${issuesForTag.size})" + issues + "\n"
   }

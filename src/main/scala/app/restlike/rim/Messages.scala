@@ -43,11 +43,12 @@ object Messages {
     "show:",
     "  - board                          ⇒ 'rim'",
     "  - backlog                        ⇒ 'rim .'",
-    "  - phb board summary              ⇒ 'rim ^ {tag1 tag2 tagX}'                         ⇒ i.e. in tag priority order",
-    "  - phb release summary            ⇒ 'rim [release] ^ {tag1 tag2 tagX}'",
+    "  - phb board summary              ⇒ 'rim ^{_} {tag1 tag2 tagX}'                         ⇒ i.e. in tag priority order",
+    "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",
     "  - releases                       ⇒ 'rim releases'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
     "  - tags                           ⇒ 'rim :'",
+//  TODO: shoudl probably support sanitise
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - untagged                       ⇒ 'rim :-'",
     "  - who is doing what              ⇒ 'rim @'",
@@ -71,7 +72,7 @@ object Messages {
     "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
     "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
     "",
-    "where: [arg] = mandatory, {arg} = optional, phb = pointy haired boss",
+    "where: [arg] = mandatory, {arg} = optional, {_} = sanitise, phb = pointy haired boss",
     ""
   )
 }
