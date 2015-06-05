@@ -1,8 +1,6 @@
 package app.restlike.rim
 
 //NEXT:
-//'rim [tag] :*' - toggle importance
-//'rim ±' - might look quite similar to rim @, but be tag instead
 //colourise the statuses
 //consider and nice 4 blue for what youve just changed
 //and then you traffic lights for status, light blue for
@@ -10,21 +8,8 @@ package app.restlike.rim
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
 
-//remove the old release note option
-//might want modifier to rim ± to exclude things e.g. tags and id's (it's like you want to fix it and then produce it)
-
-// ..... how about . instead of : for less interesting tags, or even :; (winky tags)
-
-// ..... can/should we lose some the extra : on id's and labels within rim, make it a bit cleaner
-
-//consider * for collapse non blessed tags
-
-//consider collapse non * tags in phb view
-//should we sort by importance and then size
-
 ///pointy head reporting
-//(1) we have done a b c
-//(2) next we are doing d e f
+//consider * for collapse non blessed tags
 
 //show the board when:
 //'rim =' and issue is on the board
@@ -37,27 +22,20 @@ package app.restlike.rim
 
 //collect stats on command usage
 
-//feedback from team
-//Meta tags? Or mark some tags as private or business
-//clear screen each time? (see below)
+//annoying issues:
 //rim = should parse tags
-//always show the incoming command > and the response =>
-//if something changes the board, then show the board (too)
+//empty board can lead to id issue
 
+//thoughts:
+// ..... how about . instead of : for less interesting tags, or even :; (winky tags)
+// ..... can/should we lose some the extra : on id's and labels within rim, make it a bit cleaner
 //TIP: http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 //rim ± = option shift equals .. iteration/management summary .. or use pointy hat symbol ^
-
-//release notes
-//- no id, no by and grouped by business tag
-//- should be a 'rim note [release]' or 'rim [release] note'
-
-//when doing +/ etc .. show the both the created ref and the new board (or colorise what changed)
+//show tags by most recent etc (maybe)
 
 //tags:
-//show tags by most recent etc (maybe)
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
 //tags should be [a-z0-9\-]
-//should 'rim [tag] :-' remove tag .. (dicey) .. should be to detag all issues with that tag
 
 //operations to support on many:
 //rim 1 2 N .
@@ -92,9 +70,7 @@ package app.restlike.rim
 
 //???:
 //help should have an 'issues' section for working with multiples on =, : etc
-//when doing rim = ... - it's easy to forget the to not copy the tags, seems like tags should be processed (i.e. add)
 //might be nice to have rim audit (or track) and see the last x items from the history
-//rim @ should sort/breakdown by status, so you can easily what you are doing/have done
 //how do we handle rim releases getting too long?
 
 //audit stuff
@@ -117,20 +93,12 @@ package app.restlike.rim
 //would be nice to have a symbol for release ... it could be: ±
 //so then show = 'rim ±' or _ .. as in draw a line under it
 //so then create = 'rim ± [name]'
-//so then notes = 'rim [name] ±' ... need something to differentiate from adding
-//so maybe: '_+ [name]' to add, '_' to show, '[name] _' for notes
-
-//UI clearing
-//show the command that was entered =>
 
 //TODO: handle corrupted rim.json
-
 //TODO: protect against empty value
 //TODO: discover common keys and present them when updating
 //TODO: be careful with aka .. they need to be unique
 //TODO: on update, don't show self in list of others and don't show anything if others are empty
-//TODO: make it possible to ask questions and force others to answer them
-//TODO: colourise
 //http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python?rq=1
 //http://apple.stackexchange.com/questions/74777/echo-color-coding-stopped-working-in-mountain-lion
 //http://unix.stackexchange.com/questions/43408/printing-colored-text-using-echo
