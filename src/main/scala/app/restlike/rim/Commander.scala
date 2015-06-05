@@ -62,7 +62,7 @@ object Commander {
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
   private def onShowReleases(currentModel: Model, aka: String) = {
-    val all = currentModel.released.flatMap(Presentation.release(_, Some(aka)))
+    val all = currentModel.released.reverse.flatMap(Presentation.release(_, Some(aka)))
     val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
     Out(result, None)
