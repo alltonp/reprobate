@@ -25,7 +25,6 @@ package app.restlike.rim
 
 //annoying issues:
 //rim = should parse tags
-//empty board can lead to id issue
 
 //thoughts:
 // ..... how about . instead of : for less interesting tags, or even :; (winky tags)
