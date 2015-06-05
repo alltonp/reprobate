@@ -67,7 +67,9 @@ object Messages {
     "  - create                         ⇒ 'rim ± [label]'",
     "",
     "config:",
+    //TODO: aka should work like tags i.e. = and show
     "  - set aka                        ⇒ 'rim aka [initials]'",
+    "  - show tag priority              ⇒ 'rim tags'",
     "  - set tag priority               ⇒ 'rim tags = {tag1 tag2 tagX}'                    ⇒ i.e. in tag priority order",
     "",
     "expert mode:",
