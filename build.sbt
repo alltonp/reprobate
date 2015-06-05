@@ -12,7 +12,7 @@ libraryDependencies ++= {
   Seq(
     "io.shaka" %% "naive-http" % "48",
     "ch.qos.logback" % "logback-classic" % "1.0.6",
-    "im.mange" %% "little" % "0.0.17",
+    "im.mange" %% "little" % "0.0.23",
     "im.mange" %% "little-server" % "0.0.8",
     "im.mange" %% "shoreditch-api" % "0.0.65",
     "im.mange" %% "jetboot" % "0.0.55",
@@ -21,6 +21,14 @@ libraryDependencies ++= {
       exclude("net.liftweb", "lift-markdown_2.11"),
     //TODO: re-enable this soon
     //exclude("org.scala-lang", "scala-compiler")
+    "org.json4s"        %% "json4s-native"          % "3.2.11"
+      exclude("org.scala-lang", "scala-compiler")
+      exclude("org.scala-lang", "scalap")
+      exclude("joda-time", "joda-time")
+    ,
+    "org.json4s"        %% "json4s-ext"             % "3.2.11"
+      exclude("joda-time", "joda-time")
+    ,
 //    ,
     "org.scalatest" %% "scalatest" % "2.2.4" % "test"
   )

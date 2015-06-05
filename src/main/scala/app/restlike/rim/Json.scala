@@ -1,12 +1,16 @@
 package app.restlike.rim
 
-import im.mange.little.json.LittleSerialisers
+import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
 
 object Json {
-  import net.liftweb.json.Serialization._
-  import net.liftweb.json._
+//  import net.liftweb.json.Serialization._
+//  import net.liftweb.json._
+  import org.json4s._
+  import org.json4s.native.JsonMethods._
+  import org.json4s.native.Serialization.write
+  import org.json4s.native.{JsonParser, Serialization}
 
-  private val theFormats = Serialization.formats(NoTypeHints)
+  private val theFormats = Serialization.formats(NoTypeHints) ++ LittleJodaSerialisers.all
 
   def deserialise(json: String) = {
     implicit val formats = theFormats
