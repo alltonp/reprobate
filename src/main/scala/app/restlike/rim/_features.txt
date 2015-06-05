@@ -50,7 +50,7 @@ package app.restlike.rim
 //rim ! - show end state
 
 //releases:
-//store when we released .. useful for really simple tracking
+//when 'rim " [tag] and issue is released might be nice to show when and version
 
 //colouring: (orange = updated, cyan = me, ? = context)
 //colorise what changed .. (could be property specific)
