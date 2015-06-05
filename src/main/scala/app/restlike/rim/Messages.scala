@@ -48,7 +48,7 @@ object Messages {
     "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",
     "  - releases                       ⇒ 'rim ±'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
-    "  - tag usage                       ⇒ 'rim :'",
+    "  - tag usage                      ⇒ 'rim :'",
 //  TODO: should probably support sanitise
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - untagged                       ⇒ 'rim :-'",
