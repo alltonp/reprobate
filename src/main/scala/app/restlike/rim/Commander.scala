@@ -289,7 +289,7 @@ object Commander {
     val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
     //TODO: this string will be wrong when we support releases - or maybe not
     val result = if (matching.isEmpty) s"board is empty" :: Nil
-    else Presentation.releaseNotes2("release", matching, blessedTags, currentModel, sanitise).toList
+    else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, sanitise).toList
     Out(result, None)
   }
 

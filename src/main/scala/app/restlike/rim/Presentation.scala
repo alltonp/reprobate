@@ -33,9 +33,8 @@ object Presentation {
 //  }
 
   //TODO: render or remove release
-  //TODO: rename
   //TODO: we should show the release name if its a release ...
-  def releaseNotes2(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean) = {
+  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean) = {
     val tagNames = issues.flatMap(_.tags).distinct
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
     sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise)
