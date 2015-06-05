@@ -30,6 +30,12 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("tags a b c", current, expected)
   }
 
+  "unset priority tags" in {
+    val current = emptyModelWithWorkflow
+    val expected = current.copy(priorityTags = Nil)
+    runAndExpect("tags", current, expected)
+  }
+
   //adding
 
   "add issue" in {
@@ -282,6 +288,7 @@ class RimSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
 
+  private def modelWithTags(tags: List[String]) = Model(workflowStates, usersToAka, Nil, Nil, tags)
   private def modelWithIssue(issue: Issue) = Model(workflowStates, usersToAka, List(issue), Nil, Nil)
   private def modelWithReleasedIssue(issue: Issue) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))), Nil)
 }
