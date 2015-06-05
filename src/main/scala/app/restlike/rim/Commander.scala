@@ -92,7 +92,7 @@ object Commander {
   }
 
   private def onShowUntagged(currentModel: Model, aka: String) = {
-    val untagged = currentModel.allIssuesIncludingReleased.filter(_.tags.isEmpty)
+    val untagged = currentModel.issues.filter(_.tags.isEmpty)
     val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
     else SortByStatus(untagged, currentModel).map(_.render(highlightAka = Some(aka)))
     Out(result, None)
