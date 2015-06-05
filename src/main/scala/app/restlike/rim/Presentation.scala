@@ -26,14 +26,6 @@ object Presentation {
     groupByStatus(includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
-//  //TODO: render or remove release
-//  def releaseNotes(release: String, issues: Seq[Issue], currentModel: Model) = {
-//    val tagNames = issues.flatMap(_.tags).distinct
-//    println(tagNames)
-//    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-//    sieveByTag(sortedByPopularity(tags), issues, currentModel)
-//  }
-
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
   def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean) = {
