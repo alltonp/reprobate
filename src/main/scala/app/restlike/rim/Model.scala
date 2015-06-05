@@ -33,7 +33,7 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
+case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
   def knows_?(who: String) = userToAka.contains(who)
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {

@@ -14,7 +14,7 @@ object Persistence {
 
   //TODO: could Model be 'T'ed up?
   def load: Model = {
-    if (!file.toFile.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release]()))
+    if (!file.toFile.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]()))
     Json.deserialise(Filepath.load(file))
   }
 

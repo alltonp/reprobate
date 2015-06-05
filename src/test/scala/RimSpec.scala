@@ -14,10 +14,10 @@ class RimSpec extends WordSpec with MustMatchers {
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val emptyModelWithWorkflow = Model(workflowStates, usersToAka, Nil, Nil)
+  private val emptyModelWithWorkflow = Model(workflowStates, usersToAka, Nil, Nil, Nil)
 
   "set aka" in {
-    val current = Model(Nil, Map("anon2" -> aka2), Nil, Nil)
+    val current = Model(Nil, Map("anon2" -> aka2), Nil, Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
     runAndExpect("aka a", current, expected)
   }
@@ -274,6 +274,6 @@ class RimSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
 
-  private def modelWithIssue(issue: Issue) = Model(workflowStates, usersToAka, List(issue), Nil)
-  private def modelWithReleasedIssue(issue: Issue) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))))
+  private def modelWithIssue(issue: Issue) = Model(workflowStates, usersToAka, List(issue), Nil, Nil)
+  private def modelWithReleasedIssue(issue: Issue) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))), Nil)
 }
