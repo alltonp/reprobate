@@ -16,7 +16,7 @@ object Commander {
     cmd match {
       case In(None, Nil) => onShowBoard(currentModel, aka)
       case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
-      case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onTags(who, args.drop(1), currentModel)
+      case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTags(who, args.drop(1), currentModel)
       case In(Some("help"), Nil) => onHelp(currentModel, aka)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
@@ -325,10 +325,9 @@ object Commander {
     Out(Messages.help(aka.toUpperCase), Some(updatedModel))
   }
 
-  private def onTags(who: String, tags: List[String], currentModel: Model): Out = {
-//    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
+  private def onSetTags(who: String, tags: List[String], currentModel: Model): Out = {
     val updatedModel = currentModel.copy(priorityTags = tags)
-    Out(Messages.successfulUpdate("tags set"), Some(updatedModel))
+    Out(Messages.successfulUpdate(s"tag priority set to: ${tags.mkString(", ")}"), Some(updatedModel))
   }
 }
 
