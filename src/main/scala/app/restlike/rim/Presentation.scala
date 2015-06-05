@@ -72,7 +72,7 @@ object Presentation {
 
   private def renderTagAndIssues(sanitise: Boolean, tag: String, issuesForTag: Seq[Issue]): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise)
+      i.render(hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise)
     }").mkString
     s"$tag: ${if (sanitise) "" else "(${issuesForTag.size})"}" + issues + "\n"
   }

@@ -19,8 +19,8 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   def search(query: String) = indexed.contains(query)
 
-  def render(hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
-    val r = s"$ref: $description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus}"
+  def render(hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
+    val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus}"
     if (highlight) orange(r) else r
   }
 }
