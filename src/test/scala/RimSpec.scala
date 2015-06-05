@@ -16,10 +16,18 @@ class RimSpec extends WordSpec with MustMatchers {
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
   private val emptyModelWithWorkflow = Model(workflowStates, usersToAka, Nil, Nil, Nil)
 
+  //config
+
   "set aka" in {
     val current = Model(Nil, Map("anon2" -> aka2), Nil, Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
     runAndExpect("aka a", current, expected)
+  }
+
+  "set priority tags" in {
+    val current = emptyModelWithWorkflow
+    val expected = current.copy(priorityTags = List("a", "b", "c"))
+    runAndExpect("tags a b c", current, expected)
   }
 
   //adding
