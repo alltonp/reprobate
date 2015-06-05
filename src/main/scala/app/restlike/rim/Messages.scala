@@ -48,7 +48,7 @@ object Messages {
     "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",
     "  - releases                       ⇒ 'rim ±'",
 //    "  - release notes                  ⇒ 'rim note [release]'",
-    "  - tags                           ⇒ 'rim :'",
+    "  - tag usage                       ⇒ 'rim :'",
 //  TODO: should probably support sanitise
     "  - all for tag                    ⇒ 'rim : [tag]'",
     "  - untagged                       ⇒ 'rim :-'",
@@ -68,7 +68,7 @@ object Messages {
     "",
     "config:",
     "  - set aka                        ⇒ 'rim aka [initials]'",
-    "  - set tag priority               ⇒ 'rim tags {tag1 tag2 tagX}'                      ⇒ i.e. in tag priority order",
+    "  - set tag priority               ⇒ 'rim tags = {tag1 tag2 tagX}'                    ⇒ i.e. in tag priority order",
     "",
     "expert mode:",
     "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",

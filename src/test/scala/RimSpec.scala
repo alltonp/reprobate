@@ -27,13 +27,13 @@ class RimSpec extends WordSpec with MustMatchers {
   "set priority tags" in {
     val current = emptyModelWithWorkflow
     val expected = current.copy(priorityTags = List("a", "b", "c"))
-    runAndExpect("tags a b c", current, expected)
+    runAndExpect("tags = a b c", current, expected)
   }
 
   "unset priority tags" in {
     val current = emptyModelWithWorkflow
     val expected = current.copy(priorityTags = Nil)
-    runAndExpect("tags", current, expected)
+    runAndExpect("tags =", current, expected)
   }
 
   //adding

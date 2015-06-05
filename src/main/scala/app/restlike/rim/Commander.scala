@@ -16,7 +16,7 @@ object Commander {
     cmd match {
       case In(None, Nil) => onShowBoard(currentModel, aka)
       case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
-      case In(Some("tags"), tags) => onTags(who, tags, currentModel)
+      case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onTags(who, args.drop(1), currentModel)
       case In(Some("help"), Nil) => onHelp(currentModel, aka)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
