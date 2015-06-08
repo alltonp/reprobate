@@ -28,10 +28,10 @@ object Presentation {
 
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
-  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean) = {
+  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
     val tagNames = issues.flatMap(_.tags).distinct
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise)
+    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise, aka)
   }
 
   //TODO: introduce a DisplayOptions()
@@ -50,7 +50,7 @@ object Presentation {
     }).flatten
   }
 
-  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, sanitise: Boolean) = {
+  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, sanitise: Boolean, aka: String) = {
     case class TagAndIssues(tag: String, issues: Seq[Issue])
 //    println(tags.mkString(", "))
     var remainingIssues = issues
@@ -62,13 +62,13 @@ object Presentation {
       TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => i.copy(tags = i.tags.-(t.name))), currentModel))
     }) ++ Seq(TagAndIssues("?", SortByStatus(remainingIssues, currentModel)))
     r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai =>
-      renderTagAndIssues(sanitise, tai.tag, tai.issues)
+      renderTagAndIssues(sanitise, tai.tag, tai.issues, aka)
     )
   }
 
-  private def renderTagAndIssues(sanitise: Boolean, tag: String, issuesForTag: Seq[Issue]): String = {
+  private def renderTagAndIssues(sanitise: Boolean, tag: String, issuesForTag: Seq[Issue], aka: String): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise)
+      i.render(hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise, highlightAka = Some(aka))
     }").mkString
     s"$tag: ${if (sanitise) "" else s"(${issuesForTag.size})"}" + issues + "\n"
   }
