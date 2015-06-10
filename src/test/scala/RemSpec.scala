@@ -242,7 +242,7 @@ class RemSpec extends WordSpec with MustMatchers {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
   }
 
-  private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
+  private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0), "foo@bar.com")
 
   private def modelWithIssue(issue: Thing) = Model(/*usersToAka, */List(issue))
 //  private def modelWithReleasedIssue(issue: Thing) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))))

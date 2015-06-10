@@ -8,6 +8,7 @@ import net.liftweb.json._
 object Controller {
   private var universe = Persistence.load
 
+  //TODO: do we still need who? it's not doing so much for us these days ... kind of nice in tracking
   def process(who: String, req: Req, token: String) = {
     universe.modelFor(token) match {
       case Some(model) => {
@@ -16,7 +17,7 @@ object Controller {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
             Tracker(s"${Rem.appName}.tracking").track(who, value)
-            val out = Commander.process(value, who, model, refProvider)
+            val out = Commander.process(value, who, model, refProvider, universe.tokenToUser(token))
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
               Persistence.save(universe)

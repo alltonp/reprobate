@@ -4,7 +4,7 @@ import app.restlike.common.Colours._
 import app.restlike.common._
 
 object Commander {
-  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
+  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider, user: String): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
@@ -16,7 +16,7 @@ object Commander {
 //      case In(None, Nil) => onShowBoard(currentModel)
       case In(None, Nil) => onQueryThings(currentModel, Nil)
 //      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
-      case In(Some("help"), Nil) => onHelp(who, currentModel)
+      case In(Some("help"), Nil) => onHelp(who, currentModel, user)
       case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
@@ -49,7 +49,7 @@ object Commander {
 
 //  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 
-  private def onHelp(who: String, currentModel: Model) = Out(Messages.help("?"), None)
+  private def onHelp(who: String, currentModel: Model, user: String) = Out(Messages.help(user), None)
 
 //  private def onShowReleases(currentModel: Model) = {
 //    val all = currentModel.released.map(Presentation.release(_))
