@@ -11,6 +11,8 @@ object Rim extends RestHelper {
 
   val appName = "rim"
 
+//  println(java.util.UUID.randomUUID.toString)
+
   //TODO: implement token properly, like rem
   serve {
     case r@Req(`appName` :: "install" :: token :: Nil, _, GetRequest) ⇒ () ⇒ t(Script.install(appName, token), downcase = false)
