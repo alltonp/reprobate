@@ -5,7 +5,7 @@ object Messages {
 
   val eh = "eh?"
 
-  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rem aka pa'")
+//  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rem aka pa'")
   def notFound(ref: String) = problem(s"issue not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
@@ -47,7 +47,7 @@ object Messages {
     "",
 //    //TODO: this will ultimately be 'config' once we also have 'releases'
     "other:",
-    "  - set aka                        ⇒ 'rem aka [initials]'",
+//    "  - set aka                        ⇒ 'rem aka [initials]'",
 //    "  - create release                 ⇒ 'rim release [label]'",
 //    "",
 //    "expert mode:",

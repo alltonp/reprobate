@@ -8,14 +8,14 @@ object Commander {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
-    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+//    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
       //TODO: should propbably show somehting more useful, like most popular etc
 //      case In(None, Nil) => onShowBoard(currentModel)
       case In(None, Nil) => onQueryThings(currentModel, Nil)
-      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
+//      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel)
       case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
@@ -49,7 +49,7 @@ object Commander {
 
 //  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 
-  private def onHelp(who: String, currentModel: Model) = Out(Messages.help(currentModel.aka(who)), None)
+  private def onHelp(who: String, currentModel: Model) = Out(Messages.help("?"), None)
 
 //  private def onShowReleases(currentModel: Model) = {
 //    val all = currentModel.released.map(Presentation.release(_))
@@ -267,9 +267,9 @@ object Commander {
 //    }
 //  }
 
-  private def onAka(who: String, aka: String, currentModel: Model): Out = {
-    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
-    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
-    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
-  }
+//  private def onAka(who: String, aka: String, currentModel: Model): Out = {
+//    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
+//    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
+//    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
+//  }
 }

@@ -33,8 +33,8 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
     copy(userToModel = userToModel.updated(tokenToUser(token), updatedModel))
 }
 
-case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[String, String], things: List[Thing]/*, released: List[Release]*/) {
-  def knows_?(who: String) = userToAka.contains(who)
+case class Model(/*userToAka: immutable.Map[String, String],*/ things: List[Thing]) {
+//  def knows_?(who: String) = userToAka.contains(who)
 
   def createThing(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
@@ -70,8 +70,8 @@ case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[Stri
     this.copy(things = this.things.updated(index, updated))
   }
 
-  def aka(who: String) = userToAka(who)
-  def akas = userToAka.values.toList.distinct
+//  def aka(who: String) = userToAka(who)
+//  def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = things.find(_.ref == ref)
 //  def beginState = workflowStates.head
 //  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change

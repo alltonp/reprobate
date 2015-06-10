@@ -5,15 +5,13 @@ import java.nio.file.Paths
 import im.mange.little.file.Filepath
 import net.liftweb.json._
 
-import scala.collection.immutable
-
 object Persistence {
   private val file = Paths.get(s"${Rem.appName}.json")
 
   def load: Universe = {
     if (!file.toFile.exists()) save(
       Universe(
-        Map("---email---" -> Model(immutable.Map[String, String](), List[Thing]())),
+        Map("---email---" -> Model(/*immutable.Map[String, String](), */List[Thing]())),
         Map("---token---" -> "---email---")
       )
     )

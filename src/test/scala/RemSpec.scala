@@ -10,13 +10,13 @@ class RemSpec extends WordSpec with MustMatchers {
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val emptyModelWithWorkflow = Model(usersToAka, Nil)
+  private val emptyModelWithWorkflow = Model(/*usersToAka, */Nil)
 
-  "set aka" in {
-    val current = Model(Map("anon2" -> aka2), Nil)
-    val expected = current.copy(userToAka = usersToAka)
-    runAndExpect("aka a", current, expected)
-  }
+//  "set aka" in {
+//    val current = Model(Map("anon2" -> aka2), Nil)
+//    val expected = current.copy(userToAka = usersToAka)
+//    runAndExpect("aka a", current, expected)
+//  }
 
   //adding
 
@@ -244,6 +244,6 @@ class RemSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
 
-  private def modelWithIssue(issue: Thing) = Model(usersToAka, List(issue))
+  private def modelWithIssue(issue: Thing) = Model(/*usersToAka, */List(issue))
 //  private def modelWithReleasedIssue(issue: Thing) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))))
 }
