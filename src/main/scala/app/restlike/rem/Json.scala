@@ -15,4 +15,9 @@ object Json {
     implicit val formats = theFormats
     JsonParser.parse(write(response))
   }
+
+  def serialise(response: Option[Model]) = {
+    implicit val formats = theFormats
+    JsonParser.parse(write(response))
+  }
 }
