@@ -25,7 +25,13 @@ case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String])
+case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String]) {
+  def modelFor(token: String) = if (tokenToUser.contains(token)) Some(userToModel(tokenToUser(token)))
+                                else None
+
+  def updateModelFor(token: String, updatedModel: Model) =
+    copy(userToModel = userToModel.updated(tokenToUser(token), updatedModel))
+}
 
 case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[String, String], things: List[Thing]/*, released: List[Release]*/) {
   def knows_?(who: String) = userToAka.contains(who)

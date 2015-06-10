@@ -14,8 +14,8 @@ object Script {
       |TOKEN="""" + token + """"
       |REQUEST="$OPTIONS $HOST/$BASE/$TOKEN"
       |MESSAGE="${@:1}"
-      |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |clear
+      |RESPONSE=`wget $REQUEST --tries=1 --post-data="{\"value\":\"${MESSAGE}\"}" --header=Content-Type:application/json`
       |if [ $? -ne 0 ]; then
       |  echo "sorry, """ + app + """ seems to be unavailable right now, please try again later"
       |else
