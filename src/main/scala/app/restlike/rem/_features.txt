@@ -24,6 +24,7 @@ package app.restlike.rem
 //base64/salted username perhaps (done as part of install script)
 //https://github.com/Nycto/Hasher
 
+/////////////////////////////////
 //how to do the auth - from dorin
 //(1) wget rim register foo@bar.com
 //(2) sends email
@@ -31,6 +32,8 @@ package app.restlike.rem
 //(4) just use uuid to generate the token
 //(5) for resets just repeat it
 //(6) use liftmetamapper maybe (or lift dcs email stuff)
+//(7) don't invalidate existing token until new token request has been validated - otherwise it could be uses to deny people
+/////////////////////////////////
 
 ---------------------------------
 //TODO: handle corrupted rem.json
