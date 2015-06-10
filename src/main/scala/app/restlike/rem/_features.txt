@@ -7,6 +7,11 @@ package app.restlike.rem
 //detag
 //other standard tagging stuff
 //stop using white .. it won't play well on white backgrounds - could have an inverse user setting?
+//check for dupe keys
+//are dupe values okay?
+//on 'rem [ref] -' re-show list (how to order it?)
+//on 'rem [ref] +' re-show the list with added highlighted (how to order it?)
+//work on colours - it's good that values are different from keys but more subtle
 
 //TODO: Then
 //store things per user (think about globlal id vs user id)
