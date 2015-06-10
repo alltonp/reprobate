@@ -43,7 +43,7 @@ object Messages {
     "  - help                           ⇒ 'rem help'",
     "",
     "search:",
-    "  - all issues                     ⇒ 'rem ? {term1 term2 termX}'                      ⇒ e.g. 'rem ? :tag text'",
+    "  - all things                     ⇒ 'rem ? {term1 term2 termX}'                      ⇒ e.g. 'rem ? :tag text'",
     "",
 //    //TODO: this will ultimately be 'config' once we also have 'releases'
     "other:",
