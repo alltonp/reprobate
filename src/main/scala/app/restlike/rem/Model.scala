@@ -25,6 +25,8 @@ case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
+case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String])
+
 case class Model(/*workflowStates: List[String],*/ userToAka: immutable.Map[String, String], things: List[Thing]/*, released: List[Release]*/) {
   def knows_?(who: String) = userToAka.contains(who)
 
