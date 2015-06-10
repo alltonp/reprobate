@@ -26,14 +26,18 @@ package app.restlike.rem
 
 /////////////////////////////////
 //how to do the auth - from dorin
-//(1) wget rim register foo@bar.com
+//(1) wget spabloshi.com/rim/register foo@bar.com
 //(2) sends email
 //(3) user opens email and validates address
 //(4) just use uuid to generate the token
 //(5) for resets just repeat it
 //(6) use liftmetamapper maybe (or lift dcs email stuff)
 //(7) don't invalidate existing token until new token request has been validated - otherwise it could be uses to deny people
+//need to store if token has been validated
 /////////////////////////////////
+
+//for email: http://aws.amazon.com/ses/
+//will presumably want only one token for all ... certainly rem and rdo .. probably not rim
 
 ---------------------------------
 //TODO: handle corrupted rem.json
