@@ -1,7 +1,7 @@
 package app.restlike.rem
 
-import app.restlike.common.{Tracker, CliRequestJson, JsonRequestHandler, RefProvider}
 import app.restlike.common.Responder._
+import app.restlike.common.{CliRequestJson, JsonRequestHandler, RefProvider, Tracker}
 import net.liftweb.http.Req
 import net.liftweb.json._
 
@@ -21,7 +21,7 @@ object Controller {
               universe = universe.updateModelFor(token, m)
               Persistence.save(universe)
             })
-            t(out.messages)
+            t(s"> ${Rem.appName} $value" :: "" :: out.messages)
           }
         })
 

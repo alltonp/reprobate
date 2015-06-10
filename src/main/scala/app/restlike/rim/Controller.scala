@@ -2,7 +2,6 @@ package app.restlike.rim
 
 import app.restlike.common.Responder._
 import app.restlike.common._
-import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.json._
 
@@ -24,7 +23,7 @@ object Controller {
           model = m
           Persistence.save(model)
         })
-        t(s"> rim $value" :: "" :: out.messages.toList)
+        t(s"> ${Rim.appName} $value" :: "" :: out.messages.toList)
       }
     })
 }
