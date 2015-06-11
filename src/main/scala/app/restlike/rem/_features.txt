@@ -20,7 +20,6 @@ package app.restlike.rem
 //work on colours - it's good that values are different from keys but more subtle
 
 //TODO: Then
-//store things per user (think about globlal id vs user id)
 //tidy up everything about status, ownership and releases
 
 //TODO: could it be more about creating entities and add KV pairs to them
@@ -30,11 +29,8 @@ package app.restlike.rem
 //pull out a clitools jar
 //can we share serialisers and persistence? (put in common) .. might be hard
 
-//... but it probably needs something other than just the token
-//base64/salted username perhaps (done as part of install script)
+//for reference encoding
 //https://github.com/Nycto/Hasher
-
-//from original list:
 
 //this is the first project to move to aws
 /////////////////////////////////
