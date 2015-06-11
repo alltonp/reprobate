@@ -1,7 +1,9 @@
 package app.restlike.rem
 
 //name:
-//facts
+//ref or something to do with facts
+
+//should rec be the same or a different thing?
 
 //TODO: Next
 //update key _=
@@ -28,14 +30,13 @@ package app.restlike.rem
 //pull out a clitools jar
 //can we share serialisers and persistence? (put in common) .. might be hard
 
-//TODO: rem should not need aka
 //... but it probably needs something other than just the token
 //base64/salted username perhaps (done as part of install script)
 //https://github.com/Nycto/Hasher
 
 //from original list:
 
-
+//this is the first project to move to aws
 /////////////////////////////////
 //how to do the auth - from dorin
 //(1) wget spabloshi.com/rim/register foo@bar.com
@@ -46,6 +47,7 @@ package app.restlike.rem
 //(6) use liftmetamapper maybe (or lift dcs email stuff)
 //(7) don't invalidate existing token until new token request has been validated - otherwise it could be uses to deny people
 //need to store if token has been validated
+//(8) S3 backup
 /////////////////////////////////
 
 //for email: http://aws.amazon.com/ses/
