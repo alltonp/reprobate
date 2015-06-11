@@ -2,14 +2,11 @@ package app.restlike.rim
 
 //NEXT:
 //colourise the statuses
-//consider and nice 4 blue for what youve just changed
-//and then you traffic lights for status, light blue for
+//and then you traffic lights for status, light blue for cold (backlog), yellow (middle) green (done) magenta (released)
+//backlog (no colour), next (yellow), middles (orange), done (greener) released (magenta or blue)
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
-
-///pointy head reporting
-//consider * for collapse non blessed tags
 
 //show the backlog when:
 //rim +/ mooo
@@ -23,12 +20,7 @@ package app.restlike.rim
 //annoying issues:
 //rim = should parse tags
 
-//thoughts:
-// ..... how about . instead of : for less interesting tags, or even :; (winky tags)
-// ..... can/should we lose some the extra : on id's and labels within rim, make it a bit cleaner
 //TIP: http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-//rim ± = option shift equals .. iteration/management summary .. or use pointy hat symbol ^
-//show tags by most recent etc (maybe)
 
 //tags:
 //Franck: tag many: `rim ref1 ref2 … refN : foo bar baz`
@@ -39,17 +31,7 @@ package app.restlike.rim
 //rim 1 2 N :
 //rim 1 2 N :-
 
-//more view options:
-//rim / - show begin
-//rim // - show nth state
-//rim ! - show end state
-
-//releases:
-//when 'rim " [tag] and issue is released might be nice to show when and version
-
 //colouring: (orange = updated, cyan = me, ? = context)
-//colorise what changed .. (could be property specific)
-//when doing 'rim @' consider highlight what exactly is being done
 
 //gaps:
 //properly support multiple / in /// and +///
