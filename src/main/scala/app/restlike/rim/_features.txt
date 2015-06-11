@@ -12,7 +12,6 @@ package app.restlike.rim
 //consider * for collapse non blessed tags
 
 //show the board when:
-//'rim =' and issue is on the board
 //'rim @=' and issue is on the board
 //'rim [ref] :' and issue is on the board
 

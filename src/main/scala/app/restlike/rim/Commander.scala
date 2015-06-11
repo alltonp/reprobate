@@ -37,7 +37,7 @@ object Commander {
       case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
-      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel)
+      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
@@ -179,11 +179,11 @@ object Commander {
     }
   }
 
-  private def onOwnIssue(who: String, ref: String, currentModel: Model) = {
+  private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
     }
   }
 
@@ -258,10 +258,12 @@ object Commander {
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
-                         else
-        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(presentation, Some(updatedModel))
+      //TODO: abstract this away somewhere
+      //also, depended on context might want to show the backlog or releases
+//      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
+//                         else
+//        Messages.successfulUpdate(s"${updatedIssue.render()}")
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
     }
   }
 

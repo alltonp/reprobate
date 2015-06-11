@@ -4,6 +4,11 @@ import app.ServiceFactory.dateFormats
 
 //TODO: add issue
 object Presentation {
+  def basedOnUpdateContext(model: Model, updatedIssue: Issue, aka: String) = {
+    if (model.onBoard_?(updatedIssue)) Presentation.board(model, changed = Seq(updatedIssue.ref), aka)
+    else Messages.successfulUpdate(s"${updatedIssue.render()}")
+  }
+
   def board(model: Model, changed: Seq[String], aka: String) = {
     groupByStatus(compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
   }
