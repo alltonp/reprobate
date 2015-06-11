@@ -27,7 +27,7 @@ object Controller {
         })
 
       }
-      case None => t(List("fail"))
+      case None => t(List("bad request"))
     }
   }
 }
