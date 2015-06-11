@@ -8,8 +8,8 @@ import org.joda.time.DateTime
 case class Tracker(filename: String) {
   private val file = Paths.get(filename)
 
-  def track(who: String, what: String) {
-    val content = List(DateTime.now, who, what).mkString("|") + "\n"
+  def track(who: String, what: String, email: String) {
+    val content = List(DateTime.now, who, what, email).mkString("|") + "\n"
     Filepath.append(content, file)
   }
 

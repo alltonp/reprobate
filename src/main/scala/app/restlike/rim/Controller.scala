@@ -20,7 +20,7 @@ object Controller {
         JsonRequestHandler.handle(req)((json, req) ⇒ {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-            Tracker(s"${Rim.appName}.tracking").track(who, value)
+            Tracker(s"${Rim.appName}.tracking").track(who, value, universe.tokenToUser(token))
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
