@@ -39,7 +39,7 @@ object Commander {
       case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
-      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel)
+      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
@@ -195,12 +195,12 @@ object Commander {
     }
   }
 
-  private def onAssignIssue(assignee: String, ref: String, currentModel: Model): Out = {
+  private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
     if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
     }
   }
 
