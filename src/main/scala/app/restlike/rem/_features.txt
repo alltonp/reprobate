@@ -32,6 +32,9 @@ package app.restlike.rem
 //for reference encoding
 //https://github.com/Nycto/Hasher
 
+//franck
+//run it or clipboard it or something
+
 //this is the first project to move to aws
 /////////////////////////////////
 //how to do the auth - from dorin
