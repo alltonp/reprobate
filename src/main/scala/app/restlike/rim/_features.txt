@@ -11,11 +11,8 @@ package app.restlike.rim
 ///pointy head reporting
 //consider * for collapse non blessed tags
 
-//show the board when:
-//
-
-//in "rim :"
-//consider highlighting tags that are only in released, might indicate dead ... but oy probably wouldnt delete
+//show the backlog when:
+//rim +/ mooo
 
 //in "rim : [tag]" colorise the statuses
 
@@ -88,11 +85,7 @@ package app.restlike.rim
 
 //SOMEDAY/MAYBE:
 //split and merge {}
-
-//think about:
-//would be nice to have a symbol for release ... it could be: ±
-//so then show = 'rim ±' or _ .. as in draw a line under it
-//so then create = 'rim ± [name]'
+//in "rim :" - //consider highlighting tags that are only in released, might indicate dead ... but you probably wouldnt delete
 
 //TODO: handle corrupted rim.json
 //TODO: protect against empty value
