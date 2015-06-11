@@ -8,7 +8,7 @@ package app.restlike.rim
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
 
-//show the backlog when:
+//maybe show the backlog when: (or maybe not)
 //rim +/ mooo
 
 //in "rim : [tag]" colorise the statuses
