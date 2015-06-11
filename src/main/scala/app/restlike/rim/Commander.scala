@@ -44,7 +44,7 @@ object Commander {
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
       case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
-      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":-" => onDeleteTag(tagToDelete, currentModel)
+      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
@@ -143,7 +143,7 @@ object Commander {
     } else Out(Messages.problem(s"$oldTag does not exist"))
   }
 
-  private def onDeleteTag(oldTag: String, currentModel: Model) = {
+  private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
     def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
