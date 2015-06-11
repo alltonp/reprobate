@@ -251,6 +251,20 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("tag1 := tagX", current, expected)
   }
 
+  "delete tag" in {
+    val issue = Issue("1", "an item", Some(next), None, tags = Set("tag1", "tag2", "tagN"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))
+    runAndExpect("tag2 :-", current, expected)
+  }
+
+  "delete tag in released" in {
+    val issue = Issue("1", "an item", Some(done), None, tags = Set("tag1", "tag2", "tagN"))
+    val current = modelWithReleasedIssue(issue)
+    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))))
+    runAndExpect("tag2 :-", current, expected)
+  }
+
   //releases
 
   "releasing moves done issue and status to released" in {
