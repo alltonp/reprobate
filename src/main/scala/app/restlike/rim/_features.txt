@@ -12,8 +12,8 @@ package app.restlike.rim
 //consider * for collapse non blessed tags
 
 //show the board when:
-//'rim @=' and issue is on the board
 //'rim [ref] :' and issue is on the board
+//'rim [ref] :-' and issue is on the board
 
 //in "rim :"
 //consider highlighting tags that are only in released, might indicate dead ... but oy probably wouldnt delete
