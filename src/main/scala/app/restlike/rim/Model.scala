@@ -45,6 +45,7 @@ case class Tag(name: String, count: Int)
 
 case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
   def knows_?(who: String) = userToAka.contains(who)
+  def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)

@@ -32,7 +32,7 @@ object Commander {
       case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
       case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
+      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
@@ -253,12 +253,15 @@ object Commander {
     }
   }
 
-  private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
+  private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Messages.successfulUpdate(s"${updatedIssue.render()}"), Some(updatedModel))
+      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
+                         else
+        Messages.successfulUpdate(s"${updatedIssue.render()}")
+      Out(presentation, Some(updatedModel))
     }
   }
 
