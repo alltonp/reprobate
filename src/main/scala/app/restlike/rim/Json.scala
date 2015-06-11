@@ -14,10 +14,10 @@ object Json {
 
   def deserialise(json: String) = {
     implicit val formats = theFormats
-    parse(json).extract[Model]
+    parse(json).extract[Universe]
   }
 
-  def serialise(response: Model) = {
+  def serialise(response: Universe) = {
     implicit val formats = theFormats
     JsonParser.parse(write(response))
   }

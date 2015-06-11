@@ -6,6 +6,15 @@ import org.joda.time.DateTime
 
 import scala.collection.immutable
 
+
+case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String]) {
+  def modelFor(token: String) = if (tokenToUser.contains(token)) Some(userToModel(tokenToUser(token)))
+  else None
+
+  def updateModelFor(token: String, updatedModel: Model) =
+    copy(userToModel = userToModel.updated(tokenToUser(token), updatedModel))
+}
+
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {

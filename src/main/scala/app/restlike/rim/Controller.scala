@@ -6,24 +6,32 @@ import net.liftweb.http._
 import net.liftweb.json._
 
 object Controller {
-  private var model = Persistence.load
+  private var universe = Persistence.load
 
-  private val refProvider = RefProvider(
-    if (model.allIssuesIncludingReleased.isEmpty) 0
-    else model.allIssuesIncludingReleased.map(_.ref.toLong).max
-  )
+  def process(who: String, req: Req, token: String) = {
+    universe.modelFor(token) match {
+      case Some(model) => {
 
-  def process(who: String, req: Req) =
-    JsonRequestHandler.handle(req)((json, req) ⇒ {
-      synchronized {
-        val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-        Tracker(s"${Rim.appName}.tracking").track(who, value)
-        val out = Commander.process(value, who, model, refProvider)
-        out.updatedModel.foreach(m => {
-          model = m
-          Persistence.save(model)
+        val refProvider = RefProvider(
+          if (model.allIssuesIncludingReleased.isEmpty) 0
+          else model.allIssuesIncludingReleased.map(_.ref.toLong).max
+        )
+
+        JsonRequestHandler.handle(req)((json, req) ⇒ {
+          synchronized {
+            val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
+            Tracker(s"${Rim.appName}.tracking").track(who, value)
+            val out = Commander.process(value, who, model, refProvider)
+            out.updatedModel.foreach(m => {
+              universe = universe.updateModelFor(token, m)
+              Persistence.save(universe)
+            })
+            t(s"> ${Rim.appName} $value" :: "" :: out.messages.toList)
+          }
         })
-        t(s"> ${Rim.appName} $value" :: "" :: out.messages.toList)
+
       }
-    })
+      case None => t(List("fail"))
+    }
+  }
 }

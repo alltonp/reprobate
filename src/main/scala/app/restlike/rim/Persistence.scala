@@ -17,12 +17,17 @@ object Persistence {
   private val defaultStatuses = List("next", "doing", "done")
 
   //TODO: could Model be 'T'ed up?
-  def load: Model = {
-    if (!file.toFile.exists()) save(Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]()))
+  def load: Universe = {
+    if (!file.toFile.exists()) save(
+      Universe(
+        Map("---email---" -> Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
+        Map("---token---" -> "---email---")
+      )
+    )
     Json.deserialise(Filepath.load(file))
   }
 
-  def save(state: Model) {
+  def save(state: Universe) {
     Filepath.save(pretty(render(Json.serialise(state))), file)
   }
 }
