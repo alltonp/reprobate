@@ -58,7 +58,7 @@ object Messages {
     "tags:",
     "  - migrate                        ⇒ 'rim [oldtag] := [newtag]'",
   //TODO: consider having the user type yes on the end (previewing it first)
-    "  - kill all usages              ⇒ 'rim [killtag] :--'",
+    "  - kill all usages                ⇒ 'rim [killtag] :--'",
     "",
     "search:",
     "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
