@@ -349,12 +349,12 @@ object Commander {
   private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
     val updatedModel = currentModel.copy(priorityTags = tags)
     //TODO: de-dupe message (using this version)
-    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(", ")}"), Some(updatedModel))
+    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel))
   }
 
   private def onShowTagPriority(who: String, currentModel: Model): Out = {
     //TODO: de-dupe message (not this version)
-    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(", ")}"), None)
+    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None)
   }
 }
 
