@@ -23,6 +23,5 @@ object Script {
       |fi
       |echo
       |`wget -qO.""" + app + """.bak $HOST/""" + app + """/state/$TOKEN`
-      |
     """).stripMargin.split("\n").toList
 }

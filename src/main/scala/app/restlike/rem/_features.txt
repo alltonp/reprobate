@@ -1,8 +1,12 @@
 package app.restlike.rem
 
+//name:
+//facts
+
 //TODO: Next
-//update key
-//update value
+//update key _=
+//update value =_
+(or reverse) _ suggests leave whats there already
 //tag
 //detag
 //other standard tagging stuff
@@ -28,6 +32,9 @@ package app.restlike.rem
 //... but it probably needs something other than just the token
 //base64/salted username perhaps (done as part of install script)
 //https://github.com/Nycto/Hasher
+
+//from original list:
+
 
 /////////////////////////////////
 //how to do the auth - from dorin
