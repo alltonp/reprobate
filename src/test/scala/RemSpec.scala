@@ -38,15 +38,6 @@ class RemSpec extends WordSpec with MustMatchers {
     runAndExpect("+ key", current, expected)
   }
 
-  //editing
-
-  "edit value" in {
-    val issue = Thing("1", "key", Some("value"))
-    val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "key", Some("new value"))))
-    runAndExpect("1 _= new value", current, expected)
-  }
-
   "add with tags" in {
     val current = emptyModelWithWorkflow
     val expected = current.copy(things = List(Thing("1", "key", Some("value"), Set("tag1", "tag2"))))
@@ -63,6 +54,15 @@ class RemSpec extends WordSpec with MustMatchers {
     val current = emptyModelWithWorkflow
     val expected = current.copy(things = List(Thing("1", "key", None, Set("tag1", "tag2"))))
     runAndExpect("+ key : :tag1 :tag2", current, expected)
+  }
+
+  //editing
+
+  "edit value" in {
+    val issue = Thing("1", "key", Some("value"))
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "key", Some("new value"))))
+    runAndExpect("1 _= new value", current, expected)
   }
 
   //tagging
