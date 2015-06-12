@@ -6,9 +6,9 @@ object Messages {
   val eh = "eh?"
 
 //  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rem aka pa'")
-  def notFound(ref: String) = problem(s"issue not found: $ref")
+  def notFound(ref: String) = problem(s"thing not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
-  def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
+  def duplicateThing(ref: String) = problem(s"thing already exists: $ref")
   def problem(message: String) = List(red(s"problem: ") + message)
 
   //TODO: use appName everywhere
@@ -18,7 +18,8 @@ object Messages {
     "",
     "things:",
     "  - create                         ⇒ 'rem + [key] = {value} {: tag1 tag2 tagX}'",
-//    "  - update                         ⇒ 'rim [ref] ='",
+    "  - update value                   ⇒ 'rim [ref] _= {value}'",
+    "  - update key                     ⇒ 'rim [ref] =_ {key}'",
     "  - delete                         ⇒ 'rem [ref] -'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",

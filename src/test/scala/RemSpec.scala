@@ -38,7 +38,17 @@ class RemSpec extends WordSpec with MustMatchers {
     runAndExpect("+ key", current, expected)
   }
 
-//  "add and move forward to begin state" in {
+  //editing
+
+  "edit value" in {
+    val issue = Thing("1", "key", Some("value"))
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "key", Some("new value"))))
+    runAndExpect("1 _= new value", current, expected)
+  }
+
+
+  //  "add and move forward to begin state" in {
 //    val current = emptyModelWithWorkflow
 //    val expected = current.copy(issues = List(Issue("1", "an item", Some(next), None)))
 //    runAndExpect("+/ an item", current, expected)
@@ -190,7 +200,7 @@ class RemSpec extends WordSpec with MustMatchers {
   "tag" in {
     (pending)
     val issue = Thing("1", "key", None)
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tag"))))
     runAndExpect("1 : tag", current, expected)
   }
@@ -198,7 +208,7 @@ class RemSpec extends WordSpec with MustMatchers {
   "detag" in {
     (pending)
     val issue = Thing("1", "key", None, Set("tag"))
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set.empty)))
     runAndExpect("1 :- tag", current, expected)
   }
@@ -206,7 +216,7 @@ class RemSpec extends WordSpec with MustMatchers {
   "tag multi" in {
     (pending)
     val issue = Thing("1", "key", None)
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
     runAndExpect("1 : tag1 tag2 tagN", current, expected)
   }
@@ -214,7 +224,7 @@ class RemSpec extends WordSpec with MustMatchers {
   "edit tag" in {
     (pending)
     val issue = Thing("1", "key", None, tags = Set("tag1", "tag2", "tagN"))
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
     runAndExpect("tag1 := tagX", current, expected)
   }
@@ -244,6 +254,6 @@ class RemSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0), "foo@bar.com")
 
-  private def modelWithIssue(issue: Thing) = Model(/*usersToAka, */List(issue))
+  private def modelWithThing(issue: Thing) = Model(/*usersToAka, */List(issue))
 //  private def modelWithReleasedIssue(issue: Thing) = Model(workflowStates, usersToAka, Nil, List(Release("release", List(issue))))
 }

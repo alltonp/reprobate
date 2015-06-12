@@ -21,6 +21,10 @@ object Presentation {
 //    s"${aka}: (${issues.size})" + r + "\n"
 //  }
 
+  def things(all: Seq[Thing]) = {
+    all.sortBy(_.ref.toInt).reverseMap(i => i.render()).toList
+  }
+
   def tags(all: Seq[Tag]) = {
     val sorted = all.sortBy(t => (-t.count, t.name)).map(t => s"${t.name} (${t.count})")
     ": " + sorted.mkString(", ") :: Nil

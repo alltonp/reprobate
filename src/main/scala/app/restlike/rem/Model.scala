@@ -58,7 +58,7 @@ case class Model(/*userToAka: immutable.Map[String, String],*/ things: List[Thin
     //TODO: validate there is max 2
     //TODO: validate key is not already used
     val maybeDupe = things.find(i => i.description == description)
-    if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
+    if (maybeDupe.isDefined) return Left(Messages.duplicateThing(maybeDupe.get.ref))
     val newRef = refProvider.next
     val created = Thing(newRef, keyValueBits.head, keyValueBits.drop(1).headOption, tagBits.toSet)
     val updatedModel = this.copy(things = created :: this.things)

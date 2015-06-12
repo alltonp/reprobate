@@ -18,7 +18,9 @@ object Commander {
 //      case In(Some("aka"), List(aka)) => onAka(who, aka, currentModel)
       case In(Some("help"), Nil) => onHelp(who, currentModel, user)
       case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
-//      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
+      case In(Some(ref), args) if args.nonEmpty && args.head == "_=" => onEditThingValue(ref, args.drop(1), currentModel)
+
+      //      case In(Some("+/"), args) => onAddAndBeginIssue(who, args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(who, args, currentModel, refProvider)
 //      case In(Some("+!"), args) => onAddAndEndIssue(who, args, currentModel, refProvider)
       case In(Some("?"), Nil) => onQueryThings(currentModel, Nil)
@@ -228,7 +230,7 @@ object Commander {
     val allIssues = currentModel.things// ::: currentModel.released.flatMap(_.issues)
     val matching = query(allIssues, terms)
     val result = if (matching.isEmpty) (s"no things found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else matching.sortBy(_.ref.toInt).reverseMap(i => i.render())
+    else Presentation.things(matching)
     Out(result, None)
   }
 
@@ -246,7 +248,16 @@ object Commander {
     }
   }
 
-//  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
+  private def onEditThingValue(ref: String, args: List[String], currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newValue = args.mkString(" ")
+      val updatedThing = found.copy(value = Some(newValue))
+      val updatedModel = currentModel.updateIssue(updatedThing)
+      Out(Presentation.things(updatedModel.things), Some(updatedModel))
+    }
+  }
+
+  //  private def onAddAndBeginIssue(who: String, args: List[String], currentModel: Model, refProvider: RefProvider) = {
 //    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
 //      case Left(e) => Out(e, None)
 //      case Right(r) => Out(Presentation.board(r.updatedModel), Some(r.updatedModel))
