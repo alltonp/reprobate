@@ -8,6 +8,16 @@ package app.restlike.rim
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
 
+//after talking with stu/tom/albert
+//stu: would be good to answer things like: how long a card took?
+//tom: how long has a card been in state x? or put another way: elasped time vs time actually worked on
+//tom: limit size of backlog so that it gets pruned - refuse to add unless we delete something (limits could be configurable)
+//maybe how long between releases
+//if we have the start date then we can work out a blunt time per card
+//even better if we capture when things change state
+//so: we could store a state history ... i.e. when status changes record what is was an when
+//record for now and analyse later
+
 //maybe show the backlog when: (or maybe not)
 //rim +/ mooo
 
