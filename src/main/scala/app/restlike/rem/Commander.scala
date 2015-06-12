@@ -19,6 +19,7 @@ object Commander {
       case In(Some("help"), Nil) => onHelp(who, currentModel, user)
       case In(Some("+"), args) => onAddThing(args, currentModel, refProvider)
       case In(Some(ref), args) if args.nonEmpty && args.head == "_=" => onEditValue(ref, args.drop(1), currentModel)
+      case In(Some(ref), args) if args.nonEmpty && args.head == "=_" => onEditKey(ref, args.drop(1), currentModel)
 
       case In(Some("?"), Nil) => onQueryThings(currentModel, Nil)
       case In(Some("?"), terms) => onQueryThings(currentModel, terms)
@@ -115,6 +116,15 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newValue = args.mkString(" ")
       val updatedThing = found.copy(value = Some(newValue))
+      val updatedModel = currentModel.updateIssue(updatedThing)
+      Out(Presentation.things(updatedModel.things), Some(updatedModel))
+    }
+  }
+
+  private def onEditKey(ref: String, args: List[String], currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newValue = args.mkString(" ")
+      val updatedThing = found.copy(key = newValue)
       val updatedModel = currentModel.updateIssue(updatedThing)
       Out(Presentation.things(updatedModel.things), Some(updatedModel))
     }

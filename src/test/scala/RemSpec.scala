@@ -65,6 +65,13 @@ class RemSpec extends WordSpec with MustMatchers {
     runAndExpect("1 _= new value", current, expected)
   }
 
+  "edit key" in {
+    val issue = Thing("1", "key", Some("value"))
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "new key", Some("value"))))
+    runAndExpect("1 =_ new key", current, expected)
+  }
+
   //tagging
 
   "tag" in {
