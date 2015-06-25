@@ -75,7 +75,7 @@ object Presentation {
     val issues = issuesForTag.map(i => s"\n  ${
       i.render(model, hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise, highlightAka = Some(aka))
     }").mkString
-    s"$tag: ${if (sanitise) "" else s"(${issuesForTag.size})"}" + issues + "\n"
+    s"$tag ${if (sanitise) "" else s"(${issuesForTag.size})"}" + issues + "\n"
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
