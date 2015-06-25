@@ -63,7 +63,7 @@ object Commander {
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
   private def onShowReleases(currentModel: Model, aka: String) = {
-    val all = currentModel.released.reverse.flatMap(Presentation.release(_, Some(aka)))
+    val all = currentModel.released.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
     val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
     Out(result, None)
@@ -73,7 +73,7 @@ object Commander {
     val akas = currentModel.akas
     val all = akas.map(aka => {
       val issues = currentModel.issues.filter(_.by == Some(aka))
-      Presentation.issuesForUser(aka, SortByStatus(issues, currentModel))
+      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
     })
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
@@ -98,7 +98,7 @@ object Commander {
   private def onShowUntagged(currentModel: Model, aka: String) = {
     val untagged = currentModel.issues.filter(_.tags.isEmpty)
     val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
-    else SortByStatus(untagged, currentModel).map(_.render(highlightAka = Some(aka)))
+    else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
     Out(result, None)
   }
 
@@ -121,7 +121,7 @@ object Commander {
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
-    Out(Presentation.release(release, Some(aka)), Some(updatedModel))
+    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
@@ -270,7 +270,7 @@ object Commander {
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(Messages.successfulUpdate(s"${found.render()}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel))
     }
   }
 
@@ -285,14 +285,14 @@ object Commander {
 
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else SortByStatus(matching, currentModel).map(i => i.render(highlightAka = Some(aka)))
+    else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
     Out(result, None)
   }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.map(i => i.render(highlightAka = Some(aka)))
+    else matching.map(i => i.render(currentModel, highlightAka = Some(aka)))
     Out(result, None)
   }
 
@@ -320,7 +320,7 @@ object Commander {
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render()}"), Some(r.updatedModel))
+      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel))
     }
   }
 

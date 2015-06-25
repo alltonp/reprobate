@@ -27,7 +27,9 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   private val renderStatus = {
     val value = status.fold("")(" ^" + _)
-    value match {
+    status match {
+      case None => value
+//      case Some(x) if (x == )=> value
       case _ => dullMagenta(value)
     }
   }  //•
@@ -36,7 +38,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   def search(query: String) = indexed.contains(query)
 
-  def render(hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
+  def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus}"
     if (highlight) orange(r) else r
   }
