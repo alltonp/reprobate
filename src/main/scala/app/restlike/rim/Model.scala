@@ -19,7 +19,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
-      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else blue(r)
+      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
       case (None, _) => ""
     }
   }
