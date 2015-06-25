@@ -43,7 +43,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
-    if (highlight) dullYellow(r) else r
+    if (highlight) dullYellow(r) else customGrey(r)
   }
 }
 
