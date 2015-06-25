@@ -1,12 +1,12 @@
 package app.restlike.rim
 
 //NEXT:
-//colourise the statuses
-//and then you traffic lights for status, light blue for cold (backlog), yellow (middle) green (done) magenta (released)
-//backlog (no colour), next (yellow), middles (orange), done (greener) released (magenta or blue)
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
+//bar chart of progress
+//http://codegolf.stackexchange.com/questions/23350/ascii-art-pie-chart
+//todo: could do burn down!
 
 //after talking with stu/tom/albert
 //stu: would be good to answer things like: how long a card took?

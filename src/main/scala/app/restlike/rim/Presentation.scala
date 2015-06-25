@@ -51,7 +51,7 @@ object Presentation {
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
-      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s (${issuesForState.size})" + issues + "\n")
     }).flatten
   }
 
