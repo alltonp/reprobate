@@ -18,21 +18,21 @@ object Colours {
   private val DULLGREEN = "\033[2;38m"
   private val DULLYELLOW = "\033[2;33m"
 //  private val DARKGREY ="\033[1;30m"
-  private val LIGHTMAGENTA ="\033[0;95m"
+//  private val LIGHTMAGENTA ="\033[0;95m"
   //TIP: 38 and 5 = this is special from the colour chart of 256
-  private val ORANGE ="\033[0;38;5;208m"
+//  private val ORANGE ="\033[0;38;5;208m"
 //  private val WHITE ="\033[1;37m"
 
-  private val CUSTOMBLUE ="\033[0;38;5;27m"
-  private val CUSTOMYELLOW ="\033[0;38;5;3m"
-  private val CUSTOMORANGE ="\033[0;38;5;202m"
+  private val CUSTOMBLUE ="\033[0;38;5;33m"
   private val CUSTOMGREEN ="\033[0;38;5;28m"
+  private val CUSTOMGREY ="\033[0;38;5;244m"
+  private val CUSTOMORANGE ="\033[0;38;5;202m"
+  private val CUSTOMMAGENTA ="\033[0;38;5;5m"
+  private val CUSTOMYELLOW ="\033[0;38;5;227m"
 
   private val END ="\033[0m"
 
   def red(value: String) = s"$RED$value$END"
-  def green(value: String) = s"$CUSTOMGREEN$value$END"
-  def yellow(value: String) = s"$CUSTOMYELLOW$value$END"
   def blue(value: String) = s"$BLUE$value$END"
   def cyan(value: String) = s"$CYAN$value$END"
   def lightGrey(value: String) = s"$LIGHTGREY$value$END"
@@ -44,9 +44,14 @@ object Colours {
   def dullGreen(value: String) = s"$DULLGREEN$value$END"
   def dullOrange(value: String) = s"$YELLOW$value$END"
   def dullYellow(value: String) = s"$DULLYELLOW$value$END"
-  def brightMagenta(value: String) = s"$LIGHTMAGENTA$value$END"
+//  def brightMagenta(value: String) = s"$LIGHTMAGENTA$value$END"
 
-  def orange(value: String) = s"$CUSTOMORANGE$value$END"
   def customBlue(value: String) = s"$CUSTOMBLUE$value$END"
-//  def white(value: String) = s"$WHITE$value$END"
+  def customGreen(value: String) = s"$CUSTOMGREEN$value$END"
+  def customGrey(value: String) = s"$CUSTOMGREY$value$END"
+  def customMagenta(value: String) = s"$CUSTOMMAGENTA$value$END"
+  def customOrange(value: String) = s"$CUSTOMORANGE$value$END"
+  def customYellow(value: String) = s"$CUSTOMYELLOW$value$END"
+
+  //  def white(value: String) = s"$WHITE$value$END"
 }

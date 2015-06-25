@@ -19,21 +19,21 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
-      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) cyan(r) else dullCyan(r)
+      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else blue(r)
       case (None, _) => ""
     }
   }
-  private val renderTags = dullOrange(tags.toList.sorted.map(t => s" :$t").mkString)
+  private val renderTags = customGrey(tags.toList.sorted.map(t => s" :$t").mkString)
 
   private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)
     model.fold(value)(m =>
     status match {
       case None => value
-      case Some(x) if x == m.beginState => customBlue(value)
-      case Some(x) if x == m.endState => yellow(value)
-      case Some("released") => dullMagenta(value)
-      case _ => orange(value)
+      case Some(x) if x == m.beginState => cyan(value)
+      case Some(x) if x == m.endState => customOrange(value)
+      case Some("released") => customMagenta(value)
+      case _ => customYellow(value)
     })
   }  //•
 
@@ -43,7 +43,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
-    if (highlight) customBlue(r) else r
+    if (highlight) dullYellow(r) else r
   }
 }
 
