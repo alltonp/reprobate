@@ -23,7 +23,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
       case (None, _) => ""
     }
   }
-  private val renderTags = customGrey(tags.toList.sorted.map(t => s" :$t").mkString)
+  private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
   private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)
