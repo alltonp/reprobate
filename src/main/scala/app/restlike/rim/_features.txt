@@ -21,7 +21,7 @@ package app.restlike.rim
 //maybe show the backlog when: (or maybe not)
 //rim +/ mooo
 
-//in "rim : [tag]" colorise the statuses
+//in "rim : [tag]" colorise the statuses ... then no need to break down
 
 //colourise help
 

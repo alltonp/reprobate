@@ -367,7 +367,7 @@ object Commander {
 object SortByStatus {
   def apply(issues: Seq[Issue], currentModel: Model) = {
     val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
-    println(statusToIndex)
+//    println(statusToIndex)
     issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
   }
 }
