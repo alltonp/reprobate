@@ -5,6 +5,11 @@ package app.restlike.rem
 
 //should rec be the same or a different thing?
 
+/do replacements e.g.
+//rem + deploy = deploy $version $env
+//then ..
+//rem 23 ! 1234 uat
+
 //TODO: Next
 //update key _=
 //update value =_
