@@ -23,24 +23,27 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
       case (None, _) => ""
     }
   }
-  private val renderTags = dullYellow(tags.toList.sorted.map(t => s" :$t").mkString)
+  private val renderTags = dullOrange(tags.toList.sorted.map(t => s" :$t").mkString)
 
-  private val renderStatus = {
+  private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)
+    model.fold(value)(m =>
     status match {
       case None => value
-//      case Some(x) if (x == )=> value
-      case _ => dullMagenta(value)
-    }
+      case Some(x) if x == m.beginState => customBlue(value)
+      case Some(x) if x == m.endState => yellow(value)
+      case Some("released") => dullMagenta(value)
+      case _ => orange(value)
+    })
   }  //•
 
-  private val indexed = List(ref, description, renderStatus, renderBy(None).toLowerCase, renderTags).mkString(" ")
+  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
-    val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus}"
-    if (highlight) orange(r) else r
+    val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
+    if (highlight) customBlue(r) else r
   }
 }
 
