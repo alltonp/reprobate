@@ -26,7 +26,7 @@ object Colours {
   private val CUSTOMBLUE ="\033[0;38;5;33m"
   private val CUSTOMGREEN ="\033[0;38;5;28m"
   private val CUSTOMGREY ="\033[0;38;5;244m"
-  private val CUSTOMORANGE ="\033[0;38;5;202m"
+  private val CUSTOMORANGE ="\033[0;38;5;208m"
   private val CUSTOMMAGENTA ="\033[0;38;5;5m"
   private val CUSTOMYELLOW ="\033[0;38;5;227m"
 
