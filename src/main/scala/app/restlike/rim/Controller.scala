@@ -1,5 +1,6 @@
 package app.restlike.rim
 
+import app.restlike.common.Colours.customGrey
 import app.restlike.common.Responder._
 import app.restlike.common._
 import net.liftweb.http._
@@ -26,7 +27,8 @@ object Controller {
               universe = universe.updateModelFor(token, m)
               Persistence.save(universe)
             })
-            t(s"> ${Rim.appName} $value" :: "" :: out.messages.toList)
+            val result = s"> ${Rim.appName} $value" :: "" :: out.messages.toList
+            t(result.map(customGrey(_)))
           }
         })
 

@@ -30,10 +30,10 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
     model.fold(value)(m =>
     status match {
       case None => value
-      case Some(x) if x == m.beginState => cyan(value)
-      case Some(x) if x == m.endState => customOrange(value)
+      case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
+      case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
       case Some("released") => customMagenta(value)
-      case _ => customYellow(value)
+      case _ => customOrange(value) //customYellow(value)
     })
   }  //•
 
