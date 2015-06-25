@@ -13,11 +13,11 @@ object Messages {
 
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
 
-  def problem(message: String) = List(red(s"problem: ") + message)
+  def problem(message: String) = List(red(s"problem: ") + customGrey(message))
 
   def success(what: String) = List(what)
 
-  def successfulUpdate(what: String) = List(dullYellow(s"=> $what"))
+  def successfulUpdate(what: String) = List(customGreen2(s"=> $what"))
 
   //TODO: use appName everywhere ...
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
