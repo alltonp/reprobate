@@ -17,7 +17,7 @@ object Messages {
 
   def success(what: String) = List(what)
 
-  def successfulUpdate(what: String) = List(customGreen2(s"=> $what"))
+  def successfulUpdate(what: String) = List(customGreen(s"=> $what"))
 
   //TODO: use appName everywhere ...
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right

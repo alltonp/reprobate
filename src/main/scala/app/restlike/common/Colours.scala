@@ -25,8 +25,7 @@ object Colours {
 
   private val CUSTOMRED ="\033[0;38;5;9m"
   private val CUSTOMBLUE ="\033[0;38;5;33m"
-  private val CUSTOMGREEN ="\033[0;38;5;28m"
-  private val CUSTOMGREEN2 ="\033[0;38;5;40m"
+  private val CUSTOMGREEN ="\033[0;38;5;40m"
   private val CUSTOMGREY ="\033[0;38;5;244m"
   private val CUSTOMIVORY ="\033[0;38;5;187m"
   private val CUSTOMORANGE ="\033[0;38;5;208m"
@@ -50,13 +49,12 @@ object Colours {
 //  def brightMagenta(value: String) = s"$LIGHTMAGENTA$value$END"
 
   def customBlue(value: String) = s"$CUSTOMBLUE$value$END"
-  def customGreen(value: String) = s"$CUSTOMGREEN$value$END"
   def customGrey(value: String) = s"$CUSTOMGREY$value$END"
   def customIvory(value: String) = s"$CUSTOMIVORY$value$END"
   def customMagenta(value: String) = s"$CUSTOMMAGENTA$value$END"
   def customOrange(value: String) = s"$CUSTOMORANGE$value$END"
   def customYellow(value: String) = s"$CUSTOMYELLOW$value$END"
-  def customGreen2(value: String) = s"$CUSTOMGREEN2$value$END"
+  def customGreen(value: String) = s"$CUSTOMGREEN$value$END"
 
   //  def white(value: String) = s"$WHITE$value$END"
 }
