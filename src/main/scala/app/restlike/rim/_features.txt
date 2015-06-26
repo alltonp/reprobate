@@ -1,6 +1,5 @@
-package app.restlike.rim
-
 //NEXT:
+//colour the update succsefully mre nicely
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
