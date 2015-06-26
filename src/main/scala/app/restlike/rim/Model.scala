@@ -33,7 +33,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private def colouredForStatus(model: Option[Model], value: String) = {
     model.fold(value)(m =>
       status match {
-        case None => value
+        case None => customGrey(value)
         case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
         case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
         case Some("released") => customMagenta(value)
