@@ -42,7 +42,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
-    val r = s"${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
+    val r = s"• ${if (hideId) "" else s"$ref: "}$description${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
     if (highlight) customGreen(r) else customGrey(r)
   }
 }
