@@ -20,7 +20,7 @@
 //maybe show the backlog when: (or maybe not)
 //rim +/ mooo
 
-//in "rim : [tag]" colorise the statuses ... then no need to break down
+//in "rim : [tag]" should show who did it ... and optionally support _ spartan mode
 
 //colourise help
 
