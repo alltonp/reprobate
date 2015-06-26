@@ -21,6 +21,7 @@
 //rim +/ mooo
 
 //in "rim : [tag]" should show who did it ... and optionally support _ spartan mode
+//ocd the id padding ...
 
 //colourise help
 
