@@ -16,13 +16,13 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-case class Thing(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
-  private def renderBy(highlightAka: Option[String]) = {
-    (by, highlightAka) match {
-      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
-      case (None, _) => ""
-    }
-  }
+case class Thing(ref: String, description: String, status: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+//  private def renderBy(highlightAka: Option[String]) = {
+//    (by, highlightAka) match {
+//      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
+//      case (None, _) => ""
+//    }
+//  }
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
@@ -42,13 +42,13 @@ case class Thing(ref: String, description: String, status: Option[String], by: O
       })
   }
 
-  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderTags).mkString(" ")
+  private val indexed = List(ref, description, renderStatus(None), renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
+    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model))}"
 //    if (highlight) customGreen(r) else customGrey(r)
     r
   }
@@ -86,7 +86,7 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
     val maybeDupe = issues.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Thing(newRef, description, status, by, tagBits.toSet)
+    val created = Thing(newRef, description, status, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }

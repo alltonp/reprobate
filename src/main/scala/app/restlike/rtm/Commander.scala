@@ -187,13 +187,13 @@ object Commander {
 //    }
 //  }
 
-  private def onDisownIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = None)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onDisownIssue(who: String, ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = None)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
 //  private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
 //    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
@@ -213,8 +213,8 @@ object Commander {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
         if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
       }
-      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
-      val updatedIssue = found.copy(status = newStatus, by = by)
+//      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
+      val updatedIssue = found.copy(status = newStatus)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
@@ -223,7 +223,7 @@ object Commander {
   private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
-      val updatedIssue = found.copy(status = newStatus, by = None)
+      val updatedIssue = found.copy(status = newStatus)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
@@ -237,8 +237,8 @@ object Commander {
         val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
         currentModel.workflowStates(newIndex)
       }
-      val by = if (newStatus == currentModel.beginState) None else Some(aka)
-      val updatedIssue = found.copy(status = Some(newStatus), by = by)
+//      val by = if (newStatus == currentModel.beginState) None else Some(aka)
+      val updatedIssue = found.copy(status = Some(newStatus))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
@@ -247,7 +247,7 @@ object Commander {
   private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = currentModel.endState
-      val updatedIssue = found.copy(status = Some(newStatus), by = Some(aka))
+      val updatedIssue = found.copy(status = Some(newStatus))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
