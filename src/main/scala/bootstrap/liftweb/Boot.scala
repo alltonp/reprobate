@@ -5,6 +5,7 @@ import app.restlike.broadcast.BroadcastFlash
 import app.restlike.demo.Demo
 import app.restlike.rem.Rem
 import app.restlike.rim.Rim
+import app.restlike.rtm.Rtm
 import app.view.AppView
 import app.{ServiceFactory}
 import net.liftweb.common._
@@ -48,6 +49,7 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(Iam)
     LiftRules.statelessDispatch.append(Rim)
     LiftRules.statelessDispatch.append(Rem)
+    LiftRules.statelessDispatch.append(Rtm)
 
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
