@@ -56,23 +56,23 @@ class RtmSpec extends WordSpec with MustMatchers {
     runAndExpect("+ an   item  ", current, expected)
   }
 
-  "add and move forward to begin state" in {
-    val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", Some(next))))
-    runAndExpect("+/ an item", current, expected)
-  }
+//  "add and move forward to begin state" in {
+//    val current = emptyModelWithWorkflow
+//    val expected = current.copy(issues = List(Thing("1", "an item", Some(next))))
+//    runAndExpect("+/ an item", current, expected)
+//  }
 
-  "add and move forward to second state" in {
-    val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", Some(doing))))
-    runAndExpect("+// an item", current, expected)
-  }
+//  "add and move forward to second state" in {
+//    val current = emptyModelWithWorkflow
+//    val expected = current.copy(issues = List(Thing("1", "an item", Some(doing))))
+//    runAndExpect("+// an item", current, expected)
+//  }
 
-  "add and move forward to end state" in {
-    val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", Some(done))))
-    runAndExpect("+! an item", current, expected)
-  }
+//  "add and move forward to end state" in {
+//    val current = emptyModelWithWorkflow
+//    val expected = current.copy(issues = List(Thing("1", "an item", Some(done))))
+//    runAndExpect("+! an item", current, expected)
+//  }
 
   "add with tags" in {
     val current = emptyModelWithWorkflow
@@ -86,17 +86,17 @@ class RtmSpec extends WordSpec with MustMatchers {
     runAndExpect("+ an item : :tag1 :tag2", current, expected)
   }
 
-  "add and move forward to begin state with tags" in {
-    val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", Some(next), Set("tag1", "tag2"))))
-    runAndExpect("+/ an item : tag1 tag2", current, expected)
-  }
+//  "add and move forward to begin state with tags" in {
+//    val current = emptyModelWithWorkflow
+//    val expected = current.copy(issues = List(Thing("1", "an item", Some(next), Set("tag1", "tag2"))))
+//    runAndExpect("+/ an item : tag1 tag2", current, expected)
+//  }
 
-  "add and move forward to end state with tags" in {
-    val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", Some(done), Set("tag1", "tag2"))))
-    runAndExpect("+! an item : tag1 tag2", current, expected)
-  }
+//  "add and move forward to end state with tags" in {
+//    val current = emptyModelWithWorkflow
+//    val expected = current.copy(issues = List(Thing("1", "an item", Some(done), Set("tag1", "tag2"))))
+//    runAndExpect("+! an item : tag1 tag2", current, expected)
+//  }
 
   //editing
 
