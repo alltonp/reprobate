@@ -100,12 +100,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //editing
 
-  "edit issue retains by, tags and status" in {
-    val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(Thing("1", "an item edited", Some(doing), Set("tag1", "tag2"))))
-    runAndExpect("1 = an item edited", current, expected)
-  }
+//  "edit issue retains by, tags and status" in {
+//    val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(Thing("1", "an item edited", Some(doing), Set("tag1", "tag2"))))
+//    runAndExpect("1 = an item edited", current, expected)
+//  }
 
   "edit with tags adds tags" in {
     (pending)
@@ -117,12 +117,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //moving
 
-  "move forward one state" in {
-    val issue = Thing("1", "an item", Some(doing))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(done))))
-    runAndExpect("1 /", current, expected)
-  }
+//  "move forward one state" in {
+//    val issue = Thing("1", "an item", Some(doing))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(done))))
+//    runAndExpect("1 /", current, expected)
+//  }
 
   //TODO: this is not completely trivial, e.g. going past done etc
 //  "move forward two states" in {
@@ -147,41 +147,41 @@ class RtmSpec extends WordSpec with MustMatchers {
     runAndExpect("1 //", current, expected)
   }
 
-  "move forward to end state" in {
-    val issue = Thing("1", "an item", None)
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(done))))
-    runAndExpect("1 /!", current, expected)
-  }
+//  "move forward to end state" in {
+//    val issue = Thing("1", "an item", None)
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(done))))
+//    runAndExpect("1 /!", current, expected)
+//  }
 
-  "move back a state" in {
-    val issue = Thing("1", "an item", Some(done))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(doing))))
-    runAndExpect("1 .", current, expected)
-  }
+//  "move back a state" in {
+//    val issue = Thing("1", "an item", Some(done))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(doing))))
+//    runAndExpect("1 .", current, expected)
+//  }
 
-  "move back a state to begin state" in {
-    val issue = Thing("1", "an item", Some(doing))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(next))))
-    runAndExpect("1 .", current, expected)
-  }
+//  "move back a state to begin state" in {
+//    val issue = Thing("1", "an item", Some(doing))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(next))))
+//    runAndExpect("1 .", current, expected)
+//  }
 
   //TODO: by should be None
-  "move back a state (into backlog)" in {
-    val issue = Thing("1", "an item", Some(next))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = None)))
-    runAndExpect("1 .", current, expected)
-  }
+//  "move back a state (into backlog)" in {
+//    val issue = Thing("1", "an item", Some(next))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = None)))
+//    runAndExpect("1 .", current, expected)
+//  }
 
-  "move back to begin state (into backlog)" in {
-    val issue = Thing("1", "an item", Some(done))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = None)))
-    runAndExpect("1 .!", current, expected)
-  }
+//  "move back to begin state (into backlog)" in {
+//    val issue = Thing("1", "an item", Some(done))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = None)))
+//    runAndExpect("1 .!", current, expected)
+//  }
 
   //owning
 
