@@ -16,7 +16,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Thing(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -56,15 +56,15 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
 //case class History(who: String, command: String)
 
-case class Release(tag: String, issues: List[Issue], when: Option[DateTime])
+case class Release(tag: String, issues: List[Thing], when: Option[DateTime])
 
-case class IssueCreation(created: Issue, updatedModel: Model)
+case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
-  def knows_?(who: String) = userToAka.contains(who)
-  def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
+case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ issues: List[Thing], released: List[Release], priorityTags: List[String]) {
+//  def knows_?(who: String) = userToAka.contains(who)
+  def onBoard_?(issue: Thing) = issue.status.fold(false)(workflowStates.contains(_))
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
@@ -86,18 +86,18 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     val maybeDupe = issues.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by, tagBits.toSet)
+    val created = Thing(newRef, description, status, by, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
 
-  def updateIssue(updated: Issue) = {
+  def updateIssue(updated: Thing) = {
     val index = this.issues.indexOf(findIssue(updated.ref).get)
     this.copy(issues = this.issues.updated(index, updated))
   }
 
-  def aka(who: String) = userToAka(who)
-  def akas = userToAka.values.toList.distinct
+//  def aka(who: String) = userToAka(who)
+//  def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = workflowStates.head
   def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change

@@ -9,47 +9,47 @@ object Commander {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
-    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+//    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
 
-    def aka = currentModel.aka(who)
+//    def aka = currentModel.aka(who)
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-      case In(None, Nil) => onShowBoard(currentModel, aka)
-      case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
+//      case In(None, Nil) => onShowBoard(currentModel, aka)
+//      case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
       case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
       case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
-      case In(Some("help"), Nil) => onHelp(currentModel, aka)
+//      case In(Some("help"), Nil) => onHelp(currentModel, aka)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
-      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
-      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
-      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
-      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
-      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
-      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
-      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
-      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
-      case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
-      case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
+//      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
+//      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
+//      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
+//      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
+//      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
+//      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
+//      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
+//      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
+//      case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
+//      case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
-      case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
-      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
-      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
-      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
-      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
-      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
-      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
-      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
-      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
-      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
+//      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
+//      case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
+//      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
+//      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
+//      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
+//      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
+//      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
+//      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
+//      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
+//      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
+//      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
       case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
-      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
-      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
-      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
+//      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
+//      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
+//      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
@@ -69,17 +69,17 @@ object Commander {
     Out(result, None)
   }
 
-  private def onShowWhoIsDoingWhat(currentModel: Model) = {
-    val akas = currentModel.akas
-    val all = akas.map(aka => {
-      val issues = currentModel.issues.filter(_.by == Some(aka))
-      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
-    })
-
-    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
-    else all
-    Out(result, None)
-  }
+//  private def onShowWhoIsDoingWhat(currentModel: Model) = {
+//    val akas = currentModel.akas
+//    val all = akas.map(aka => {
+//      val issues = currentModel.issues.filter(_.by == Some(aka))
+//      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
+//    })
+//
+//    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
+//    else all
+//    Out(result, None)
+//  }
 
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
@@ -126,7 +126,7 @@ object Commander {
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
     if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
     else if (currentModel.tags.map(_.name).contains(oldTag)) {
@@ -145,7 +145,7 @@ object Commander {
 
   private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
     if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
@@ -179,13 +179,13 @@ object Commander {
     }
   }
 
-  private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
   private def onDisownIssue(who: String, ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -195,14 +195,14 @@ object Commander {
     }
   }
 
-  private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
-    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(by = Some(assignee))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
+//    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val updatedIssue = found.copy(by = Some(assignee))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
   //TODO: model.forwardAState
   //TODO: model.backwardAState
@@ -276,7 +276,7 @@ object Commander {
 
   //TODO: add search to Model
   private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
-    def query(issues: List[Issue], terms: List[String]): List[Issue] = {
+    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
       terms match {
         case Nil => issues
         case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
@@ -309,7 +309,7 @@ object Commander {
     }
   }
 
-  private def onShowManagementSummary(matching: List[Issue], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
+  private def onShowManagementSummary(matching: List[Thing], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
     val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
     //TODO: this string will be wrong when we support releases - or maybe not
     val result = if (matching.isEmpty) s"board is empty" :: Nil
@@ -345,11 +345,11 @@ object Commander {
     }
   }
 
-  private def onAka(who: String, aka: String, currentModel: Model): Out = {
-    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
-    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
-    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
-  }
+//  private def onAka(who: String, aka: String, currentModel: Model): Out = {
+//    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
+//    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
+//    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
+//  }
 
   private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
     val updatedModel = currentModel.copy(priorityTags = tags)
@@ -365,7 +365,7 @@ object Commander {
 
 //TODO: move this out
 object SortByStatus {
-  def apply(issues: Seq[Issue], currentModel: Model) = {
+  def apply(issues: Seq[Thing], currentModel: Model) = {
     val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
     issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))

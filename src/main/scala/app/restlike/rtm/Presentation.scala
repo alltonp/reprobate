@@ -4,7 +4,7 @@ import app.ServiceFactory.dateFormats
 
 //TODO: add issue
 object Presentation {
-  def basedOnUpdateContext(model: Model, updatedIssue: Issue, aka: String) = {
+  def basedOnUpdateContext(model: Model, updatedIssue: Thing, aka: String) = {
     if (model.onBoard_?(updatedIssue)) Presentation.board(model, changed = Seq(updatedIssue.ref), aka)
     else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
   }
@@ -18,7 +18,7 @@ object Presentation {
     s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
   }
 
-  def issuesForUser(model: Model, aka: String, issues: Seq[Issue]) = {
+  def issuesForUser(model: Model, aka: String, issues: Seq[Thing]) = {
     val r = issues.map(i => s"\n  ${i.render(model, hideBy = true)}").mkString
     s"${aka}: (${issues.size})" + r + "\n"
   }
@@ -27,13 +27,13 @@ object Presentation {
 
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
-  def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
+  def tagDetail(tag: String, issues: Seq[Thing], currentModel: Model) = {
     groupByStatus(currentModel, compressEmptyStates = true, includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
-  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
+  def pointyHairedManagerView(release: String, issues: Seq[Thing], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
     val tagNames = issues.flatMap(_.tags).distinct
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
     sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise, aka)
@@ -42,7 +42,7 @@ object Presentation {
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
   //TODO: this should show a nice "there is nothing to see" if that is the case
-  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
+  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
     val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
@@ -55,8 +55,8 @@ object Presentation {
     }).flatten
   }
 
-  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, sanitise: Boolean, aka: String) = {
-    case class TagAndIssues(tag: String, issues: Seq[Issue])
+  private def sieveByTag(tags: Seq[Tag], issues: Seq[Thing], currentModel: Model, sanitise: Boolean, aka: String) = {
+    case class TagAndIssues(tag: String, issues: Seq[Thing])
 //    println(tags.mkString(", "))
     var remainingIssues = issues
     val r = tags.map(t => {
@@ -71,7 +71,7 @@ object Presentation {
     )
   }
 
-  private def renderTagAndIssues(model: Model, sanitise: Boolean, tag: String, issuesForTag: Seq[Issue], aka: String): String = {
+  private def renderTagAndIssues(model: Model, sanitise: Boolean, tag: String, issuesForTag: Seq[Thing], aka: String): String = {
     val issues = issuesForTag.map(i => s"\n  ${
       i.render(model, hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise, highlightAka = Some(aka))
     }").mkString
