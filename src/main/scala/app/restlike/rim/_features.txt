@@ -1,5 +1,6 @@
+package app.restlike.rim
+
 //NEXT:
-//colour the update succsefully mre nicely
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
@@ -22,6 +23,11 @@
 
 //in "rim : [tag]" should show who did it ... and optionally support _ spartan mode
 //ocd the id padding ...
+
+//show counts for
+//rim .
+//rim ?
+//in "rim : [tag]" colorise the statuses ... then no need to break down
 
 //colourise help
 
