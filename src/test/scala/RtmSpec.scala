@@ -132,12 +132,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("1 //", current, expected)
 //  }
 
-  "move forward to an initial leaves disowned" in {
-    val issue = Thing("1", "an item", None)
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(next))))
-    runAndExpect("1 /", current, expected)
-  }
+//  "move forward to an initial leaves disowned" in {
+//    val issue = Thing("1", "an item", None)
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(status = Some(next))))
+//    runAndExpect("1 /", current, expected)
+//  }
 
   "move forward two states" in {
     (pending)
@@ -216,26 +216,26 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //tagging
 
-  "tag" in {
-    val issue = Thing("1", "an item", Some(next))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag"))))
-    runAndExpect("1 : tag", current, expected)
-  }
+//  "tag" in {
+//    val issue = Thing("1", "an item", Some(next))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(tags = Set("tag"))))
+//    runAndExpect("1 : tag", current, expected)
+//  }
 
-  "detag" in {
-    val issue = Thing("1", "an item", Some(next), Set("tag"))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set.empty)))
-    runAndExpect("1 :- tag", current, expected)
-  }
+//  "detag" in {
+//    val issue = Thing("1", "an item", Some(next), Set("tag"))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(tags = Set.empty)))
+//    runAndExpect("1 :- tag", current, expected)
+//  }
 
-  "tag multi" in {
-    val issue = Thing("1", "an item", Some(next))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
-    runAndExpect("1 : tag1 tag2 tagN", current, expected)
-  }
+//  "tag multi" in {
+//    val issue = Thing("1", "an item", Some(next))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
+//    runAndExpect("1 : tag1 tag2 tagN", current, expected)
+//  }
 
   "migrate tag" in {
     val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
@@ -267,12 +267,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //releases
 
-  "releasing moves done issue and status to released" in {
-    val issue = Thing("1", "an item", Some(done))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime))))
-    runAndExpect("± a", current, expected)
-  }
+//  "releasing moves done issue and status to released" in {
+//    val issue = Thing("1", "an item", Some(done))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime))))
+//    runAndExpect("± a", current, expected)
+//  }
 
   "releasing ignores other states" in {
     (pending) // fails presumably because nothing to release
