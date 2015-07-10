@@ -23,6 +23,8 @@ package app.restlike.rim
 //maybe show the backlog when: (or maybe not)
 //rim +/ mooo
 
+//consider capturing who created an issue and indicate with +FR on certain views
+
 //in "rim : [tag]" should show who did it ... and optionally support _ spartan mode
 //ocd the id padding ...
 
