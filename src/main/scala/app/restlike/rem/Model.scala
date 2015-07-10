@@ -14,7 +14,7 @@ case class Thing(ref: String, key: String, value: Option[String], tags: Set[Stri
   private val indexed = List(ref/*, description, renderStatus, renderBy.toLowerCase,*/, key, value.getOrElse(""), renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
-  def render() = s"${lightGrey(s"$ref:")} ${customYellow(key)}${value.fold("")(v => s" ${lightGrey("=")} ${cyan(v)}")}${lightGrey(renderTags)}"
+  def render() = s"${customGrey(s"$ref:")} ${customOrange(key)}${value.fold("")(v => s" ${customGrey("=")} ${customBlue(v)}")}${customIvory(renderTags)}"
 }
 
 //case class History(who: String, command: String)
