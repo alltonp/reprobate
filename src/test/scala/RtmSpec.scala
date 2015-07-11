@@ -237,12 +237,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("1 : tag1 tag2 tagN", current, expected)
 //  }
 
-  "migrate tag" in {
-    val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
-    runAndExpect("tag1 := tagX", current, expected)
-  }
+//  "migrate tag" in {
+//    val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
+//    runAndExpect("tag1 := tagX", current, expected)
+//  }
 
 //  "migrate tag in released" in {
 //    val issue = Thing("1", "an item", Some(done), tags = Set("tag1", "tag2", "tagN"))
@@ -251,12 +251,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("tag1 := tagX", current, expected)
 //  }
 
-  "delete tag" in {
-    val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tagN"))))
-    runAndExpect("tag2 :--", current, expected)
-  }
+//  "delete tag" in {
+//    val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tagN"))))
+//    runAndExpect("tag2 :--", current, expected)
+//  }
 
 //  "delete tag in released" in {
 //    val issue = Thing("1", "an item", Some(done), tags = Set("tag1", "tag2", "tagN"))
