@@ -10,7 +10,7 @@ object Presentation {
   }
 
   def board(model: Model, changed: Seq[String], aka: String) = {
-    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
+    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed, Some(aka))
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {

@@ -96,7 +96,7 @@ object Commander {
   }
 
   private def onShowUntagged(currentModel: Model, aka: String) = {
-    val untagged = currentModel.issues.filter(_.tags.isEmpty)
+    val untagged = currentModel.things.filter(_.tags.isEmpty)
     val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
     else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
     Out(result, None)
@@ -111,7 +111,7 @@ object Commander {
 
   private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
     val releaseable = currentModel.releasableIssues
-    val remainder = currentModel.issues diff releaseable
+    val remainder = currentModel.things diff releaseable
 
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
@@ -119,7 +119,7 @@ object Commander {
     val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
     //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
-    val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
+    val updatedModel = currentModel.copy(things = remainder, released = release :: releasesToMigrate )
 
     Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
   }
@@ -131,7 +131,7 @@ object Commander {
     if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
     else if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
-        issues = currentModel.issues.map(i => {
+        things = currentModel.things.map(i => {
           migrateIssue(i)
         }),
         released = currentModel.released.map(r => {
@@ -149,7 +149,7 @@ object Commander {
 
     if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
-        issues = currentModel.issues.map(i => {
+        things = currentModel.things.map(i => {
           migrateIssue(i)
         }),
         released = currentModel.released.map(r => {
@@ -269,7 +269,7 @@ object Commander {
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
+      val updatedModel = currentModel.copy(things = currentModel.things.filterNot(i => i == found))
       Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel))
     }
   }
@@ -290,14 +290,14 @@ object Commander {
   }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
-    val matching = currentModel.issues.filter(i => i.status.isEmpty)
+    val matching = currentModel.things.filter(i => i.status.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.map(i => i.render(currentModel, highlightAka = Some(aka)))
     Out(result, None)
   }
 
   private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val matching = currentModel.issues.filterNot(i => i.status.isEmpty)
+    val matching = currentModel.things.filterNot(i => i.status.isEmpty)
     onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
   }
 

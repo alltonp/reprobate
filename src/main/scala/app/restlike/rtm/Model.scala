@@ -62,7 +62,7 @@ case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ issues: List[Thing], released: List[Release], priorityTags: List[String]) {
+case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ things: List[Thing], released: List[Release], priorityTags: List[String]) {
 //  def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Thing) = issue.status.fold(false)(workflowStates.contains(_))
 
@@ -83,28 +83,28 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
     })
 
     val description = descriptionBits.reverse.mkString(" ")
-    val maybeDupe = issues.find(i => i.description == description)
+    val maybeDupe = things.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
     val created = Thing(newRef, description, status, tagBits.toSet)
-    val updatedModel = this.copy(issues = created :: this.issues)
+    val updatedModel = this.copy(things = created :: this.things)
     Right(IssueCreation(created, updatedModel))
   }
 
   def updateIssue(updated: Thing) = {
-    val index = this.issues.indexOf(findIssue(updated.ref).get)
-    this.copy(issues = this.issues.updated(index, updated))
+    val index = this.things.indexOf(findIssue(updated.ref).get)
+    this.copy(things = this.things.updated(index, updated))
   }
 
 //  def aka(who: String) = userToAka(who)
 //  def akas = userToAka.values.toList.distinct
-  def findIssue(ref: String) = issues.find(_.ref == ref)
+  def findIssue(ref: String) = things.find(_.ref == ref)
   def beginState = workflowStates.head
   def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
   def endState = workflowStates.reverse.head
-  def releasableIssues = issues.filter(_.status == Some(endState))
+  def releasableIssues = things.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
-  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
+  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ things
 
   def tags = {
     val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten

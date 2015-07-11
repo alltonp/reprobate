@@ -46,13 +46,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   "add issue" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", None)))
+    val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an item", current, expected)
   }
 
   "add issue (ignoring surplus noise)" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", None)))
+    val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an   item  ", current, expected)
   }
 
@@ -76,13 +76,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   "add with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
+    val expected = current.copy(things = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : tag1 tag2", current, expected)
   }
 
   "strip dodgy chars from tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
+    val expected = current.copy(things = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : :tag1 :tag2", current, expected)
   }
 
@@ -111,7 +111,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     (pending)
     val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(Thing("1", "an item edited", None, Set("tag1", "tag2", "tags3"))))
+    val expected = current.copy(things = List(Thing("1", "an item edited", None, Set("tag1", "tag2", "tags3"))))
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
 
@@ -143,7 +143,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     (pending)
     val issue = Thing("1", "an item", None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = Some(doing))))
+    val expected = current.copy(things = List(issue.copy(status = Some(doing))))
     runAndExpect("1 //", current, expected)
   }
 
@@ -240,7 +240,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "migrate tag" in {
     val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
+    val expected = current.copy(things = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
     runAndExpect("tag1 := tagX", current, expected)
   }
 
@@ -254,7 +254,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "delete tag" in {
     val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))
+    val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tagN"))))
     runAndExpect("tag2 :--", current, expected)
   }
 
@@ -279,7 +279,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     //TODO: need modelWithIssues
     val issue = Thing("1", "an item", Some(doing))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue), released = Nil)
+    val expected = current.copy(things = List(issue), released = Nil)
     runAndExpect("± a", current, expected)
   }
 
@@ -297,7 +297,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     (pending) //TODO: need to start asserting the Out().messages
     val issue = Thing("1", "an item", Some(done))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(status = None)))
+    val expected = current.copy(things = List(issue.copy(status = None)))
     runAndExpect("", current, expected)
   }
 
