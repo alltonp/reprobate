@@ -62,7 +62,7 @@ case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ things: List[Thing], released: List[Release], priorityTags: List[String]) {
+case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ things: List[Thing], done: List[Release], priorityTags: List[String]) {
 //  def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Thing) = issue.status.fold(false)(workflowStates.contains(_))
 
@@ -103,8 +103,8 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
   def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
   def endState = workflowStates.reverse.head
   def releasableIssues = things.filter(_.status == Some(endState))
-  def releaseTags = released.map(_.tag)
-  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ things
+  def releaseTags = done.map(_.tag)
+  def allIssuesIncludingReleased = done.map(_.issues).flatten ++ things
 
   def tags = {
     val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten

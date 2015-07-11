@@ -63,7 +63,7 @@ object Commander {
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
   private def onShowReleases(currentModel: Model, aka: String) = {
-    val all = currentModel.released.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
+    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
     val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
     Out(result, None)
@@ -118,8 +118,8 @@ object Commander {
 
     val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
     //TODO: this can die soon ...
-    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
-    val updatedModel = currentModel.copy(things = remainder, released = release :: releasesToMigrate )
+    val releasesToMigrate = currentModel.done.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
+    val updatedModel = currentModel.copy(things = remainder, done = release :: releasesToMigrate )
 
     Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
   }
@@ -134,7 +134,7 @@ object Commander {
         things = currentModel.things.map(i => {
           migrateIssue(i)
         }),
-        released = currentModel.released.map(r => {
+        done = currentModel.done.map(r => {
           r.copy(issues = r.issues.map(i => migrateIssue(i)))
         })
       )
@@ -152,7 +152,7 @@ object Commander {
         things = currentModel.things.map(i => {
           migrateIssue(i)
         }),
-        released = currentModel.released.map(r => {
+        done = currentModel.done.map(r => {
           r.copy(issues = r.issues.map(i => migrateIssue(i)))
         })
       )
@@ -302,7 +302,7 @@ object Commander {
   }
 
   private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val maybeRelease = currentModel.released.find(_.tag == release)
+    val maybeRelease = currentModel.done.find(_.tag == release)
     maybeRelease match {
       case None => Out(Messages.problem(s"release $release does not exist"), None)
       case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)

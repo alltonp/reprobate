@@ -247,7 +247,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "migrate tag in released" in {
     val issue = Thing("1", "an item", Some(done), tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))))
+    val expected = current.copy(done = List(current.done.head.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))))
     runAndExpect("tag1 := tagX", current, expected)
   }
 
@@ -261,7 +261,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "delete tag in released" in {
     val issue = Thing("1", "an item", Some(done), tags = Set("tag1", "tag2", "tagN"))
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))))
+    val expected = current.copy(done = List(current.done.head.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))))
     runAndExpect("tag2 :--", current, expected)
   }
 
@@ -279,7 +279,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     //TODO: need modelWithIssues
     val issue = Thing("1", "an item", Some(doing))
     val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue), released = Nil)
+    val expected = current.copy(things = List(issue), done = Nil)
     runAndExpect("± a", current, expected)
   }
 
@@ -287,7 +287,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     (pending) // fails presumably because nothing to release
     val issue = Thing("1", "an item", Some(done))
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some("released"))))))
+    val expected = current.copy(done = List(current.done.head.copy(issues = List(issue.copy(status = Some("released"))))))
     runAndExpect("± a", current, expected)
   }
 
