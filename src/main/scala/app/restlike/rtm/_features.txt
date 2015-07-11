@@ -1,1 +1,13 @@
 maybe this should be gtd afterall
+
+use the colour system like rim (or opposite)
+
+red for things that are past due date
+orange for collected
+yellow for next
+grey for things we don't need to worry about yet (incubated backlog)
+magenta for done
+how about delegated - maybe they should be highlighted blue or yellow/orange - could also have a due date
+ - important to highlight what we are waiting on
+
+have option to decide how many items to show, default to 1 or 5
