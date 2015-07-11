@@ -2,7 +2,7 @@ package app.restlike.rtm
 
 import app.restlike.common.Colours._
 import app.restlike.common._
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate, DateTime}
 
 import scala.collection.immutable
 
@@ -16,7 +16,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-case class Thing(ref: String, description: String, status: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Thing(ref: String, description: String, status: Option[LocalDate], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
 //  private def renderBy(highlightAka: Option[String]) = {
 //    (by, highlightAka) match {
 //      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -26,29 +26,29 @@ case class Thing(ref: String, description: String, status: Option[String], tags:
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
-  private def renderStatus(model: Option[Model]) = {
-    val value = status.fold("")(" ^" + _)
-    colouredForStatus(model, value)
-  }
+//  private def renderStatus(model: Option[Model]) = {
+//    val value = status.fold("")(" ^" + _)
+//    colouredForStatus(model, value)
+//  }
 
-  private def colouredForStatus(model: Option[Model], value: String) = {
-    model.fold(value)(m =>
-      status match {
-        case None => customGrey(value)
-        case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
-        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
-        case Some("released") => customMagenta(value)
-        case _ => customOrange(value) //customYellow(value)
-      })
-  }
+//  private def colouredForStatus(model: Option[Model], value: String) = {
+//    model.fold(value)(m =>
+//      status match {
+//        case None => customGrey(value)
+//        case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
+//        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
+//        case Some("released") => customMagenta(value)
+//        case _ => customOrange(value) //customYellow(value)
+//      })
+//  }
 
-  private val indexed = List(ref, description, renderStatus(None), renderTags).mkString(" ")
+  private val indexed = List(ref, description/*, renderStatus(None)*/, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model))}"
+    val r = s"${if (hideId) "" else /*colouredForStatus(Some(model), */"◼︎ "/*)*/}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else "" /*renderStatus(Some(model))*/ }"
 //    if (highlight) customGreen(r) else customGrey(r)
     r
   }
@@ -66,7 +66,7 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
 //  def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Thing) = issue.status.fold(false)(workflowStates.contains(_))
 
-  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
+  def createIssue(args: List[String], status: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
 
     //TODO: this is well shonky!

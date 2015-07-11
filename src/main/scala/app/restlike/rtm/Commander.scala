@@ -3,6 +3,7 @@ package app.restlike.rtm
 import app.ServiceFactory.systemClock
 import app.restlike.common.Colours._
 import app.restlike.common._
+import org.joda.time.LocalDate
 
 object Commander {
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
@@ -206,19 +207,19 @@ object Commander {
 
   //TODO: model.forwardAState
   //TODO: model.backwardAState
-  private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = if (found.status.isEmpty) None
-      else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
-      }
-//      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
-      val updatedIssue = found.copy(status = newStatus)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-    }
-  }
+//  private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) None
+//      else {
+//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
+//        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
+//      }
+////      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
+//      val updatedIssue = found.copy(status = newStatus)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+//    }
+//  }
 
   private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -229,29 +230,29 @@ object Commander {
     }
   }
 
-  private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = if (found.status.isEmpty) currentModel.beginState
-      else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
-        currentModel.workflowStates(newIndex)
-      }
-//      val by = if (newStatus == currentModel.beginState) None else Some(aka)
-      val updatedIssue = found.copy(status = Some(newStatus))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-    }
-  }
+//  private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) currentModel.beginState
+//      else {
+//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
+//        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
+//        currentModel.workflowStates(newIndex)
+//      }
+////      val by = if (newStatus == currentModel.beginState) None else Some(aka)
+//      val updatedIssue = found.copy(status = Some(newStatus))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+//    }
+//  }
 
-  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = currentModel.endState
-      val updatedIssue = found.copy(status = Some(newStatus))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-    }
-  }
+//  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = currentModel.endState
+//      val updatedIssue = found.copy(status = Some(newStatus))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+//    }
+//  }
 
   private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -324,26 +325,26 @@ object Commander {
     }
   }
 
-  private def onAddAndBeginIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
-    }
-  }
+//  private def onAddAndBeginIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
+//    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+//    }
+//  }
 
-  private def onAddAndForwardIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-    currentModel.createIssue(args, Some(currentModel.state(1)), Some(aka), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
-    }
-  }
+//  private def onAddAndForwardIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
+//    currentModel.createIssue(args, Some(currentModel.state(1)), Some(aka), refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+//    }
+//  }
 
-  private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-    currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
-    }
-  }
+//  private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
+//    currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
+//      case Left(e) => Out(e, None)
+//      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+//    }
+//  }
 
 //  private def onAka(who: String, aka: String, currentModel: Model): Out = {
 //    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
@@ -368,7 +369,9 @@ object SortByStatus {
   def apply(issues: Seq[Thing], currentModel: Model) = {
     val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
-    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
+//    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
+    implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
+    issues.sortBy(i => i.status)
   }
 }
 

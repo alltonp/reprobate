@@ -107,13 +107,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("1 = an item edited", current, expected)
 //  }
 
-  "edit with tags adds tags" in {
-    (pending)
-    val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(Thing("1", "an item edited", None, Set("tag1", "tag2", "tags3"))))
-    runAndExpect("1 = an item edited : tag3", current, expected)
-  }
+//  "edit with tags adds tags" in {
+//    (pending)
+//    val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(Thing("1", "an item edited", None, Set("tag1", "tag2", "tags3"))))
+//    runAndExpect("1 = an item edited : tag3", current, expected)
+//  }
 
   //moving
 
@@ -139,13 +139,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("1 /", current, expected)
 //  }
 
-  "move forward two states" in {
-    (pending)
-    val issue = Thing("1", "an item", None)
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue.copy(status = Some(doing))))
-    runAndExpect("1 //", current, expected)
-  }
+//  "move forward two states" in {
+//    (pending)
+//    val issue = Thing("1", "an item", None)
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(issue.copy(status = Some(doing))))
+//    runAndExpect("1 //", current, expected)
+//  }
 
 //  "move forward to end state" in {
 //    val issue = Thing("1", "an item", None)
@@ -274,14 +274,14 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("± a", current, expected)
 //  }
 
-  "releasing ignores other states" in {
-    (pending) // fails presumably because nothing to release
-    //TODO: need modelWithIssues
-    val issue = Thing("1", "an item", Some(doing))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue), done = Nil)
-    runAndExpect("± a", current, expected)
-  }
+//  "releasing ignores other states" in {
+//    (pending) // fails presumably because nothing to release
+//    //TODO: need modelWithIssues
+//    val issue = Thing("1", "an item", Some(doing))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(issue), done = Nil)
+//    runAndExpect("± a", current, expected)
+//  }
 
 //  "migrate legacy 'done' to 'released'" in {
 //    (pending) // fails presumably because nothing to release
@@ -293,14 +293,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //show
 
-  "show board" in {
-    (pending) //TODO: need to start asserting the Out().messages
-    val issue = Thing("1", "an item", Some(done))
-    val current = modelWithIssue(issue)
-    val expected = current.copy(things = List(issue.copy(status = None)))
-    runAndExpect("", current, expected)
-  }
-
+//  "show board" in {
+//    (pending) //TODO: need to start asserting the Out().messages
+//    val issue = Thing("1", "an item", Some(done))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(things = List(issue.copy(status = None)))
+//    runAndExpect("", current, expected)
+//  }
 
   private def runAndExpect(in: String, current: Model, expected: Model) {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
