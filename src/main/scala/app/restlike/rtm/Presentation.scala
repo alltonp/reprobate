@@ -33,11 +33,11 @@ object Presentation {
 
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
-  def pointyHairedManagerView(release: String, issues: Seq[Thing], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
-    val tagNames = issues.flatMap(_.tags).distinct
-    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise, aka)
-  }
+//  def pointyHairedManagerView(release: String, issues: Seq[Thing], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
+//    val tagNames = issues.flatMap(_.tags).distinct
+//    val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
+//    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise, aka)
+//  }
 
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky

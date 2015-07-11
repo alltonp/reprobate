@@ -43,10 +43,10 @@ object Commander {
 //      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
-      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
-      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
-      case In(Some(":"), Nil) => onShowTags(currentModel)
-      case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
+//      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
+//      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
+//      case In(Some(":"), Nil) => onShowTags(currentModel)
+//      case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
 //      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
 //      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
 //      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
@@ -62,12 +62,12 @@ object Commander {
 
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
-  private def onShowReleases(currentModel: Model, aka: String) = {
-    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
-    val result = if (all.isEmpty) Messages.success(s"no releases found")
-    else all
-    Out(result, None)
-  }
+//  private def onShowReleases(currentModel: Model, aka: String) = {
+//    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
+//    val result = if (all.isEmpty) Messages.success(s"no releases found")
+//    else all
+//    Out(result, None)
+//  }
 
 //  private def onShowWhoIsDoingWhat(currentModel: Model) = {
 //    val akas = currentModel.akas
@@ -81,19 +81,19 @@ object Commander {
 //    Out(result, None)
 //  }
 
-  private def onShowTags(currentModel: Model) = {
-    val all = currentModel.tags
-    val result = if (all.isEmpty) Messages.success(s"no tags found")
-    else Presentation.tags(all)
-    Out(result, None)
-  }
+//  private def onShowTags(currentModel: Model) = {
+//    val all = currentModel.tags
+//    val result = if (all.isEmpty) Messages.success(s"no tags found")
+//    else Presentation.tags(all)
+//    Out(result, None)
+//  }
 
-  private def onShowAllForTag(tag: String, currentModel: Model) = {
-    val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
-    val result = if (issuesWithTag.isEmpty) Messages.success(s"no issues found for tag: $tag")
-    else Presentation.tagDetail(tag, issuesWithTag, currentModel)
-    Out(result, None)
-  }
+//  private def onShowAllForTag(tag: String, currentModel: Model) = {
+//    val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
+//    val result = if (issuesWithTag.isEmpty) Messages.success(s"no issues found for tag: $tag")
+//    else Presentation.tagDetail(tag, issuesWithTag, currentModel)
+//    Out(result, None)
+//  }
 
   private def onShowUntagged(currentModel: Model, aka: String) = {
     val untagged = currentModel.things.filter(_.tags.isEmpty)
@@ -109,57 +109,57 @@ object Commander {
 //    Out(result, None)
 //  }
 
-  private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
-    val releaseable = currentModel.releasableIssues
-    val remainder = currentModel.things diff releaseable
+//  private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
+//    val releaseable = currentModel.releasableIssues
+//    val remainder = currentModel.things diff releaseable
+//
+//    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
+//    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
+//
+//    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
+//    //TODO: this can die soon ...
+//    val releasesToMigrate = currentModel.done.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
+//    val updatedModel = currentModel.copy(things = remainder, done = release :: releasesToMigrate )
+//
+//    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
+//  }
 
-    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
-    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
+//  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
+//    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
+//    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//
+//    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
+//    else if (currentModel.tags.map(_.name).contains(oldTag)) {
+//      val updatedModel = currentModel.copy(
+//        things = currentModel.things.map(i => {
+//          migrateIssue(i)
+//        }),
+//        done = currentModel.done.map(r => {
+//          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+//        })
+//      )
+//      //TODO: should show the issues that have changed as a result
+//      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
+//    } else Out(Messages.problem(s"$oldTag does not exist"))
+//  }
 
-    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
-    //TODO: this can die soon ...
-    val releasesToMigrate = currentModel.done.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
-    val updatedModel = currentModel.copy(things = remainder, done = release :: releasesToMigrate )
-
-    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
-  }
-
-  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
-    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
-    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
-
-    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
-    else if (currentModel.tags.map(_.name).contains(oldTag)) {
-      val updatedModel = currentModel.copy(
-        things = currentModel.things.map(i => {
-          migrateIssue(i)
-        }),
-        done = currentModel.done.map(r => {
-          r.copy(issues = r.issues.map(i => migrateIssue(i)))
-        })
-      )
-      //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
-    } else Out(Messages.problem(s"$oldTag does not exist"))
-  }
-
-  private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
-    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
-    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
-
-    if (currentModel.tags.map(_.name).contains(oldTag)) {
-      val updatedModel = currentModel.copy(
-        things = currentModel.things.map(i => {
-          migrateIssue(i)
-        }),
-        done = currentModel.done.map(r => {
-          r.copy(issues = r.issues.map(i => migrateIssue(i)))
-        })
-      )
-      //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
-    } else Out(Messages.problem(s"$oldTag does not exist"))
-  }
+//  private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
+//    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
+//    def migrateIssue(i: Thing): Thing = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//
+//    if (currentModel.tags.map(_.name).contains(oldTag)) {
+//      val updatedModel = currentModel.copy(
+//        things = currentModel.things.map(i => {
+//          migrateIssue(i)
+//        }),
+//        done = currentModel.done.map(r => {
+//          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+//        })
+//      )
+//      //TODO: should show the issues that have changed as a result
+//      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
+//    } else Out(Messages.problem(s"$oldTag does not exist"))
+//  }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -274,20 +274,20 @@ object Commander {
     }
   }
 
-  //TODO: add search to Model
-  private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
-    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
-      terms match {
-        case Nil => issues
-        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
-      }
-    }
-
-    val matching = query(currentModel.allIssuesIncludingReleased, terms)
-    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
-    Out(result, None)
-  }
+//  //TODO: add search to Model
+//  private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
+//    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
+//      terms match {
+//        case Nil => issues
+//        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+//      }
+//    }
+//
+//    val matching = query(currentModel.allIssuesIncludingReleased, terms)
+//    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
+//    else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
+//    Out(result, None)
+//  }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.things.filter(i => i.status.isEmpty)
@@ -296,26 +296,26 @@ object Commander {
     Out(result, None)
   }
 
-  private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val matching = currentModel.things.filterNot(i => i.status.isEmpty)
-    onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
-  }
+//  private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
+//    val matching = currentModel.things.filterNot(i => i.status.isEmpty)
+//    onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
+//  }
 
-  private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val maybeRelease = currentModel.done.find(_.tag == release)
-    maybeRelease match {
-      case None => Out(Messages.problem(s"release $release does not exist"), None)
-      case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)
-    }
-  }
+//  private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
+//    val maybeRelease = currentModel.done.find(_.tag == release)
+//    maybeRelease match {
+//      case None => Out(Messages.problem(s"release $release does not exist"), None)
+//      case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)
+//    }
+//  }
 
-  private def onShowManagementSummary(matching: List[Thing], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
-    //TODO: this string will be wrong when we support releases - or maybe not
-    val result = if (matching.isEmpty) s"board is empty" :: Nil
-    else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, sanitise, aka).toList
-    Out(result, None)
-  }
+//  private def onShowManagementSummary(matching: List[Thing], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
+//    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
+//    //TODO: this string will be wrong when we support releases - or maybe not
+//    val result = if (matching.isEmpty) s"board is empty" :: Nil
+//    else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, sanitise, aka).toList
+//    Out(result, None)
+//  }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {

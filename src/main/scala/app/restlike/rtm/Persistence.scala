@@ -17,7 +17,7 @@ object Persistence {
   def load: Universe = {
     if (!file.toFile.exists()) save(
       Universe(
-        Map("---email---" -> Model(defaultStatuses, List[Thing](), List[Release](), List[String]())),
+        Map("---email---" -> Model(defaultStatuses, List[Thing](), List[Thing](), List[String]())),
         Map("---token---" -> "---email---")
       )
     )
