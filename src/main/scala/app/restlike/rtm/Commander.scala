@@ -224,7 +224,7 @@ object Commander {
   private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newStatus = None
-      val updatedIssue = found.copy(status = newStatus)
+      val updatedIssue = found.copy(date = newStatus)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
@@ -291,7 +291,7 @@ object Commander {
 //  }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
-    val matching = currentModel.things.filter(i => i.status.isEmpty)
+    val matching = currentModel.things.filter(i => i.date.isEmpty)
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
     else matching.map(i => i.render(currentModel, highlightAka = Some(aka)))
     Out(result, None)
@@ -371,7 +371,7 @@ object SortByStatus {
 //    println(statusToIndex)
 //    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
     implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
-    issues.sortBy(i => i.status)
+    issues.sortBy(i => i.date)
   }
 }
 

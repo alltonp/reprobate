@@ -44,7 +44,7 @@ object Presentation {
   //TODO: this should show a nice "there is nothing to see" if that is the case
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
-    val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
+    val stateToIssues = issues.groupBy(_.date.getOrElse("backlog"))
     val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
     interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)

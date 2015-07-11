@@ -16,7 +16,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-case class Thing(ref: String, description: String, status: Option[LocalDate], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Thing(ref: String, description: String, date: Option[LocalDate], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
 //  private def renderBy(highlightAka: Option[String]) = {
 //    (by, highlightAka) match {
 //      case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -64,9 +64,9 @@ case class Tag(name: String, count: Int)
 
 case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ things: List[Thing], done: List[Thing], priorityTags: List[String]) {
 //  def knows_?(who: String) = userToAka.contains(who)
-  def onBoard_?(issue: Thing) = issue.status.fold(false)(workflowStates.contains(_))
+  def onBoard_?(issue: Thing) = issue.date.fold(false)(workflowStates.contains(_))
 
-  def createIssue(args: List[String], status: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
+  def createIssue(args: List[String], date: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
 
     //TODO: this is well shonky!
@@ -86,7 +86,7 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
     val maybeDupe = things.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Thing(newRef, description, status, tagBits.toSet)
+    val created = Thing(newRef, description, date, tagBits.toSet)
     val updatedModel = this.copy(things = created :: this.things)
     Right(IssueCreation(created, updatedModel))
   }
@@ -102,7 +102,7 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
   def beginState = workflowStates.head
   def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
   def endState = workflowStates.reverse.head
-  def releasableIssues = things.filter(_.status == Some(endState))
+  def releasableIssues = things.filter(_.date == Some(endState))
 //  def releaseTags = done.map(_.tag)
   def allIssuesIncludingReleased = done ++ things
 
