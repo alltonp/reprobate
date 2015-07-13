@@ -20,7 +20,7 @@ object Commander {
 //      case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
       case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
       case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
-//      case In(Some("help"), Nil) => onHelp(currentModel, aka)
+      case In(Some("help"), Nil) => onHelp(currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
@@ -61,7 +61,7 @@ object Commander {
 
 //  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
 
-  private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
+  private def onHelp(currentModel: Model) = Out(Messages.help("???"), None)
 
 //  private def onShowReleases(currentModel: Model, aka: String) = {
 //    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
