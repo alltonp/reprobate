@@ -7,10 +7,11 @@ import org.joda.time.LocalDate
 object Presentation {
   implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
 
-  //  def basedOnUpdateContext(model: Model, updatedIssue: Thing, aka: String) = {
+  def basedOnUpdateContext(model: Model, updatedIssue: Thing) = {
 //    if (model.onBoard_?(updatedIssue)) Presentation.board(model, changed = Seq(updatedIssue.ref), aka)
 //    else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
-//  }
+    Presentation.board(model, changed = Seq(updatedIssue.ref))
+  }
 
   def board(model: Model, changed: Seq[String]) = {
 //    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed, Some(aka))
