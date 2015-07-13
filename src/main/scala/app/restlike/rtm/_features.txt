@@ -1,6 +1,15 @@
-maybe this should be gtd afterall
-
+/ = done (set the date)
+. = undone (what to do about the date)
+---
+then defer
+---
+maybe this should be gtd afterall - yes it's too close to rim otherwise
+---
+the colours seem wonky for some reason, probably thing.render
+---
 use the colour system like rim (or opposite)
+---
++ should show the board ...
 
 red for things that are past due date
 orange for collected
@@ -11,3 +20,10 @@ how about delegated - maybe they should be highlighted blue or yellow/orange - c
  - important to highlight what we are waiting on
 
 have option to decide how many items to show, default to 1 or 5
+
+---
+aka might come back at some point
+---
+is this really just rim with a single status and no releases?
+---
+make collected be blue = cold, grey = someday maybe
