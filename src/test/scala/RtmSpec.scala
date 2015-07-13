@@ -16,11 +16,11 @@ class RtmSpec extends WordSpec with MustMatchers {
   private val doing = "doing"
   private val done = "done"
   private val released = "released"
-  private val workflowStates = List(next, doing, done)
+//  private val workflowStates = List(next, doing, done)
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val emptyModelWithWorkflow = Model(workflowStates, Nil, Nil, Nil)
+  private val emptyModelWithWorkflow = Model(Nil, Nil, Nil)
 
   //config
 
@@ -307,9 +307,9 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
 
-  private def modelWithTags(tags: List[String]) = Model(workflowStates, Nil, Nil, tags)
-  private def modelWithIssue(issue: Thing) = Model(workflowStates, List(issue), Nil, Nil)
+  private def modelWithTags(tags: List[String]) = Model(Nil, Nil, tags)
+  private def modelWithIssue(issue: Thing) = Model(List(issue), Nil, Nil)
 
   private def modelWithReleasedIssue(issue: Thing) =
-    Model(workflowStates, Nil, List(issue), Nil)
+    Model(Nil, List(issue), Nil)
 }

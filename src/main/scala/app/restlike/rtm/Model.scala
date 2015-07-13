@@ -62,9 +62,9 @@ case class IssueCreation(created: Thing, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String, String],*/ things: List[Thing], done: List[Thing], priorityTags: List[String]) {
+case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[String, String],*/ things: List[Thing], done: List[Thing], priorityTags: List[String]) {
 //  def knows_?(who: String) = userToAka.contains(who)
-  def onBoard_?(issue: Thing) = issue.date.fold(false)(workflowStates.contains(_))
+//  def onBoard_?(issue: Thing) = issue.date.fold(false)(workflowStates.contains(_))
 
   def createIssue(args: List[String], date: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
@@ -99,10 +99,10 @@ case class Model(workflowStates: List[String], /*userToAka: immutable.Map[String
 //  def aka(who: String) = userToAka(who)
 //  def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = things.find(_.ref == ref)
-  def beginState = workflowStates.head
-  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
-  def endState = workflowStates.reverse.head
-  def releasableIssues = things.filter(_.date == Some(endState))
+//  def beginState = workflowStates.head
+//  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
+//  def endState = workflowStates.reverse.head
+//  def releasableIssues = things.filter(_.date == Some(endState))
 //  def releaseTags = done.map(_.tag)
   def allIssuesIncludingReleased = done ++ things
 

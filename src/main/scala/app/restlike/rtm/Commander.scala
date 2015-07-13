@@ -59,7 +59,7 @@ object Commander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
+//  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
 
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
 
@@ -96,12 +96,12 @@ object Commander {
 //    Out(result, None)
 //  }
 
-  private def onShowUntagged(currentModel: Model, aka: String) = {
-    val untagged = currentModel.things.filter(_.tags.isEmpty)
-    val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
-    else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
-    Out(result, None)
-  }
+//  private def onShowUntagged(currentModel: Model, aka: String) = {
+//    val untagged = currentModel.things.filter(_.tags.isEmpty)
+//    val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
+////    else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
+//    Out(result, None)
+//  }
 
 //  private def onShowReleaseNote(release: String, currentModel: Model) = {
 //    val maybeRelease = currentModel.released.find(_.tag == release)
@@ -162,23 +162,23 @@ object Commander {
 //    } else Out(Messages.problem(s"$oldTag does not exist"))
 //  }
 
-  private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newTags = found.tags -- args
-      val updatedIssue = found.copy(tags = newTags)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newTags = found.tags -- args
+//      val updatedIssue = found.copy(tags = newTags)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
-  private def onTagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newTags = found.tags ++ args
-      val updatedIssue = found.copy(tags = newTags)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onTagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newTags = found.tags ++ args
+//      val updatedIssue = found.copy(tags = newTags)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
 //  private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -221,14 +221,14 @@ object Commander {
 //    }
 //  }
 
-  private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newStatus = None
-      val updatedIssue = found.copy(date = newStatus)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-    }
-  }
+//  private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = None
+//      val updatedIssue = found.copy(date = newStatus)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+//    }
+//  }
 
 //  private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -254,19 +254,19 @@ object Commander {
 //    }
 //  }
 
-  private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val newDescription = args.mkString(" ")
-      val updatedIssue = found.copy(description = newDescription)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      //TODO: abstract this away somewhere
-      //also, depended on context might want to show the backlog or releases
-//      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
-//                         else
-//        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-    }
-  }
+//  private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newDescription = args.mkString(" ")
+//      val updatedIssue = found.copy(description = newDescription)
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      //TODO: abstract this away somewhere
+//      //also, depended on context might want to show the backlog or releases
+////      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
+////                         else
+////        Messages.successfulUpdate(s"${updatedIssue.render()}")
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+//    }
+//  }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
@@ -365,13 +365,13 @@ object Commander {
 }
 
 //TODO: move this out
-object SortByStatus {
-  def apply(issues: Seq[Thing], currentModel: Model) = {
-    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
-//    println(statusToIndex)
-//    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
-    implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
-    issues.sortBy(i => i.date)
-  }
-}
+//object SortByStatus {
+//  def apply(issues: Seq[Thing], currentModel: Model) = {
+//    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
+////    println(statusToIndex)
+////    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
+//    implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
+//    issues.sortBy(i => i.date)
+//  }
+//}
 
