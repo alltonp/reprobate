@@ -3,7 +3,7 @@ import app.ServiceFactory._
 import app.restlike.common.RefProvider
 import app.restlike.rtm._
 import im.mange.little.clock.FrozenClock
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate, DateTime}
 import org.scalatest.{MustMatchers, WordSpec}
 
 class RtmSpec extends WordSpec with MustMatchers {
@@ -100,12 +100,12 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //editing
 
-//  "edit issue retains by, tags and status" in {
-//    val issue = Thing("1", "an item", Some(doing), Set("tag1", "tag2"))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(Thing("1", "an item edited", Some(doing), Set("tag1", "tag2"))))
-//    runAndExpect("1 = an item edited", current, expected)
-//  }
+  "edit issue retains date, tags and status" in {
+    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(things = List(Thing("1", "an item edited", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
+    runAndExpect("1 = an item edited", current, expected)
+  }
 
 //  "edit with tags adds tags" in {
 //    (pending)
