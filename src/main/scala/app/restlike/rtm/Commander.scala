@@ -6,6 +6,8 @@ import app.restlike.common._
 import org.joda.time.LocalDate
 
 object Commander {
+//  implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
+
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
@@ -16,7 +18,7 @@ object Commander {
 
     //TODO: be nice of the help could be driven off this ...
     cmd match {
-//      case In(None, Nil) => onShowBoard(currentModel, aka)
+      case In(None, Nil) => onShowBoard(currentModel)
 //      case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
       case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
       case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
@@ -59,7 +61,7 @@ object Commander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-//  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
+  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel, Nil), None)
 
   private def onHelp(currentModel: Model) = Out(Messages.help("???"), None)
 

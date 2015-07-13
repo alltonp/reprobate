@@ -1,17 +1,21 @@
 package app.restlike.rtm
 
 import app.ServiceFactory.dateFormats
+import org.joda.time.LocalDate
 
 //TODO: add issue
 object Presentation {
-//  def basedOnUpdateContext(model: Model, updatedIssue: Thing, aka: String) = {
+  implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
+
+  //  def basedOnUpdateContext(model: Model, updatedIssue: Thing, aka: String) = {
 //    if (model.onBoard_?(updatedIssue)) Presentation.board(model, changed = Seq(updatedIssue.ref), aka)
 //    else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
 //  }
 
-//  def board(model: Model, changed: Seq[String], aka: String) = {
+  def board(model: Model, changed: Seq[String]) = {
 //    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed, Some(aka))
-//  }
+    model.things.sortBy(_.date).map(_.render(model)).mkString("\n") :: Nil
+  }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {
     val r = release.issues.map(i => s"\n  ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
