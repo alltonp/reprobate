@@ -7,7 +7,7 @@ import org.joda.time.{LocalDate, DateTime}
 import org.scalatest.{MustMatchers, WordSpec}
 
 class RtmSpec extends WordSpec with MustMatchers {
-  //TOOD: this is naughty
+  //TODO: this is naughty
   ServiceFactory.systemClock.default.set(FrozenClock(new DateTime()))
 
   //TODO: work out what examples are missing
@@ -23,12 +23,6 @@ class RtmSpec extends WordSpec with MustMatchers {
   private val emptyModelWithWorkflow = Model(Nil, Nil, Nil)
 
   //config
-
-//  "set aka" in {
-//    val current = Model(Nil, Map("anon2" -> aka2), Nil, Nil, Nil)
-//    val expected = current.copy(userToAka = usersToAka)
-//    runAndExpect("aka a", current, expected)
-//  }
 
   "set priority tags" in {
     val current = emptyModelWithWorkflow
@@ -130,37 +124,6 @@ class RtmSpec extends WordSpec with MustMatchers {
     val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))), done = Nil)
     runAndExpect("1 .", current, expected)
   }
-
-  //owning
-
-//  "own" in {
-//    val issue = Thing("1", "an item", Some(next))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(by = Some(aka))))
-//    runAndExpect("1 @", current, expected)
-//  }
-
-//  "disown" in {
-//    val issue = Thing("1", "an item", Some(next), Some(aka))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(by = None)))
-//    runAndExpect("1 @-", current, expected)
-//  }
-
-//  "assign" in {
-//    val issue = Thing("1", "an item", Some(next), Some(aka))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(by = Some(aka2))))
-//    runAndExpect("1 @= b", current, expected)
-//  }
-
-//  "assign (invalid aka)" in {
-//    (pending) //TODO: TODO: need to start asserting the Out().messages
-//    val issue = Thing("1", "an item", Some(next), Some(aka))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(by = Some(aka2))))
-//    runAndExpect("1 @= c", current, expected)
-//  }
 
   //tagging
 
