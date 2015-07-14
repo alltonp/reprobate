@@ -28,6 +28,7 @@ object Messages {
     "  - create                         ⇒ 'rtm + [the description] {: tag1 tag2 tagX}'",
     "  - update                         ⇒ 'rtm [ref] ='",
     "  - delete                         ⇒ 'rtm [ref] -'",
+    "  - do                             ⇒ 'rtm [ref] /'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
