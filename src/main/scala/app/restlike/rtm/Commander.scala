@@ -32,8 +32,6 @@ object Commander {
 //      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
 //      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
-//      case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
-//      case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
@@ -45,9 +43,6 @@ object Commander {
 //      case In(Some(":"), Nil) => onShowTags(currentModel)
 //      case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
 //      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
-//      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
-//      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
-//      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -58,13 +53,6 @@ object Commander {
   private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel, Nil), None)
 
   private def onHelp(currentModel: Model) = Out(Messages.help("???"), None)
-
-//  private def onShowReleases(currentModel: Model, aka: String) = {
-//    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
-//    val result = if (all.isEmpty) Messages.success(s"no releases found")
-//    else all
-//    Out(result, None)
-//  }
 
 //  private def onShowTags(currentModel: Model) = {
 //    val all = currentModel.tags
@@ -85,28 +73,6 @@ object Commander {
 //    val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
 ////    else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
 //    Out(result, None)
-//  }
-
-//  private def onShowReleaseNote(release: String, currentModel: Model) = {
-//    val maybeRelease = currentModel.released.find(_.tag == release)
-//    val result = if (maybeRelease.isEmpty) Messages.problem(s"no release found for: $release")
-//    else Presentation.releaseNotes(release, maybeRelease.get.issues, currentModel).toList
-//    Out(result, None)
-//  }
-
-//  private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
-//    val releaseable = currentModel.releasableIssues
-//    val remainder = currentModel.things diff releaseable
-//
-//    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
-//    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
-//
-//    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
-//    //TODO: this can die soon ...
-//    val releasesToMigrate = currentModel.done.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
-//    val updatedModel = currentModel.copy(things = remainder, done = release :: releasesToMigrate )
-//
-//    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
 //  }
 
 //  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
@@ -230,14 +196,6 @@ object Commander {
 //    onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
 //  }
 
-//  private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-//    val maybeRelease = currentModel.done.find(_.tag == release)
-//    maybeRelease match {
-//      case None => Out(Messages.problem(s"release $release does not exist"), None)
-//      case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)
-//    }
-//  }
-
 //  private def onShowManagementSummary(matching: List[Thing], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
 //    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
 //    //TODO: this string will be wrong when we support releases - or maybe not
@@ -274,12 +232,6 @@ object Commander {
 //    }
 //  }
 
-//  private def onAka(who: String, aka: String, currentModel: Model): Out = {
-//    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
-//    val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
-//    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
-//  }
-
   private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
     val updatedModel = currentModel.copy(priorityTags = tags)
     //TODO: de-dupe message (using this version)
@@ -291,15 +243,4 @@ object Commander {
     Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None)
   }
 }
-
-//TODO: move this out
-//object SortByStatus {
-//  def apply(issues: Seq[Thing], currentModel: Model) = {
-//    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
-////    println(statusToIndex)
-////    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
-//    implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
-//    issues.sortBy(i => i.date)
-//  }
-//}
 
