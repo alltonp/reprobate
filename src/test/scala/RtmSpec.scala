@@ -115,6 +115,15 @@ class RtmSpec extends WordSpec with MustMatchers {
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
 
+  //doing
+
+  "doing issue moves it to done" in {
+    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
+    runAndExpect("1 /", current, expected)
+  }
+
   //moving
 
 //  "move forward one state" in {
