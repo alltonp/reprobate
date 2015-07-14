@@ -29,6 +29,7 @@ object Messages {
     "  - update                         ⇒ 'rtm [ref] ='",
     "  - delete                         ⇒ 'rtm [ref] -'",
     "  - do                             ⇒ 'rtm [ref] /'",
+    "  - undo                           ⇒ 'rtm [ref] .'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
