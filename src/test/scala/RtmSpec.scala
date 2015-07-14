@@ -8,7 +8,8 @@ import org.scalatest.{MustMatchers, WordSpec}
 
 class RtmSpec extends WordSpec with MustMatchers {
   //TODO: this is naughty
-  ServiceFactory.systemClock.default.set(FrozenClock(new DateTime()))
+  private val clockDate = new DateTime(2015, 2, 1, 0, 0, 0)
+  ServiceFactory.systemClock.default.set(FrozenClock(clockDate))
 
   //TODO: work out what examples are missing
   private val emptyModel = Model(Nil, Nil, Nil)
@@ -105,7 +106,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "do thing" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
     val current = modelWithThing(issue)
-    val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
+    val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 !", current, expected)
   }
 

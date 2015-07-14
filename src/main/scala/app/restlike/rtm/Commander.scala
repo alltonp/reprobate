@@ -133,7 +133,8 @@ object Commander {
   private def onDoIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedThings = currentModel.things.filterNot(_ == found)
-      val updatedDone = found :: currentModel.done
+      val updatedFound = found.copy(date = Some(systemClock().date))
+      val updatedDone = updatedFound :: currentModel.done
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
