@@ -17,7 +17,8 @@ ref : tag ...
 ---
 will want add and next - presumably / is next actually and ! is done
 ---
-
+undo will automatically go back to being dated
+---
 (unsorted)
 red for things that are past due date
 orange for collected
