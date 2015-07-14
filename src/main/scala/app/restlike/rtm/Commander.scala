@@ -34,7 +34,7 @@ object Commander {
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
-      case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
+      case In(Some(ref), List("!")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)

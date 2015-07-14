@@ -106,7 +106,7 @@ class RtmSpec extends WordSpec with MustMatchers {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
     val current = modelWithThing(issue)
     val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
-    runAndExpect("1 /", current, expected)
+    runAndExpect("1 !", current, expected)
   }
 
   "undo thing" in {
