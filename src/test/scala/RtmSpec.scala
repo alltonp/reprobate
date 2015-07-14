@@ -11,27 +11,18 @@ class RtmSpec extends WordSpec with MustMatchers {
   ServiceFactory.systemClock.default.set(FrozenClock(new DateTime()))
 
   //TODO: work out what examples are missing
-
-  private val next = "next"
-  private val doing = "doing"
-  private val done = "done"
-  private val released = "released"
-//  private val workflowStates = List(next, doing, done)
-  private val aka = "A"
-  private val aka2 = "B"
-  private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val emptyModelWithWorkflow = Model(Nil, Nil, Nil)
+  private val emptyModel = Model(Nil, Nil, Nil)
 
   //config
 
   "set priority tags" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(priorityTags = List("a", "b", "c"))
     runAndExpect("tags = a b c", current, expected)
   }
 
   "unset priority tags" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(priorityTags = Nil)
     runAndExpect("tags =", current, expected)
   }
@@ -39,13 +30,13 @@ class RtmSpec extends WordSpec with MustMatchers {
   //adding
 
   "add issue" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an item", current, expected)
   }
 
   "add issue (ignoring surplus noise)" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an   item  ", current, expected)
   }
@@ -69,13 +60,13 @@ class RtmSpec extends WordSpec with MustMatchers {
 //  }
 
   "add with tags" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : tag1 tag2", current, expected)
   }
 
   "strip dodgy chars from tags" in {
-    val current = emptyModelWithWorkflow
+    val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : :tag1 :tag2", current, expected)
   }
