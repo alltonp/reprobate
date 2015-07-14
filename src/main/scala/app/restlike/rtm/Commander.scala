@@ -38,10 +38,6 @@ object Commander {
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
-//      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
-//      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
-//      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
-//      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
@@ -66,18 +62,6 @@ object Commander {
 //  private def onShowReleases(currentModel: Model, aka: String) = {
 //    val all = currentModel.done.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
 //    val result = if (all.isEmpty) Messages.success(s"no releases found")
-//    else all
-//    Out(result, None)
-//  }
-
-//  private def onShowWhoIsDoingWhat(currentModel: Model) = {
-//    val akas = currentModel.akas
-//    val all = akas.map(aka => {
-//      val issues = currentModel.issues.filter(_.by == Some(aka))
-//      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
-//    })
-//
-//    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
 //    else all
 //    Out(result, None)
 //  }
@@ -175,31 +159,6 @@ object Commander {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
 //      val newTags = found.tags ++ args
 //      val updatedIssue = found.copy(tags = newTags)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-//    }
-//  }
-
-//  private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-//    }
-//  }
-
-//  private def onDisownIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val updatedIssue = found.copy(by = None)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-//    }
-//  }
-
-//  private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
-//    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val updatedIssue = found.copy(by = Some(assignee))
 //      val updatedModel = currentModel.updateIssue(updatedIssue)
 //      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
 //    }
