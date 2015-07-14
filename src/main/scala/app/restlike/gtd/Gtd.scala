@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import app.restlike.common.{Script, Tracker}
 import net.liftweb.common.Full
@@ -6,10 +6,10 @@ import net.liftweb.http._
 import net.liftweb.http.rest.RestHelper
 import org.json4s.native.JsonMethods
 
-object Rtm extends RestHelper {
+object Gtd extends RestHelper {
   import app.restlike.common.Responder._
 
-  val appName = "rtm"
+  val appName = "gtd"
 
   serve {
     case r@Req(`appName` :: "install" :: token :: Nil, _, GetRequest) ⇒ () ⇒

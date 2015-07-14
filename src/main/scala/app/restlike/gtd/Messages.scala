@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 object Messages {
   import app.restlike.common.Colours._
@@ -22,15 +22,15 @@ object Messages {
   //TODO: use appName everywhere ...
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to rtm - rudimentary task management © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to gtd - rudimentary task management © 2015 spabloshi ltd",
     "",
     "things:",
-    "  - create                         ⇒ 'rtm + [the description] {: tag1 tag2 tagX}'",
-    "  - update                         ⇒ 'rtm [ref] ='",
-    "  - delete                         ⇒ 'rtm [ref] -'",
-    "  - do                             ⇒ 'rtm [ref] !'",
-    "  - undo                           ⇒ 'rtm [ref] .'",
-//    "  - next                           ⇒ 'rtm [ref] /'",
+    "  - create                         ⇒ 'gtd + [the description] {: tag1 tag2 tagX}'",
+    "  - update                         ⇒ 'gtd [ref] ='",
+    "  - delete                         ⇒ 'gtd [ref] -'",
+    "  - do                             ⇒ 'gtd [ref] !'",
+    "  - undo                           ⇒ 'gtd [ref] .'",
+//    "  - next                           ⇒ 'gtd [ref] /'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",

@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import app.ServiceFactory.dateFormats
 import org.joda.time.LocalDate

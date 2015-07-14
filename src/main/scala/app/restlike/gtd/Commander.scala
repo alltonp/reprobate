@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import app.ServiceFactory.systemClock
 import app.restlike.common.Colours._

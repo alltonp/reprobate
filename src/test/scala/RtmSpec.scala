@@ -1,7 +1,7 @@
 import app.ServiceFactory
 import app.ServiceFactory._
 import app.restlike.common.RefProvider
-import app.restlike.rtm._
+import app.restlike.gtd._
 import im.mange.little.clock.FrozenClock
 import org.joda.time.{LocalDate, DateTime}
 import org.scalatest.{MustMatchers, WordSpec}

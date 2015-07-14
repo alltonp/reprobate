@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
 

@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import app.restlike.common.Colours._
 import app.restlike.common._

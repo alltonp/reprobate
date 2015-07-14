@@ -1,4 +1,4 @@
-package app.restlike.rtm
+package app.restlike.gtd
 
 import app.restlike.common.Colours.customGrey
 import app.restlike.common.Responder._
@@ -21,13 +21,13 @@ object Controller {
         JsonRequestHandler.handle(req)((json, req) ⇒ {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-            Tracker(s"${Rtm.appName}.tracking").track(who, value, universe.tokenToUser(token))
+            Tracker(s"${Gtd.appName}.tracking").track(who, value, universe.tokenToUser(token))
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
               Persistence.save(universe)
             })
-            val result = s"> ${Rtm.appName} $value" :: "" :: out.messages.toList
+            val result = s"> ${Gtd.appName} $value" :: "" :: out.messages.toList
             t(result.map(customGrey(_)))
           }
         })
