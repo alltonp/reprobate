@@ -96,7 +96,7 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   "edit issue retains date, tags and status" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(Thing("1", "an item edited", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 = an item edited", current, expected)
   }
@@ -104,7 +104,7 @@ class RtmSpec extends WordSpec with MustMatchers {
   "edit with tags adds tags" in {
     (pending)
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = List(Thing("1", "an item edited", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2", "tags3"))))
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
@@ -113,7 +113,7 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   "do thing" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
-    val current = modelWithIssue(issue)
+    val current = modelWithThing(issue)
     val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 /", current, expected)
   }
@@ -193,9 +193,6 @@ class RtmSpec extends WordSpec with MustMatchers {
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
 
   private def modelWithTags(tags: List[String]) = Model(Nil, Nil, tags)
-  private def modelWithIssue(issue: Thing) = Model(List(issue), Nil, Nil)
-  private def modelWithDone(issue: Thing) = Model(Nil, List(issue), Nil)
-
-  private def modelWithReleasedIssue(issue: Thing) =
-    Model(Nil, List(issue), Nil)
+  private def modelWithThing(thing: Thing) = Model(List(thing), Nil, Nil)
+  private def modelWithDone(thing: Thing) = Model(Nil, List(thing), Nil)
 }
