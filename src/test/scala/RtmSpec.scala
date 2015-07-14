@@ -117,11 +117,18 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //doing
 
-  "doing issue moves it to done" in {
+  "do thing" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
     val current = modelWithIssue(issue)
     val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 /", current, expected)
+  }
+
+  "undo thing" in {
+    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val current = modelWithDone(issue)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))), done = Nil)
+    runAndExpect("1 .", current, expected)
   }
 
   //moving
@@ -318,6 +325,7 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   private def modelWithTags(tags: List[String]) = Model(Nil, Nil, tags)
   private def modelWithIssue(issue: Thing) = Model(List(issue), Nil, Nil)
+  private def modelWithDone(issue: Thing) = Model(Nil, List(issue), Nil)
 
   private def modelWithReleasedIssue(issue: Thing) =
     Model(Nil, List(issue), Nil)
