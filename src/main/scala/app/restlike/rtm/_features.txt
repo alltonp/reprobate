@@ -1,5 +1,5 @@
-/ = done (set the date)
-. = undone (what to do about the date)
+? to show all
+colourise: done = magenta
 ---
 then defer
 ---
