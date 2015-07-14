@@ -11,8 +11,9 @@ the colours seem wonky for some reason, probably thing.render
 ---
 use the colour system like rim (or opposite)
 ---
-+ should show the board ...
-
++ should show the collected list afterwards ...
+---
+(unsorted)
 red for things that are past due date
 orange for collected
 yellow for next
