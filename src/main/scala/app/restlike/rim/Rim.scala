@@ -11,7 +11,7 @@ object Rim extends RestHelper {
 
   val appName = "rim"
 
-//  println(java.util.UUID.randomUUID.toString)
+  println(java.util.UUID.randomUUID.toString)
 
   serve {
     case r@Req(`appName` :: "install" :: token :: Nil, _, GetRequest) ⇒ () ⇒

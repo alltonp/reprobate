@@ -13,6 +13,11 @@ use the colour system like rim (or opposite)
 ---
 + should show the collected list afterwards ...
 ---
+ref : tag ...
+---
+will want add and next - presumably / is next actually and ! is done
+---
+
 (unsorted)
 red for things that are past due date
 orange for collected
