@@ -37,6 +37,7 @@ object Commander {
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
+      case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
 //      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
@@ -244,6 +245,23 @@ object Commander {
 //      val updatedIssue = found.copy(status = Some(newStatus))
       val updatedThings = currentModel.things.filterNot(_ == found)
       val updatedDone = found :: currentModel.done
+      val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+    }
+  }
+
+  private def onUndoIssue(ref: String, currentModel: Model) = {
+    currentModel.findDone(ref).fold(Out(Messages.notFound(ref), None)){found =>
+//      val newStatus = if (found.status.isEmpty) currentModel.beginState
+//      else {
+//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
+//        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
+//        currentModel.workflowStates(newIndex)
+//      }
+////      val by = if (newStatus == currentModel.beginState) None else Some(aka)
+//      val updatedIssue = found.copy(status = Some(newStatus))
+      val updatedThings = found :: currentModel.things
+      val updatedDone = currentModel.done.filterNot(_ == found)
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }

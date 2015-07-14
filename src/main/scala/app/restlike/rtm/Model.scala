@@ -99,6 +99,7 @@ case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[St
 //  def aka(who: String) = userToAka(who)
 //  def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = things.find(_.ref == ref)
+  def findDone(ref: String) = done.find(_.ref == ref)
 //  def beginState = workflowStates.head
 //  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
 //  def endState = workflowStates.reverse.head
