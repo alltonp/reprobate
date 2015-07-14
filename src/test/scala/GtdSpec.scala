@@ -6,7 +6,7 @@ import im.mange.little.clock.FrozenClock
 import org.joda.time.{LocalDate, DateTime}
 import org.scalatest.{MustMatchers, WordSpec}
 
-class RtmSpec extends WordSpec with MustMatchers {
+class GtdSpec extends WordSpec with MustMatchers {
   //TODO: this is naughty
   private val clockDate = new DateTime(2015, 2, 1, 0, 0, 0)
   ServiceFactory.systemClock.default.set(FrozenClock(clockDate))
