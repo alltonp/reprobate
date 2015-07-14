@@ -235,14 +235,6 @@ object Commander {
 
   private def onDoIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = if (found.status.isEmpty) currentModel.beginState
-//      else {
-//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-//        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
-//        currentModel.workflowStates(newIndex)
-//      }
-////      val by = if (newStatus == currentModel.beginState) None else Some(aka)
-//      val updatedIssue = found.copy(status = Some(newStatus))
       val updatedThings = currentModel.things.filterNot(_ == found)
       val updatedDone = found :: currentModel.done
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
@@ -252,14 +244,6 @@ object Commander {
 
   private def onUndoIssue(ref: String, currentModel: Model) = {
     currentModel.findDone(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = if (found.status.isEmpty) currentModel.beginState
-//      else {
-//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-//        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
-//        currentModel.workflowStates(newIndex)
-//      }
-////      val by = if (newStatus == currentModel.beginState) None else Some(aka)
-//      val updatedIssue = found.copy(status = Some(newStatus))
       val updatedThings = found :: currentModel.things
       val updatedDone = currentModel.done.filterNot(_ == found)
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
