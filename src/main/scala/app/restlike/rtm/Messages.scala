@@ -73,7 +73,8 @@ object Messages {
 //    "  - create, forward many and tag   ⇒ 'rim +// description {: tag1 tag2 tagX}'",
 //    "  - create, end and tag            ⇒ 'rim +! description {: tag1 tag2 tagX}'",
     "",
-    "where: [arg] = mandatory, {arg} = optional, {_} = sanitise, phb = pointy haired boss",
+//    "where: [arg] = mandatory, {arg} = optional, {_} = sanitise, phb = pointy haired boss",
+    "where: [arg] = mandatory, {arg} = optional",
     ""
   )
 }
