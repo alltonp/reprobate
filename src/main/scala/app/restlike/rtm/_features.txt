@@ -1,7 +1,9 @@
 ? to show all
 colourise: done = magenta
 ---
-then defer
+only show collected (= blue) until there are none
+---
+defer
 ---
 maybe this should be gtd afterall - yes it's too close to rim otherwise
 ---
