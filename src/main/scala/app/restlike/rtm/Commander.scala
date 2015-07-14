@@ -38,9 +38,6 @@ object Commander {
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
-//      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
-//      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
-//      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
 //      case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
 //      case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
@@ -208,31 +205,6 @@ object Commander {
 //    }
 //  }
 
-  //TODO: model.forwardAState
-  //TODO: model.backwardAState
-//  private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = if (found.status.isEmpty) None
-//      else {
-//        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-//        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
-//      }
-////      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
-//      val updatedIssue = found.copy(status = newStatus)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-//    }
-//  }
-
-//  private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = None
-//      val updatedIssue = found.copy(date = newStatus)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-//    }
-//  }
-
   private def onDoIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedThings = currentModel.things.filterNot(_ == found)
@@ -250,15 +222,6 @@ object Commander {
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }
-
-//  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newStatus = currentModel.endState
-//      val updatedIssue = found.copy(status = Some(newStatus))
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-//    }
-//  }
 
   private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>

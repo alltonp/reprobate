@@ -24,7 +24,7 @@ object Messages {
   def help(who: String) = List(
     s"hello ${who}, welcome to rtm - rudimentary task management © 2015 spabloshi ltd",
     "",
-    "issues:",
+    "things:",
     "  - create                         ⇒ 'rtm + [the description] {: tag1 tag2 tagX}'",
     "  - update                         ⇒ 'rtm [ref] ='",
     "  - delete                         ⇒ 'rtm [ref] -'",
@@ -35,12 +35,6 @@ object Messages {
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
 //    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
 //    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
-//    "  - move forward                   ⇒ 'rim [ref] /'",
-    //    "  - move forward many              ⇒ 'rim [ref] //'",
-//    "  - move to end                    ⇒ 'rim [ref] /!'",
-//    "  - move backward                  ⇒ 'rim [ref] .'",
-    //    "  - move backward many         ⇒ 'rim [ref] ..'",
-//    "  - return to backlog              ⇒ 'rim [ref] .!'",
     "",
     //is this 'reports'
     "show:",
