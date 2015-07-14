@@ -36,7 +36,7 @@ object Commander {
 //      case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
-//      case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
+      case In(Some(ref), List("/")) => onDoIssue(ref, currentModel)
 //      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
@@ -232,8 +232,8 @@ object Commander {
 //    }
 //  }
 
-//  private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+  private def onDoIssue(ref: String, currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
 //      val newStatus = if (found.status.isEmpty) currentModel.beginState
 //      else {
 //        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
@@ -242,10 +242,12 @@ object Commander {
 //      }
 ////      val by = if (newStatus == currentModel.beginState) None else Some(aka)
 //      val updatedIssue = found.copy(status = Some(newStatus))
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
-//    }
-//  }
+      val updatedThings = currentModel.things.filterNot(_ == found)
+      val updatedDone = found :: currentModel.done
+      val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+    }
+  }
 
 //  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
