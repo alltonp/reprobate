@@ -54,7 +54,7 @@ object Presentation {
                             changed: Seq[String]) = {
     val stateToIssues = issues.groupBy(_.date.getOrElse("collected"))
     println(stateToIssues)
-    val interestingStates = if (hideNextIfUnprocessed) List("collected") else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
+    val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected") else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
     interestingStates.map(s => {
       println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil)
