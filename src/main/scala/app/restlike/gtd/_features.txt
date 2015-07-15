@@ -1,4 +1,11 @@
 infer a status ... next is things that are today, deferred is things that are after today
+show this on the search screen and the board
+---
+use ^ for status and something else for date, maybe @, maybe nothing, maybe the date is part of the status
+---
+show board on delete, ideally both really
+---
+have a max items setting, default to 10 and then do ... to encourage faster processing
 ---
 flag as red things that are past today
 ---
