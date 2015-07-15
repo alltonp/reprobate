@@ -11,7 +11,7 @@ the colours seem wonky for some reason, probably thing.render
 ---
 use the colour system like rim (or opposite)
 ---
-+ should show the collected list afterwards ...
+show only collected if there are some
 ---
 ref : tag ...
 ---
