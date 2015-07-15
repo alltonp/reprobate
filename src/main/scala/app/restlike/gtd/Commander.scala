@@ -175,7 +175,7 @@ object Commander {
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(things = currentModel.things.filterNot(i => i == found))
-      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${found.render(currentModel)}") ::: List("") ::: Presentation.board(updatedModel, Nil), Some(updatedModel))
     }
   }
 
