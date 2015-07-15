@@ -1,3 +1,7 @@
+collected should be sorted by id (so that oldest are first)
+---
+query sort order is all wrong
+---
 infer a status ... next is things that are today, deferred is things that are after today
 show this on the search screen and the board
 ---
