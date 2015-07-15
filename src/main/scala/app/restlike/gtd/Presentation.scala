@@ -17,7 +17,7 @@ object Presentation {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
 
-    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed)
+    groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 
@@ -50,11 +50,11 @@ object Presentation {
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
   //TODO: this should show a nice "there is nothing to see" if that is the case
-  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
+  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, hideNextIfUnprocessed: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String]) = {
     val stateToIssues = issues.groupBy(_.date.getOrElse("collected"))
     println(stateToIssues)
-    val interestingStates = /*()if (includeBacklog) List("collected") else Nil) ::: */ stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
+    val interestingStates = if (hideNextIfUnprocessed) List("collected") else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
     interestingStates.map(s => {
       println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil)
