@@ -36,7 +36,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
       date match {
         case None => customBlue(value)
         case Some(x) if m.done.contains(this) => customMagenta(value)
-//        case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
+        case Some(x) => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
         case _ => customGrey(value) //customYellow(value)
