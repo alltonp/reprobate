@@ -161,8 +161,16 @@ object Commander {
 
   private def onDeferIssue(ref: String, args: List[String], currentModel: Model) = {
     //TODO: we need to properly process args
+    //TODO: we need to handle dodgy input
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(date = Some(systemClock().date.plusWeeks(1)))
+      val deferredDate = args.head.trim match {
+        case "1d" => systemClock().date.plusDays(1)
+        case "1w" => systemClock().date.plusWeeks(1)
+        case "1m" => systemClock().date.plusMonths(1)
+        case "1y" => systemClock().date.plusYears(1)
+        case _ => systemClock().date//.plusYears(1)
+      }
+      val updatedIssue = found.copy(date = Some(deferredDate))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
