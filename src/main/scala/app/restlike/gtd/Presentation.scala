@@ -17,7 +17,7 @@ object Presentation {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
 
-    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = true, hideBy = false, hideTags = false, model.things, model, changed)
+    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed)
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 

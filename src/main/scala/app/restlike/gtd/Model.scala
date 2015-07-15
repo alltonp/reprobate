@@ -1,5 +1,6 @@
 package app.restlike.gtd
 
+import app.ServiceFactory.systemClock
 import app.restlike.common.Colours._
 import app.restlike.common._
 import org.joda.time.{LocalDate, DateTime}
@@ -36,6 +37,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
       date match {
         case None => customBlue(value)
         case Some(x) if m.done.contains(this) => customMagenta(value)
+        case Some(x) if systemClock().date == x => customOrange(value)
         case Some(x) => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
@@ -67,7 +69,7 @@ case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[St
 //  def knows_?(who: String) = userToAka.contains(who)
 //  def onBoard_?(issue: Thing) = issue.date.fold(false)(workflowStates.contains(_))
 
-  def collectedNeedProcessing = things.filter(_.date.isEmpty).nonEmpty
+//  def collectedNeedProcessing = things.filter(_.date.isEmpty).nonEmpty
 
   def createIssue(args: List[String], date: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
