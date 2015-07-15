@@ -31,16 +31,17 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 //    colouredForStatus(model, value)
 //  }
 
-//  private def colouredForStatus(model: Option[Model], value: String) = {
-//    model.fold(value)(m =>
-//      status match {
-//        case None => customGrey(value)
+  private def colouredForStatus(model: Option[Model], value: String) = {
+    model.fold(value)(m =>
+      date match {
+        case None => customBlue(value)
+        case Some(x) if m.done.contains(this) => customMagenta(value)
 //        case Some(x) if x == m.beginState => customYellow(value) //cyan(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
-//        case _ => customOrange(value) //customYellow(value)
-//      })
-//  }
+        case _ => customGrey(value) //customYellow(value)
+      })
+  }
 
   private val indexed = List(ref, description/*, renderStatus(None)*/, renderTags).mkString(" ")
 
@@ -48,7 +49,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else /*colouredForStatus(Some(model), */"◼︎ "/*)*/}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else "" /*renderStatus(Some(model))*/ }"
+    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else "" /*renderStatus(Some(model))*/ }"
 //    if (highlight) customGreen(r) else customGrey(r)
     r
   }
