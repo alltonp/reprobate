@@ -1,6 +1,7 @@
-colourise: done = magenta
 ---
 only show collected (= blue) until there are none
+---
+show a breakdown of stats - using the colours and counts
 ---
 defer
 ---
