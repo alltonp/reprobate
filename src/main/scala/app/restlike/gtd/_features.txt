@@ -1,4 +1,3 @@
-collected should be sorted by id (so that oldest are first)
 ---
 query sort order is all wrong
 ---
@@ -13,7 +12,9 @@ flag as red things that are past today
 ---
 show a summary of stats - using the colours and counts
 ---
-defer
+moan if something is next and it is nexted again (don't change the date, enforce a defer)
+---
+make defer better
 ---
 support ; when adding (how do we handle tags? apply to all?)
 ---
