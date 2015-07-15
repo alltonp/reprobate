@@ -5,6 +5,8 @@ show a breakdown of stats - using the colours and counts
 ---
 defer
 ---
+support ; when adding (how do we handle tags? apply to all?)
+---
 maybe this should be gtd afterall - yes it's too close to rim otherwise
 ---
 the colours seem wonky for some reason, probably thing.render
