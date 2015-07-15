@@ -9,6 +9,8 @@ import org.scalatest.{MustMatchers, WordSpec}
 class GtdSpec extends WordSpec with MustMatchers {
   //TODO: this is naughty
   private val clockDate = new DateTime(2015, 2, 1, 0, 0, 0)
+  private val someDate: Some[LocalDate] = Some(new LocalDate(2015, 1, 1))
+
   ServiceFactory.systemClock.default.set(FrozenClock(clockDate))
 
   //TODO: work out what examples are missing
@@ -87,38 +89,38 @@ class GtdSpec extends WordSpec with MustMatchers {
   //editing
 
   "edit issue retains date, tags and status" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val issue = Thing("1", "an item", someDate, Set("tag1", "tag2"))
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item edited", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))))
+    val expected = current.copy(things = List(Thing("1", "an item edited", someDate, Set("tag1", "tag2"))))
     runAndExpect("1 = an item edited", current, expected)
   }
 
   "edit with tags adds tags" in {
     (pending)
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val issue = Thing("1", "an item", someDate, Set("tag1", "tag2"))
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item edited", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2", "tags3"))))
+    val expected = current.copy(things = List(Thing("1", "an item edited", someDate, Set("tag1", "tag2", "tags3"))))
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
 
   //processing
 
   "do a thing" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val issue = Thing("1", "an item", someDate, Set("tag1", "tag2"))
     val current = modelWithThing(issue)
     val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 !", current, expected)
   }
 
   "undo a thing" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val issue = Thing("1", "an item", someDate, Set("tag1", "tag2"))
     val current = modelWithDone(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))), done = Nil)
+    val expected = current.copy(things = List(Thing("1", "an item", someDate, Set("tag1", "tag2"))), done = Nil)
     runAndExpect("1 .", current, expected)
   }
 
   "next a thing" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val issue = Thing("1", "an item", someDate, Set("tag1", "tag2"))
     val current = modelWithThing(issue)
     val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 /", current, expected)
@@ -127,25 +129,25 @@ class GtdSpec extends WordSpec with MustMatchers {
   //tagging
 
   "tag" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)))
+    val issue = Thing("1", "an item", someDate)
     val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set("tag"))))
     runAndExpect("1 : tag", current, expected)
   }
 
   "detag" in {
-    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag"))
+    val issue = Thing("1", "an item", someDate, Set("tag"))
     val current = modelWithThing(issue)
     val expected = current.copy(things = List(issue.copy(tags = Set.empty)))
     runAndExpect("1 :- tag", current, expected)
   }
 
-//  "tag multi" in {
-//    val issue = Thing("1", "an item", Some(next))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
-//    runAndExpect("1 : tag1 tag2 tagN", current, expected)
-//  }
+  "tag multi" in {
+    val issue = Thing("1", "an item", someDate)
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
+    runAndExpect("1 : tag1 tag2 tagN", current, expected)
+  }
 
 //  "migrate tag" in {
 //    val issue = Thing("1", "an item", Some(next), tags = Set("tag1", "tag2", "tagN"))
