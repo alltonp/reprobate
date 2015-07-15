@@ -50,7 +50,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
     val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
-//    if (highlight) customGreen(r) else customGrey(r)
+    if (highlight) customGreen(r) else customGrey(r)
     r
   }
 }
