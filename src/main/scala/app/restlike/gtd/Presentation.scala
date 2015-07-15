@@ -53,10 +53,10 @@ object Presentation {
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, hideNextIfUnprocessed: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String]) = {
     val stateToIssues = issues.groupBy(_.date.getOrElse("collected"))
-    println(stateToIssues)
+//    println(stateToIssues)
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected") else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
     interestingStates.map(s => {
-      println(s)
+//      println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil)
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref))
