@@ -33,7 +33,7 @@ object Messages {
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",
     "  - tag                            ⇒ 'gtd [ref] : [tag1] {tag2} {tagX}'",
-//    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
+    "  - detag                          ⇒ 'gtd [ref] :- [tag1] {tag2} {tagX}'",
     "",
     //is this 'reports'
     "show:",
