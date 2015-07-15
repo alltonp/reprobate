@@ -15,7 +15,7 @@ object Presentation {
 
   def board(model: Model, changed: Seq[String]) = {
 //    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed, Some(aka))
-    model.things.sortBy(_.date).map(_.render(model)).mkString("\n") :: Nil
+    model.things.sortBy(_.date).map(t => t.render(model, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {
