@@ -14,8 +14,9 @@ object Presentation {
   }
 
   def board(model: Model, changed: Seq[String]) = {
+    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.things, model, changed, Some(aka))
-    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
+    thingsToShow.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {

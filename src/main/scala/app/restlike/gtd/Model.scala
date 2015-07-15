@@ -67,6 +67,8 @@ case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[St
 //  def knows_?(who: String) = userToAka.contains(who)
 //  def onBoard_?(issue: Thing) = issue.date.fold(false)(workflowStates.contains(_))
 
+  def collectedNeedProcessing = things.filter(_.date.isEmpty).nonEmpty
+
   def createIssue(args: List[String], date: Option[LocalDate], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
 
