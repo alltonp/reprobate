@@ -1,3 +1,4 @@
+if nothing next then show deferred
 ---
 query sort order is all wrong
 ---
@@ -22,6 +23,7 @@ ref : tag ...
 ---
 will want expert mode add and next +/
 will want expert mode add and done +!
+might want expert mode /d, /w, /m, /y or even d, w, m, y were it's automatically 1, but could be /d 2 etc
 ---
 http://lifedev.net/2007/02/gtd-cheatsheet-the-workflow/
 http://lifedev.net/2007/02/gtd-cheatsheet-the-collection/
