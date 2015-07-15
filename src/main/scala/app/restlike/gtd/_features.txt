@@ -1,3 +1,6 @@
+infer a status ... next is things that are today, deferred is things that are after today
+---
+flag as red things that are past today
 ---
 only show collected (= blue) until there are none
 ---
@@ -20,6 +23,10 @@ ref : tag ...
 will want add and next - presumably / is next actually and ! is done
 ---
 undo will automatically go back to being dated
+---
+http://lifedev.net/2007/02/gtd-cheatsheet-the-workflow/
+http://lifedev.net/2007/02/gtd-cheatsheet-the-collection/
+http://lifedev.net/2007/02/gtd-cheatsheet-processing-your-stuff/
 ---
 (unsorted)
 red for things that are past due date
