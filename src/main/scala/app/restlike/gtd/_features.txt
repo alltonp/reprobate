@@ -3,33 +3,20 @@ show this on the search screen and the board
 ---
 use ^ for status and something else for date, maybe @, maybe nothing, maybe the date is part of the status
 ---
-show board on delete, ideally both really
----
 have a max items setting, default to 10 and then do ... to encourage faster processing
 ---
 flag as red things that are past today
 ---
-only show collected (= blue) until there are none
----
-show a breakdown of stats - using the colours and counts
+show a summary of stats - using the colours and counts
 ---
 defer
 ---
 support ; when adding (how do we handle tags? apply to all?)
 ---
-maybe this should be gtd afterall - yes it's too close to rim otherwise
----
-the colours seem wonky for some reason, probably thing.render
----
-use the colour system like rim (or opposite)
----
-show only collected if there are some
----
 ref : tag ...
 ---
-will want add and next - presumably / is next actually and ! is done
----
-undo will automatically go back to being dated
+will want expert mode add and next +/
+will want expert mode add and done +!
 ---
 http://lifedev.net/2007/02/gtd-cheatsheet-the-workflow/
 http://lifedev.net/2007/02/gtd-cheatsheet-the-collection/
