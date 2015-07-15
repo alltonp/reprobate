@@ -5,8 +5,6 @@ object Messages {
 
   val eh = "eh?"
 
-  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rim aka pa'")
-
   def notFound(ref: String) = problem(s"issue not found: $ref")
 
   def descriptionEmpty = problem(s"description is empty")
@@ -22,7 +20,7 @@ object Messages {
   //TODO: use appName everywhere ...
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to gtd - rudimentary task management © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to gtd - getting things done © 2015 spabloshi ltd",
     "",
     "things:",
     "  - create                         ⇒ 'gtd + [the description] {: tag1 tag2 tagX}'",
@@ -50,7 +48,7 @@ object Messages {
 //    "  - all for tag                    ⇒ 'rim : [tag]'",
 //    "  - untagged                       ⇒ 'rim :-'",
 //    "  - who is doing what              ⇒ 'rim @'",
-    "  - help                           ⇒ 'rim help'",
+    "  - help                           ⇒ 'gtd help'",
 //    "",
 //    "tags:",
 //    "  - migrate                        ⇒ 'rim [oldtag] := [newtag]'",
