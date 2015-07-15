@@ -27,8 +27,8 @@ object Commander {
 //      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
-//      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
-//      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
+      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
+      case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
 //      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
 //      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
@@ -171,19 +171,19 @@ object Commander {
   }
 
 //  //TODO: add search to Model
-//  private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
-//    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
-//      terms match {
-//        case Nil => issues
-//        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
-//      }
-//    }
-//
-//    val matching = query(currentModel.allIssuesIncludingReleased, terms)
-//    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-//    else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
-//    Out(result, None)
-//  }
+  private def onQueryIssues(currentModel: Model, terms: List[String]) = {
+    def query(issues: List[Thing], terms: List[String]): List[Thing] = {
+      terms match {
+        case Nil => issues
+        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+      }
+    }
+
+    val matching = query(currentModel.allIssuesIncludingReleased, terms)
+    val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
+    else /*SortByStatus(matching, currentModel)*/matching.map(i => i.render(currentModel))
+    Out(result, None)
+  }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.things.filter(i => i.date.isEmpty)
