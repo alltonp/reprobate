@@ -39,7 +39,7 @@ object Messages {
     "",
     //is this 'reports'
     "show:",
-//    "  - board                          ⇒ 'rim'",
+    "  - all                            ⇒ 'gtd'",
 //    "  - backlog                        ⇒ 'rim .'",
 //    "  - phb board summary              ⇒ 'rim ^{_} {tag1 tag2 tagX}'                      ⇒ i.e. in tag priority order",
 //    "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",
@@ -56,9 +56,9 @@ object Messages {
 //    "  - migrate                        ⇒ 'rim [oldtag] := [newtag]'",
   //TODO: consider having the user type yes on the end (previewing it first)
 //    "  - kill all usages                ⇒ 'rim [killtag] :--'",
-//    "",
-//    "search:",
-//    "  - all issues                     ⇒ 'rim ? {term1 term2 termX}'                      ⇒ e.g. 'rim ? :tag ^status @aka text'",
+    "",
+    "search:",
+    "  - all things                     ⇒ 'gtd ? {term1 term2 termX}'                      ⇒ e.g. 'gtd ? :tag text'",
 //    "",
 //    "releases:",
 //    "  - create                         ⇒ 'rim ± [label]'",
