@@ -105,7 +105,7 @@ case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[St
 //  def endState = workflowStates.reverse.head
 //  def releasableIssues = things.filter(_.date == Some(endState))
 //  def releaseTags = done.map(_.tag)
-  def allIssuesIncludingReleased = done ++ things
+  def allIssuesIncludingDone = done ++ things
 
 //  def tags = {
 //    val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten

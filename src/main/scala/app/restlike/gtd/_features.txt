@@ -1,4 +1,3 @@
-? to show all
 colourise: done = magenta
 ---
 only show collected (= blue) until there are none
