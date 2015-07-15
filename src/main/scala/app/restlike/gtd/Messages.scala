@@ -29,6 +29,7 @@ object Messages {
     "  - do                             ⇒ 'gtd [ref] !'",
     "  - undo                           ⇒ 'gtd [ref] .'",
     "  - next                           ⇒ 'gtd [ref] /'",
+    "  - defer 1w                       ⇒ 'gtd [ref] / 1w'",
 //    "  - own                            ⇒ 'rim [ref] @'",
 //    "  - disown                         ⇒ 'rim [ref] @-'",
 //    "  - assign                         ⇒ 'rim [ref] @= [aka]'",

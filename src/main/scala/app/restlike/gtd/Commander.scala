@@ -37,6 +37,7 @@ object Commander {
       case In(Some(ref), List("!")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
       case In(Some(ref), List("/")) => onNextIssue(ref, currentModel)
+      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == "/" => onDeferIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel)
 //      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
@@ -153,6 +154,15 @@ object Commander {
   private def onNextIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(date = Some(systemClock().date))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+    }
+  }
+
+  private def onDeferIssue(ref: String, args: List[String], currentModel: Model) = {
+    //TODO: we need to properly process args
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val updatedIssue = found.copy(date = Some(systemClock().date.plusWeeks(1)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }

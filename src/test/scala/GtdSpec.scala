@@ -128,6 +128,13 @@ class GtdSpec extends WordSpec with MustMatchers {
     runAndExpect("1 /", current, expected)
   }
 
+  "defer a thing 1w" in {
+    val issue = Thing("1", "an item", someDate, someTags)
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusWeeks(1)), someTags)))
+    runAndExpect("1 / 1w", current, expected)
+  }
+
   //tagging
 
   "tag" in {
