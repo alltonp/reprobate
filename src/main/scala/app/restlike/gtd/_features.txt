@@ -44,3 +44,5 @@ grey for things we don't need to worry about yet (incubated backlog) i.e. someda
 how about delegated - maybe they should be highlighted blue or yellow/orange - could also have a due date
  - important to highlight what we are waiting on
 do we allow reference items? - could also be grey
+
+how about: red really overdue, orange a bit overdue, yellow due, grey deferred
