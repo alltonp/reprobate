@@ -126,12 +126,12 @@ class GtdSpec extends WordSpec with MustMatchers {
 
   //tagging
 
-//  "tag" in {
-//    val issue = Thing("1", "an item", Some(next))
-//    val current = modelWithIssue(issue)
-//    val expected = current.copy(issues = List(issue.copy(tags = Set("tag"))))
-//    runAndExpect("1 : tag", current, expected)
-//  }
+  "tag" in {
+    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)))
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(issue.copy(tags = Set("tag"))))
+    runAndExpect("1 : tag", current, expected)
+  }
 
 //  "detag" in {
 //    val issue = Thing("1", "an item", Some(next), Set("tag"))

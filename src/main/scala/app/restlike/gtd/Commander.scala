@@ -37,7 +37,7 @@ object Commander {
       case In(Some(ref), List("!")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
       case In(Some(ref), List("/")) => onNextIssue(ref, currentModel)
-      //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
+      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
 //      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
@@ -122,14 +122,14 @@ object Commander {
 //    }
 //  }
 
-//  private def onTagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-//      val newTags = found.tags ++ args
-//      val updatedIssue = found.copy(tags = newTags)
-//      val updatedModel = currentModel.updateIssue(updatedIssue)
-//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
-//    }
-//  }
+  private def onTagIssue(ref: String, args: List[String], currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newTags = found.tags ++ args
+      val updatedIssue = found.copy(tags = newTags)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue), Some(updatedModel))
+    }
+  }
 
   private def onDoIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
