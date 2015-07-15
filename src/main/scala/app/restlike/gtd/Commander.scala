@@ -208,7 +208,7 @@ object Commander {
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)))
     }
   }
 
