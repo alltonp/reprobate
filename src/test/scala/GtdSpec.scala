@@ -11,6 +11,7 @@ class GtdSpec extends WordSpec with MustMatchers {
   private val clockDate = new DateTime(2015, 2, 1, 0, 0, 0)
   private val someDate = Some(new LocalDate(2015, 1, 1))
   private val someTags = Set("tag1", "tag2")
+  private val updatedDate: Some[LocalDate] = Some(new LocalDate(2015, 2, 1))
 
   ServiceFactory.systemClock.default.set(FrozenClock(clockDate))
 
@@ -89,7 +90,7 @@ class GtdSpec extends WordSpec with MustMatchers {
 
   //editing
 
-  "edit issue retains date, tags and status" in {
+  "edit retains date, tags and status" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
     val expected = current.copy(things = List(Thing("1", "an item edited", someDate, someTags)))
@@ -109,7 +110,7 @@ class GtdSpec extends WordSpec with MustMatchers {
   "do a thing" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), someTags)))
+    val expected = current.copy(things = Nil, done = List(Thing("1", "an item", updatedDate, someTags)))
     runAndExpect("1 !", current, expected)
   }
 
@@ -123,7 +124,7 @@ class GtdSpec extends WordSpec with MustMatchers {
   "next a thing" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), someTags)))
+    val expected = current.copy(things = List(Thing("1", "an item", updatedDate, someTags)))
     runAndExpect("1 /", current, expected)
   }
 
