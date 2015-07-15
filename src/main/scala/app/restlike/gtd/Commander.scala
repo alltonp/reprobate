@@ -6,7 +6,7 @@ import app.restlike.common._
 import org.joda.time.LocalDate
 
 object Commander {
-//  implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
+  implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
 
   def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
@@ -181,7 +181,7 @@ object Commander {
 
     val matching = query(currentModel.allIssuesIncludingDone, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else /*SortByStatus(matching, currentModel)*/matching.map(i => i.render(currentModel))
+    else /*SortByStatus(matching, currentModel)*/matching.sortBy(_.date).map(i => i.render(currentModel))
     Out(result, None)
   }
 
