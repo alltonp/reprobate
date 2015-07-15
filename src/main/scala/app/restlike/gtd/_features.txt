@@ -1,15 +1,15 @@
-if nothing next then show deferred
----
-query sort order is all wrong
+flag as red things that are past today
 ---
 infer a status ... next is things that are today, deferred is things that are after today
 show this on the search screen and the board
 ---
+show only next on the board ... if nothing in next then show deferred
+---
 use ^ for status and something else for date, maybe @, maybe nothing, maybe the date is part of the status
 ---
-have a max items setting, default to 10 and then do ... to encourage faster processing
+query sort order is all wrong
 ---
-flag as red things that are past today
+have a max items setting, default to 10 and then do ... to encourage faster processing
 ---
 show a summary of stats - using the colours and counts
 ---
@@ -19,7 +19,7 @@ make defer better
 ---
 support ; when adding (how do we handle tags? apply to all?)
 ---
-ref : tag ...
+: tag (although search covers it for now)
 ---
 will want expert mode add and next +/
 will want expert mode add and done +!
