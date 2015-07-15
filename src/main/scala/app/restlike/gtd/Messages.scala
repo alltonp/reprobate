@@ -56,7 +56,7 @@ object Messages {
 //    "  - kill all usages                ⇒ 'rim [killtag] :--'",
     "",
     "search:",
-    "  - all things                     ⇒ 'gtd ? {term1 term2 termX}'                      ⇒ e.g. 'gtd ? :tag text'",
+    "  - all things                     ⇒ 'gtd ? {term1 term2 termX}'                      ⇒ e.g. 'gtd ? :tag ^date text'",
 //    "",
 //    "releases:",
 //    "  - create                         ⇒ 'rim ± [label]'",

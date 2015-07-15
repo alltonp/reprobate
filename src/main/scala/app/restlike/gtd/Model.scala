@@ -26,10 +26,10 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
-//  private def renderStatus(model: Option[Model]) = {
-//    val value = status.fold("")(" ^" + _)
-//    colouredForStatus(model, value)
-//  }
+  private def renderStatus(model: Option[Model]) = {
+    val value = date.fold("")(" ^" + _)
+    colouredForStatus(model, value)
+  }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
     model.fold(value)(m =>
@@ -43,13 +43,13 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
       })
   }
 
-  private val indexed = List(ref, description/*, renderStatus(None)*/, renderTags).mkString(" ")
+  private val indexed = List(ref, description, renderStatus(None), renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else "" /*renderStatus(Some(model))*/ }"
+    val r = s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
 //    if (highlight) customGreen(r) else customGrey(r)
     r
   }
