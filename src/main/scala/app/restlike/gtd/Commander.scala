@@ -36,7 +36,8 @@ object Commander {
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel)
       case In(Some(ref), List("!")) => onDoIssue(ref, currentModel)
       case In(Some(ref), List(".")) => onUndoIssue(ref, currentModel)
-//      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
+      case In(Some(ref), List("/")) => onNextIssue(ref, currentModel)
+      //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
 //      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
@@ -145,6 +146,14 @@ object Commander {
       val updatedThings = found :: currentModel.things
       val updatedDone = currentModel.done.filterNot(_ == found)
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
+      Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
+    }
+  }
+
+  private def onNextIssue(ref: String, currentModel: Model) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val updatedIssue = found.copy(date = Some(systemClock().date))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref)), Some(updatedModel))
     }
   }

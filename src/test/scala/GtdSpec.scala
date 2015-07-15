@@ -101,20 +101,27 @@ class GtdSpec extends WordSpec with MustMatchers {
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
 
-  //doing
+  //processing
 
-  "do thing" in {
+  "do a thing" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
     val current = modelWithThing(issue)
     val expected = current.copy(things = Nil, done = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), Set("tag1", "tag2"))))
     runAndExpect("1 !", current, expected)
   }
 
-  "undo thing" in {
+  "undo a thing" in {
     val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
     val current = modelWithDone(issue)
     val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))), done = Nil)
     runAndExpect("1 .", current, expected)
+  }
+
+  "next a thing" in {
+    val issue = Thing("1", "an item", Some(new LocalDate(2015, 1, 1)), Set("tag1", "tag2"))
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(new LocalDate(2015, 2, 1)), Set("tag1", "tag2"))))
+    runAndExpect("1 /", current, expected)
   }
 
   //tagging
