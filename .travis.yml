@@ -4,6 +4,7 @@ scala:
 jdk:
 - oraclejdk8
 script: ./scripts/ci-build.sh
+sudo: false
 env:
   global:
   - LIB_VERSION=$TRAVIS_BUILD_NUMBER
