@@ -52,24 +52,13 @@ object Presentation {
   //TODO: this should show a nice "there is nothing to see" if that is the case
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, hideNextIfUnprocessed: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String]) = {
-    val today = systemClock().date
-
-    val stateToIssues = issues.groupBy(i => {
-      i.date match {
-        case Some(x) if x == today || x.isBefore(today) => "next"
-        case Some(x) => "deferred"
-        case None => "collected"
-      }
-    })
-
-//    println(stateToIssues)
+    val stateToIssues = issues.groupBy(_.inferredState)
 
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
                             else if (hideNextIfUnprocessed && stateToIssues.contains("next")) List("next")
                             else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
 
     interestingStates.flatMap(s => {
-      //      println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil).sortBy(_.ref.toLong)
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref))

@@ -25,6 +25,15 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 //    }
 //  }
 
+  val inferredState = {
+    val today = systemClock().date
+    date match {
+      case Some(x) if x == today || x.isBefore(today) => "next"
+      case Some(x) => "deferred"
+      case None => "collected"
+    }
+  }
+
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
   private def renderStatus(model: Option[Model]) = {
