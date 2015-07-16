@@ -24,6 +24,8 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 //    }
 //  }
 
+  //TODO: should this also support 'overdue' and 'really-overdue' .. then colours work purely off the strings
+  //TODO: these should be constants to and sort by them .. zipwithindex etc
   def inferredState(model: Option[Model]) = {
     val today = systemClock().date
     date match {
