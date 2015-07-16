@@ -4,8 +4,6 @@ if trying to change a done, reject the change .. must be undone first
 ---
 make it impossible to process next until collected are all done (later make it an option)
 ---
-flag as red things that are past today
----
 infer a status ... next is things that are today, deferred is things that are after today
 show this on the search screen and the board
 ---

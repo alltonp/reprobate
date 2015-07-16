@@ -37,7 +37,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
   private def renderStatus(model: Option[Model]) = {
-    val value = date.fold("")(" ^" + _)
+    val value = date.fold("")(s" ^$inferredState - " + _)
     colouredForStatus(model, value)
   }
 
