@@ -7,7 +7,6 @@ import org.joda.time.{LocalDate, DateTime}
 
 import scala.collection.immutable
 
-
 case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String]) {
   def modelFor(token: String) = if (tokenToUser.contains(token)) Some(userToModel(tokenToUser(token)))
   else None
@@ -25,7 +24,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 //    }
 //  }
 
-  val inferredState = {
+  def inferredState(model: Option[Model]) = {
     val today = systemClock().date
     date match {
       case Some(x) if x == today || x.isBefore(today) => "next"
@@ -37,19 +36,20 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
 
   private def renderStatus(model: Option[Model]) = {
-    val value = date.fold("")(s" ^$inferredState - " + _)
+    val value = date.fold("")(s" ^${inferredState(model)} - " + _)
     colouredForStatus(model, value)
   }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
+    val state = inferredState(model)
     model.fold(value)(m =>
       date match {
         case None => customBlue(value)
         case Some(_) if m.done.contains(this) => customMagenta(value)
-        case Some(_) if inferredState == "deferred" => customGrey(value)
-        case Some(d) if d.isAfter(systemClock().date.plusDays(2)) && inferredState == "next" => red(value)
-        case Some(d) if d.isAfter(systemClock().date.plusDays(1)) && inferredState == "next" => customOrange(value)
-        case Some(_) if inferredState == "next" => customYellow(value)
+        case Some(_) if state == "deferred" => customGrey(value)
+        case Some(d) if d.isAfter(systemClock().date.plusDays(2)) && state == "next" => red(value)
+        case Some(d) if d.isAfter(systemClock().date.plusDays(1)) && state == "next" => customOrange(value)
+        case Some(_) if state == "next" => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
         case _ => customGrey(value) //customYellow(value)

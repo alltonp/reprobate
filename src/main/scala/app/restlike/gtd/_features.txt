@@ -4,13 +4,6 @@ if trying to change a done, reject the change .. must be undone first
 ---
 make it impossible to process next until collected are all done (later make it an option)
 ---
-infer a status ... next is things that are today, deferred is things that are after today
-show this on the search screen and the board
----
-show only next on the board ... if nothing in next then show deferred
----
-use ^ for status and something else for date, maybe @, maybe nothing, maybe the date is part of the status
----
 query sort order is all wrong
 ---
 have a max items setting, default to 10 and then do ... to encourage faster processing
@@ -19,7 +12,7 @@ show a summary of stats - using the colours and counts
 ---
 moan if something is next and it is nexted again (don't change the date, enforce a defer)
 ---
-make defer better
+make defer even betterer
 ---
 support ; when adding (how do we handle tags? apply to all?)
 ---

@@ -52,7 +52,7 @@ object Presentation {
   //TODO: this should show a nice "there is nothing to see" if that is the case
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, hideNextIfUnprocessed: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Thing], currentModel: Model,
                             changed: Seq[String]) = {
-    val stateToIssues = issues.groupBy(_.inferredState)
+    val stateToIssues = issues.groupBy(_.inferredState(Some(model)))
 
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
                             else if (hideNextIfUnprocessed && stateToIssues.contains("next")) List("next")
