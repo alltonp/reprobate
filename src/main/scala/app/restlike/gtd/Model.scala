@@ -27,6 +27,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
   def inferredState(model: Option[Model]) = {
     val today = systemClock().date
     date match {
+      case Some(x) if model.fold(List.empty[Thing])(_.done).contains(this) => "done"
       case Some(x) if x == today || x.isBefore(today) => "next"
       case Some(x) => "deferred"
       case None => "collected"
