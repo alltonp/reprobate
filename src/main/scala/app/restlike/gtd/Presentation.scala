@@ -54,15 +54,16 @@ object Presentation {
                             changed: Seq[String]) = {
     val stateToIssues = issues.groupBy(_.date.getOrElse("collected"))
 //    println(stateToIssues)
-    val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected") else stateToIssues.keys.toList.sorted ::: (if (includeReleased) List("done") else Nil)
-    interestingStates.map(s => {
-//      println(s)
+    val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
+                            else stateToIssues.keys.toList.sorted ::: (if (includeReleased) List("done") else Nil)
+    interestingStates.flatMap(s => {
+      //      println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil).sortBy(_.ref.toLong)
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref))
       }").mkString
       if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
-    }).flatten
+    })
   }
 
 //  private def sieveByTag(tags: Seq[Tag], issues: Seq[Thing], currentModel: Model, sanitise: Boolean, aka: String) = {
