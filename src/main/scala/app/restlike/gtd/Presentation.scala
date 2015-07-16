@@ -65,6 +65,7 @@ object Presentation {
 //    println(stateToIssues)
 
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
+                            else if (hideNextIfUnprocessed && stateToIssues.contains("next")) List("next")
                             else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
 
     interestingStates.flatMap(s => {
