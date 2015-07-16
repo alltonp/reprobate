@@ -43,11 +43,13 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   private def colouredForStatus(model: Option[Model], value: String) = {
     model.fold(value)(m =>
-      inferredState match {
-        case "collected" => customBlue(value)
-        case _ if m.done.contains(this) => customMagenta(value)
-        case "deferred" => customGrey(value)
-        case "next" => customYellow(value)
+      date match {
+        case None => customBlue(value)
+        case Some(_) if m.done.contains(this) => customMagenta(value)
+        case Some(_) if inferredState == "deferred" => customGrey(value)
+        case Some(d) if d.isAfter(systemClock().date.plusDays(2)) && inferredState == "next" => red(value)
+        case Some(d) if d.isAfter(systemClock().date.plusDays(1)) && inferredState == "next" => customOrange(value)
+        case Some(_) if inferredState == "next" => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
         case _ => customGrey(value) //customYellow(value)
