@@ -55,7 +55,7 @@ object Presentation {
     val stateToIssues = issues.groupBy(_.date.getOrElse("collected"))
 //    println(stateToIssues)
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
-                            else stateToIssues.keys.toList.sorted ::: (if (includeReleased) List("done") else Nil)
+                            else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
     interestingStates.flatMap(s => {
       //      println(s)
       val issuesForState = stateToIssues.getOrElse(s, Nil).sortBy(_.ref.toLong)
