@@ -46,7 +46,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
     model.fold(value)(m =>
       date match {
         case None => customBlue(value)
-        case Some(_) if m.done.contains(this) => customMagenta(value)
+        case Some(_) if m.done.contains(this) => customGreen(value)
         case Some(_) if state == "deferred" => customGrey(value)
         case Some(d) if d.isBefore(systemClock().date.minusDays(1)) && state == "next" => red(value)
         case Some(d) if d.isBefore(systemClock().date) && state == "next" => customOrange(value)
