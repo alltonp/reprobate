@@ -46,7 +46,8 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(Dogfood)
     LiftRules.statelessDispatch.append(BroadcastFlash)
     LiftRules.statelessDispatch.append(Demo)
-    LiftRules.statelessDispatch.append(Iam)
+
+//    LiftRules.statelessDispatch.append(Iam)
     LiftRules.statelessDispatch.append(Rim)
     LiftRules.statelessDispatch.append(Rem)
     LiftRules.statelessDispatch.append(Gtd)
