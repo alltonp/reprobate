@@ -1,3 +1,5 @@
+really important to show the impact of the last command .. as too easy to get it wrong right now ...
+---
 after all changes show the thing and the board
 ---
 if trying to change a done, reject the change .. must be undone first
