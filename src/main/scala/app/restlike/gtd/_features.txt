@@ -1,3 +1,7 @@
+order board by status colour
+---
+order ? by status colour
+---
 we really need +!
 ---
 make it impossible to process next until collected are all done (later make it an option)
