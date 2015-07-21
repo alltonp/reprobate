@@ -1,6 +1,12 @@
 package app.restlike.rim
 
 //NEXT:
+//now that tracking is disabled, make it possible to see history for an item
+//  e.g. rim 64
+//also make it possible to free text search an item
+//  e.g. rim ; for history query
+//-both are simple queries over the (token-filtered-tracking)
+
 //think about limiting WIP
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
@@ -9,7 +15,6 @@ package app.restlike.rim
 //todo: could do burn down!
 //rim burn
 //rim stats
-
 
 //after talking with stu/tom/albert
 //stu: would be good to answer things like: how long a card took?
