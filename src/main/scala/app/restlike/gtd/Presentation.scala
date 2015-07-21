@@ -13,6 +13,7 @@ object Presentation {
     Presentation.board(model, changed = Seq(updatedIssue.ref), Some(updatedIssue))
   }
 
+  //TODO: reanme to basedOnUpdateContext
   def board(model: Model, changed: Seq[String], found: Option[Thing]) = {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)

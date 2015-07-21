@@ -119,7 +119,7 @@ object Commander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
@@ -128,7 +128,7 @@ object Commander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
@@ -186,7 +186,7 @@ object Commander {
 //      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
 //                         else
 //        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
