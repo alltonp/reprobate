@@ -48,7 +48,7 @@ class GtdSpec extends WordSpec with MustMatchers {
 
   "collect and next forward to begin state" in {
     val current = emptyModel
-    val expected = current.copy(things = List(Thing("1", "an item", someDate)))
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date))))
     runAndExpect("+/ an item", current, expected)
   }
 
