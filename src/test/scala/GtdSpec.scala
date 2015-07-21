@@ -32,25 +32,25 @@ class GtdSpec extends WordSpec with MustMatchers {
     runAndExpect("tags =", current, expected)
   }
 
-  //adding
+  //collecting
 
-  "add issue" in {
+  "collect issue" in {
     val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an item", current, expected)
   }
 
-  "add issue (ignoring surplus noise)" in {
+  "collect issue (ignoring surplus noise)" in {
     val current = emptyModel
     val expected = current.copy(things = List(Thing("1", "an item", None)))
     runAndExpect("+ an   item  ", current, expected)
   }
 
-//  "add and move forward to begin state" in {
-//    val current = emptyModelWithWorkflow
-//    val expected = current.copy(issues = List(Thing("1", "an item", Some(next))))
-//    runAndExpect("+/ an item", current, expected)
-//  }
+  "collect and next forward to begin state" in {
+    val current = emptyModel
+    val expected = current.copy(things = List(Thing("1", "an item", someDate)))
+    runAndExpect("+/ an item", current, expected)
+  }
 
 //  "add and move forward to second state" in {
 //    val current = emptyModelWithWorkflow
