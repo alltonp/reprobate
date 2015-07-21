@@ -1,10 +1,4 @@
-really really important to show the impact of the last command .. as too easy to get it wrong right now ...
----
 we really need +!
----
-after all changes show the thing and the board
----
-if trying to change a done, reject the change .. must be undone first
 ---
 make it impossible to process next until collected are all done (later make it an option)
 ---
