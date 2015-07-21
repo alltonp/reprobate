@@ -52,7 +52,7 @@ object Commander {
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
     Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
-  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel, Nil, None), None)
+  private def onShowBoard(currentModel: Model) = Out(Presentation.basedOnUpdateContext(currentModel, Nil, None), None)
 
   private def onHelp(currentModel: Model) = Out(Messages.help("???"), None)
 
@@ -119,7 +119,7 @@ object Commander {
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
@@ -128,7 +128,7 @@ object Commander {
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
@@ -138,7 +138,7 @@ object Commander {
       val updatedFound = found.copy(date = Some(systemClock().date))
       val updatedDone = updatedFound :: currentModel.done
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
-      Out(Presentation.board(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
     }
   }
 
@@ -147,7 +147,7 @@ object Commander {
       val updatedThings = found :: currentModel.things
       val updatedDone = currentModel.done.filterNot(_ == found)
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
-      Out(Presentation.board(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
     }
   }
 
@@ -155,7 +155,7 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedIssue = found.copy(date = Some(systemClock().date))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
     }
   }
 
@@ -172,7 +172,7 @@ object Commander {
       }
       val updatedIssue = found.copy(date = Some(deferredDate))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
     }
   }
 
@@ -186,14 +186,14 @@ object Commander {
 //      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
 //                         else
 //        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(Presentation.board(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedModel = currentModel.copy(things = currentModel.things.filterNot(i => i == found))
-      Out(Presentation.board(updatedModel, Nil, Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Nil, Some(found)), Some(updatedModel))
     }
   }
 
@@ -235,14 +235,14 @@ object Commander {
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), Some(r.created)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.basedOnUpdateContext(r.updatedModel, Seq(r.created.ref), Some(r.created)), Some(r.updatedModel))
     }
   }
 
   private def onAddAndNext(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, Some(systemClock().date), None, refProvider) match {
       case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), Some(r.created)), Some(r.updatedModel))
+      case Right(r) => Out(Presentation.basedOnUpdateContext(r.updatedModel, Seq(r.created.ref), Some(r.created)), Some(r.updatedModel))
     }
   }
 

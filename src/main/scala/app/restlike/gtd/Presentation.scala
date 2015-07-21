@@ -7,17 +7,13 @@ import org.joda.time.LocalDate
 object Presentation {
   implicit def dateTimeOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
 
-  def basedOnUpdateContext(model: Model, updatedIssue: Thing) = {
-//    if (model.onBoard_?(updatedIssue)) Presentation.board(model, changed = Seq(updatedIssue.ref), aka)
-//    else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
-    Presentation.board(model, changed = Seq(updatedIssue.ref), Some(updatedIssue))
-  }
-
-  //TODO: reanme to basedOnUpdateContext
-  def board(model: Model, changed: Seq[String], found: Option[Thing]) = {
+  def basedOnUpdateContext(model: Model, changed: Seq[String], found: Option[Thing]) = {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
-    found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) ::: groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
+
+    found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
+      groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
+
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 
