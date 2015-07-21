@@ -24,7 +24,7 @@ object Commander {
       case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
       case In(Some("help"), Nil) => onHelp(currentModel)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
-//      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
+      case In(Some("+/"), args) => onAddAndNext(args, currentModel, refProvider)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
@@ -234,6 +234,13 @@ object Commander {
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
+      case Left(e) => Out(e, None)
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
+    }
+  }
+
+  private def onAddAndNext(args: List[String], currentModel: Model, refProvider: RefProvider) = {
+    currentModel.createIssue(args, Some(systemClock().date), None, refProvider) match {
       case Left(e) => Out(e, None)
       case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref)), Some(r.updatedModel))
     }
