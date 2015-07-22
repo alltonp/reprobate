@@ -46,21 +46,8 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   private def renderStatus(model: Option[Model]) = {
     val value = date.fold("")(s" ^${inferredState(model)} - " + _)
-    colouredForStatus(inferredState(model), value)
+    ColouredForStatus(inferredState(model), value)
   }
-
-  private def colouredForStatus(state: String, value: String) =
-    state match {
-      case "collected" => customBlue(value)
-      case "done" => customGreen(value)
-      case "deferred" => customGrey(value)
-      case "next-really-overdue" => red(value)
-      case "next-overdue" => customOrange(value)
-      case "next" => customYellow(value)
-//        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
-//        case Some("released") => customMagenta(value)
-      case _ => customGrey(value) //customYellow(value)
-    }
 
   private val indexed = List(ref, description, renderStatus(None), renderTags).mkString(" ")
 
@@ -68,10 +55,25 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else colouredForStatus(inferredState(Some(model)) , "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
+    val r = s"${if (hideId) "" else ColouredForStatus(inferredState(Some(model)) , "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
     if (highlight) customGreen(r) else customGrey(r)
     r
   }
+}
+
+object ColouredForStatus {
+  def apply(state: String, value: String) =
+    state match {
+      case "collected" => customBlue(value)
+      case "done" => customGreen(value)
+      case "deferred" => customGrey(value)
+      case "next-really-overdue" => red(value)
+      case "next-overdue" => customOrange(value)
+      case "next" => customYellow(value)
+      //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
+      //        case Some("released") => customMagenta(value)
+      case _ => customGrey(value) //customYellow(value)
+    }
 }
 
 //case class History(who: String, command: String)
