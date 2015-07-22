@@ -23,7 +23,7 @@ object Presentation {
 
     //TODO: split these out ...
     found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
-      List(sortedSummary.map{case (k, c) => s"${ColouredForStatus(k, s"◼ ($c) ") + Colours.customGrey(s"")}"}.mkString(" ")) ::: List("") :::
+      List(sortedSummary.map{case (k, c) => s"${ColouredForStatus(k, s"◼ $k ($c) ") + Colours.customGrey(s"")}"}.mkString(" ")) ::: List("") :::
       groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
 
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
