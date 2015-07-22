@@ -19,7 +19,7 @@ object Presentation {
       case (k, vs) => (k, vs.size)
     }
 
-    val sortedSummary = summary.toList.sortBy(s => order.indexOf(s._1))
+    val sortedSummary = summary.filterNot(_._2 == 0).toList.sortBy(s => order.indexOf(s._1))
 
     //TODO: split these out ...
     found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
