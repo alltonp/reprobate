@@ -11,6 +11,12 @@ object Presentation {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
 
+    val summary = model.allIssuesIncludingDone.groupBy(_.inferredState(Some(model))).map{
+      case (k, vs) => (k, vs.size)
+    }
+
+    println(summary)
+
     found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
       groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
 
