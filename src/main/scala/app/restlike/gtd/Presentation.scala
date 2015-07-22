@@ -54,8 +54,14 @@ object Presentation {
                             else if (hideNextIfUnprocessed && stateToIssues.contains("next")) List("next")
                             else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
 
+//    println(interestingStates)
+
     interestingStates.flatMap(s => {
-      val issuesForState = stateToIssues.getOrElse(s, Nil).sortBy(_.ref.toLong)
+      val issuesForState = stateToIssues.getOrElse(s, Nil).sortBy(_.ref.toLong).sortBy(_.inferredState(Some(model)))
+
+//      issuesForState.sortBy(_.inferredState(Some(model)))
+//      println(issuesForState)
+
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref))
       }").mkString
