@@ -1,6 +1,7 @@
 package app.restlike.gtd
 
 import app.ServiceFactory.{systemClock, dateFormats}
+import app.restlike.common.Colours
 import org.joda.time.LocalDate
 
 //TODO: add issue
@@ -17,7 +18,7 @@ object Presentation {
 
     //TODO: split these out ...
     found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
-      List(summary.map{case (k, c) => s"${ColouredForStatus(k, s"$k: (${c})")}"}.toList.sorted.mkString(", ")) ::: List("") :::
+      List(summary.map{case (k, c) => s"${ColouredForStatus(k, s"◼ ") + Colours.customGrey(s"(${c})")}"}.toList.sorted.mkString(" ")) ::: List("") :::
       groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
 
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil

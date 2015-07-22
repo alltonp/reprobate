@@ -15,10 +15,6 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
     copy(userToModel = userToModel.updated(tokenToUser(token), updatedModel))
 }
 
-object Colouriser {
-
-}
-
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 case class Thing(ref: String, description: String, date: Option[LocalDate], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
 //  private def renderBy(highlightAka: Option[String]) = {
