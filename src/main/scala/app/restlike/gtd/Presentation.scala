@@ -13,7 +13,7 @@ object Presentation {
 //    val thingsByDate = model.things.groupBy(_.date)
 
     //TODO: really need constants for these ...
-    val order = List("collected", "next", "next-overdue", "next-really-overdue", "done", "deferred")
+    val order = List("collected", "next-really-overdue", "next-overdue", "next", "done", "deferred")
 
     val summary = model.allThingsIncludingDone.groupBy(_.inferredState(Some(model))).map{
       case (k, vs) => (k, vs.size)
