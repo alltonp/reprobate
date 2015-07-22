@@ -17,15 +17,15 @@ object Presentation {
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
   }
 
-  def release(model: Model, release: Release, highlightAka: Option[String]) = {
-    val r = release.issues.map(i => s"\n  ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
-    s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
-  }
+//  def release(model: Model, release: Release, highlightAka: Option[String]) = {
+//    val r = release.issues.map(i => s"\n  ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
+//    s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
+//  }
 
-  def issuesForUser(model: Model, aka: String, issues: Seq[Thing]) = {
-    val r = issues.map(i => s"\n  ${i.render(model, hideBy = true)}").mkString
-    s"${aka}: (${issues.size})" + r + "\n"
-  }
+//  def issuesForUser(model: Model, aka: String, issues: Seq[Thing]) = {
+//    val r = issues.map(i => s"\n  ${i.render(model, hideBy = true)}").mkString
+//    s"${aka}: (${issues.size})" + r + "\n"
+//  }
 
   def tags(all: Seq[Tag]) = sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil
 
