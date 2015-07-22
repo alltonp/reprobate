@@ -49,20 +49,18 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
     colouredForStatus(model, inferredState(model), value)
   }
 
-  private def colouredForStatus(model: Option[Model], state: String, value: String) = {
-    model.fold(value)(m =>
-      state match {
-        case "collected" => customBlue(value)
-        case "done" => customGreen(value)
-        case "deferred" => customGrey(value)
-        case "next-really-overdue" => red(value)
-        case "next-overdue" => customOrange(value)
-        case "next" => customYellow(value)
+  private def colouredForStatus(model: Option[Model], state: String, value: String) =
+    state match {
+      case "collected" => customBlue(value)
+      case "done" => customGreen(value)
+      case "deferred" => customGrey(value)
+      case "next-really-overdue" => red(value)
+      case "next-overdue" => customOrange(value)
+      case "next" => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
-        case _ => customGrey(value) //customYellow(value)
-      })
-  }
+      case _ => customGrey(value) //customYellow(value)
+    }
 
   private val indexed = List(ref, description, renderStatus(None), renderTags).mkString(" ")
 
