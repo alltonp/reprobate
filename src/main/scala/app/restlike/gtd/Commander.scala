@@ -206,7 +206,7 @@ object Commander {
       }
     }
 
-    val matching = query(currentModel.allIssuesIncludingDone, terms)
+    val matching = query(currentModel.allThingsIncludingDone, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else /*SortByStatus(matching, currentModel)*/matching.sortBy(_.date).map(i => i.render(currentModel))
     Out(result, None)

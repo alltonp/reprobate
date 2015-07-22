@@ -11,7 +11,7 @@ object Presentation {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
 
-    val summary = model.allIssuesIncludingDone.groupBy(_.inferredState(Some(model))).map{
+    val summary = model.allThingsIncludingDone.groupBy(_.inferredState(Some(model))).map{
       case (k, vs) => (k, vs.size)
     }
 

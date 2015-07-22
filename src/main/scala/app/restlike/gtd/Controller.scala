@@ -14,8 +14,8 @@ object Controller {
       case Some(model) => {
 
         val refProvider = RefProvider(
-          if (model.allIssuesIncludingDone.isEmpty) 0
-          else model.allIssuesIncludingDone.map(_.ref.toLong).max
+          if (model.allThingsIncludingDone.isEmpty) 0
+          else model.allThingsIncludingDone.map(_.ref.toLong).max
         )
 
         JsonRequestHandler.handle(req)((json, req) ⇒ {
