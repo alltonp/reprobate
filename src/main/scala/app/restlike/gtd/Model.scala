@@ -46,10 +46,10 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   private def renderStatus(model: Option[Model]) = {
     val value = date.fold("")(s" ^${inferredState(model)} - " + _)
-    colouredForStatus(model, inferredState(model), value)
+    colouredForStatus(inferredState(model), value)
   }
 
-  private def colouredForStatus(model: Option[Model], state: String, value: String) =
+  private def colouredForStatus(state: String, value: String) =
     state match {
       case "collected" => customBlue(value)
       case "done" => customGreen(value)
@@ -68,7 +68,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    val r = s"${if (hideId) "" else colouredForStatus(Some(model), inferredState(Some(model)) , "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
+    val r = s"${if (hideId) "" else colouredForStatus(inferredState(Some(model)) , "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideStatus) "" else renderStatus(Some(model)) }"
     if (highlight) customGreen(r) else customGrey(r)
     r
   }
