@@ -12,13 +12,18 @@ object Presentation {
 //    val thingsToShow = if (model.collectedNeedProcessing) model.things.filter(_.date.isEmpty) else model.things
 //    val thingsByDate = model.things.groupBy(_.date)
 
+    //TODO: really need constants for these ...
+    val order = List("collected", "next", "next-overdue", "next-really-overdue", "done", "deferred")
+
     val summary = model.allThingsIncludingDone.groupBy(_.inferredState(Some(model))).map{
       case (k, vs) => (k, vs.size)
     }
 
+    val sortedSummary = summary.toList.sortBy(s => order.indexOf(s._1))
+
     //TODO: split these out ...
     found.fold(List.empty[String])(f => Messages.successfulUpdate(s"${f.render(model)}") ::: List("")) :::
-      List(summary.map{case (k, c) => s"${ColouredForStatus(k, s"◼⇒ ") + Colours.customGrey(s"${c}")}"}.toList.sorted.mkString("  ")) ::: List("") :::
+      List(sortedSummary.map{case (k, c) => s"${ColouredForStatus(k, s"◼⇒ ") + Colours.customGrey(s"${c}")}"}.toList.mkString("  ")) ::: List("") :::
       groupByStatus(model, compressEmptyStates = false, includeReleased = false, hideNextIfUnprocessed = true, hideBy = false, hideTags = false, model.things, model, changed)
 
 //    model.things.sortBy(_.date).map(t => t.render(model, hideStatus = true, highlight = changed.contains(t.ref))).mkString("\n") :: Nil
