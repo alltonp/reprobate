@@ -53,7 +53,7 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
     model.fold(value)(m =>
       state match {
         case "collected" => customBlue(value)
-        case _ if m.done.contains(this) => customGreen(value)
+        case "done" => customGreen(value)
         case "deferred" => customGrey(value)
         case "next-really-overdue" => red(value)
         case "next-overdue" => customOrange(value)
