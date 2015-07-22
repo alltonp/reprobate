@@ -15,6 +15,10 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
     copy(userToModel = userToModel.updated(tokenToUser(token), updatedModel))
 }
 
+object Colouriser {
+
+}
+
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 case class Thing(ref: String, description: String, date: Option[LocalDate], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
 //  private def renderBy(highlightAka: Option[String]) = {
@@ -30,6 +34,8 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
     val today = systemClock().date
     date match {
       case Some(x) if model.fold(List.empty[Thing])(_.done).contains(this) => "done"
+      case Some(d) if d.isBefore(systemClock().date.minusDays(1)) => "next-really-overdue"
+      case Some(d) if d.isBefore(systemClock().date) => "next-overdue"
       case Some(x) if x == today || x.isBefore(today) => "next"
       case Some(x) => "deferred"
       case None => "collected"
@@ -50,8 +56,8 @@ case class Thing(ref: String, description: String, date: Option[LocalDate], tags
         case None => customBlue(value)
         case Some(_) if m.done.contains(this) => customGreen(value)
         case Some(_) if state == "deferred" => customGrey(value)
-        case Some(d) if d.isBefore(systemClock().date.minusDays(1)) && state == "next" => red(value)
-        case Some(d) if d.isBefore(systemClock().date) && state == "next" => customOrange(value)
+        case Some(_) if state == "next-really-overdue" => red(value)
+        case Some(_) if state == "next-overdue" => customOrange(value)
         case Some(_) if state == "next" => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
 //        case Some("released") => customMagenta(value)
