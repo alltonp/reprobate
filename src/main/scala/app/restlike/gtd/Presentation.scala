@@ -62,8 +62,12 @@ object Presentation {
                             changed: Seq[String]) = {
     val stateToIssues = issues.groupBy(_.inferredState(Some(model)))
 
+    val nextyThings = List("next-really-overdue", "next-overdue", "next")
+
+    //TOOD: hideNextIfUnprocessed is a bad name
+
     val interestingStates = if (hideNextIfUnprocessed && stateToIssues.contains("collected")) List("collected")
-                            else if (hideNextIfUnprocessed && stateToIssues.contains("next")) List("next")
+                            else if (hideNextIfUnprocessed && stateToIssues.keys.exists(_.startsWith("next"))) nextyThings
                             else stateToIssues.keys.toList ::: (if (includeReleased) List("done") else Nil)
 
 //    println(interestingStates)
