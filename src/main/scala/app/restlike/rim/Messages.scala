@@ -25,7 +25,7 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimentary issue management © 2015 spabloshi ltd",
     "",
     "issues:",
-    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'",
+    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'     ⇒ e.g. 'rim + description : tag1 tag2'",
     "  - update                         ⇒ 'rim [ref] ='",
     "  - delete                         ⇒ 'rim [ref] -'",
     "  - own                            ⇒ 'rim [ref] @'",
