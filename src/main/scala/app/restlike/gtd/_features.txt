@@ -1,4 +1,4 @@
-order board by status colour
+show the result of the last command looks like the version before the change
 ---
 order ? by status colour
 ---
@@ -10,8 +10,6 @@ query sort order is all wrong
 ---
 have a max items setting, default to 10 and then do ... to encourage faster processing
 ---
-show a summary of stats - using the colours and counts
----
 moan if something is next and it is nexted again (don't change the date, enforce a defer)
 ---
 make defer even betterer
@@ -20,7 +18,6 @@ support ; when adding (how do we handle tags? apply to all?)
 ---
 : tag (although search covers it for now)
 ---
-will want expert mode add and next +/
 will want expert mode add and defer +/w etc
 will want expert mode add and done +!
 might want expert mode / d, / w, / m, / y where it's automatically 1, but could be / d 2 etc
