@@ -1,13 +1,16 @@
-package app.restlike.rim
-
-//NEXT:
-//now that tracking is disabled, make it possible to see history for an item
-//  e.g. rim 64
-//also make it possible to free text search an item
-//  e.g. rim ; for history query
-//-both are simple queries over the (token-filtered-tracking)
-
-//think about limiting WIP
+now that tracking is disabled, make it possible to see history for an item
+e.g. rim 64
+---
+also make it possible to free text search history
+e.g. rim ; for history query
+both are simple queries over the (token-filtered-tracking)
+---
+... need to make the priotisation sessions easier
+when updating items on the backlog e.g. tagging, show the backlog
+when updating items on the ^, show the ^ ... hmmm
+---
+think about limiting WIP
+---
 //ultimately rim : [tag] might want to be sorted by status and not broken down by status
 //consider a colour blob next to the status (like a rag status), could be round or reverse video
 //bar chart of progress
