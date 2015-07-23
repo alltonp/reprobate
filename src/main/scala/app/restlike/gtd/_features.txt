@@ -1,3 +1,7 @@
+might need to make things overdue ... although its a but iffy obv
+---
+expert mode, when adding split on a char that isnt ';,|'
+---
 order ? by status colour
 ---
 we really need +!
