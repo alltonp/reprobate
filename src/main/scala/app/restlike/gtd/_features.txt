@@ -1,7 +1,3 @@
-think about replacing all squares with triangles (at least two places)
----
-show the result of the last command looks like the version before the change
----
 order ? by status colour
 ---
 we really need +!

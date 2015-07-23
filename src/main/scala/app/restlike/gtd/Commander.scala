@@ -135,10 +135,10 @@ object Commander {
   private def onDoIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val updatedThings = currentModel.things.filterNot(_ == found)
-      val updatedFound = found.copy(date = Some(systemClock().date))
-      val updatedDone = updatedFound :: currentModel.done
+      val updatedThing = found.copy(date = Some(systemClock().date))
+      val updatedDone = updatedThing :: currentModel.done
       val updatedModel = currentModel.copy(things = updatedThings, done = updatedDone)
-      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(updatedThing)), Some(updatedModel))
     }
   }
 
@@ -153,9 +153,9 @@ object Commander {
 
   private def onNextIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val updatedIssue = found.copy(date = Some(systemClock().date))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      val updatedThing = found.copy(date = Some(systemClock().date))
+      val updatedModel = currentModel.updateIssue(updatedThing)
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(updatedThing)), Some(updatedModel))
     }
   }
 
@@ -170,23 +170,23 @@ object Commander {
         case "1y" => systemClock().date.plusYears(1)
         case _ => systemClock().date//.plusYears(1)
       }
-      val updatedIssue = found.copy(date = Some(deferredDate))
-      val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(found)), Some(updatedModel))
+      val updatedThing = found.copy(date = Some(deferredDate))
+      val updatedModel = currentModel.updateIssue(updatedThing)
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(updatedThing)), Some(updatedModel))
     }
   }
 
   private def onEditIssue(ref: String, args: List[String], currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val newDescription = args.mkString(" ")
-      val updatedIssue = found.copy(description = newDescription)
-      val updatedModel = currentModel.updateIssue(updatedIssue)
+      val updatedThing = found.copy(description = newDescription)
+      val updatedModel = currentModel.updateIssue(updatedThing)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the backlog or releases
 //      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
 //                         else
 //        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(updatedIssue.ref), Some(updatedIssue)), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(updatedThing.ref), Some(updatedThing)), Some(updatedModel))
     }
   }
 
