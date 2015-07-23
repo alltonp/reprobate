@@ -297,7 +297,7 @@ object Commander {
   }
 
   private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val matching = currentModel.issues.filterNot(i => i.status.isEmpty)
+    val matching = currentModel.issues//.filterNot(i => i.status.isEmpty)
     onShowManagementSummary(matching, currentModel, providedTags, aka, sanitise)
   }
 
