@@ -1,6 +1,7 @@
 package bootstrap.liftweb
 
 import app.Control._
+import app.comet.{AppPage, RimPage}
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.demo.Demo
 import app.restlike.rem.Rem
@@ -8,8 +9,10 @@ import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
 import app.view.{RimView, AppView}
 import app.{ServiceFactory}
+import im.mange.jetboot.page.Pages
 import net.liftweb.common._
 import net.liftweb.http._
+import net.liftweb.sitemap.Loc.LocGroup
 import net.liftweb.sitemap._
 import net.liftweb.util._
 import app.restlike.iam.Iam
@@ -20,6 +23,8 @@ class Boot extends Loggable {
     logger.info("Lift is booting ...")
     fatalOnFailure(unsafeBoot())(logger)
   }
+
+  val topBar = LocGroup("topBar")
 
   private def unsafeBoot() {
     LiftRules.addToPackages("app")
@@ -37,7 +42,20 @@ class Boot extends Loggable {
       case List("rim") ⇒ Left(() ⇒ Full(RimView()))
 //      case List("index") ⇒ Left(() ⇒ Full(RimView()))
     }
-    
+
+//    val protectedPages = Seq(
+//      //      Nick(topBar, requiresAuth),
+//      AppPage("index"),
+//      RimPage("rim")//,
+//      //      CustodianRec(topBar, requiresAuth)
+//    )
+//    Pages(
+//      protectedPages ++ Seq(
+////        LoginFailed(),
+////        Logout(logUserOut)
+//      ): _*
+//    )
+
     LiftRules.uriNotFound.prepend(NamedPF("404handler") {
       case (req, failure) ⇒ NotFoundAsTemplate(ParsePath(List("404"), "html", false, false))
     })
