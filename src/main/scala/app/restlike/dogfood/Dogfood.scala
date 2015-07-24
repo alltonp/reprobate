@@ -2,6 +2,7 @@ package app.restlike.dogfood
 
 import im.mange.reprobate.api.Runner
 import im.mange.shoreditch.api.Check
+import im.mange.shoreditch.check.Alive
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.{GetRequest, Req}
 import app.ServiceFactory
@@ -12,6 +13,7 @@ import app.model.FailedProbe
 object Dogfood extends RestHelper {
   serve {
     case Req("check" :: "probes" :: "ok" :: env :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(OkProbe(env)) }
+    case Req("check" :: "alive" :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(Alive) }
   }
 }
 
