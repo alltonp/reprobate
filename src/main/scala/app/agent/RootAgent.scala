@@ -1,6 +1,6 @@
 package app.agent
 
-import app.comet.Subscriber
+//import app.comet.Subscriber
 import im.mange.jetboot.bootstrap3.{Bootstrap, GridSystem}
 import app.server._
 import im.mange.jetboot.Css._
@@ -43,7 +43,7 @@ import app.server.ProbeStatusUpdate
 //features:
 //store probe duration ...
 
-case class RootAgent(subscriber: Subscriber) extends Renderable {
+case class RootAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
   import im.mange.jetboot.Html._
   import Js._
   import GridSystem._

@@ -74,3 +74,13 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
   private def tablify(h: TableHeaders, r: List[TableRow]) =
     div(None, simpleTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
 }
+
+@deprecated("Use LinkAnchor() instead", "01/05/2015")
+trait LinkButton extends Button {
+  import im.mange.jetboot.Js._
+
+  //TODO: target should be configurable
+  def url: String
+  val onClick = nothing
+  def render = <a href={url} id={id} target="_blank" class={presentation.classes.render} style={presentation.styles.render}>{presentation.body}</a>
+}

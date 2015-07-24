@@ -1,15 +1,18 @@
 package app.server
 
 import app.model._
-import app.comet.Subscriber
+import im.mange.jetboot.comet.Subscriber
+
+//import app.comet.Subscriber
 import org.joda.time.LocalDateTime
 import scala._
 import app.model.Probe
 import app.model.ChecksHistory
 import app.model.Incident
 
-case class Subscribe(subscriber: Subscriber)
-case class Unsubscribe(subscriber: Subscriber)
+//TODO: these need to die soon ...
+case class Subscribe(subscriber: im.mange.jetboot.comet.Subscriber)
+case class Unsubscribe(subscriber: im.mange.jetboot.comet.Subscriber)
 
 //TODO: should this be ExecuteProbeSuite?
 case object ExecuteProbeRun

@@ -4,10 +4,11 @@ import java.io.FileNotFoundException
 import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
 import app.ServiceFactory._
-import app.comet.{Init, Subscriber}
+import app.comet.{Init}
 import app.model._
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
+import im.mange.jetboot.comet.Subscriber
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
 
