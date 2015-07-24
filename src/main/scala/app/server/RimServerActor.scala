@@ -5,7 +5,7 @@ import im.mange.jetboot.comet.{PushToAllSubscribers, Subscriber, MulticastLiftAc
 import net.liftweb.actor.LiftActor
 
 class RimServerActor extends MessageCapturingLiftActor with MulticastLiftActor with Bangable[Any] {
-  override def onCapturedMessage(message: Any, actor: LiftActor) {  }
+  override def onCapturedMessage(message: Any, actor: LiftActor) { println(s"$this: $message $actor") }
 
   def handleMessage: PartialFunction[Any, Unit] = {
     case i:ModelChanged => this ! PushToAllSubscribers(i)

@@ -19,9 +19,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 class RimCometActor extends RefreshableCometActor with im.mange.jetboot.comet.MessageCapturingCometActor with im.mange.jetboot.comet.Subscriber with Loggable {
   override def onCapturedMessage(message: Any, actor: LiftActor) {}
 
-  private var rootAgent = RimAgent(this)
-
-  override def render = rootAgent.render
+  private var rootAgent: RimAgent = _
 
   def beforeRefresh() {
     //root.cleanup()
@@ -37,11 +35,13 @@ class RimCometActor extends RefreshableCometActor with im.mange.jetboot.comet.Me
   }
 
   def doRender = {
+    println("rendering")
     rootAgent.render
   }
 
   override def localShutdown() {
     //root.cleanup()
+    rimServerActor() ! Unsubscribe(this)
     super.localShutdown()
   }
 
