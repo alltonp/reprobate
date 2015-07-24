@@ -1,8 +1,10 @@
 package app.restlike.rim
 
+import app.ServiceFactory.rimServerActor
 import app.restlike.common.Colours.customGrey
 import app.restlike.common.Responder._
 import app.restlike.common._
+import app.server.ModelChanged
 import net.liftweb.http._
 import net.liftweb.json._
 
@@ -25,6 +27,8 @@ object Controller {
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
+              rimServerActor() ! ModelChanged()
+              println("rimServerActor notified")
               Persistence.save(universe)
             })
             val result = s"> ${Rim.appName} $value" :: "" :: out.messages.toList
