@@ -19,24 +19,24 @@ class AppCometActor extends im.mange.jetboot.comet.RefreshableCometActor with im
 //  probeProviderActor() ! Subscribe(this)
 
   def beforeRefresh() {
-    println("beforeRefresh")
+//    println("beforeRefresh")
     //root.cleanup()
-//    probeProviderActor() ! Unsubscribe(this)
+    probeProviderActor() ! Unsubscribe(this)
   }
 
   def doRefresh() {
-    println("doRefresh")
+//    println("doRefresh")
     rootAgent = new RootAgent(this)
   }
 
-  def afterRefresh(): Unit = {
-    println("afterRefresh")
+  def afterRefresh() = {
+//    println("afterRefresh")
     probeProviderActor() ! Subscribe(this)//; this ! Init()
   }
 
   def doRender = {
-    println("doRender")
-    probeProviderActor() ! Subscribe(this)
+//    println("doRender")
+//    probeProviderActor() ! Subscribe(this)
     rootAgent.render
   }
 
