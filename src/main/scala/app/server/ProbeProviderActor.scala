@@ -17,6 +17,7 @@ import scala.concurrent._
 import scala.concurrent.duration.Duration
 import app.restlike.dogfood.{ProbeStatuses, GetProbeStatuses}
 
+//TODO: make this be more like RimServerActor
 class ProbeProviderActor extends LiftActor {
   private val historicState = ProbateRegistry.load
   private var subscribers = Set[Subscriber]()
@@ -26,8 +27,6 @@ class ProbeProviderActor extends LiftActor {
   private val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
   private val broadcastLog = BroadcastLog()
   private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
-
-  println("### " + dateFormats().timeNow + " - ProbeProviderActor started")
 
   this ! ExecuteProbeRun
 
