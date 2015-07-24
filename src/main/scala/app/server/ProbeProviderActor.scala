@@ -8,7 +8,7 @@ import app.comet.{Init}
 import app.model._
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
-import im.mange.jetboot.comet.Subscriber
+import im.mange.jetboot.comet.{Unsubscribe, Subscribe, Subscriber}
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
 
@@ -26,6 +26,8 @@ class ProbeProviderActor extends LiftActor {
   private val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
   private val broadcastLog = BroadcastLog()
   private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
+
+  println("### " + dateFormats().timeNow + " - ProbeProviderActor started")
 
   this ! ExecuteProbeRun
 

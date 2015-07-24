@@ -11,8 +11,8 @@ import app.model.ChecksHistory
 import app.model.Incident
 
 //TODO: these need to die soon ...
-case class Subscribe(subscriber: im.mange.jetboot.comet.Subscriber)
-case class Unsubscribe(subscriber: im.mange.jetboot.comet.Subscriber)
+//case class Subscribe(subscriber: im.mange.jetboot.comet.Subscriber)
+//case class Unsubscribe(subscriber: im.mange.jetboot.comet.Subscriber)
 
 //TODO: should this be ExecuteProbeSuite?
 case object ExecuteProbeRun
