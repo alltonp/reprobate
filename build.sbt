@@ -15,10 +15,11 @@ libraryDependencies ++= {
     "im.mange" %% "little" % "0.0.23",
     "im.mange" %% "little-server" % "0.0.8",
     "im.mange" %% "shoreditch-api" % "0.0.65",
-    "im.mange" %% "jetboot" % "0.0.77",
-    "net.liftweb" %% "lift-webkit" % "2.6.1"
+    "im.mange" %% "jetboot" % "0.0.82",
+    "net.liftweb" %% "lift-webkit" % "2.6.2"
       exclude("javax.mail", "mail")
       exclude("net.liftweb", "lift-markdown_2.11"),
+    "net.liftmodules"   %% "lift-jquery-module_2.6" % "2.8",
     //TODO: re-enable this soon
     //exclude("org.scala-lang", "scala-compiler")
     "org.json4s"        %% "json4s-native"          % "3.2.11"

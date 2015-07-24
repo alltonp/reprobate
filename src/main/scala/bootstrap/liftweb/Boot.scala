@@ -10,6 +10,7 @@ import app.restlike.gtd.Gtd
 import app.view.{RimView, AppView}
 import app.{ServiceFactory}
 import im.mange.jetboot.page.Pages
+import net.liftmodules.JQueryModule
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.sitemap.Loc.LocGroup
@@ -29,32 +30,32 @@ class Boot extends Loggable {
   private def unsafeBoot() {
     LiftRules.addToPackages("app")
 
-    val entries = List(
-      Menu(S ? "Probate") / "index",
-      Menu(S ? "Rim") / "rim"
-//      Menu(S ? "Rim") / "index"
-    )
-
-    LiftRules.setSiteMap(SiteMap(entries: _*))
-
-    LiftRules.viewDispatch.append {
-      case List("index") ⇒ Left(() ⇒ Full(AppView()))
-      case List("rim") ⇒ Left(() ⇒ Full(RimView()))
-//      case List("index") ⇒ Left(() ⇒ Full(RimView()))
-    }
-
-//    val protectedPages = Seq(
-//      //      Nick(topBar, requiresAuth),
-//      AppPage("index"),
-//      RimPage("rim")//,
-//      //      CustodianRec(topBar, requiresAuth)
+//    val entries = List(
+//      Menu(S ? "Probate") / "index",
+//      Menu(S ? "Rim") / "rim"
+////      Menu(S ? "Rim") / "index"
 //    )
-//    Pages(
-//      protectedPages ++ Seq(
+//
+//    LiftRules.setSiteMap(SiteMap(entries: _*))
+//
+//    LiftRules.viewDispatch.append {
+//      case List("index") ⇒ Left(() ⇒ Full(AppView()))
+//      case List("rim") ⇒ Left(() ⇒ Full(RimView()))
+////      case List("index") ⇒ Left(() ⇒ Full(RimView()))
+//    }
+
+    val protectedPages = Seq(
+//      //      Nick(topBar, requiresAuth),
+      AppPage("index"),
+      RimPage("rim", topBar)//,
+//      //      CustodianRec(topBar, requiresAuth)
+    )
+    Pages(
+      protectedPages ++ Seq(
 ////        LoginFailed(),
 ////        Logout(logUserOut)
-//      ): _*
-//    )
+      ): _*
+    )
 
     LiftRules.uriNotFound.prepend(NamedPF("404handler") {
       case (req, failure) ⇒ NotFoundAsTemplate(ParsePath(List("404"), "html", false, false))
@@ -77,6 +78,8 @@ class Boot extends Loggable {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
+
+    JQueryModule.InitParam.JQuery=JQueryModule.JQuery211
 
     //TODO: we probably need an init to kick things off.
     ServiceFactory.probeProviderActor()

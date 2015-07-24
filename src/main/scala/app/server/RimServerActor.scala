@@ -13,6 +13,7 @@ class RimServerActor extends MessageCapturingLiftActor with MulticastLiftActor w
   }
 
   override def afterSubscribe(subscriber: Subscriber) {
+    println(s"afterSubscribe $subscriber")
     //    this ! PushAllProductsTo(subscriber)
     //    this ! PushAllChatsTo(subscriber)
   }
