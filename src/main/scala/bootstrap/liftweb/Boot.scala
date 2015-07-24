@@ -6,7 +6,7 @@ import app.restlike.demo.Demo
 import app.restlike.rem.Rem
 import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
-import app.view.AppView
+import app.view.{RimView, AppView}
 import app.{ServiceFactory}
 import net.liftweb.common._
 import net.liftweb.http._
@@ -25,13 +25,15 @@ class Boot extends Loggable {
     LiftRules.addToPackages("app")
 
     val entries = List(
-      Menu(S ? "Probate") / "index"
+      Menu(S ? "Probate") / "index",
+      Menu(S ? "Rim") / "rim"
     )
 
     LiftRules.setSiteMap(SiteMap(entries: _*))
 
     LiftRules.viewDispatch.append {
       case List("index") ⇒ Left(() ⇒ Full(AppView()))
+      case List("rim") ⇒ Left(() ⇒ Full(RimView()))
     }
     
     LiftRules.uriNotFound.prepend(NamedPF("404handler") {
