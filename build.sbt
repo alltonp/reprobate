@@ -15,7 +15,7 @@ libraryDependencies ++= {
     "im.mange" %% "little" % "0.0.23",
     "im.mange" %% "little-server" % "0.0.8",
     "im.mange" %% "shoreditch-api" % "0.0.65",
-    "im.mange" %% "jetboot" % "0.0.55",
+    "im.mange" %% "jetboot" % "0.0.77",
     "net.liftweb" %% "lift-webkit" % "2.6.1"
       exclude("javax.mail", "mail")
       exclude("net.liftweb", "lift-markdown_2.11"),
