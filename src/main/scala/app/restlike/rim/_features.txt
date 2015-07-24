@@ -1,3 +1,5 @@
+BUG: rim ^ p1 ... is showing all tags for some reason
+---
 now that tracking is disabled, make it possible to see history for an item
 e.g. rim 64
 ---
