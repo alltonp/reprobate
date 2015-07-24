@@ -4,8 +4,12 @@ import im.mange.jetboot.comet.RefreshableCometActor
 import im.mange.jetboot.{R, Renderable}
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
+import net.liftweb.http.S
 
 case class RimAgent(subscriber: Subscriber) extends Renderable {
+  println("refresh")
+  println(s"params: ${S.request.get.params}")
+
   def render = R("hello").render
 }
 
@@ -27,7 +31,9 @@ class RimCometActor extends RefreshableCometActor with im.mange.jetboot.comet.Me
   def afterRefresh() {
   }
 
-  def doRender = rootAgent.render
+  def doRender = {
+    rootAgent.render
+  }
 
   override def localShutdown() {
     //root.cleanup()
