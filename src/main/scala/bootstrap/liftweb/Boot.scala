@@ -27,6 +27,7 @@ class Boot extends Loggable {
     val entries = List(
       Menu(S ? "Probate") / "index",
       Menu(S ? "Rim") / "rim"
+//      Menu(S ? "Rim") / "index"
     )
 
     LiftRules.setSiteMap(SiteMap(entries: _*))
@@ -34,6 +35,7 @@ class Boot extends Loggable {
     LiftRules.viewDispatch.append {
       case List("index") ⇒ Left(() ⇒ Full(AppView()))
       case List("rim") ⇒ Left(() ⇒ Full(RimView()))
+//      case List("index") ⇒ Left(() ⇒ Full(RimView()))
     }
     
     LiftRules.uriNotFound.prepend(NamedPF("404handler") {
