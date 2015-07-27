@@ -109,7 +109,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       JsRaw( s"""terminal.echo("$l");""")
     }
 
-    val whatToShow = pointyHairedManagerView.mkString("\n")
+    val board = Presentation.board(model, changed, aka.getOrElse(""))
+    val whatToShow = pointyHairedManagerView.mkString("\n") + board.mkString("\n")
 
     //.replaceAll("\n", "<br />")
     val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
