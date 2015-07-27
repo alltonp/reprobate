@@ -1,6 +1,7 @@
 package app.comet
 
 import app.ServiceFactory.{systemClock, rimServerActor}
+import app.restlike.rim.Persistence
 import app.server.ModelChanged
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
@@ -33,7 +34,7 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
   override def onCapturedMessage(message: Any, actor: LiftActor) {}
 
   //TODO: this forces refresh
-  this ! ModelChanged()
+  this ! ModelChanged(Persistence.load.modelFor("test").get)
 
   private var rootAgent: RimAgent = _
 

@@ -27,7 +27,7 @@ object Controller {
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
-              rimServerActor() ! ModelChanged()
+              rimServerActor() ! ModelChanged(m)
               println("rimServerActor notified")
               Persistence.save(universe)
             })
