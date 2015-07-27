@@ -1,7 +1,8 @@
 package bootstrap.liftweb
 
 import app.Control._
-import app.comet.{AppPage, RimPage}
+import app.agent.AppPage
+import app.comet.{RimPage}
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.demo.Demo
 import app.restlike.rem.Rem

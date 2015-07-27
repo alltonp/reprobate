@@ -1,6 +1,8 @@
 package app.agent
 
 //import app.comet.Subscriber
+
+import app.comet.AppCometActor
 import im.mange.jetboot.bootstrap3.{Bootstrap, GridSystem}
 import app.server._
 import im.mange.jetboot.Css._
@@ -8,8 +10,10 @@ import app.server.AllRunsStatusUpdate
 import app.server.ProbeFailure
 import app.server.CurrentRunStatusUpdate
 import app.model.{Broadcast, Probe}
+import im.mange.jetboot.page.CometPage
 import im.mange.jetboot.{Js, Renderable, Composite}
 import app.server.ProbeStatusUpdate
+import net.liftweb.sitemap.Loc
 
 //TODO:
 //have the probe list be an editable yaml or json
@@ -42,6 +46,8 @@ import app.server.ProbeStatusUpdate
 
 //features:
 //store probe duration ...
+
+case class AppPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[AppCometActor]
 
 case class RootAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
   import im.mange.jetboot.Html._

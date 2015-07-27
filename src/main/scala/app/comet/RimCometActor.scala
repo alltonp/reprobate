@@ -12,8 +12,6 @@ import net.liftweb.http.S
 import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
 
-case class AppPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[AppCometActor]
-
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
 case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
