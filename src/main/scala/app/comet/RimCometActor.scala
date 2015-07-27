@@ -54,7 +54,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   }
 
   private def present(modelChanged: ModelChanged): JsCmd = {
-    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
+//    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
 
     modelChanged.updated.fold(Js.nothing) { model =>
       //    println("### present")
@@ -114,8 +114,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       }
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
-      val backlog = Presentation.
-      val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n") + backlog
+      val backlog = Presentation.backlog(model, aka)
+      val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n") + "\n" + backlog.mkString("\n")
 
       //.replaceAll("\n", "<br />")
       val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq

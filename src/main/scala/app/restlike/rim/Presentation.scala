@@ -9,8 +9,10 @@ object Presentation {
     else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
   }
 
-  def backlog(model: Model, matching: List[Issue], aka: Option[String]) = {
-    matching.map(i => i.render(model, highlightAka = aka))
+  def backlog(model: Model, aka: Option[String]) = {
+    val matching = model.issues.filter(i => i.status.isEmpty)
+    if (matching.isEmpty) s"backlog is empty" :: Nil
+    else matching.map(i => i.render(model, highlightAka = aka))
   }
 
   def board(model: Model, changed: Seq[String], aka: String, hideBy: Boolean = false) = {
