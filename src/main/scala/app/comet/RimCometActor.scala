@@ -52,6 +52,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   }
 
   private def present(modelChanged: ModelChanged): JsCmd = {
+    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
+
 //    println("### present")
 
     R(s"update ${systemClock().dateTime} - $modelChanged - $params")
@@ -158,7 +160,8 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
     rimServerActor() ! Subscribe(this)
     //TODO: this forces refresh
     this ! app.server.Init()
-    this ! ModelChanged(Persistence.load.modelFor("4d30e06a-5107-4330-a8c7-7e9b472f716b").get)
+    //TODO: pull out obv
+    this ! ModelChanged(Persistence.load.modelFor("4d30e06a-5107-4330-a8c7-7e9b472f716b").get, "4d30e06a-5107-4330-a8c7-7e9b472f716b")
   }
 
   def doRender = {
