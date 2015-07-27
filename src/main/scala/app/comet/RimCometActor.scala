@@ -24,7 +24,6 @@ import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
 import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
 
-
 import scala.xml.Unparsed
 
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
@@ -110,7 +109,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     }
 
     val board = Presentation.board(model, changed, aka.getOrElse(""))
-    val whatToShow = pointyHairedManagerView.mkString("\n") + board.mkString("\n")
+    val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n")
 
     //.replaceAll("\n", "<br />")
     val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
