@@ -35,6 +35,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
     model.fold(value)(m =>
       status match {
         case None => customGrey(value)
+        case Some(x) if blocked.isDefined => red(value)
         case Some(x) if x == m.beginState => customYellow(value)
         case Some(x) if x == m.endState => customGreen(value)
         case Some("released") => customMagenta(value)
