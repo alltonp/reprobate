@@ -27,7 +27,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   def render = holder.render
 
-  def onModelChanged(changed: ModelChanged) = holder.fill(R(s"update ${systemClock().dateTime} - $changed - $params"))
+  def onModelChanged(changed: ModelChanged) = holder.fill(present(changed))
+
+  private def present(changed: ModelChanged): R = {
+    R(s"update ${systemClock().dateTime} - $changed - $params")
+    R(changed.updated.issues.map(i => div(None, R(i.description))))
+  }
 }
 
 class RimCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
