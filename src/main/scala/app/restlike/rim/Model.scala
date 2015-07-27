@@ -16,7 +16,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, description: String, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -82,7 +82,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     val maybeDupe = issues.find(i => i.description == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by, tagBits.toSet)
+    val created = Issue(newRef, description, status, by, None, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
