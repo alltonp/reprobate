@@ -3,19 +3,19 @@ package app.server
 import java.io.FileNotFoundException
 import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
+
 import app.ServiceFactory._
-import app.comet.{Init}
 import app.model._
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
-import im.mange.jetboot.comet.{Unsubscribe, Subscribe, Subscriber}
+import app.restlike.dogfood.{GetProbeStatuses, ProbeStatuses}
+import im.mange.jetboot.comet.{Subscribe, Subscriber, Unsubscribe}
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration.Duration
-import app.restlike.dogfood.{ProbeStatuses, GetProbeStatuses}
 
 //TODO: make this be more like RimServerActor
 class ProbeProviderActor extends LiftActor {
@@ -181,7 +181,7 @@ class ProbeProviderActor extends LiftActor {
       println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
     }
 
-    subscriber ! Init(currentRun.probes)
+    subscriber ! app.comet.Init(currentRun.probes)
     currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, incidentLog.currentOpenIncident(p._1)) }
   }
 

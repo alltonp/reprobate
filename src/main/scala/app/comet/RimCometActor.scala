@@ -33,9 +33,20 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   def render = holder.render
 
+  def onInit = createTerminal("term_demo")
   def onModelChanged(changed: ModelChanged) = present(changed)
 
+  private def createTerminal(id: String) = {
+    println("### init")
+    val what = "hello"
+    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '>', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
+    println(js)
+    js
+  }
+
   private def present(modelChanged: ModelChanged): JsCmd = {
+    println("### present")
+
     R(s"update ${systemClock().dateTime} - $modelChanged - $params")
 
     R(modelChanged.updated.issues.map(i => div(None, R(i.description))))
@@ -75,12 +86,10 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
     val what = Colours.customBlue("you just typed test")
     val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
-    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: 'term_demo',\n\t\t\t        prompt: '>', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
     val js2 = JsRaw("terminal.clear();")
     val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
     println(newWhat)
-    println(js)
-    js & js2 & js3
+    js2 & js3
 
 
 //    $('#some_id').terminal(function(command, term) {
@@ -103,9 +112,6 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 class RimCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
   override def onCapturedMessage(message: Any, actor: LiftActor) {}
 
-  //TODO: this forces refresh
-  this ! ModelChanged(Persistence.load.modelFor("test").get)
-
   private var rootAgent: RimAgent = _
 
   def beforeRefresh() {
@@ -121,7 +127,10 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
 
   def afterRefresh(): Unit = {
     println("afterRefresh")
-    rimServerActor() ! Subscribe(this)//; this ! Init()
+    rimServerActor() ! Subscribe(this)
+    //TODO: this forces refresh
+    this ! app.server.Init()
+    this ! ModelChanged(Persistence.load.modelFor("test").get)
   }
 
   def doRender = {
@@ -140,6 +149,7 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
 
   //TODO: pull out commands for all these
   private def handleMessage: PartialFunction[Any, Unit] = {
+    case m:app.server.Init => println("got: " + m); partialUpdate(rootAgent.onInit)
     case m:ModelChanged => println(m); partialUpdate(rootAgent.onModelChanged(m))
     case e => logger.error(s"${getClass.getSimpleName}: unexpected message received: $e")
   }
