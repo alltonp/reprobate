@@ -48,10 +48,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
     val r = interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)
+      //TODO: this is the pure view bit
       val issues = issuesForState.map(i => s"\n  ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
       if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+      //end view bit
     }).flatten
     R(r)
   }
