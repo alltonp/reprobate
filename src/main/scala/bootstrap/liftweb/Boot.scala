@@ -46,9 +46,9 @@ class Boot extends Loggable {
 
     val protectedPages = Seq(
 //      //      Nick(topBar, requiresAuth),
-//      AppPage("index"),
-//      RimPage("rim", topBar)//,
-      RimPage("index")//,
+      AppPage("index"),
+      RimPage("rim", topBar)//,
+//      RimPage("index")//,
 //      //      CustodianRec(topBar, requiresAuth)
     )
     Pages(
