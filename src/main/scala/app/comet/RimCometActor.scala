@@ -76,10 +76,11 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     val what = Colours.customBlue("you just typed test")
     val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
     val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: 'term_demo',\n\t\t\t        prompt: '>', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
-    val js2 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
+    val js2 = JsRaw("terminal.clear();")
+    val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
     println(newWhat)
     println(js)
-    js & js2
+    js & js2 & js3
 
 
 //    $('#some_id').terminal(function(command, term) {
