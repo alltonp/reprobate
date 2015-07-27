@@ -9,8 +9,14 @@ import im.mange.jetboot.{Html, Js, R, Renderable}
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 import net.liftweb.http.S
+import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
+import im.mange.jetboot.Js
+import net.liftweb.http.js.JE.{JsRaw, ValById}
+import net.liftweb.http.js.JsCmds.{SetHtml, _}
+import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
+import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
 
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
@@ -22,14 +28,15 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param
   println(s"params: ${params}")
 
-  private val holder = div(Some("rimHolder"), R(s"hello ${systemClock().dateTime}"))
+  private val holder = div(Some("term_demo"), R(s"hello ${systemClock().dateTime}"))
 
   def render = holder.render
 
-  def onModelChanged(changed: ModelChanged) = holder.fill(present(changed))
+  def onModelChanged(changed: ModelChanged) = present(changed)
 
-  private def present(modelChanged: ModelChanged): R = {
+  private def present(modelChanged: ModelChanged): JsCmd = {
     R(s"update ${systemClock().dateTime} - $modelChanged - $params")
+
     R(modelChanged.updated.issues.map(i => div(None, R(i.description))))
     //TODO: this is essentially groupByStatus in disguise - we should share it ..
     modelChanged.updated.issues.groupBy(_.status)
@@ -55,7 +62,14 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
       //end view bit
     }).flatten
-    R(r)
+
+    holder.fill(R(r))
+
+    val id = "term_demo"
+    val value = r
+    JsRaw("$('#" + id + "').echo('" + value + "');")
+//    R(<div id="term_demo" class="terminal" style="height: 200px;"></div>)
+//    R(s"update ${systemClock().dateTime} - $modelChanged - $params")
   }
 }
 
