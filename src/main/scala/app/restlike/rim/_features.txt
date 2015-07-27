@@ -1,8 +1,11 @@
-BUG: rim ^ p1 ... is showing all tags for some reason - is this still true
----
 rimweb:
  - links to specific queries
  - bookmark queries
+ - show backlog
+ - support search/type-ahead
+ - make it a hybrid text and html app
+---
+make it possible to block/unblock a thing - in red - which operand to use? make it an option string /reason (, or %)
 ---
 now that tracking is disabled, make it possible to see history for an item
 e.g. rim 64
