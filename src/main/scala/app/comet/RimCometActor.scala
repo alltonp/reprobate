@@ -1,6 +1,7 @@
 package app.comet
 
 import app.ServiceFactory.{systemClock, rimServerActor}
+import app.restlike.common.Colours
 import app.restlike.rim.Persistence
 import app.server.ModelChanged
 import im.mange.jetboot.comet._
@@ -70,10 +71,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 //    JsRaw("$('#" + id + "').echo('" + value + "');")
 
 //    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo('you just typed test'); }, { prompt: '>', name: 'test' } ););")
-    val what = "you just typed test"
-    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo(\"" + r.mkString + "\"); } );")
+    val what = Colours.customBlue("you just typed test")
+    val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
+    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); } );")
+    val js2 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
+    println(newWhat)
     println(js)
-    js
+    js & js2
 
 
 //    $('#some_id').terminal(function(command, term) {

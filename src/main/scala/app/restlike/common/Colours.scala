@@ -32,7 +32,7 @@ object Colours {
   private val CUSTOMMAGENTA ="\033[0;38;5;5m"
   private val CUSTOMYELLOW ="\033[0;38;5;227m"
 
-  private val END ="\033[0m"
+  private val END = "\033[0m"
 
   def red(value: String) = s"$CUSTOMRED$value$END"
   def blue(value: String) = s"$BLUE$value$END"
