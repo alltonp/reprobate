@@ -21,4 +21,5 @@ class RimServerActor extends MessageCapturingLiftActor with MulticastLiftActor w
 
 }
 
+//TODO: ultimately this could have the before and after and the last x transations
 case class ModelChanged(updated: Model)
