@@ -28,7 +28,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 
   private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)
-    colouredForStatus(model, value)
+    colouredForStatus(model, value + blocked.fold(""){r => s" $r"})
   }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
