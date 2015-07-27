@@ -9,8 +9,6 @@ rimweb:
 ---
 tip: console is a bit like a scaffold, it's a good starting point for the ui
 ---
-make it possible to block/unblock a thing - in red - which operand to use? make it an option string /reason (, or %)
----
 now that tracking is disabled, make it possible to see history for an item
 e.g. rim 64
 ---
