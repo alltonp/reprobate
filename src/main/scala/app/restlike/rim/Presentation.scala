@@ -9,8 +9,8 @@ object Presentation {
     else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
   }
 
-  def board(model: Model, changed: Seq[String], aka: String) = {
-    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = false, hideTags = false, model.issues, model, changed, Some(aka))
+  def board(model: Model, changed: Seq[String], aka: String, hideBy: Boolean = false) = {
+    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = hideBy, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {

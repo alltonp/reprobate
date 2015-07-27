@@ -1,4 +1,8 @@
-BUG: rim ^ p1 ... is showing all tags for some reason
+BUG: rim ^ p1 ... is showing all tags for some reason - is this still true
+---
+rimweb:
+ - links to specific queries
+ - bookmark queries
 ---
 now that tracking is disabled, make it possible to see history for an item
 e.g. rim 64
