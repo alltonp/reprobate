@@ -113,7 +113,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val backlog = Presentation.backlog(model, aka)
-      val phmv = Presentation.pointyHairedManagerView("release", matching, blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false)
+      val phmv = Presentation.pointyHairedManagerView("release", matching, blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
       val whatToShow = board.mkString("\n") + "\n" + backlog.mkString("\n") + "\n" + phmv.mkString("\n")
 
       //.replaceAll("\n", "<br />")

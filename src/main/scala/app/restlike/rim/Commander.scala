@@ -311,7 +311,8 @@ object Commander {
     //TODO: this string will be wrong when we support releases - or maybe not
     //TODO: the empty check should be inside the Presentation
     val result = if (matching.isEmpty) s"board is empty" :: Nil
-    else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, aka, sanitise, sanitise, sanitise, sanitise).toList
+    //TODO: really really need display options
+    else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, aka, sanitise, sanitise, sanitise, sanitise, sanitise).toList
     Out(result, None)
   }
 
