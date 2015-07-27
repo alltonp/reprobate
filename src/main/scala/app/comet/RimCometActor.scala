@@ -46,6 +46,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   private def createTerminal(id: String) = {
     println("### init")
     val what = "hello"
+    //TODO: not sure we need the function .. it doesnt need to echo anything right now
     val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
     val js2 = JsRaw("terminal.clear();")
 //    println(js)
