@@ -54,6 +54,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   }
 
   private def present(modelChanged: ModelChanged): JsCmd = {
+    //TODO: we need this back again ....
 //    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
 
     modelChanged.updated.fold(Js.nothing) { model =>

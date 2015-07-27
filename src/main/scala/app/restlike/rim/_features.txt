@@ -1,9 +1,13 @@
 rimweb:
+ - two pain view
+ - only show backlog in phv
  - links to specific queries
  - bookmark queries
- - show backlog
- - support search/type-ahead
+ - support search/type-ahead (livetextbox)
  - make it a hybrid text and html app
+ - show tags and releases browser somewhere
+---
+tip: console is a bit like a scaffold, it's a good starting point for the ui
 ---
 make it possible to block/unblock a thing - in red - which operand to use? make it an option string /reason (, or %)
 ---
