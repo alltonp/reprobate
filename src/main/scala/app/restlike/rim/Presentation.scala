@@ -9,6 +9,10 @@ object Presentation {
     else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
   }
 
+  def backlog(model: Model, matching: List[Issue], aka: Option[String]) = {
+    matching.map(i => i.render(model, highlightAka = aka))
+  }
+
   def board(model: Model, changed: Seq[String], aka: String, hideBy: Boolean = false) = {
     groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = hideBy, hideTags = false, model.issues, model, changed, Some(aka))
   }

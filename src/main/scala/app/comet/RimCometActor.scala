@@ -114,7 +114,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       }
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
-      val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n")
+      val backlog = Presentation.
+      val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n") + backlog
 
       //.replaceAll("\n", "<br />")
       val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq

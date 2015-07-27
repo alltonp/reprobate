@@ -291,8 +291,9 @@ object Commander {
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
     val matching = currentModel.issues.filter(i => i.status.isEmpty)
+    //TODO: the empty check should be inside the Presentation
     val result = if (matching.isEmpty) s"backlog is empty" :: Nil
-    else matching.map(i => i.render(currentModel, highlightAka = Some(aka)))
+    else Presentation.backlog(currentModel, matching, Some(aka))
     Out(result, None)
   }
 
@@ -312,6 +313,7 @@ object Commander {
   private def onShowManagementSummary(matching: List[Issue], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
     val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
     //TODO: this string will be wrong when we support releases - or maybe not
+    //TODO: the empty check should be inside the Presentation
     val result = if (matching.isEmpty) s"board is empty" :: Nil
     else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, sanitise, aka).toList
     Out(result, None)
