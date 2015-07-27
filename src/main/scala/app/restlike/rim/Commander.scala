@@ -37,6 +37,7 @@ object Commander {
       case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".!")) => onFastBackwardIssue(ref, currentModel, aka)
+      case In(Some(ref), List("%")) => onUnblockIssue(ref, currentModel, aka)
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
@@ -215,6 +216,15 @@ object Commander {
       }
       val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
       val updatedIssue = found.copy(status = newStatus, by = by)
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+    }
+  }
+
+  private def onUnblockIssue(ref: String, currentModel: Model, aka: String) = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+      val newStatus = None
+      val updatedIssue = found.copy(blocked = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
     }
