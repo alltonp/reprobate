@@ -39,10 +39,10 @@ object Presentation {
 
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
-  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, sanitise: Boolean, aka: String) = {
+  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean) = {
     val tagNames = issues.flatMap(_.tags).distinct
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
-    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, sanitise, aka)
+    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, aka, hideStatus, hideBy, hideTags, hideId)
   }
 
   //TODO: introduce a DisplayOptions()
@@ -61,7 +61,7 @@ object Presentation {
     }).flatten
   }
 
-  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, sanitise: Boolean, aka: String) = {
+  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean) = {
     case class TagAndIssues(tag: String, issues: Seq[Issue])
 //    println(tags.mkString(", "))
     var remainingIssues = issues
@@ -73,18 +73,20 @@ object Presentation {
       TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => i.copy(tags = i.tags.-(t.name))), currentModel))
     }) ++ Seq(TagAndIssues("?", SortByStatus(remainingIssues, currentModel)))
     r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai =>
-      renderTagAndIssues(currentModel, sanitise, tai.tag, tai.issues, aka)
+      renderTagAndIssues(currentModel, tai.tag, tai.issues, aka, hideStatus, hideBy, hideTags, hideId)
     )
   }
 
-  private def renderTagAndIssues(model: Model, sanitise: Boolean, tag: String, issuesForTag: Seq[Issue], aka: String): String = {
+  private def renderTagAndIssues(model: Model, tag: String, issuesForTag: Seq[Issue], aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean): String = {
     val issues = issuesForTag.map(i => s"\n  ${
-      i.render(model, hideStatus = sanitise, hideBy = sanitise, hideTags = sanitise, hideId = sanitise, highlightAka = Some(aka))
+      i.render(model, hideStatus = hideStatus, hideBy = hideBy, hideTags = hideTags, hideId = hideId, highlightAka = Some(aka))
     }").mkString
-    s"$tag: ${if (sanitise) "" else s"(${issuesForTag.size})"}" + issues + "\n"
+//    s"$tag: ${if (sanitise) "" else s"(${issuesForTag.size})"}" + issues + "\n"
+    s"$tag: (${issuesForTag.size})" + issues + "\n"
   }
 
   private def sortedByPopularity(all: Seq[Tag]) = all.sortBy(t => (-t.count, t.name))
+
   private def sortedByImportance(all: Seq[Tag], blessedTags: List[String]) = {
     val blessed = blessedTags.flatMap(bt => all.find(_.name == bt))
     val remainder = all.diff(blessed).sortBy(_.name)
