@@ -21,6 +21,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   println("refresh")
   private val params: Map[String, List[String]] = S.request.get.params
+  //TODO: ultimately lookup "token" param
   println(s"params: ${params}")
 
   private val holder = div(Some("rimHolder"), R(s"hello ${systemClock().dateTime}"))
