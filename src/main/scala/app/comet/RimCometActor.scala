@@ -29,7 +29,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param
   println(s"params: ${params}")
 
-  private val holder = div(Some("term_demo"), R(s"hello ${systemClock().dateTime}"))
+  private val holder = div(Some("term_demo"))
 
   def render = holder.render
 
