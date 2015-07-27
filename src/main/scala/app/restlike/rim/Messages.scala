@@ -39,6 +39,8 @@ object Messages {
     "  - move backward                  ⇒ 'rim [ref] .'",
     //    "  - move backward many         ⇒ 'rim [ref] ..'",
     "  - return to backlog              ⇒ 'rim [ref] .!'",
+    "  - block                          ⇒ 'rim [ref] % [reason]'",
+    "  - unblock                        ⇒ 'rim [ref] %'",
     "",
     //is this 'reports'
     "show:",
