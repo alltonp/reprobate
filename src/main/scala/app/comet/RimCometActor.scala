@@ -29,9 +29,32 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   def onModelChanged(changed: ModelChanged) = holder.fill(present(changed))
 
-  private def present(changed: ModelChanged): R = {
-    R(s"update ${systemClock().dateTime} - $changed - $params")
-    R(changed.updated.issues.map(i => div(None, R(i.description))))
+  private def present(modelChanged: ModelChanged): R = {
+    R(s"update ${systemClock().dateTime} - $modelChanged - $params")
+    R(modelChanged.updated.issues.map(i => div(None, R(i.description))))
+    //TODO: this is essectially groupByStatus in disguise - we should share it ..
+    modelChanged.updated.issues.groupBy(_.status)
+
+    val includeBacklog = true
+    val includeReleased = true
+    val compressEmptyStates = false
+    val hideBy = true
+    val hideTags = false
+    val aka = None
+    val changed = Seq()
+    val currentModel = modelChanged.updated
+    val model = modelChanged.updated
+
+    val stateToIssues = model.issues.groupBy(_.status.getOrElse("backlog"))
+    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
+    val r = interestingStates.map(s => {
+      val issuesForState = stateToIssues.getOrElse(s, Nil)
+      val issues = issuesForState.map(i => s"\n  ${
+        i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
+      }").mkString
+      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+    }).flatten
+    R(r)
   }
 }
 
