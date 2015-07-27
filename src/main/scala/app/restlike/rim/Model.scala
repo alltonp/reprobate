@@ -25,10 +25,11 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   }
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
+  private val renderBlocked = red(blocked.getOrElse(""))
 
   private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)
-    colouredForStatus(model, value + blocked.fold(""){r => s" $r"})
+    colouredForStatus(model, value)
   }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
@@ -43,13 +44,13 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
       })
   }
 
-  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderTags).mkString(" ")
+  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))}"
+    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
   }
 }
 
