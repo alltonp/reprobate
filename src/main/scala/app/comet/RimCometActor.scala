@@ -32,11 +32,11 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   private def present(modelChanged: ModelChanged): R = {
     R(s"update ${systemClock().dateTime} - $modelChanged - $params")
     R(modelChanged.updated.issues.map(i => div(None, R(i.description))))
-    //TODO: this is essectially groupByStatus in disguise - we should share it ..
+    //TODO: this is essentially groupByStatus in disguise - we should share it ..
     modelChanged.updated.issues.groupBy(_.status)
 
     val includeBacklog = true
-    val includeReleased = true
+    val includeReleased = false
     val compressEmptyStates = false
     val hideBy = true
     val hideTags = false
