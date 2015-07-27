@@ -2,7 +2,7 @@ package app.comet
 
 import app.ServiceFactory.{systemClock, rimServerActor}
 import app.server.ModelChanged
-import im.mange.jetboot.comet.{Subscribe, Unsubscribe, RefreshableCometActor}
+import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
 import im.mange.jetboot.{Html, Js, R, Renderable}
 import net.liftweb.actor.LiftActor
@@ -19,17 +19,17 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   import Html._
 
   println("refresh")
-  println(s"params: ${S.request.get.params}")
+  private val params: Map[String, List[String]] = S.request.get.params
+  println(s"params: ${params}")
 
   private val holder = div(Some("rimHolder"), R(s"hello ${systemClock().dateTime}"))
 
   def render = holder.render
 
-  def onModelChanged(changed: ModelChanged) = holder.fill(R(s"update ${systemClock().dateTime} - $changed"))
+  def onModelChanged(changed: ModelChanged) = holder.fill(R(s"update ${systemClock().dateTime} - $changed - $params"))
 }
 
-//TODO: get rid of the namespacing whe we have got rid of the reprobate versions
-class RimCometActor extends im.mange.jetboot.comet.RefreshableCometActor with im.mange.jetboot.comet.MessageCapturingCometActor with im.mange.jetboot.comet.Subscriber with Loggable {
+class RimCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
   override def onCapturedMessage(message: Any, actor: LiftActor) {}
 
   //TODO: this forces refresh
