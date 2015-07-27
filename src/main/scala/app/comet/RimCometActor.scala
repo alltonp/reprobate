@@ -33,7 +33,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   println("refresh")
   private val params: Map[String, List[String]] = S.request.get.params
-  //TODO: ultimately lookup "token" param
+  //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"params: ${params}")
 
   private val holder = div(Some("term_demo"))
@@ -52,7 +52,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   }
 
   private def present(modelChanged: ModelChanged): JsCmd = {
-    println("### present")
+//    println("### present")
 
     R(s"update ${systemClock().dateTime} - $modelChanged - $params")
 
@@ -114,8 +114,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     //.replaceAll("\n", "<br />")
     val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
 //    val js3 = JsRaw(s"""terminal.echo("$whatToShow");""")
-    println(whatToShow)
-    println(js3)
+//    println(whatToShow)
+//    println(js3)
 
     js2 & Js.chain(js3)
 
@@ -143,31 +143,31 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
   private var rootAgent: RimAgent = _
 
   def beforeRefresh() {
-    println("beforeRefresh")
+//    println("beforeRefresh")
     //root.cleanup()
     rimServerActor() ! Unsubscribe(this)
   }
 
   def doRefresh() {
-    println("doRefresh")
+//    println("doRefresh")
     rootAgent = new RimAgent(this)
   }
 
   def afterRefresh(): Unit = {
-    println("afterRefresh")
+//    println("afterRefresh")
     rimServerActor() ! Subscribe(this)
     //TODO: this forces refresh
     this ! app.server.Init()
-    this ! ModelChanged(Persistence.load.modelFor("test").get)
+    this ! ModelChanged(Persistence.load.modelFor("4d30e06a-5107-4330-a8c7-7e9b472f716b").get)
   }
 
   def doRender = {
-    println("doRender")
+//    println("doRender")
     rootAgent.render
   }
 
   override def localShutdown() {
-    println("localShutdown")
+//    println("localShutdown")
     //root.cleanup()
     rimServerActor() ! Unsubscribe(this)
     super.localShutdown()
@@ -177,8 +177,8 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
 
   //TODO: pull out commands for all these
   private def handleMessage: PartialFunction[Any, Unit] = {
-    case m:app.server.Init => println("got: " + m); partialUpdate(rootAgent.onInit)
-    case m:ModelChanged => println(m); partialUpdate(rootAgent.onModelChanged(m))
+    case m:app.server.Init => /*println("got: " + m);*/ partialUpdate(rootAgent.onInit)
+    case m:ModelChanged => /*println(m); */ partialUpdate(rootAgent.onModelChanged(m))
     case e => logger.error(s"${getClass.getSimpleName}: unexpected message received: $e")
   }
 }
