@@ -2,7 +2,7 @@ package app.comet
 
 import app.ServiceFactory.{systemClock, rimServerActor}
 import app.restlike.common.Colours
-import app.restlike.rim.Persistence
+import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
@@ -18,6 +18,14 @@ import net.liftweb.http.js.JE.{JsRaw, ValById}
 import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
 import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
+
+import net.liftweb.http.js.JE.{JsRaw, ValById}
+import net.liftweb.http.js.JsCmds.{SetHtml, _}
+import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
+import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
+
+
+import scala.xml.Unparsed
 
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
@@ -39,7 +47,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   private def createTerminal(id: String) = {
     println("### init")
     val what = "hello"
-    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '>', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
+    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
     println(js)
     js
   }
@@ -58,7 +66,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     val compressEmptyStates = false
     val hideBy = true
     val hideTags = false
-    val aka = None
+    val aka: Option[String] = None
     val changed = Seq()
     val currentModel = modelChanged.updated
     val model = modelChanged.updated
@@ -84,12 +92,32 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 //    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo('you just typed test'); }, { prompt: '>', name: 'test' } ););")
 
     //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
-    val what = Colours.customBlue("you just typed test")
+    val what = List(Colours.customBlue("blue"), Colours.customGreen("green")).mkString("")
     val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
     val js2 = JsRaw("terminal.clear();")
-    val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
-    println(newWhat)
-    js2 & js3
+//    val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
+//    val js3 = JsRaw("terminal.echo('" + Presentation.board(model, changed, aka.getOrElse("")) + "');")
+    val matching = model.issues
+    val blessedTags = List.empty[String]
+    val sanitise = true
+
+    val pointyHairedManagerView: Seq[String] = Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, sanitise, aka.getOrElse(""))
+
+//    val whatToShow = Unparsed(what)
+//    val whatToShow = Unparsed(pointyHairedManagerView.mkString("[lb]").replaceAll("\n", "<br />"))
+    def echo(l: String): JsCmd = {
+      JsRaw( s"""terminal.echo("$l");""")
+    }
+
+    val whatToShow = pointyHairedManagerView.mkString("\n")
+
+    //.replaceAll("\n", "<br />")
+    val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
+//    val js3 = JsRaw(s"""terminal.echo("$whatToShow");""")
+    println(whatToShow)
+    println(js3)
+
+    js2 & Js.chain(js3)
 
 
 //    $('#some_id').terminal(function(command, term) {
