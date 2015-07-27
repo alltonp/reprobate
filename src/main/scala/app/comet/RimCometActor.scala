@@ -105,8 +105,6 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val blessedTags = List.empty[String]
       val sanitise = true
 
-      val pointyHairedManagerView: Seq[String] = Presentation.pointyHairedManagerView("release", matching, blessedTags, model, sanitise, aka.getOrElse(""))
-
       //    val whatToShow = Unparsed(what)
       //    val whatToShow = Unparsed(pointyHairedManagerView.mkString("[lb]").replaceAll("\n", "<br />"))
       def echo(l: String): JsCmd = {
@@ -115,7 +113,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val backlog = Presentation.backlog(model, aka)
-      val whatToShow = /*pointyHairedManagerView.mkString("\n") + */ board.mkString("\n") + "\n" + backlog.mkString("\n")
+      val phmv = Presentation.pointyHairedManagerView("release", matching, blessedTags, model, sanitise, aka.getOrElse(""))
+      val whatToShow = board.mkString("\n") + "\n" + backlog.mkString("\n") + "\n" + phmv.mkString("\n")
 
       //.replaceAll("\n", "<br />")
       val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
@@ -124,7 +123,6 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       //    println(js3)
 
       js2 & Js.chain(js3)
-
     }
 
 
