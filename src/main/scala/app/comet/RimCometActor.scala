@@ -67,7 +67,27 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
     val id = "term_demo"
     val value = r
-    JsRaw("$('#" + id + "').echo('" + value + "');")
+//    JsRaw("$('#" + id + "').echo('" + value + "');")
+
+//    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo('you just typed test'); }, { prompt: '>', name: 'test' } ););")
+    val what = "you just typed test"
+    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo(\"" + r.mkString + "\"); } );")
+    println(js)
+    js
+
+
+//    $('#some_id').terminal(function(command, term) {
+//      if (command == 'test') {
+//        term.echo("you just typed 'test'");
+//      } else {
+//        term.echo('unknown command');
+//      }
+//    }, { prompt: '>', name: 'test' });
+
+//    $('#some_id').terminal(function(command, term) {
+//        term.echo("you just typed 'test'");
+//    }, { prompt: '>', name: 'test' });
+
 //    R(<div id="term_demo" class="terminal" style="height: 200px;"></div>)
 //    R(s"update ${systemClock().dateTime} - $modelChanged - $params")
   }
