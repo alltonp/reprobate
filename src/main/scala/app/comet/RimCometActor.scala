@@ -142,7 +142,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
 
-      backlogTerminal.refresh(phmv.mkString("\n")) & boardTerminal.refresh(board.mkString("\n"))
+      boardTerminal.refresh(board.mkString("\n")) & backlogTerminal.refresh(phmv.mkString("\n"))
     }
 
 //    $('#some_id').terminal(function(command, term) {
