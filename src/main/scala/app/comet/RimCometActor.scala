@@ -47,8 +47,8 @@ case class Terminal(id: String) extends Renderable {
     js & clear
   }
 
-  def show(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
-
+  def refresh(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
+  
   private def clear = JsRaw(s"${instance}.clear();")
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
@@ -97,7 +97,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
 
-      backlogTerminal.show(phmv.mkString("\n")) & boardTerminal.show(board.mkString("\n"))
+      backlogTerminal.refresh(phmv.mkString("\n")) & boardTerminal.refresh(board.mkString("\n"))
     }
 
 //    $('#some_id').terminal(function(command, term) {
