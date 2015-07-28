@@ -2,6 +2,7 @@ package app.comet
 
 import app.ServiceFactory.{systemClock, rimServerActor}
 import app.restlike.common.Colours
+import app.restlike.common.Colours._
 import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
 import im.mange.jetboot.Css._
@@ -85,7 +86,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val changed = Seq()
 
       //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
-      val what = List(Colours.customBlue("blue"), Colours.customGreen("green")).mkString("")
+      val what = List(customBlue("blue"), customGreen("green")).mkString("")
       val blessedTags = model.priorityTags
 
       //TODO: support recently changed ...
