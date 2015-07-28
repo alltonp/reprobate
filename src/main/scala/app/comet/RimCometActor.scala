@@ -82,7 +82,7 @@ case class ToggleButton(id: String, label: String, buttonClasses: Classes, expan
 
     private def expand() = { println("expand"); link.fill(closeIcon()) }
     private def collapse() = link.fill(openIcon())
-    private def openIcon() = R(<span><span class="glyphicon glyphicon-chevron-right"/>&nbsp;{label}</span>)
+    private def openIcon() = R(<span><i class="fa fa-toggle-on"></i>&nbsp;{label}</span>)
     private def closeIcon() = R(<span><span class="glyphicon glyphicon-chevron-down"/>&nbsp;{label}</span>)
     private def icon() = if (expanded) closeIcon() else openIcon()
 
