@@ -97,7 +97,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"params: ${params}")
 
-  private val backlogTerminal = Terminal("backlog", Styles(fontSize(xSmall)))
+  private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
