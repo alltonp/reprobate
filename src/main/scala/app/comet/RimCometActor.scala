@@ -59,11 +59,11 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"params: ${params}")
 
-  private val terminal = Terminal("term_demo")
+  private val backlogTerminal = Terminal("backlog")
 
-  def render = terminal.render
+  def render = backlogTerminal.render
 
-  def onInit = terminal.init
+  def onInit = backlogTerminal.init
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
@@ -137,7 +137,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       //    println(whatToShow)
       //    println(js3)
 
-      terminal.show(whatToShow)
+      backlogTerminal.show(whatToShow)
     }
 
 //    $('#some_id').terminal(function(command, term) {
