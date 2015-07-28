@@ -109,9 +109,9 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     div(
       containerFluid(
         row(col(12, div(
-            span(boardToggle).styles(margin("2px")),
-            span(backlogToggle).styles(margin("2px"))
-          ).styles(textAlign(center), marginBottom("3px")))
+            span(boardToggle).styles(marginLeft("1px"), marginRight("2px")),
+            span(backlogToggle).styles(marginLeft("2px"))
+          ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
         row(col(12, div(
 //          div(R()).styles(width("1px"), display("table-cell"), padding("0px")),
