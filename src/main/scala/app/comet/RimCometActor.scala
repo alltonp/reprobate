@@ -8,14 +8,13 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
-import im.mange.jetboot.{Html, Js, R, Renderable}
+import im.mange.jetboot._
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 import net.liftweb.http.S
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
-import im.mange.jetboot.Js
 import net.liftweb.http.js.JE.{JsRaw, ValById}
 import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
@@ -65,9 +64,11 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   def render = {
     import im.mange.jetboot.bootstrap3.GridSystem._
+    import Css._
 
     div(
       containerFluid(
+        row(col(6, div(R("Backlog")).styles(textAlign(center), marginBottom("7px"))), col(6, div(R("Board")).styles(textAlign(center), marginBottom("7px")))),
         row(col(6, backlogTerminal), col(6, boardTerminal))
       )
     ).render
