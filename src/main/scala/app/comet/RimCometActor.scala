@@ -36,13 +36,10 @@ case class Terminal(id: String) extends Renderable {
   def render = holder.render
 
   def init = {
-    println("### init")
-    val what = "hello"
+    val what = ""
     //TODO: not sure we need the function .. it doesnt need to echo anything right now
-    //TODO: need to include id in the var name and stash it
     val js = JsRaw("var " + instance + " = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + instance + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
-    val js2 = clear
-    js & js2
+    js & clear
   }
 
   def show(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
@@ -83,13 +80,6 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
 
     modelChanged.updated.fold(Js.nothing) { model =>
-      //    println("### present")
-
-//      R(s"update ${systemClock().dateTime} - $modelChanged - $params")
-
-//      R(modelChanged.updated.issues.map(i => div(None, R(i.description))))
-//      TODO: this is essentially groupByStatus in disguise - we should share it ..
-//      modelChanged.updated.issues.groupBy(_.status)
 
       val includeBacklog = true
       val includeReleased = false
@@ -99,36 +89,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val aka: Option[String] = None
       val changed = Seq()
       val currentModel = modelChanged.updated
-//      val model = modelChanged.updated
-
-//      val stateToIssues = model.issues.groupBy(_.status.getOrElse("backlog"))
-//      val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
-//      val r = interestingStates.map(s => {
-//        val issuesForState = stateToIssues.getOrElse(s, Nil)
-//        //TODO: this is the pure view bit
-//        val issues = issuesForState.map(i => s"\n  ${
-//          i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
-//        }").mkString
-//        if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
-//        //end view bit
-//      }).flatten
-//
-//      holder.fill(R(r))
-
-      val id = "term_demo"
-//      val value = r
-      //    JsRaw("$('#" + id + "').echo('" + value + "');")
-
-      //    val js = JsRaw("$('#" + id + "').terminal(function(command, term) { term.echo('you just typed test'); }, { prompt: '>', name: 'test' } ););")
 
       //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
       val what = List(Colours.customBlue("blue"), Colours.customGreen("green")).mkString("")
-//      val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
-      val js2 = JsRaw("terminal.clear();")
       val blessedTags = model.priorityTags
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
-//      val backlog = Presentation.backlog(model, aka)
       val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
       val whatToShow = board.mkString("\n") + "\n" /*+ backlog.mkString("\n")*/ + "\n" + phmv.mkString("\n")
 
@@ -146,9 +112,6 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 //    $('#some_id').terminal(function(command, term) {
 //        term.echo("you just typed 'test'");
 //    }, { prompt: '>', name: 'test' });
-
-//    R(<div id="term_demo" class="terminal" style="height: 200px;"></div>)
-//    R(s"update ${systemClock().dateTime} - $modelChanged - $params")
   }
 }
 
