@@ -3,6 +3,7 @@ package app.restlike.common
 //TIP: http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
 //but some of the names are wrong, light often means bold
 //OR;
+//TIP: best one is:
 //http://misc.flogisoft.com/bash/tip_colors_and_formatting
 //TIP: 2=dim, 1=bold, 0=normal
 object Colours {
@@ -23,7 +24,7 @@ object Colours {
 //  private val ORANGE ="\033[0;38;5;208m"
 //  private val WHITE ="\033[1;37m"
 
-  private val CUSTOMRED ="\033[0;38;5;9m"
+  private val CUSTOMRED ="\033[0;38;5;196m"
   private val CUSTOMBLUE ="\033[0;38;5;33m"
   private val CUSTOMGREEN ="\033[0;38;5;40m"
   private val CUSTOMGREY ="\033[0;38;5;244m"
@@ -55,6 +56,7 @@ object Colours {
   def customOrange(value: String) = s"$CUSTOMORANGE$value$END"
   def customYellow(value: String) = s"$CUSTOMYELLOW$value$END"
   def customGreen(value: String) = s"$CUSTOMGREEN$value$END"
+  def customRed(value: String) = s"$CUSTOMRED$value$END"
 
   //  def white(value: String) = s"$WHITE$value$END"
 }
