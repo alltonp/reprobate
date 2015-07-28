@@ -111,9 +111,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
         row(col(12, div(
             span(backlogToggle).styles(margin("5px")),
             span(boardToggle).styles(margin("5px"))
-          ).styles(textAlign(center)))
+          ).styles(textAlign(center), marginBottom("5px")))
         ),
-        row(col(12, div(backlogTerminal).classes(Bootstrap.pullLeft), div(boardTerminal).classes(Bootstrap.pullRight)))
+        row(col(12, div(
+          div(backlogTerminal).styles(display("table-cell"), paddingRight("3px")),
+          div(boardTerminal).styles(display("table-cell"), paddingLeft("3px"))))
+        ).styles(width("100%"))
       )
     ).render
   }
