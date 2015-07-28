@@ -98,7 +98,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   println(s"params: ${params}")
 
   private val backlogTerminal = Terminal("backlog", Styles(fontSize(xSmall)))
-  private val boardTerminal = Terminal("board")
+  private val boardTerminal = Terminal("board", Styles(fontSize(xSmall)))
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
@@ -114,14 +114,17 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
           ).styles(textAlign(center), marginBottom("3px")))
         ),
         row(col(12, div(
-          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingRight("1px")),
-          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("1px"))))
-        ).styles(width("100%"))
-      )
-    ).render
+//          div(R()).styles(width("1px"), display("table-cell"), padding("0px")),
+          div(
+            div(boardTerminal).styles(display("table-cell")),
+            div(backlogTerminal).styles(display("table-cell"))
+          ).styles(display("table-row"), padding("0px"))
+        ).styles(display("table"), width("100%"))
+      ))
+    )).render
   }
 
-  def onInit = backlogTerminal.init & backlogTerminal.hide & boardTerminal.init & boardTerminal.show
+  def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
@@ -129,7 +132,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     //
     //TODO: we need this back again ....
     //
-    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
+    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b" && modelChanged.token != "test") return Js.nothing
     //
     //
     //
