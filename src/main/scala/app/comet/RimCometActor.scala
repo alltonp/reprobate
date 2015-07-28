@@ -108,20 +108,22 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
     div(
       containerFluid(
-        row(col(12, div(
+        row(col(12,
+          div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("2px")),
             span(backlogToggle).styles(marginLeft("2px"))
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
-        row(col(12, div(
-//          div(R()).styles(width("1px"), display("table-cell"), padding("0px")),
+        row(col(12,
           div(
-            div(boardTerminal).styles(display("table-cell")),
-            div(backlogTerminal).styles(display("table-cell"))
-          ).styles(display("table-row"), padding("0px"))
-        ).styles(display("table"), width("100%"))
-      ))
-    )).render
+            div(
+              div(boardTerminal).styles(display("table-cell")),
+              div(backlogTerminal).styles(display("table-cell"))
+            ).styles(display("table-row"), padding("0px"))
+          ).styles(display("table"), width("99%"))
+        ))
+      )
+    ).render
   }
 
   def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide
