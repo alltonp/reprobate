@@ -99,8 +99,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   private val backlogTerminal = Terminal("backlog")
   private val boardTerminal = Terminal("board")
-  private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-sm btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
-  private val boardToggle = ToggleButton("board", "Board", Classes("btn-sm btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
+  private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
+  private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
   def render = {
     import im.mange.jetboot.bootstrap3.GridSystem._
@@ -109,13 +109,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     div(
       containerFluid(
         row(col(12, div(
-            span(backlogToggle).styles(margin("5px")),
-            span(boardToggle).styles(margin("5px"))
+            span(backlogToggle).styles(margin("4px")),
+            span(boardToggle).styles(margin("4px"))
           ).styles(textAlign(center), marginBottom("5px")))
         ),
         row(col(12, div(
-          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingRight("3px")),
-          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("3px"))))
+          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingRight("2px")),
+          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("2px"))))
         ).styles(width("100%"))
       )
     ).render
