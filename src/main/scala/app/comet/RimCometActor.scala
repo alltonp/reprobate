@@ -10,7 +10,7 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot.bootstrap3.Bootstrap
 import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.comet._
-import im.mange.jetboot.css.Classes
+import im.mange.jetboot.css.{Styles, Classes}
 import im.mange.jetboot.page.CometPage
 import im.mange.jetboot._
 import net.liftweb.actor.LiftActor
@@ -35,8 +35,8 @@ import scala.xml.Unparsed
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
 //TODO: pull up
-case class Terminal(id: String) extends Renderable with Hideable {
-  private val holder = div(Some(id)).classes("round-corners")//.styles(fontSize(xSmall))
+case class Terminal(id: String, styles: Styles = Styles()) extends Renderable with Hideable {
+  private val holder = div(Some(id)).classes("round-corners").styles(styles)
   private val instance = s"${id}_terminal"
 
   def render = holder.render
@@ -97,7 +97,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"params: ${params}")
 
-  private val backlogTerminal = Terminal("backlog")
+  private val backlogTerminal = Terminal("backlog", Styles(fontSize(xSmall)))
   private val boardTerminal = Terminal("board")
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
@@ -109,13 +109,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     div(
       containerFluid(
         row(col(12, div(
-            span(boardToggle).styles(margin("4px")),
-            span(backlogToggle).styles(margin("4px"))
-          ).styles(textAlign(center), marginBottom("5px")))
+            span(boardToggle).styles(margin("2px")),
+            span(backlogToggle).styles(margin("2px"))
+          ).styles(textAlign(center), marginBottom("3px")))
         ),
         row(col(12, div(
-          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingRight("2px")),
-          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("2px"))))
+          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingRight("1px")),
+          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("1px"))))
         ).styles(width("100%"))
       )
     ).render
@@ -130,6 +130,9 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     //TODO: we need this back again ....
     //
     if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
+    //
+    //
+    //
 
     modelChanged.updated.fold(Js.nothing) { model =>
       val aka: Option[String] = None
