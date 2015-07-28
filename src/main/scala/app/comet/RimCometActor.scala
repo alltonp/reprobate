@@ -34,7 +34,7 @@ import scala.xml.Unparsed
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
 //TODO: pull up
-case class Terminal(id: String) extends Renderable {
+case class Terminal(id: String) extends Renderable with Hideable {
   private val holder = div(Some(id)).styles(fontSize(xSmall))
   private val instance = s"${id}_terminal"
 
@@ -48,7 +48,10 @@ case class Terminal(id: String) extends Renderable {
   }
 
   def refresh(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
-  
+
+  override def hide = holder.hide
+  override def show = holder.show
+
   private def clear = JsRaw(s"${instance}.clear();")
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
