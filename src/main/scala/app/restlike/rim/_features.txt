@@ -1,6 +1,4 @@
 rimweb:
- - two pain view
- - only show backlog in phv
  - links to specific queries
  - bookmark queries
  - support search/type-ahead (livetextbox)
