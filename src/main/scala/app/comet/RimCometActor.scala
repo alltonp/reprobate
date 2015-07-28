@@ -7,6 +7,7 @@ import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
 import im.mange.jetboot.Css._
 import im.mange.jetboot.Html._
+import im.mange.jetboot.bootstrap3.Bootstrap
 import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
@@ -71,7 +72,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     div(
       containerFluid(
         row(col(6, div(R("Backlog")).styles(textAlign(center), marginBottom("7px"))), col(6, div(R("Board")).styles(textAlign(center), marginBottom("7px")))),
-        row(col(6, div(backlogTerminal)), col(6, boardTerminal))
+        row(col(12, div(backlogTerminal).classes(Bootstrap.pullLeft), div(boardTerminal).classes(Bootstrap.pullRight)))
       )
     ).render
   }
@@ -82,7 +83,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   private def present(modelChanged: ModelChanged): JsCmd = {
     //TODO: we need this back again ....
-    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
+//    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
 
     modelChanged.updated.fold(Js.nothing) { model =>
       val aka: Option[String] = None
