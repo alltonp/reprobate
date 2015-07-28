@@ -9,7 +9,7 @@ object Messages {
   def notFound(ref: String) = problem(s"thing not found: $ref")
   def descriptionEmpty = problem(s"description is empty")
   def duplicateThing(ref: String) = problem(s"thing already exists: $ref")
-  def problem(message: String) = List(red(s"problem: ") + message)
+  def problem(message: String) = List(customRed(s"problem: ") + message)
 
   //TODO: use appName everywhere
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right

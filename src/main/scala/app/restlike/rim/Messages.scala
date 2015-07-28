@@ -5,7 +5,7 @@ object Messages {
 
   val eh = "eh?"
 
-  def notAuthorised(who: String) = List(red(s"easy ${who}, please set your initials first: ") + "'rim aka pa'")
+  def notAuthorised(who: String) = List(customRed(s"easy ${who}, please set your initials first: ") + "'rim aka pa'")
 
   def notFound(ref: String) = problem(s"issue not found: $ref")
 
@@ -13,7 +13,7 @@ object Messages {
 
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
 
-  def problem(message: String) = List(red(s"problem: ") + customGrey(message))
+  def problem(message: String) = List(customRed(s"problem: ") + customGrey(message))
 
   def success(what: String) = List(what)
 

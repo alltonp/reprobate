@@ -25,7 +25,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   }
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
-  private val renderBlocked = red(blocked.getOrElse(""))
+  private val renderBlocked = customRed(blocked.getOrElse(""))
 
   private def renderStatus(model: Option[Model]) = {
     val value = status.fold("")(" ^" + _)

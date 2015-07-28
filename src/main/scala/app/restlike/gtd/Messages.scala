@@ -11,7 +11,7 @@ object Messages {
 
   def duplicateIssue(ref: String) = problem(s"issue already exists: $ref")
 
-  def problem(message: String) = List(red(s"problem: ") + customGrey(message))
+  def problem(message: String) = List(customRed(s"problem: ") + customGrey(message))
 
   def success(what: String) = List(what)
 

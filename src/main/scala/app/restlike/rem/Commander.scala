@@ -33,7 +33,7 @@ object Commander {
   }
 
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
-    Out(red(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
+    Out(customRed(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
 
 //  private def onShowBoard(currentModel: Model) = Out(Presentation.board(currentModel), None)
 

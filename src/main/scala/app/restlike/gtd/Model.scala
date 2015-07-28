@@ -63,7 +63,7 @@ object ColouredForStatus {
       case "collected" => customBlue(value)
       case "done" => customGreen(value)
       case "deferred" => customGrey(value)
-      case "next-really-overdue" => red(value)
+      case "next-really-overdue" => customRed(value)
       case "next-overdue" => customOrange(value)
       case "next" => customYellow(value)
       //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)

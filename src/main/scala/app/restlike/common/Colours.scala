@@ -35,7 +35,7 @@ object Colours {
 
   private val END = "\033[0m"
 
-  def red(value: String) = s"$CUSTOMRED$value$END"
+//  def red(value: String) = s"$CUSTOMRED$value$END"
   def blue(value: String) = s"$BLUE$value$END"
   def cyan(value: String) = s"$CYAN$value$END"
   def lightGrey(value: String) = s"$LIGHTGREY$value$END"
