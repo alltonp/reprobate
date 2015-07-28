@@ -3,7 +3,9 @@ rimweb:
  - bookmark queries
  - support search/type-ahead (livetextbox)
  - make it a hybrid text and html app
- - show tags and releases browser somewhere
+ - show toggleable tag/release browsers
+---
+ - consider losing ":"
 ---
 tip: console is a bit like a scaffold, it's a good starting point for the ui
 ---
