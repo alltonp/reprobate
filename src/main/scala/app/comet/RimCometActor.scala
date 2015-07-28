@@ -36,7 +36,7 @@ case class RimPage(override val path: String, override val params: Loc.LocParam[
 
 //TODO: pull up
 case class Terminal(id: String) extends Renderable with Hideable {
-  private val holder = div(Some(id))//.styles(fontSize(xSmall))
+  private val holder = div(Some(id)).classes("round-corners")//.styles(fontSize(xSmall))
   private val instance = s"${id}_terminal"
 
   def render = holder.render
@@ -114,8 +114,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
           ).styles(textAlign(center), marginBottom("5px")))
         ),
         row(col(12, div(
-          div(backlogTerminal).styles(display("table-cell"), paddingRight("3px")),
-          div(boardTerminal).styles(display("table-cell"), paddingLeft("3px"))))
+          div(backlogTerminal).styles(display("table-cell"), padding("0px"), paddingRight("3px")),
+          div(boardTerminal).styles(display("table-cell"), padding("0px"), paddingLeft("3px"))))
         ).styles(width("100%"))
       )
     ).render
