@@ -125,23 +125,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val what = List(Colours.customBlue("blue"), Colours.customGreen("green")).mkString("")
 //      val newWhat: String = r.head.replaceAll("\\(", "").replaceAll("\\)", "")
       val js2 = JsRaw("terminal.clear();")
-      //    val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
-      //    val js3 = JsRaw("terminal.echo('" + Presentation.board(model, changed, aka.getOrElse("")) + "');")
-      val matching = model.issues
       val blessedTags = model.priorityTags
-      val sanitise = false
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
-      val backlog = Presentation.backlog(model, aka)
-
-      val phmv = Presentation.pointyHairedManagerView("release", matching.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
+//      val backlog = Presentation.backlog(model, aka)
+      val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
       val whatToShow = board.mkString("\n") + "\n" /*+ backlog.mkString("\n")*/ + "\n" + phmv.mkString("\n")
-
-      //.replaceAll("\n", "<br />")
-//      val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
-      //    val js3 = JsRaw(s"""terminal.echo("$whatToShow");""")
-      //    println(whatToShow)
-      //    println(js3)
 
       backlogTerminal.show(phmv.mkString("\n")) & boardTerminal.show(board.mkString("\n"))
     }
