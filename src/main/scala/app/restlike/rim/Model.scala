@@ -112,4 +112,4 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
 }
 
 case class In(head: Option[String], tail: List[String])
-case class Out(messages: Seq[String] = Nil, updatedModel: Option[Model] = None)
+case class Out(messages: Seq[String] = Nil, updatedModel: Option[Model] = None, changed: Seq[String])

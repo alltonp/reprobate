@@ -9,7 +9,7 @@ object Commander {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
-    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None)
+    if (!cmd.head.getOrElse("").equals("aka") && !currentModel.knows_?(who)) return Out(Messages.notAuthorised(who), None, Nil)
 
     def aka = currentModel.aka(who)
 
@@ -58,17 +58,17 @@ object Commander {
   }
 
   private def onUnknownCommand(head: Option[String], tail: List[String]) =
-    Out(customRed(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None)
+    Out(customRed(Messages.eh) + " " + head.getOrElse("") + " " + tail.mkString(" ") :: Nil, None, Nil)
 
-  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None)
+  private def onShowBoard(currentModel: Model, aka: String) = Out(Presentation.board(currentModel, Nil, aka), None, Nil)
 
-  private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None)
+  private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None, Nil)
 
   private def onShowReleases(currentModel: Model, aka: String) = {
     val all = currentModel.released.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
     val result = if (all.isEmpty) Messages.success(s"no releases found")
     else all
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onShowWhoIsDoingWhat(currentModel: Model) = {
@@ -80,28 +80,28 @@ object Commander {
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
     else all
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onShowTags(currentModel: Model) = {
     val all = currentModel.tags
     val result = if (all.isEmpty) Messages.success(s"no tags found")
     else Presentation.tags(all)
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onShowAllForTag(tag: String, currentModel: Model) = {
     val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
     val result = if (issuesWithTag.isEmpty) Messages.success(s"no issues found for tag: $tag")
     else Presentation.tagDetail(tag, issuesWithTag, currentModel)
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onShowUntagged(currentModel: Model, aka: String) = {
     val untagged = currentModel.issues.filter(_.tags.isEmpty)
     val result = if (untagged.isEmpty) Messages.success(s"all issues have tags")
     else SortByStatus(untagged, currentModel).map(_.render(currentModel, highlightAka = Some(aka)))
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
 //  private def onShowReleaseNote(release: String, currentModel: Model) = {
@@ -115,22 +115,22 @@ object Commander {
     val releaseable = currentModel.releasableIssues
     val remainder = currentModel.issues diff releaseable
 
-    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None)
-    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None)
+    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None, Nil)
+    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None, Nil)
 
     val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
     //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
-    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel))
+    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = Nil)
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
     def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
-    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"))
+    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"), changed = Nil)
     else if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
         issues = currentModel.issues.map(i => {
@@ -141,8 +141,8 @@ object Commander {
         })
       )
       //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
-    } else Out(Messages.problem(s"$oldTag does not exist"))
+      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
+    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
   }
 
   private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
@@ -159,57 +159,57 @@ object Commander {
         })
       )
       //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel))
-    } else Out(Messages.problem(s"$oldTag does not exist"))
+      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
+    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
   }
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newTags = found.tags -- args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onTagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newTags = found.tags ++ args
       val updatedIssue = found.copy(tags = newTags)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onOwnIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedIssue = found.copy(by = Some(currentModel.userToAka(who)))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onDisownIssue(who: String, ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedIssue = found.copy(by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onAssignIssue(assignee: String, ref: String, currentModel: Model, aka: String): Out = {
-    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"))
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    if (!currentModel.userToAka.values.toSeq.contains(assignee)) return Out(Messages.problem(s"$assignee is not one of: ${currentModel.userToAka.values.mkString(", ")}"), changed = Nil)
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   //TODO: model.forwardAState
   //TODO: model.backwardAState
   private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = if (found.status.isEmpty) None
       else {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
@@ -218,37 +218,37 @@ object Commander {
       val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onBlockIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedIssue = found.copy(blocked = Some(args.mkString(" ")))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onUnblockIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedIssue = found.copy(blocked = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = None
       val updatedIssue = found.copy(status = newStatus, by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = if (found.status.isEmpty) currentModel.beginState
       else {
         val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
@@ -258,21 +258,21 @@ object Commander {
       val by = if (newStatus == currentModel.beginState) None else Some(aka)
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = currentModel.endState
       val updatedIssue = found.copy(status = Some(newStatus), by = Some(aka))
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel))
+      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newDescription = args.mkString(" ")
       val updatedIssue = found.copy(description = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
@@ -281,14 +281,14 @@ object Commander {
 //      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
 //                         else
 //        Messages.successfulUpdate(s"${updatedIssue.render()}")
-      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel))
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel))
+      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel), Nil)
     }
   }
 
@@ -304,11 +304,11 @@ object Commander {
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
     else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onShowBacklog(currentModel: Model, aka: String) = {
-    Out(Presentation.backlog(currentModel, Some(aka)), None)
+    Out(Presentation.backlog(currentModel, Some(aka)), None, Nil)
   }
 
   private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
@@ -319,7 +319,7 @@ object Commander {
   private def onShowReleaseManagementSummary(release: String, currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
     val maybeRelease = currentModel.released.find(_.tag == release)
     maybeRelease match {
-      case None => Out(Messages.problem(s"release $release does not exist"), None)
+      case None => Out(Messages.problem(s"release $release does not exist"), None, Nil)
       case Some(r) => onShowManagementSummary(r.issues, currentModel, providedTags, aka, sanitise)
     }
   }
@@ -331,52 +331,52 @@ object Commander {
     val result = if (matching.isEmpty) s"board is empty" :: Nil
     //TODO: really really need display options
     else Presentation.pointyHairedManagerView("release", matching, blessedTags, currentModel, aka, sanitise, sanitise, sanitise, sanitise, sanitise).toList
-    Out(result, None)
+    Out(result, None, Nil)
   }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
     currentModel.createIssue(args, None, None, refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel))
+      case Left(e) => Out(e, None, Nil)
+      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel), Seq(r.created.ref))
     }
   }
 
   private def onAddAndBeginIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
     currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+      case Left(e) => Out(e, None, Nil)
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel), Seq(r.created.ref))
     }
   }
 
   private def onAddAndForwardIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
     currentModel.createIssue(args, Some(currentModel.state(1)), Some(aka), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+      case Left(e) => Out(e, None, Nil)
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel), Seq(r.created.ref))
     }
   }
 
   private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
     currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
-      case Left(e) => Out(e, None)
-      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
+      case Left(e) => Out(e, None, Nil)
+      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel), Seq(r.created.ref))
     }
   }
 
   private def onAka(who: String, aka: String, currentModel: Model): Out = {
-    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None)
+    if (aka.size > 3) return Out(Messages.problem("maximum 3 chars"), None, Nil)
     val updatedModel = currentModel.copy(userToAka = currentModel.userToAka.updated(who, aka.toUpperCase))
-    Out(Messages.help(aka.toUpperCase), Some(updatedModel))
+    Out(Messages.help(aka.toUpperCase), Some(updatedModel), Nil)
   }
 
   private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
     val updatedModel = currentModel.copy(priorityTags = tags)
     //TODO: de-dupe message (using this version)
-    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel))
+    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
   }
 
   private def onShowTagPriority(who: String, currentModel: Model): Out = {
     //TODO: de-dupe message (not this version)
-    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None)
+    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None, Nil)
   }
 }
 
