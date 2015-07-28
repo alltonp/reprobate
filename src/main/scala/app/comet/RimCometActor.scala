@@ -36,7 +36,7 @@ case class RimPage(override val path: String, override val params: Loc.LocParam[
 
 //TODO: pull up
 case class Terminal(id: String) extends Renderable with Hideable {
-  private val holder = div(Some(id)).styles(fontSize(xSmall))
+  private val holder = div(Some(id))//.styles(fontSize(xSmall))
   private val instance = s"${id}_terminal"
 
   def render = holder.render
