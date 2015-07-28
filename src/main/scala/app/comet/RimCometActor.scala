@@ -5,6 +5,7 @@ import app.restlike.common.Colours
 import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
 import im.mange.jetboot.Html._
+import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
 import im.mange.jetboot.{Html, Js, R, Renderable}
@@ -62,7 +63,15 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   private val backlogTerminal = Terminal("backlog")
   private val boardTerminal = Terminal("board")
 
-  def render = R(backlogTerminal, boardTerminal).render
+  def render = {
+    import im.mange.jetboot.bootstrap3.GridSystem._
+
+    div(
+      containerFluid(
+        row(col(6, backlogTerminal), col(6, boardTerminal))
+      )
+    ).render
+  }
 
   def onInit = backlogTerminal.init & boardTerminal.init
 
