@@ -31,6 +31,7 @@ case class RimPage(override val path: String, override val params: Loc.LocParam[
 
 case class Terminal(id: String) extends Renderable {
   private val holder = div(Some(id))
+  private val instance = s"${id}_terminal"
 
   def render = holder.render
 
@@ -39,15 +40,15 @@ case class Terminal(id: String) extends Renderable {
     val what = "hello"
     //TODO: not sure we need the function .. it doesnt need to echo anything right now
     //TODO: need to include id in the var name and stash it
-    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
+    val js = JsRaw("var " + instance + " = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + instance + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
     val js2 = clear
     js & js2
   }
 
   def show(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
 
-  private def clear = JsRaw("terminal.clear();")
-  private def echo(line: String): JsCmd = JsRaw( s"""terminal.echo("$line");""")
+  private def clear = JsRaw(s"${instance}.clear();")
+  private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
 
 case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
