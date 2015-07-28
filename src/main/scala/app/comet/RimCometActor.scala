@@ -128,19 +128,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       //    val js3 = JsRaw("terminal.echo('" + s"update ${systemClock().dateTime} - $modelChanged - $params" + "');")
       //    val js3 = JsRaw("terminal.echo('" + Presentation.board(model, changed, aka.getOrElse("")) + "');")
       val matching = model.issues
-      val blessedTags = List.empty[String]
+      val blessedTags = model.priorityTags
       val sanitise = false
-
-      //    val whatToShow = Unparsed(what)
-      //    val whatToShow = Unparsed(pointyHairedManagerView.mkString("[lb]").replaceAll("\n", "<br />"))
-//      def echo(l: String): JsCmd = {
-//        JsRaw( s"""terminal.echo("$l");""")
-//      }
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val backlog = Presentation.backlog(model, aka)
 
-      //TODO: should probably use prioirty tags from model
       val phmv = Presentation.pointyHairedManagerView("release", matching.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
       val whatToShow = board.mkString("\n") + "\n" /*+ backlog.mkString("\n")*/ + "\n" + phmv.mkString("\n")
 
