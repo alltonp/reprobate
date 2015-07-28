@@ -133,13 +133,12 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
     modelChanged.updated.fold(Js.nothing) { model =>
       val aka: Option[String] = None
-      val changed = Seq()
+      val changed = modelChanged.changedRefs
 
       //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
       val what = List(customBlue("blue"), customGreen("green")).mkString("")
       val blessedTags = model.priorityTags
 
-      //TODO: support recently changed ...
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
 
@@ -182,7 +181,7 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
     //TODO: this forces refresh
     this ! app.server.Init()
     //TODO: pull out obv
-    this ! ModelChanged(Persistence.load.modelFor("4d30e06a-5107-4330-a8c7-7e9b472f716b"), "4d30e06a-5107-4330-a8c7-7e9b472f716b")
+    this ! ModelChanged(Persistence.load.modelFor("4d30e06a-5107-4330-a8c7-7e9b472f716b"), "4d30e06a-5107-4330-a8c7-7e9b472f716b", Nil)
   }
 
   def doRender = {
