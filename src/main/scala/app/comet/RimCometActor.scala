@@ -60,10 +60,11 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   println(s"params: ${params}")
 
   private val backlogTerminal = Terminal("backlog")
+  private val boardTerminal = Terminal("board")
 
-  def render = backlogTerminal.render
+  def render = R(backlogTerminal, boardTerminal).render
 
-  def onInit = backlogTerminal.init
+  def onInit = backlogTerminal.init & boardTerminal.init
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
@@ -137,7 +138,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       //    println(whatToShow)
       //    println(js3)
 
-      backlogTerminal.show(whatToShow)
+      backlogTerminal.show(phmv.mkString("\n")) & boardTerminal.show(board.mkString("\n"))
     }
 
 //    $('#some_id').terminal(function(command, term) {
