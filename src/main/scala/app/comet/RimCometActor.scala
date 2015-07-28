@@ -80,23 +80,16 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b") return Js.nothing
 
     modelChanged.updated.fold(Js.nothing) { model =>
-
-      val includeBacklog = true
-      val includeReleased = false
-      val compressEmptyStates = false
-      val hideBy = true
-      val hideTags = false
       val aka: Option[String] = None
       val changed = Seq()
-      val currentModel = modelChanged.updated
 
       //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
       val what = List(Colours.customBlue("blue"), Colours.customGreen("green")).mkString("")
       val blessedTags = model.priorityTags
 
+      //TODO: support recently changed ...
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val phmv = Presentation.pointyHairedManagerView("release", model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)
-      val whatToShow = board.mkString("\n") + "\n" /*+ backlog.mkString("\n")*/ + "\n" + phmv.mkString("\n")
 
       backlogTerminal.show(phmv.mkString("\n")) & boardTerminal.show(board.mkString("\n"))
     }
