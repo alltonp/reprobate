@@ -59,25 +59,33 @@ case class Terminal(id: String) extends Renderable with Hideable {
 
 case class ToggleButton(id: String, label: String, buttonClasses: Classes, expandedByDefault: Boolean = false, onCollapse: () => JsCmd, onExpand: () => JsCmd) extends Renderable {
   private var expanded = expandedByDefault
+  private val link = span(Some(s"${id}_link"), icon())
 
   def render = {
-          //TODO: use Html.a()
+    //TODO: use Html.a()
 
-          R(SHtml.a(() => toggle(),
-            <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={id + "_toggle"}>{label}</button>,
-            "style" -> "text-decoration: none;"
-          )).render
+    R(SHtml.a(() => toggle(),
+      <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={id + "_toggle"}>{link.render}</button>,
+      "style" -> "text-decoration: none;"
+    )).render
   }
 
   private def toggle() = {
     if (expanded) {
       expanded = false
-      onCollapse()
+      collapse() & onCollapse()
     } else {
       expanded = true
-      onExpand()
+      expand() & onExpand()
     }
   }
+
+    private def expand() = { println("expand"); link.fill(closeIcon()) }
+    private def collapse() = link.fill(openIcon())
+    private def openIcon() = R(<span><span class="glyphicon glyphicon-chevron-right"/>&nbsp;{label}</span>)
+    private def closeIcon() = R(<span><span class="glyphicon glyphicon-chevron-down"/>&nbsp;{label}</span>)
+    private def icon() = if (expanded) closeIcon() else openIcon()
+
 
   //  case class Collapsible(id: String, label: String, theContent: Renderable, buttonClasses: Classes, expandedByDefault: Boolean = false) extends Renderable {
 //    import im.mange.jetboot.Html._
@@ -134,8 +142,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   private val backlogTerminal = Terminal("backlog")
   private val boardTerminal = Terminal("board")
-  private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
-  private val boardToggle = ToggleButton("board", "Board", Classes("btn"), true, () => boardTerminal.hide, () => boardTerminal.show)
+  private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
+  private val boardToggle = ToggleButton("board", "Board", Classes("btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
   def render = {
     import im.mange.jetboot.bootstrap3.GridSystem._
@@ -149,7 +157,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
     ).render
   }
 
-  def onInit = backlogTerminal.init & backlogTerminal.hide & boardTerminal.init
+  def onInit = backlogTerminal.init & backlogTerminal.hide & boardTerminal.init & boardTerminal.show
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
