@@ -10,11 +10,12 @@ import im.mange.jetboot.Html._
 import im.mange.jetboot.bootstrap3.Bootstrap
 import im.mange.jetboot.bootstrap3.GridSystem._
 import im.mange.jetboot.comet._
+import im.mange.jetboot.css.Classes
 import im.mange.jetboot.page.CometPage
 import im.mange.jetboot._
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
-import net.liftweb.http.S
+import net.liftweb.http.{SHtml, S}
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
@@ -56,6 +57,72 @@ case class Terminal(id: String) extends Renderable with Hideable {
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
 
+case class ToggleButton(id: String, label: String, buttonClasses: Classes, expandedByDefault: Boolean = false, onCollapse: () => JsCmd, onExpand: () => JsCmd) extends Renderable {
+  private var expanded = expandedByDefault
+
+  def render = {
+          //TODO: use Html.a()
+
+          R(SHtml.a(() => toggle(),
+            <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={id + "_toggle"}>{label}</button>,
+            "style" -> "text-decoration: none;"
+          )).render
+  }
+
+  private def toggle() = {
+    if (expanded) {
+      expanded = false
+      onCollapse()
+    } else {
+      expanded = true
+      onExpand()
+    }
+  }
+
+  //  case class Collapsible(id: String, label: String, theContent: Renderable, buttonClasses: Classes, expandedByDefault: Boolean = false) extends Renderable {
+//    import im.mange.jetboot.Html._
+//
+//    private val link = Element("collapsibleLink_" + id)
+//    private val collapsibleContent = div(Some("collapsibleContent_" + id), theContent).classes(if (expandedByDefault) "" else Css.hidden)
+//    private val contentHolder = div(Some("collapsibleSection_" + id), content)//.styles(marginBottom("10px"))
+//
+//    def render = contentHolder.render
+//
+//    private def content =
+//      Composite(
+//        R(<span>{displayExpander().render}</span>),
+//        collapsibleContent
+//      )
+//
+//    private def displayExpander() = {
+//      //TODO: use Html.a()
+//
+//      R(SHtml.a(() => toggle(),
+//        <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={link.id}>{icon().render}</button>,
+//        "style" -> "text-decoration: none;"
+//      ))
+//    }
+//
+//    private def toggle() = {
+//      if (expanded) {
+//        expanded = false
+//        collapse()
+//      } else {
+//        expanded = true
+//        expand()
+//      }
+//    }
+//
+//    private def expand() = collapsibleContent.show & link.fill(closeIcon())
+//    private def collapse() = collapsibleContent.hide & link.fill(openIcon())
+//    private def openIcon() = R(<span><span class="glyphicon glyphicon-chevron-right"/>&nbsp;{label}</span>)
+//    private def closeIcon() = R(<span><span class="glyphicon glyphicon-chevron-down"/>&nbsp;{label}</span>)
+//    private def icon() = if (expanded) closeIcon() else openIcon()
+//  }
+
+
+}
+
 //TODO: pull up
 case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
   import Html._
@@ -67,6 +134,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
   private val backlogTerminal = Terminal("backlog")
   private val boardTerminal = Terminal("board")
+  private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
+  private val boardToggle = ToggleButton("board", "Board", Classes("btn"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
   def render = {
     import im.mange.jetboot.bootstrap3.GridSystem._
@@ -74,13 +143,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
     div(
       containerFluid(
-        row(col(6, div(R("Backlog")).styles(textAlign(center), marginBottom("7px"))), col(6, div(R("Board")).styles(textAlign(center), marginBottom("7px")))),
+        row(col(6, div(backlogToggle).styles(textAlign(center), marginBottom("7px"))), col(6, div(boardToggle).styles(textAlign(center), marginBottom("7px")))),
         row(col(12, div(backlogTerminal).classes(Bootstrap.pullLeft), div(boardTerminal).classes(Bootstrap.pullRight)))
       )
     ).render
   }
 
-  def onInit = backlogTerminal.init & boardTerminal.init
+  def onInit = backlogTerminal.init & backlogTerminal.hide & boardTerminal.init
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
