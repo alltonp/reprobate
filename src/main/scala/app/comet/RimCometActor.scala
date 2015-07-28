@@ -57,6 +57,7 @@ case class Terminal(id: String) extends Renderable with Hideable {
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
 
+//TODO: move to jetboot
 case class ToggleButton(id: String, label: String, buttonClasses: Classes, expandedByDefault: Boolean = false, onCollapse: () => JsCmd, onExpand: () => JsCmd) extends Renderable {
   private var expanded = expandedByDefault
   private val link = span(Some(s"${id}_link"), icon())
@@ -80,55 +81,11 @@ case class ToggleButton(id: String, label: String, buttonClasses: Classes, expan
     }
   }
 
-    private def expand() = link.fill(closeIcon())
-    private def collapse() = link.fill(openIcon())
-    private def openIcon() = R(<span><i class="fa fa-toggle-off fa-lg"></i>&nbsp;{label}</span>)
-    private def closeIcon() = R(<span><i class="fa fa-toggle-on fa-lg"></i>&nbsp;{label}</span>)
-    private def icon() = if (expanded) closeIcon() else openIcon()
-
-
-  //  case class Collapsible(id: String, label: String, theContent: Renderable, buttonClasses: Classes, expandedByDefault: Boolean = false) extends Renderable {
-//    import im.mange.jetboot.Html._
-//
-//    private val link = Element("collapsibleLink_" + id)
-//    private val collapsibleContent = div(Some("collapsibleContent_" + id), theContent).classes(if (expandedByDefault) "" else Css.hidden)
-//    private val contentHolder = div(Some("collapsibleSection_" + id), content)//.styles(marginBottom("10px"))
-//
-//    def render = contentHolder.render
-//
-//    private def content =
-//      Composite(
-//        R(<span>{displayExpander().render}</span>),
-//        collapsibleContent
-//      )
-//
-//    private def displayExpander() = {
-//      //TODO: use Html.a()
-//
-//      R(SHtml.a(() => toggle(),
-//        <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={link.id}>{icon().render}</button>,
-//        "style" -> "text-decoration: none;"
-//      ))
-//    }
-//
-//    private def toggle() = {
-//      if (expanded) {
-//        expanded = false
-//        collapse()
-//      } else {
-//        expanded = true
-//        expand()
-//      }
-//    }
-//
-//    private def expand() = collapsibleContent.show & link.fill(closeIcon())
-//    private def collapse() = collapsibleContent.hide & link.fill(openIcon())
-//    private def openIcon() = R(<span><span class="glyphicon glyphicon-chevron-right"/>&nbsp;{label}</span>)
-//    private def closeIcon() = R(<span><span class="glyphicon glyphicon-chevron-down"/>&nbsp;{label}</span>)
-//    private def icon() = if (expanded) closeIcon() else openIcon()
-//  }
-
-
+  private def expand() = link.fill(closeIcon())
+  private def collapse() = link.fill(openIcon())
+  private def openIcon() = R(<span><i class="fa fa-toggle-off fa-lg"></i>&nbsp;{label}</span>)
+  private def closeIcon() = R(<span><i class="fa fa-toggle-on fa-lg"></i>&nbsp;{label}</span>)
+  private def icon() = if (expanded) closeIcon() else openIcon()
 }
 
 //TODO: pull up
