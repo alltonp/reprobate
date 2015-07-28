@@ -29,8 +29,10 @@ import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
 
 import scala.xml.Unparsed
 
+//TODO: pull up
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
+//TODO: pull up
 case class Terminal(id: String) extends Renderable {
   private val holder = div(Some(id)).styles(fontSize(xSmall))
   private val instance = s"${id}_terminal"
