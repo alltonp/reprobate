@@ -4,6 +4,7 @@ import app.ServiceFactory.{systemClock, rimServerActor}
 import app.restlike.common.Colours
 import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
+import im.mange.jetboot.Html._
 import im.mange.jetboot.comet._
 import im.mange.jetboot.page.CometPage
 import im.mange.jetboot.{Html, Js, R, Renderable}
@@ -28,6 +29,27 @@ import scala.xml.Unparsed
 
 case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
 
+case class Terminal(id: String) extends Renderable {
+  private val holder = div(Some(id))
+
+  def render = holder.render
+
+  def init = {
+    println("### init")
+    val what = "hello"
+    //TODO: not sure we need the function .. it doesnt need to echo anything right now
+    //TODO: need to include id in the var name and stash it
+    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
+    val js2 = clear
+    js & js2
+  }
+
+  def show(what: String) = clear & Js.chain(what.split("\n").map(l => echo(l)).toSeq)
+
+  private def clear = JsRaw("terminal.clear();")
+  private def echo(line: String): JsCmd = JsRaw( s"""terminal.echo("$line");""")
+}
+
 case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
   import Html._
 
@@ -36,22 +58,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"params: ${params}")
 
-  private val holder = div(Some("term_demo"))
+  private val terminal = Terminal("term_demo")
 
-  def render = holder.render
+  def render = terminal.render
 
-  def onInit = createTerminal("term_demo")
+  def onInit = terminal.init
+
   def onModelChanged(changed: ModelChanged) = present(changed)
-
-  private def createTerminal(id: String) = {
-    println("### init")
-    val what = "hello"
-    //TODO: not sure we need the function .. it doesnt need to echo anything right now
-    val js = JsRaw("var terminal = $('#" + id + "').terminal(function(command, term) { term.echo('" + what + "'); }, {\n\t\t\t        name: '" + id + "',\n\t\t\t        prompt: '', \n\t\t\t        history: false,\n\t\t\t        enabled: false,\n\t\t\t        onFocus: function() { return false; }\n\t\t\t    } );")
-    val js2 = JsRaw("terminal.clear();")
-//    println(js)
-    js & js2
-  }
 
   private def present(modelChanged: ModelChanged): JsCmd = {
     //TODO: we need this back again ....
@@ -108,9 +121,9 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 
       //    val whatToShow = Unparsed(what)
       //    val whatToShow = Unparsed(pointyHairedManagerView.mkString("[lb]").replaceAll("\n", "<br />"))
-      def echo(l: String): JsCmd = {
-        JsRaw( s"""terminal.echo("$l");""")
-      }
+//      def echo(l: String): JsCmd = {
+//        JsRaw( s"""terminal.echo("$l");""")
+//      }
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val backlog = Presentation.backlog(model, aka)
@@ -118,14 +131,13 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       val whatToShow = board.mkString("\n") + "\n" /*+ backlog.mkString("\n")*/ + "\n" + phmv.mkString("\n")
 
       //.replaceAll("\n", "<br />")
-      val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
+//      val js3 = whatToShow.split("\n").map(l => echo(l)).toSeq
       //    val js3 = JsRaw(s"""terminal.echo("$whatToShow");""")
       //    println(whatToShow)
       //    println(js3)
 
-      js2 & Js.chain(js3)
+      terminal.show(whatToShow)
     }
-
 
 //    $('#some_id').terminal(function(command, term) {
 //      if (command == 'test') {
