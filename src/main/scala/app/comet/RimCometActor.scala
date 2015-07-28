@@ -52,6 +52,7 @@ case class Terminal(id: String) extends Renderable {
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
 
+//TODO: pull up
 case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
   import Html._
 
