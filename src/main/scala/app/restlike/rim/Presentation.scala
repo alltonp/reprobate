@@ -20,12 +20,12 @@ object Presentation {
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {
-    val r = release.issues.map(i => s"\n  ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
+    val r = release.issues.map(i => s"\n ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
     s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
   }
 
   def issuesForUser(model: Model, aka: String, issues: Seq[Issue]) = {
-    val r = issues.map(i => s"\n  ${i.render(model, hideBy = true)}").mkString
+    val r = issues.map(i => s"\n ${i.render(model, hideBy = true)}").mkString
     s"${aka}: (${issues.size})" + r + "\n"
   }
 
@@ -54,7 +54,7 @@ object Presentation {
     val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
     interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)
-      val issues = issuesForState.map(i => s"\n  ${
+      val issues = issuesForState.map(i => s"\n ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
       if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
@@ -78,7 +78,7 @@ object Presentation {
   }
 
   private def renderTagAndIssues(model: Model, tag: String, issuesForTag: Seq[Issue], aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean, hideCount: Boolean): String = {
-    val issues = issuesForTag.map(i => s"\n  ${
+    val issues = issuesForTag.map(i => s"\n ${
       i.render(model, hideStatus = hideStatus, hideBy = hideBy, hideTags = hideTags, hideId = hideId, highlightAka = Some(aka))
     }").mkString
     s"$tag: ${if (hideCount) "" else s"(${issuesForTag.size})"}" + issues + "\n"
