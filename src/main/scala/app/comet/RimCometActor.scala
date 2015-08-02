@@ -110,7 +110,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
       containerFluid(
         row(col(12,
           div(
-            span(boardToggle).styles(marginLeft("1px"), marginRight("2px")),
+            span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
             span(backlogToggle).styles(marginLeft("2px"))
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
@@ -119,8 +119,8 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
             div(
               div(boardTerminal).styles(display("table-cell")),
               div(backlogTerminal).styles(display("table-cell"))
-            ).styles(display("table-row"), padding("0px"))
-          ).styles(display("table"), width("99%"))
+            ).styles(display("table-row"), padding("1px"))
+          ).styles(display("table"), width("100%"))
         ))
       )
     ).render
