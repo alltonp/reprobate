@@ -5,6 +5,8 @@ rimweb:
  - make it a hybrid text and html app
  - show toggleable tag/release browsers
 ---
+support do and remind in 1w, 1m, 1y etc - e.g. invoices and bills
+---
  - consider losing ":"
 ---
 tip: console is a bit like a scaffold, it's a good starting point for the ui
