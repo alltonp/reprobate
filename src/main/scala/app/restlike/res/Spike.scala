@@ -37,6 +37,10 @@ object JSON_GET {
 
 case class PricedItinerariesResponse(pricedItinerary: PricedItinerary)
 case class PricedItinerary(items: Array[Record])
-case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMonth: String, Price: Price)
+
+case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMonth: String, Price: Price) {
+  override def toString() = s"$DepartureCityCode $ArrivalCityCode $TravelMonth ${Price.Amount.Amount} ${Price.Amount.CurrencyCode}"
+}
+
 case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
