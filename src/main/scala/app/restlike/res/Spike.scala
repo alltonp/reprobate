@@ -70,6 +70,8 @@ case class Amount(Amount: Double, CurrencyCode: String)
 
 case class Summary(records: Seq[Record]) {
   val first = records.head
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${first.Price.Amount.CurrencyCode} - " +
-    records.map(r => s"${r.TravelMonth}: ${r.Price.Amount.Amount}").mkString(", ")
+  val lowest = records.map(_.Price.Amount.Amount).min
+
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${lowest} ${first.Price.Amount.CurrencyCode}): " +
+    records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount}").mkString(", ")
 }
