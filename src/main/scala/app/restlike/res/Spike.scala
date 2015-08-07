@@ -9,9 +9,11 @@ import scala.collection.{mutable, concurrent}
 
 object Spike extends App {
   private def getJson(url: String) = {
-    val r = http(JSON_GET(url)).entityAsString
-    if (debug) println("### " + url + " =>\n" + r) else print(".")
-    parse(r)
+    val r = http(JSON_GET(url))
+    r.entity.map(e => {
+      if (debug) println("### " + url + " =>\n" + r) else print(".")
+      parse(e.toString())
+    })
   }
 
   private def doIt(brd: String, off: String): Unit = {
@@ -19,16 +21,19 @@ object Spike extends App {
 
     implicit val formats = Serialization.formats(NoTypeHints)
     val json = getJson(url)
-    //  val r = json.extract[PricedItinerariesResponse]
-    val elements = (json \\ "PricedItinerary").children
-    val r = elements.map(acct => acct.extract[Record])
-    println(r.mkString("\n") + "\n")
+    json match {
+      case Some(j) => {
+        //  val r = json.extract[PricedItinerariesResponse]
+        val elements = (j \\ "PricedItinerary").children
+        val r = elements.map(acct => acct.extract[Record])
+        println(r.mkString("\n") + "\n")
+      }
+      case None => println(s"Nothing for: $brd $off")
+    }
     Thread.sleep(1000)
   }
 
   val debug = false
-//  val brd = "FRA"
-//  val off = "HKG"
 
   val brds = Seq("FRA", "DUS", "MUC")
   val offs = Seq("HKG", "SIN", "CTU", "KUL")
