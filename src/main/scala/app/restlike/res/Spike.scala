@@ -69,9 +69,19 @@ case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
 
 case class Summary(records: Seq[Record]) {
+  val fx = Map(
+    "NOK" -> 0.0777638,
+    "DKK" -> 0.0942893,
+    "EUR" -> 0.703649
+  )
+
   val first = records.head
   val lowest = records.map(_.Price.Amount.Amount).min
 
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${lowest} ${first.Price.Amount.CurrencyCode}): " +
+  def fxed(value: Double) = {
+    value * fx(first.Price.Amount.CurrencyCode)
+  }
+
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${fxed(lowest)} GBP) ${first.Price.Amount.CurrencyCode}: " +
     records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount}").mkString(", ")
 }
