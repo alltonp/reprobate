@@ -14,18 +14,22 @@ object Spike extends App {
     parse(r)
   }
 
+  private def doIt(brd: String, off: String): Unit = {
+    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=business;journeyType=roundTrip;range=monthLow.json"
+
+    implicit val formats = Serialization.formats(NoTypeHints)
+    val json = getJson(url)
+    //  val r = json.extract[PricedItinerariesResponse]
+    val elements = (json \\ "PricedItinerary").children
+    val r = elements.map(acct => acct.extract[Record])
+    println(r.mkString("\n"))
+  }
+
   val debug = true
   val brd = "FRA"
   val off = "HKG"
-  val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=business;journeyType=roundTrip;range=monthLow.json"
 
-  implicit val formats = Serialization.formats(NoTypeHints)
-  val json = getJson(url)
-//  val r = json.extract[PricedItinerariesResponse]
-  val elements = (json \\ "PricedItinerary").children
-  val r = elements.map(acct => acct.extract[Record])
-  println(r.mkString("\n"))
-//  println(r.pricedItinerary.items(0))
+  doIt(brd, off)
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
