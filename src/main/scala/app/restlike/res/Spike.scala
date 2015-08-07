@@ -35,7 +35,7 @@ object Spike extends App {
   val ignored = Seq("DUS SIN", "MUC SIN", "DUS CTU", "MUC CTU", "DUS KUL", "MUC KUL", "FRA PVG", "DUS PVG", "MUC PVG",
     "DUS BKK", "MUC BKK", "FRA PEK", "DUS PEK", "MUC PEK")
 
-  private val germany = Seq("FRA", "DUS", "MUC")
+  private val germany = Seq("FRA", "DUS", "MUC", "HAM"/*, "TXL", "CGN"*/)
   private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
 
   val brds = germany // Seq("DUB", "CPH", "OSL")
