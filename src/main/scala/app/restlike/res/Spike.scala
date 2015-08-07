@@ -26,20 +26,34 @@ object Spike extends App {
         //  val r = json.extract[PricedItinerariesResponse]
         val elements = (j \\ "PricedItinerary").children
         val r = elements.map(acct => acct.extract[Record])
-        println(r.mkString("\n") + "\n")
+        println("\n" + r.mkString("\n"))
       }
-      case None => println(s"Nothing for: $brd $off")
+      case None => println(s"### Nothing for: $brd $off\n")
     }
     Thread.sleep(1000)
   }
 
   val debug = false
 
-  val brds = Seq("FRA", "DUS", "MUC")
-  val offs = Seq("HKG", "SIN", "CTU", "KUL")
+  val ignored = Seq("DUS SIN", "MUC SIN", "DUS CTU", "MUC CTU", "DUS KUL", "MUC KUL", "FRA PVG", "DUS PVG", "MUC PVG",
+    "DUS BKK", "MUC BKK", "FRA PEK", "DUS PEK", "MUC PEK")
+
+  private val germany = Seq("FRA", "DUS", "MUC")
+  private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
+
+  val brds = Seq("DUB", "CPH", "OSL", "LON")
+  val offs = Seq("LAX", "NYC")
+
+  //FX
+  //1.00 NOK	=	0.0777638 GBP
+  //1.00 DKK	=	0.0942893 GBP
+  //1.00 EUR	=	0.703649 GBP
 
   offs.foreach(off => {
-    brds.foreach(brd => doIt(brd, off))
+    brds.foreach(brd => {
+      if (ignored.contains(s"$brd $off")) println(s"\n### Ignoring: $brd $off")
+      else doIt(brd, off)
+    })
   })
 }
 
