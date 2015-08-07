@@ -3,9 +3,6 @@ package app.restlike.res
 import io.shaka.http.Http._
 import io.shaka.http._
 import net.liftweb.json._
-import scala.Some
-import scala.collection.immutable.HashMap
-import scala.collection.{mutable, concurrent}
 
 object Spike extends App {
   private def getJson(url: String) = {
@@ -26,7 +23,7 @@ object Spike extends App {
         //  val r = json.extract[PricedItinerariesResponse]
         val elements = (j \\ "PricedItinerary").children
         val r = elements.map(acct => acct.extract[Record])
-        println("\n" + r.mkString("\n"))
+        println("\n" + Summary(r))
       }
       case None => println(s"### Nothing for: $brd $off\n")
     }
@@ -41,7 +38,7 @@ object Spike extends App {
   private val germany = Seq("FRA", "DUS", "MUC")
   private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
 
-  val brds = Seq("DUB", "CPH", "OSL", "LON")
+  val brds = Seq("DUB", "CPH", "OSL")
   val offs = Seq("LAX", "NYC")
 
   //FX
@@ -65,8 +62,14 @@ object JSON_GET {
 }
 
 case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMonth: String, Price: Price) {
-  override def toString() = s"$DepartureCityCode $ArrivalCityCode $TravelMonth ${Price.Amount.Amount} ${Price.Amount.CurrencyCode}"
+  override def toString() = s"$DepartureCityCode-$ArrivalCityCode $TravelMonth ${Price.Amount.Amount} ${Price.Amount.CurrencyCode}"
 }
 
 case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
+
+case class Summary(records: Seq[Record]) {
+  val first = records.head
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${first.Price.Amount.CurrencyCode} - " +
+    records.map(r => s"${r.TravelMonth}: ${r.Price.Amount.Amount}").mkString(", ")
+}
