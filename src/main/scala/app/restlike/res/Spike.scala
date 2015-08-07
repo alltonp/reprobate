@@ -38,17 +38,12 @@ object Spike extends App {
   private val germany = Seq("FRA", "DUS", "MUC")
   private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
 
-  val brds = Seq("DUB", "CPH", "OSL")
-  val offs = Seq("LAX", "NYC")
-
-  //FX
-  //1.00 NOK	=	0.0777638 GBP
-  //1.00 DKK	=	0.0942893 GBP
-  //1.00 EUR	=	0.703649 GBP
+  val brds = germany // Seq("DUB", "CPH", "OSL")
+  val offs = hongKongIsh //Seq("LAX", "NYC")
 
   offs.foreach(off => {
     brds.foreach(brd => {
-      if (ignored.contains(s"$brd $off")) println(s"\n### Ignoring: $brd $off")
+      if (ignored.contains(s"$brd $off")) println(s"### Ignoring: $brd $off")
       else doIt(brd, off)
     })
   })
@@ -79,9 +74,9 @@ case class Summary(records: Seq[Record]) {
   val lowest = records.map(_.Price.Amount.Amount).min
 
   def fxed(value: Double) = {
-    value * fx(first.Price.Amount.CurrencyCode)
+    (value * fx(first.Price.Amount.CurrencyCode)).round
   }
 
   override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${fxed(lowest)} GBP) ${first.Price.Amount.CurrencyCode}: " +
-    records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount}").mkString(", ")
+    records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount.round}").mkString(", ")
 }
