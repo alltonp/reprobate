@@ -17,12 +17,12 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
     val h = headers(List(
       header(span(None, "Checks: " + checks.size).styles(color("#0088cc"))).styles(width("25%")),
       header(R("Environment")).styles(width("9%")),
-      header(R("Executed")).styles(width("9%")),
+      header(R("Executed")).styles(width("11%")),
       header(R("Failed")).styles(width("9%")),
       header(R("Inactive")).styles(width("9%")),
       header(R("Incidents")).styles(width("9%")),
-      header(R("Raw")).styles(width("10%")),
-      header(R("Defcon")).styles(width("10%")),
+      header(R("Raw")).styles(width("9%")),
+      header(R("Defcon")).styles(width("9%")),
       header(R("Active Period")).styles(width("10%"))
     ))
 
