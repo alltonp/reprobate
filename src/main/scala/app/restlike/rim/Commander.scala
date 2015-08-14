@@ -88,6 +88,7 @@ object Commander {
     val all = Rim.history(token)
       .filter(_.ref == Some(ref))
       .filter(_.action.isDefined)
+      .filter(_.who.isDefined)
 
     println(s"$ref:${all.size}")
 //    val akas = currentModel.akas
@@ -98,7 +99,7 @@ object Commander {
     //TODO: show error if ref does not exist
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
-    else all.map(h => s"${h.action.get} -> $h")
+    else all.map(h => s"${currentModel.aka(h.who.get)} ${h.action.get} -> $h")
     Out(result, None, Nil)
   }
 
