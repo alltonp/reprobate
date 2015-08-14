@@ -32,10 +32,10 @@ object Spike extends App {
 //        println("\n" + Summary(r))
         Right(Summary(r))
       }
-      case None => Left(s"### Nothing for: $brd $off")
+      case None => Left(s"### Nothing available")
     }
     Thread.sleep(1000)
-    ApiResponse(resp)
+    ApiCall(s"$brd-$off", resp)
   }
 
   val debug = false
@@ -49,11 +49,11 @@ object Spike extends App {
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
   val brds = Seq("DUB", "CPH", "OSL", "FRA")
-  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS")
+  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG")
 
   val r = brds.map(brd => {
     offs.map(off => {
-      if (ignored.contains(s"$brd $off")) ApiResponse(Left(s"### Ignoring: $brd $off"))
+      if (ignored.contains(s"$brd $off")) ApiCall(s"$brd-$off", Left(s"### Ignoring: $brd $off"))
       else doIt(brd, off)
     })
   })
@@ -75,7 +75,7 @@ case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMont
 case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
 
-case class ApiResponse(a: Either[String, Summary])
+case class ApiCall(query: String, outcome: Either[String, Summary])
 
 case class Summary(records: Seq[Record]) {
   val fx = Map(
@@ -91,6 +91,7 @@ case class Summary(records: Seq[Record]) {
     (value * fx(first.Price.Amount.CurrencyCode)).round
   }
 
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${fxed(lowest)} GBP) ${first.Price.Amount.CurrencyCode}: " +
+//  ${first.DepartureCityCode}-${first.ArrivalCityCode}
+  override def toString() = s"(${fxed(lowest)} GBP) ${first.Price.Amount.CurrencyCode}: " +
     records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount.round}").mkString(", ")
 }
