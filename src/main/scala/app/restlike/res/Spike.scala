@@ -4,6 +4,8 @@ import io.shaka.http.Http._
 import io.shaka.http._
 import net.liftweb.json._
 
+//TODO: look for 'F" too
+//CPH-NYC = hot!
 object Spike extends App {
   private def getJson(url: String) = {
     val r = http(JSON_GET(url))
@@ -14,7 +16,11 @@ object Spike extends App {
   }
 
   private def doIt(brd: String, off: String): Unit = {
-    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=business;journeyType=roundTrip;range=monthLow.json"
+//    val cabin = "first"
+    val cabin = "business"
+    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
+
+    //TODO: save down past results
 
     implicit val formats = Serialization.formats(NoTypeHints)
     val json = getJson(url)
@@ -40,8 +46,8 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL")
-  val offs = Seq("LAX", "NYC")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA")
+  val offs = Seq("LAX", "NYC", "SYD")
 
   offs.foreach(off => {
     brds.foreach(brd => {
