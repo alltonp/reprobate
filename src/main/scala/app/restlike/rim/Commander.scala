@@ -98,7 +98,7 @@ object Commander {
     //TODO: show error if ref does not exist
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
-    else all.map(_.toString)
+    else all.map(h => s"${h.action.get} -> $h")
     Out(result, None, Nil)
   }
 
