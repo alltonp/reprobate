@@ -48,7 +48,7 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD")
   val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO")
 
   val results = brds.map(brd => {
@@ -100,7 +100,7 @@ case class Summary(records: Seq[Record]) {
     (value * fx(first.Price.Amount.CurrencyCode)).round
   }
 
-//  ${first.DepartureCityCode}-${first.ArrivalCityCode}
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${lowestedFx} GBP) ${first.Price.Amount.CurrencyCode}: " +
-    records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount.round}").mkString(", ")
+//  ${first.Price.Amount.CurrencyCode}
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx} (GBP): " +
+    records.map(r => s"${r.TravelMonth} ${fxed(r.Price.Amount.Amount.round)}").mkString(", ")
 }
