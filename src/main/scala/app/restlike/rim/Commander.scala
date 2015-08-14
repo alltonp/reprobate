@@ -105,6 +105,9 @@ object Commander {
     //(2) repeat using =
     //save changes
 
+    //TODO: report on issues that are created.isEmpty
+    //TODO: run this is as part of rim {display} for a bit
+
     println(adds.mkString("\n"))
 
     val issue = currentModel.findIssue(ref)
