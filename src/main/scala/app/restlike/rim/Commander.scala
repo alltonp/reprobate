@@ -91,6 +91,9 @@ object Commander {
       .filter(_.who.isDefined)
 
     println(s"$ref:${all.size}")
+
+    val issue = currentModel.findIssue(ref)
+
 //    val akas = currentModel.akas
 //    val all = akas.map(aka => {
 //      val issues = currentModel.issues.filter(_.by == Some(aka))
@@ -98,8 +101,9 @@ object Commander {
 //    })
     //TODO: show error if ref does not exist
 
-    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
-    else all.map(h => s"${currentModel.aka(h.who.get)} ${h.action.get} -> $h")
+    val result = if (issue.isEmpty) Messages.notFound(ref)
+    else if (all.isEmpty) Messages.problem(s"no history for: $ref")
+    else List(issue.get.render(currentModel)) ::: all.map(h => s" ${currentModel.aka(h.who.get)} ${h.action.get} -> $h").toList
     Out(result, None, Nil)
   }
 
