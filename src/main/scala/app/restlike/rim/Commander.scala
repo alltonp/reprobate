@@ -87,6 +87,7 @@ object Commander {
   private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
     val all = Rim.history(token)
       .filter(_.ref == Some(ref))
+      .filter(_.action.isDefined)
 
     println(s"$ref:${all.size}")
 //    val akas = currentModel.akas

@@ -14,8 +14,9 @@ case class History(content: String) {
 
 //  try {
     val ref = whatBits.flatMap(_.lift(0))
+    val action = whatBits.flatMap(_.lift(1))
     val email = contentBits.lift(3)
-    println(s"$content - $ref $email")
+    println(s"$content - $ref $email $action")
 
 //  } catch {
 //    case e: Exception => println(s"${e.getMessage} in $content")
