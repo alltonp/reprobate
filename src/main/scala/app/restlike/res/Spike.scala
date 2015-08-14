@@ -32,7 +32,7 @@ object Spike extends App {
 //        println("\n" + Summary(r))
         Right(Summary(r))
       }
-      case None => Left(s"### Nothing available")
+      case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
     ApiCall(s"$brd-$off", resp)
@@ -53,7 +53,7 @@ object Spike extends App {
 
   val results = brds.map(brd => {
     offs.map(off => {
-      if (ignored.contains(s"$brd $off")) ApiCall(s"$brd-$off", Left(s"### Ignoring: $brd $off"))
+      if (ignored.contains(s"$brd $off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else doIt(brd, off)
     })
   })
