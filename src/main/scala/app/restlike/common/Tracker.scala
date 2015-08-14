@@ -6,8 +6,9 @@ import im.mange.little.file.Filepath
 import org.joda.time.DateTime
 
 case class History(content: String) {
-  private val bits = content.split("|")
+  private val bits = content.split("\\|")
   val email = bits.lift(3)
+//  println(s"$content - $email")
 }
 
 case class Tracker(filename: String) {
@@ -18,5 +19,5 @@ case class Tracker(filename: String) {
     Filepath.append(content, file)
   }
 
-  def view(email: String) = Filepath.load(file).split("\n").reverse.map(History(_)).filter(_.email == email).toSeq
+  def view(email: String) = Filepath.load(file).split("\n").reverse.map(History(_)).filter(_.email == Some(email)).toSeq
 }

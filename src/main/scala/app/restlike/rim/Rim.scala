@@ -25,7 +25,5 @@ object Rim extends RestHelper {
       Controller.process(who, r, token)
   }
 
-  def history(token: String) = {
-    Tracker(s"$appName.tracking").view(Persistence.load.tokenToUser(token))
-  }
+  def history(token: String) = Tracker(s"$appName.tracking").view(Persistence.load.tokenToUser(token))
 }
