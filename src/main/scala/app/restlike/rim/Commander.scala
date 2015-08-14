@@ -85,6 +85,7 @@ object Commander {
   }
 
   private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
+    //TODO: problem now is that history with missing email is not included .. hence the gaps
     val all = Rim.history(token)
       .filter(_.ref == Some(ref))
       .filter(_.action.isDefined)
@@ -125,8 +126,6 @@ object Commander {
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    //TODO: use the fileDateTimeFormat in little ...
-    //TODO: highlight the aka for me ...
     else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
     Out(result, None, Nil)
   }
