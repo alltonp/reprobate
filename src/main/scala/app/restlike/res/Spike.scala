@@ -15,7 +15,7 @@ object Spike extends App {
     })
   }
 
-  private def doIt(brd: String, off: String): Unit = {
+  private def doIt(brd: String, off: String) = {
 //    val cabin = "first"
     val cabin = "business"
     val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
@@ -24,16 +24,18 @@ object Spike extends App {
 
     implicit val formats = Serialization.formats(NoTypeHints)
     val json = getJson(url)
-    json match {
+    val resp: Either[String, Summary] = json match {
       case Some(j) => {
         //  val r = json.extract[PricedItinerariesResponse]
         val elements = (j \\ "PricedItinerary").children
         val r = elements.map(acct => acct.extract[Record])
-        println("\n" + Summary(r))
+//        println("\n" + Summary(r))
+        Right(Summary(r))
       }
-      case None => println(s"### Nothing for: $brd $off\n")
+      case None => println(s"### Nothing for: $brd $off\n"); Left(s"### Nothing for: $brd $off\n")
     }
     Thread.sleep(1000)
+    ApiResponse(resp)
   }
 
   val debug = false
@@ -47,14 +49,16 @@ object Spike extends App {
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
   val brds = Seq("DUB", "CPH", "OSL", "FRA")
-  val offs = Seq("LAX", "NYC", "SYD")
+  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS")
 
-  offs.foreach(off => {
-    brds.foreach(brd => {
+  val r = brds.map(brd => {
+    offs.map(off => {
       if (ignored.contains(s"$brd $off")) println(s"### Ignoring: $brd $off")
       else doIt(brd, off)
     })
   })
+
+  println(r.flatten.mkString("\n"))
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
@@ -70,6 +74,8 @@ case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMont
 
 case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
+
+case class ApiResponse(a: Either[String, Summary])
 
 case class Summary(records: Seq[Record]) {
   val fx = Map(
