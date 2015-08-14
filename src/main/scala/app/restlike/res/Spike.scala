@@ -32,7 +32,7 @@ object Spike extends App {
 //        println("\n" + Summary(r))
         Right(Summary(r))
       }
-      case None => println(s"### Nothing for: $brd $off\n"); Left(s"### Nothing for: $brd $off\n")
+      case None => Left(s"### Nothing for: $brd $off")
     }
     Thread.sleep(1000)
     ApiResponse(resp)
@@ -53,7 +53,7 @@ object Spike extends App {
 
   val r = brds.map(brd => {
     offs.map(off => {
-      if (ignored.contains(s"$brd $off")) println(s"### Ignoring: $brd $off")
+      if (ignored.contains(s"$brd $off")) ApiResponse(Left(s"### Ignoring: $brd $off"))
       else doIt(brd, off)
     })
   })
