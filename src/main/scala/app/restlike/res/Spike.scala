@@ -48,7 +48,7 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS")
   val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
 
   val results = brds.map(brd => {
@@ -67,13 +67,16 @@ object Spike extends App {
   
   val byPrice = rights.sortBy(_.lowestedFx)
   val byDest = rights.sortBy(s => (s.off, s.lowestedFx) )
+  val byOrig = rights.sortBy(s => (s.brd, s.lowestedFx) )
 
   //TODO: include TP and price per TP
+  //TODO: cache query for the day ... (so no re-asking)
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
-    "\n\nBy Dest:\n" + byDest.mkString("\n") +
-   s"\n\n(${results.size})"
+    "\n\nBy Brd:\n" + byDest.mkString("\n") +
+    "\n\nBy Off:\n" + byOrig.mkString("\n") +
+   s"\n\n(${results.flatten.size})"
   )
 }
 
@@ -103,6 +106,7 @@ case class Summary(records: Seq[Record]) {
   val first = records.head
   val lowest = records.map(_.Price.Amount.Amount).min
   val off = records.head.ArrivalCityCode
+  val brd = records.head.DepartureCityCode
 
   val lowestedFx = fxed(lowest)
 
