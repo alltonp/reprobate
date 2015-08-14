@@ -68,6 +68,8 @@ object Spike extends App {
   val byPrice = rights.sortBy(_.lowestedFx)
   val byDest = rights.sortBy(s => (s.off, s.lowestedFx) )
 
+  //TODO: include TP and price per TP
+
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
     "\n\nBy Dest:\n" + byDest.mkString("\n")
