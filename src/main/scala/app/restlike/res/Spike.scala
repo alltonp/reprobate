@@ -49,16 +49,23 @@ object Spike extends App {
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
   val brds = Seq("DUB", "CPH", "OSL", "FRA")
-  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG")
+  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO")
 
-  val r = brds.map(brd => {
+  val results = brds.map(brd => {
     offs.map(off => {
       if (ignored.contains(s"$brd $off")) ApiCall(s"$brd-$off", Left(s"### Ignoring: $brd $off"))
       else doIt(brd, off)
     })
   })
 
-  println(r.flatten.mkString("\n"))
+  val out = results.flatten.map(r => {
+    r.outcome match {
+      case Left(_) => None
+      case Right(x) => Some(x)
+    }
+  }).flatten.sortBy(_.lowestedFx).mkString("\n")
+
+  println("\n" + out)
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
@@ -87,11 +94,13 @@ case class Summary(records: Seq[Record]) {
   val first = records.head
   val lowest = records.map(_.Price.Amount.Amount).min
 
+  val lowestedFx = fxed(lowest)
+
   def fxed(value: Double) = {
     (value * fx(first.Price.Amount.CurrencyCode)).round
   }
 
 //  ${first.DepartureCityCode}-${first.ArrivalCityCode}
-  override def toString() = s"(${fxed(lowest)} GBP) ${first.Price.Amount.CurrencyCode}: " +
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} (${lowestedFx} GBP) ${first.Price.Amount.CurrencyCode}: " +
     records.map(r => s"${r.TravelMonth} ${r.Price.Amount.Amount.round}").mkString(", ")
 }
