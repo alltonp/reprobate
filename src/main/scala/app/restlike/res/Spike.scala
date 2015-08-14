@@ -58,12 +58,12 @@ object Spike extends App {
     })
   })
 
-  private val rights = results.flatten.map(r => {
+  private val rights = results.flatten.flatMap(r => {
     r.outcome match {
       case Left(_) => None
       case Right(x) => Some(x)
     }
-  }).flatten
+  })
   
   val byPrice = rights.sortBy(_.lowestedFx).mkString("\n")
 
