@@ -97,7 +97,9 @@ object Commander {
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().today(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
+    //TODO: use the fileDateTimeFormat in little ...
+    //TODO: highlight the aka for me ...
+    else List(issue.get.render(currentModel)) ::: all.map(h => s"  > ${dateFormats().today(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
     Out(result, None, Nil)
   }
 
