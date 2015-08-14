@@ -41,6 +41,7 @@ object Messages {
     "  - return to backlog              ⇒ 'rim [ref] .!'",
     "  - block                          ⇒ 'rim [ref] % [reason]'",
     "  - unblock                        ⇒ 'rim [ref] %'",
+    "  - history                        ⇒ 'rim [ref]'",
     "",
     //is this 'reports'
     "show:",

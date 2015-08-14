@@ -24,7 +24,7 @@ object Controller {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
             Tracker(s"${Rim.appName}.tracking").track(who, value, universe.tokenToUser(token))
-            val out = Commander.process(value, who, model, refProvider)
+            val out = Commander.process(value, who, model, refProvider, token)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
               rimServerActor() ! ModelChanged(Some(m), token, out.changed)

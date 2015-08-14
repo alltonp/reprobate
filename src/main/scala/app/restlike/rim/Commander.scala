@@ -5,7 +5,7 @@ import app.restlike.common.Colours._
 import app.restlike.common._
 
 object Commander {
-  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider): Out = {
+  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider, token: String): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
@@ -45,14 +45,15 @@ object Commander {
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
+      case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
       case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
-      case In(Some(":"), Nil) => onShowTags(currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
       case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
       case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
+      case In(Some(ref), Nil) => onShowHistoryIssue(ref, currentModel, token)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -80,6 +81,21 @@ object Commander {
 
     val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
     else all
+    Out(result, None, Nil)
+  }
+
+  private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
+    val all = Rim.history(token)
+    println(all.size)
+//    val akas = currentModel.akas
+//    val all = akas.map(aka => {
+//      val issues = currentModel.issues.filter(_.by == Some(aka))
+//      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
+//    })
+    //TODO: show error if ref does not exist
+
+    val result = if (all.isEmpty) Messages.success(s"nobody is doing anything")
+    else all.map(_.toString)
     Out(result, None, Nil)
   }
 

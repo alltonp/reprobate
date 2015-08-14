@@ -322,7 +322,7 @@ class RimSpec extends WordSpec with MustMatchers {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
   }
 
-  private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0))
+  private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0), "")
 
   private def modelWithTags(tags: List[String]) = Model(workflowStates, usersToAka, Nil, Nil, tags)
   private def modelWithIssue(issue: Issue) = Model(workflowStates, usersToAka, List(issue), Nil, Nil)
