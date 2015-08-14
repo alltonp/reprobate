@@ -58,14 +58,16 @@ object Spike extends App {
     })
   })
 
-  val out = results.flatten.map(r => {
+  private val rights = results.flatten.map(r => {
     r.outcome match {
       case Left(_) => None
       case Right(x) => Some(x)
     }
-  }).flatten.sortBy(_.lowestedFx).mkString("\n")
+  }).flatten
+  
+  val byPrice = rights.sortBy(_.lowestedFx).mkString("\n")
 
-  println("\n" + out)
+  println("\n" + byPrice)
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
