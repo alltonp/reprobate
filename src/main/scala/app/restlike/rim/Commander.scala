@@ -91,16 +91,9 @@ object Commander {
       .filter(_.who.isDefined)
       .filter(_.when.isDefined)
 
-    println(s"$ref:${all.size}")
+//    println(s"$ref:${all.size}")
 
     val issue = currentModel.findIssue(ref)
-
-//    val akas = currentModel.akas
-//    val all = akas.map(aka => {
-//      val issues = currentModel.issues.filter(_.by == Some(aka))
-//      Presentation.issuesForUser(currentModel, aka, SortByStatus(issues, currentModel))
-//    })
-    //TODO: show error if ref does not exist
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
