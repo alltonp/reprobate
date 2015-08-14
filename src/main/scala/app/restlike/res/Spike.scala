@@ -49,7 +49,7 @@ object Spike extends App {
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
   val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD")
-  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO")
+  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
 
   val results = brds.map(brd => {
     offs.map(off => {
@@ -58,7 +58,7 @@ object Spike extends App {
     })
   })
 
-  private val rights = results.flatten.flatMap(r => {
+  val rights = results.flatten.flatMap(r => {
     r.outcome match {
       case Left(_) => None
       case Right(x) => Some(x)
@@ -72,7 +72,8 @@ object Spike extends App {
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
-    "\n\nBy Dest:\n" + byDest.mkString("\n")
+    "\n\nBy Dest:\n" + byDest.mkString("\n") +
+   s"\n\n(${results.size})"
   )
 }
 
