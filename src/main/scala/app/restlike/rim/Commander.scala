@@ -93,9 +93,19 @@ object Commander {
 
 //    println(s"$ref:${all.size}")
 
-    val addable = List("+").map(Some(_))
+    val addable = List("+", "+/", "+//", "+!").map(Some(_))
     val adds = Rim.history(token).filter(h => addable.contains(h.ref)).reverse
 
+    currentModel.allIssuesIncludingReleased.map(i => {
+      val r = adds.find(a => {
+//        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
+        val d = a.action.getOrElse("")
+//        println(s"%${a.action} $d => ${i.description}")
+        d == i.description
+      })
+      println(s"$i => $r")
+      r
+    })
     //(1) using just + +/ +// +!
     //for each model issue with created = None
     //find the first addable where description == issue.description
@@ -103,12 +113,13 @@ object Commander {
 
     //this bit is lossy ... if we went through backwards we could in theory migrate back
     //(2) repeat using =
-    //save changes
+
+    //save changes - will need to process issues and released seperately
 
     //TODO: report on issues that are created.isEmpty
     //TODO: run this is as part of rim {display} for a bit
 
-    println(adds.mkString("\n"))
+//    println(adds.mkString("\n"))
 
     val issue = currentModel.findIssue(ref)
 
