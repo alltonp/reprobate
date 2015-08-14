@@ -1,6 +1,6 @@
 package app.restlike.rim
 
-import app.ServiceFactory.systemClock
+import app.ServiceFactory._
 import app.restlike.common.Colours._
 import app.restlike.common._
 
@@ -89,6 +89,7 @@ object Commander {
       .filter(_.ref == Some(ref))
       .filter(_.action.isDefined)
       .filter(_.who.isDefined)
+      .filter(_.when.isDefined)
 
     println(s"$ref:${all.size}")
 
@@ -103,7 +104,7 @@ object Commander {
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    else List(issue.get.render(currentModel)) ::: all.map(h => s" ${currentModel.aka(h.who.get)} ${h.action.get} -> $h").toList
+    else List(issue.get.render(currentModel)) ::: all.map(h => s" ${dateFormats().today(h.when.get)} > ${currentModel.aka(h.who.get)} ${h.action.get} -> $h").toList
     Out(result, None, Nil)
   }
 

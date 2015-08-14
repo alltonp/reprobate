@@ -15,6 +15,7 @@ case class History(content: String) {
 //  try {
     val ref = whatBits.flatMap(_.lift(0))
     val action = whatBits.flatMap(_.lift(1))
+    val when = contentBits.lift(0).map(new DateTime(_))
     val who = contentBits.lift(1)
     val email = contentBits.lift(3)
     println(s"$content - $ref $email $who $action")
