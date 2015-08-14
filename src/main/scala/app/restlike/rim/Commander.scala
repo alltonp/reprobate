@@ -86,7 +86,9 @@ object Commander {
 
   private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
     val all = Rim.history(token)
-    println(all.size)
+      .filter(_.ref == Some(ref))
+
+    println(s"$ref:${all.size}")
 //    val akas = currentModel.akas
 //    val all = akas.map(aka => {
 //      val issues = currentModel.issues.filter(_.by == Some(aka))
