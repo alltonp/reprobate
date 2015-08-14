@@ -65,9 +65,13 @@ object Spike extends App {
     }
   })
   
-  val byPrice = rights.sortBy(_.lowestedFx).mkString("\n")
+  val byPrice = rights.sortBy(_.lowestedFx)
+  val byDest = rights.sortBy(s => (s.off, s.lowestedFx) )
 
-  println("\n" + byPrice)
+  println(
+    "\n\nBy Price:\n" + byPrice.mkString("\n") +
+    "\n\nBy Dest:\n" + byDest.mkString("\n")
+  )
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
@@ -95,6 +99,7 @@ case class Summary(records: Seq[Record]) {
 
   val first = records.head
   val lowest = records.map(_.Price.Amount.Amount).min
+  val off = records.head.ArrivalCityCode
 
   val lowestedFx = fxed(lowest)
 
