@@ -93,6 +93,20 @@ object Commander {
 
 //    println(s"$ref:${all.size}")
 
+    val addable = List("+").map(Some(_))
+    val adds = Rim.history(token).filter(h => addable.contains(h.ref)).reverse
+
+    //(1) using just + +/ +// +!
+    //for each model issue with created = None
+    //find the first addable where description == issue.description
+    //set created = Some(Created(addable.when, addable.who))
+
+    //this bit is lossy ... if we went through backwards we could in theory migrate back
+    //(2) repeat using =
+    //save changes
+
+    println(adds.mkString("\n"))
+
     val issue = currentModel.findIssue(ref)
 
     val result = if (issue.isEmpty) Messages.notFound(ref)

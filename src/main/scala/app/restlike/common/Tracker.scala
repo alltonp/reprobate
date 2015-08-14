@@ -18,7 +18,7 @@ case class History(content: String) {
     val when = contentBits.lift(0).map(new DateTime(_))
     val who = contentBits.lift(1)
     val email = contentBits.lift(3)
-    println(s"$content - $ref $email $who $action")
+//    println(s"$content - $ref $email $who $action")
 
 //  } catch {
 //    case e: Exception => println(s"${e.getMessage} in $content")
