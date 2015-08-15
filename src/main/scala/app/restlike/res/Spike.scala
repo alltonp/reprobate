@@ -37,6 +37,8 @@ case class Cache(date: LocalDate) {
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
 
+case class Scenario(name: String, brds: Seq[String], offs: Seq[String])
+
 //TODO: look for 'F" too
 //CPH-NYC = hot!
 object Spike extends App {
@@ -87,13 +89,18 @@ object Spike extends App {
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
 
-  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU", "MXP", "FCO", "LIS", "OPO"/* "BFS", "ABZ"*/)
-  val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
 
-  val results = brds.map(brd => {
-    offs.map(off => {
+  val locationArbitrage = Scenario("Location Arbitrage",
+    brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU", "MXP", "FCO", "LIS", "OPO"),
+    offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
+  )
+
+  val scenario = locationArbitrage
+
+  val results = scenario.brds.map(brd => {
+    scenario.offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
       else { print("-"); doIt(brd, off, cache) }
