@@ -22,8 +22,16 @@ case class Cache(date: LocalDate) {
   if (!dir.exists) dir.createDirectory()
 
   def contains(route: String) = fileFor(route).toFile.exists()
-  def store(route: String, json: JValue) = Filepath.save(pretty(render(json)), fileFor(route))
-  def load(route: String) = parse(Filepath.load(fileFor(route)))
+  def store(route: String, json: Option[JValue]) = Filepath.save(pretty(render(json.getOrElse(JObject(Nil)))), fileFor(route))
+
+  def load(route: String) = {
+    val jValue: JValue = parse(Filepath.load(fileFor(route)))
+    val resp: Either[String, Summary] = jValue match {
+      case JObject(Nil) => Left(s"Unavailable")
+      case _ => Right(Spike.parseToSummary(jValue))
+    }
+    resp
+  }
 
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
@@ -48,11 +56,9 @@ object Spike extends App {
     //TODO: save down past results
 
     val json = getJson(url)
+    cache.store(s"$brd-$off", json)
     val resp: Either[String, Summary] = json match {
-      case Some(j) => {
-        cache.store(s"$brd-$off", j)
-        Right(parseToSummary(j))
-      }
+      case Some(j) => Right(parseToSummary(j))
       case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
@@ -88,7 +94,7 @@ object Spike extends App {
   val results = brds.map(brd => {
     offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
-      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Right(parseToSummary(cache.load(s"$brd-$off"))))
+      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", cache.load(s"$brd-$off"))
       else doIt(brd, off, cache)
     })
   })
