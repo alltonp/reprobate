@@ -86,7 +86,7 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
+  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH")
   val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
@@ -114,6 +114,10 @@ object Spike extends App {
   //TODO: show completely dead routes
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
   //TODO: show diff between LON and arbitraged (include TP)
+  //TODO: feed fx rates for each day
+
+  //e.g found nothing for $off
+  //e.g found nothing for $brd
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
@@ -144,6 +148,7 @@ case class Summary(records: Seq[Record]) {
     "NOK" -> 0.0777638,
     "DKK" -> 0.0942893,
     "EUR" -> 0.703649,
+    "CHF" -> 0.654815,
     "GBP" -> 1.0
   )
 
