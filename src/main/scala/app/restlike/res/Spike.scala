@@ -32,6 +32,7 @@ case class Cache(date: LocalDate) {
 //CPH-NYC = hot!
 object Spike extends App {
   private def getJson(url: String) = {
+    print("+")
     val r = http(JSON_GET(url))
     r.entity.map(e => {
       if (debug) println("### " + url + " =>\n" + r) else print(".")
@@ -81,7 +82,7 @@ object Spike extends App {
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
 //  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS", "AMS", "JER")
 //  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
-  val brds = Seq("DUB")
+  val brds = Seq("DUB", "JER")
   val offs = Seq("LAX")
 
   val results = brds.map(brd => {
