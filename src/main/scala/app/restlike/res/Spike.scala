@@ -1,8 +1,20 @@
 package app.restlike.res
 
+import java.nio.file.Paths
+
+import app.ServiceFactory.{dateFormats, systemClock}
 import io.shaka.http.Http._
 import io.shaka.http._
 import net.liftweb.json._
+import org.joda.time.LocalDate
+
+//TODO: make Route()
+
+case class Cache(date: LocalDate) {
+  def contains(route: String) = fileFor(route).toFile.exists()
+
+  private def fileFor(route: String) = Paths.get(s"res/${dateFormats().fileDateFormat.print(date)}/${route}.json")
+}
 
 //TODO: look for 'F" too
 //CPH-NYC = hot!
@@ -40,20 +52,25 @@ object Spike extends App {
 
   val debug = false
 
-  val ignored = Seq("DUS SIN", "MUC SIN", "DUS CTU", "MUC CTU", "DUS KUL", "MUC KUL", "FRA PVG", "DUS PVG", "MUC PVG",
-    "DUS BKK", "MUC BKK", "FRA PEK", "DUS PEK", "MUC PEK")
+  val ignored = Seq("DUS-SIN", "MUC-SIN", "DUS-CTU", "MUC-CTU", "DUS-KUL", "MUC-KUL", "FRA-PVG", "DUS-PVG", "MUC-PVG",
+    "DUS-BKK", "MUC-BKK", "FRA-PEK", "DUS-PEK", "MUC-PEK")
+
+  val cache = Cache(systemClock().date)
 
   private val germany = Seq("FRA", "DUS", "MUC", "HAM"/*, "TXL", "CGN"*/)
   private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS")
-  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
+//  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS", "AMS", "JER")
+//  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
+  val brds = Seq("DUB")
+  val offs = Seq("LAX")
 
   val results = brds.map(brd => {
     offs.map(off => {
-      if (ignored.contains(s"$brd $off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
+      if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
+      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Cached"))
       else doIt(brd, off)
     })
   })
