@@ -92,16 +92,26 @@ object Spike extends App {
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
 
+  val arbitragable = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU", "MXP", "FCO", "LIS", "OPO")
+
   val locationArbitrage = Scenario("Location Arbitrage",
-    brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU", "MXP", "FCO", "LIS", "OPO"),
+    brds = Seq("LON") ++ arbitragable,
     offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
   )
 
+  val europeanBreaks = Scenario("European Breaks",
+    brds = Seq("LON") ++ Seq("MAN"),
+    offs = arbitragable ++ Seq("RAK", "IBZ")
+  )
+
   val scenario = locationArbitrage
+  //seems broken .. largely current month only
+//  val scenario = europeanBreaks
 
   val results = scenario.brds.map(brd => {
     scenario.offs.map(off => {
-      if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
+      if (brd == off) ApiCall(s"$brd-$off", Left(s"Pointless"))
+      else if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
       else { print("-"); doIt(brd, off, cache) }
     })
