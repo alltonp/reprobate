@@ -86,8 +86,8 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS", "AMS", "JER", "BCN")
-  val offs = Seq("LAX", "NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
+  val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
 
@@ -95,7 +95,7 @@ object Spike extends App {
     offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else if (cache.contains(s"$brd-$off")) { print("+"); ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
-      else { println("-"); doIt(brd, off, cache) }
+      else { print("-"); doIt(brd, off, cache) }
     })
   })
 
@@ -111,7 +111,8 @@ object Spike extends App {
   val byBrd = rights.sortBy(s => (s.brd, s.lowestedFx) )
 
   //TODO: include TP and price per TP
-  //TODO: cache query for the day ... (so no re-asking)
+  //TODO: show completely dead routes
+  //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
