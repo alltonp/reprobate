@@ -86,7 +86,7 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH")
+  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU")
   val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
