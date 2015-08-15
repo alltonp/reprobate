@@ -1,19 +1,32 @@
 package app.restlike.res
 
-import java.nio.file.Paths
+import java.nio.file.{Path, Paths}
 
 import app.ServiceFactory.{dateFormats, systemClock}
+import im.mange.little.file.Filepath
 import io.shaka.http.Http._
 import io.shaka.http._
 import net.liftweb.json._
+import net.liftweb.json.parse
+import net.liftweb.json.render
 import org.joda.time.LocalDate
+
+import scala.reflect.io.Directory
+
+//import org.json4s.native.JsonMethods._
 
 //TODO: make Route()
 
 case class Cache(date: LocalDate) {
-  def contains(route: String) = fileFor(route).toFile.exists()
+  //Filepath.save should do all of this ..
+  private val base = s"res/${dateFormats().fileDateFormat.print(date)}"
+  private val dir = Directory(base)
+  if (!dir.exists) dir.createDirectory()
 
-  private def fileFor(route: String) = Paths.get(s"res/${dateFormats().fileDateFormat.print(date)}/${route}.json")
+  def contains(route: String) = fileFor(route).toFile.exists()
+  def store(route: String, json: JValue) = Filepath.save(pretty(render(json)), fileFor(route))
+
+  private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
 
 //TODO: look for 'F" too
@@ -27,7 +40,7 @@ object Spike extends App {
     })
   }
 
-  private def doIt(brd: String, off: String) = {
+  private def doIt(brd: String, off: String, cache: Cache) = {
 //    val cabin = "first"
     val cabin = "business"
     val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
@@ -38,6 +51,7 @@ object Spike extends App {
     val json = getJson(url)
     val resp: Either[String, Summary] = json match {
       case Some(j) => {
+        cache.store(s"$brd-$off", j)
         //  val r = json.extract[PricedItinerariesResponse]
         val elements = (j \\ "PricedItinerary").children
         val r = elements.map(acct => acct.extract[Record])
@@ -71,7 +85,7 @@ object Spike extends App {
     offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Cached"))
-      else doIt(brd, off)
+      else doIt(brd, off, cache)
     })
   })
 
