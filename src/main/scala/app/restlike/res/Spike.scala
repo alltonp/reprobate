@@ -14,6 +14,7 @@ import org.joda.time.LocalDate
 import scala.reflect.io.Directory
 
 //TODO: make Route() - route should include fare basis later Y/W/J/F
+//TODO: highlight the cheapest fares on each row in colour
 
 case class Cache(date: LocalDate) {
   //Filepath.save should do all of this ..
@@ -106,16 +107,16 @@ object Spike extends App {
   })
   
   val byPrice = rights.sortBy(_.lowestedFx)
-  val byDest = rights.sortBy(s => (s.off, s.lowestedFx) )
-  val byOrig = rights.sortBy(s => (s.brd, s.lowestedFx) )
+  val byOff = rights.sortBy(s => (s.off, s.lowestedFx) )
+  val byBrd = rights.sortBy(s => (s.brd, s.lowestedFx) )
 
   //TODO: include TP and price per TP
   //TODO: cache query for the day ... (so no re-asking)
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
-    "\n\nBy Brd:\n" + byDest.mkString("\n") +
-    "\n\nBy Off:\n" + byOrig.mkString("\n") +
+    "\n\nBy Off:\n" + byOff.mkString("\n") +
+    "\n\nBy Brd:\n" + byBrd.mkString("\n") +
    s"\n\n(${results.flatten.size})"
   )
 }
