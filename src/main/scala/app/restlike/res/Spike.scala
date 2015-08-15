@@ -23,6 +23,7 @@ case class Cache(date: LocalDate) {
 
   def contains(route: String) = fileFor(route).toFile.exists()
   def store(route: String, json: JValue) = Filepath.save(pretty(render(json)), fileFor(route))
+  def load(route: String) = parse(Filepath.load(fileFor(route)))
 
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
@@ -45,21 +46,25 @@ object Spike extends App {
 
     //TODO: save down past results
 
-    implicit val formats = Serialization.formats(NoTypeHints)
     val json = getJson(url)
     val resp: Either[String, Summary] = json match {
       case Some(j) => {
         cache.store(s"$brd-$off", j)
-        //  val r = json.extract[PricedItinerariesResponse]
-        val elements = (j \\ "PricedItinerary").children
-        val r = elements.map(acct => acct.extract[Record])
-//        println("\n" + Summary(r))
-        Right(Summary(r))
+        Right(parseToSummary(j))
       }
       case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
     ApiCall(s"$brd-$off", resp)
+  }
+
+  def parseToSummary(j: JValue) = {
+    implicit val formats = Serialization.formats(NoTypeHints)
+    //  val r = json.extract[PricedItinerariesResponse]
+    val elements = (j \\ "PricedItinerary").children
+    val r = elements.map(acct => acct.extract[Record])
+    //        println("\n" + Summary(r))
+    Summary(r)
   }
 
   val debug = false
@@ -82,7 +87,7 @@ object Spike extends App {
   val results = brds.map(brd => {
     offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
-      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Cached"))
+      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Right(parseToSummary(cache.load(s"$brd-$off"))))
       else doIt(brd, off, cache)
     })
   })
