@@ -86,8 +86,8 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
-  val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "SYD")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
+  val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
 
@@ -149,11 +149,13 @@ case class Summary(records: Seq[Record]) {
   val lowest = records.map(_.Price.Amount.Amount).min
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
+  private val ccy = first.Price.Amount.CurrencyCode
 
   val lowestedFx = fxed(lowest)
 
   def fxed(value: Double) = {
-    (value * fx(first.Price.Amount.CurrencyCode)).round
+    if (!fx.contains(ccy)) throw new RuntimeException("no fx rate for:" + ccy)
+    (value * fx(ccy)).round
   }
 
 //  ${first.Price.Amount.CurrencyCode}
