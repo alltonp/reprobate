@@ -40,7 +40,6 @@ case class Cache(date: LocalDate) {
 //CPH-NYC = hot!
 object Spike extends App {
   private def getJson(url: String) = {
-    print("+")
     val r = http(JSON_GET(url))
     r.entity.map(e => {
       if (debug) println("### " + url + " =>\n" + r) else print(".")
@@ -86,16 +85,16 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-//  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS", "AMS", "JER")
-//  val offs = Seq(/*"LAX", */"NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
-  val brds = Seq("DUB", "JER")
-  val offs = Seq("LAX")
+  val brds = Seq("DUB", "CPH", "OSL", "FRA", "MAD", "DUS", "AMS", "JER", "BCN")
+  val offs = Seq("LAX", "NYC", "SYD", "BOS", "HKG", "TYO", "MIA", "PHL")
+//  val brds = Seq("DUB", "JER")
+//  val offs = Seq("LAX")
 
   val results = brds.map(brd => {
     offs.map(off => {
       if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
-      else if (cache.contains(s"$brd-$off")) ApiCall(s"$brd-$off", cache.load(s"$brd-$off"))
-      else doIt(brd, off, cache)
+      else if (cache.contains(s"$brd-$off")) { print("+"); ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
+      else { println("-"); doIt(brd, off, cache) }
     })
   })
 
