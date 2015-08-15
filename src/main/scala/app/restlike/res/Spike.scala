@@ -86,7 +86,7 @@ object Spike extends App {
 
 //  val brds = germany // Seq("DUB", "CPH", "OSL")
 //  val offs = hongKongIsh //Seq("LAX", "NYC")
-  val brds = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
+  val brds = Seq("LON", "DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "MAD", "AMS", "JER", "BCN", "CDG", "ARN")
   val offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
@@ -113,6 +113,7 @@ object Spike extends App {
   //TODO: include TP and price per TP
   //TODO: show completely dead routes
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
+  //TODO: show diff between LON and arbitraged (include TP)
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
@@ -142,7 +143,8 @@ case class Summary(records: Seq[Record]) {
   val fx = Map(
     "NOK" -> 0.0777638,
     "DKK" -> 0.0942893,
-    "EUR" -> 0.703649
+    "EUR" -> 0.703649,
+    "GBP" -> 1.0
   )
 
   val first = records.head
@@ -154,7 +156,7 @@ case class Summary(records: Seq[Record]) {
   val lowestedFx = fxed(lowest)
 
   def fxed(value: Double) = {
-    if (!fx.contains(ccy)) throw new RuntimeException("no fx rate for:" + ccy)
+    if (!fx.contains(ccy)) throw new RuntimeException(s"no fx rate for: $ccy")
     (value * fx(ccy)).round
   }
 
