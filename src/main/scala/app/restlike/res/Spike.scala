@@ -13,9 +13,7 @@ import org.joda.time.LocalDate
 
 import scala.reflect.io.Directory
 
-//import org.json4s.native.JsonMethods._
-
-//TODO: make Route()
+//TODO: make Route() - route should include fare basis later Y/W/J/F
 
 case class Cache(date: LocalDate) {
   //Filepath.save should do all of this ..
