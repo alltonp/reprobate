@@ -83,15 +83,6 @@ object Spike extends App {
 
   val cache = Cache(systemClock().date)
 
-  private val germany = Seq("FRA", "DUS", "MUC", "HAM"/*, "TXL", "CGN"*/)
-  private val hongKongIsh = Seq("HKG", "SIN", "CTU", "KUL", "PVG", "BKK", "PEK")
-
-//  val brds = germany // Seq("DUB", "CPH", "OSL")
-//  val offs = hongKongIsh //Seq("LAX", "NYC")
-
-//  val brds = Seq("DUB", "JER")
-//  val offs = Seq("LAX")
-
   val arbitragable = Seq(
     "CPH", "OSL", "HEL", "ARN", "GOT",
     "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
@@ -107,7 +98,7 @@ object Spike extends App {
   )
 
   val europeanBreaks = Scenario("European Breaks",
-    brds = Seq("LON") ++ Seq("MAN"),
+    brds = Seq("LON"),
     offs = arbitragable ++ Seq("RAK", "IBZ")
   )
 
