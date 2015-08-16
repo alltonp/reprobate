@@ -174,7 +174,16 @@ object Spike extends App {
 
   //to try:
   //brd:
-  //off: BJS CHI SHA GRU SFO BUE
+  //off: BJS SHA SFO SAO
+  // (CHI instead of ORD)
+  // (BUE instead of EZE)
+  // (MIL instead of MXP)
+  // (PAR instead of CDG)
+  // (RIO instead of GIG)
+  // (ROM instead of FCO)
+  // (STO instead of ARN)
+  // (SEL instead of ICN)
+  //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
   //a url ... https://www.google.com/flights/#search;f=HEL;t=JFK,EWR,LGA;d=2015-10-31;r=2015-11-02;sc=b;a=BA
   //then click calendar - job done!
@@ -182,6 +191,7 @@ object Spike extends App {
 
   //TODO: do a by month
 
+  //TODO: ultimately it will be one link for month to populate iframe
   println(
     "\n\nBy Price:\n" + byPrice.map(s => s + " -> " + s.originalPrice + " " + GoogleFlight(s.brd, s.off, s.lowestMonth).url).mkString("\n") +
     "\n\nBy Destination:\n" + byOff.mkString("\n") +
