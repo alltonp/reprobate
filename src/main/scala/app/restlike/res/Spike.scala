@@ -78,8 +78,8 @@ object Spike extends App {
 
   val debug = false
 
-  val ignored = Seq("DUS-SIN", "MUC-SIN", "DUS-CTU", "MUC-CTU", "DUS-KUL", "MUC-KUL", "FRA-PVG", "DUS-PVG", "MUC-PVG",
-    "DUS-BKK", "MUC-BKK", "FRA-PEK", "DUS-PEK", "MUC-PEK")
+  val ignored = Nil //Seq("DUS-SIN", "MUC-SIN", "DUS-CTU", "MUC-CTU", "DUS-KUL", "MUC-KUL", "FRA-PVG", "DUS-PVG", "MUC-PVG",
+//    "DUS-BKK", "MUC-BKK", "FRA-PEK", "DUS-PEK", "MUC-PEK")
 
   val cache = Cache(systemClock().date)
 
