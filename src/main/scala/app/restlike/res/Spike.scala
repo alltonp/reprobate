@@ -29,7 +29,7 @@ case class Cache(date: LocalDate) {
     val jValue: JValue = parse(Filepath.load(fileFor(route)))
     val resp: Either[String, Summary] = jValue match {
       case JObject(Nil) => Left(s"Unavailable")
-      case _ => Right(Spike.parseToSummary(jValue))
+      case _ => Right(API.parseToSummary(jValue))
     }
     resp
   }
@@ -37,21 +37,22 @@ case class Cache(date: LocalDate) {
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
 
-case class Scenario(name: String, brds: Seq[String], offs: Seq[String])
-
-//TODO: look for 'F" too
-//CPH-NYC = hot!
-object Spike extends App {
-  private def getJson(url: String) = {
-    val r = http(JSON_GET(url))
-    r.entity.map(e => {
-      if (debug) println("### " + url + " =>\n" + r) else print(".")
-      parse(e.toString())
+case class Scenario(name: String, brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
+  def run(cache: Cache) = brds.toSeq.map(brd => {
+    offs.toSeq.map(off => {
+      if (brd == off) ApiCall(s"$brd-$off", Left(s"Pointless"))
+      else if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
+      else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
+      else { print("-"); API.doIt(brd, off, cache) }
     })
-  }
+  })
+}
 
-  private def doIt(brd: String, off: String, cache: Cache) = {
-//    val cabin = "first"
+object API {
+  private val debug = false
+
+  def doIt(brd: String, off: String, cache: Cache) = {
+    //    val cabin = "first"
     val cabin = "business"
     val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
 
@@ -76,14 +77,21 @@ object Spike extends App {
     Summary(r)
   }
 
-  val debug = false
+  private def getJson(url: String) = {
+    val r = http(JSON_GET(url))
+    r.entity.map(e => {
+      if (debug) println("### " + url + " =>\n" + r) else print(".")
+      parse(e.toString())
+    })
+  }
+}
 
-  val ignored = Nil //Seq("DUS-SIN", "MUC-SIN", "DUS-CTU", "MUC-CTU", "DUS-KUL", "MUC-KUL", "FRA-PVG", "DUS-PVG", "MUC-PVG",
-//    "DUS-BKK", "MUC-BKK", "FRA-PEK", "DUS-PEK", "MUC-PEK")
-
+//TODO: look for 'F" too
+//CPH-NYC = hot!
+object Spike extends App {
   val cache = Cache(systemClock().date)
 
-  val arbitragable = Seq(
+  val arbitragable = Set(
     "CPH", "OSL", "HEL", "ARN", "GOT",
     "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
     "DUB", "BFS",
@@ -93,27 +101,20 @@ object Spike extends App {
     "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
-    brds = Seq("LON") ++ arbitragable,
-    offs = Seq("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
+    brds = Set("LON") ++ arbitragable,
+    offs = Set("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
   )
 
   val europeanBreaks = Scenario("European Breaks",
-    brds = Seq("LON"),
-    offs = arbitragable ++ Seq("RAK", "IBZ")
+    brds = Set("LON"),
+    offs = arbitragable ++ Set("RAK", "IBZ")
   )
 
   val scenario = locationArbitrage
   //seems broken .. largely current month only
 //  val scenario = europeanBreaks
 
-  val results = scenario.brds.map(brd => {
-    scenario.offs.map(off => {
-      if (brd == off) ApiCall(s"$brd-$off", Left(s"Pointless"))
-      else if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
-      else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
-      else { print("-"); doIt(brd, off, cache) }
-    })
-  })
+  val results = scenario.run(cache)
 
   val rights = results.flatten.flatMap(r => {
     r.outcome match {
