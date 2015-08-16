@@ -124,7 +124,12 @@ object Spike extends App {
   })
   
   val byPrice = rights.sortBy(_.lowestedFx)
-  val byOff = rights.sortBy(s => (s.off, s.lowestedFx) )
+  val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
+
+  val byOff = groupByOff.keys.toSeq.sorted.map(k => {
+    s"$k: ${groupByOff(k).take(5).map(s => s"${s.brd} ${s.lowestedFx}").mkString(", ")}"
+  })
+
   val byBrd = rights.sortBy(s => (s.brd, s.lowestedFx) )
 
   //TODO: include TP and price per TP
