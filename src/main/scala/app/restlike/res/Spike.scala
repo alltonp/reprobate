@@ -188,20 +188,17 @@ object Spike extends App {
   // (SEL instead of ICN)
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
-  //a url ... https://www.google.com/flights/#search;f=HEL;t=JFK,EWR,LGA;d=2015-10-31;r=2015-11-02;sc=b;a=BA
-  //then click calendar - job done!
-  //could iframe this up!
-
-  //TODO: do a by month
+  //TODO: put link in iframe - job done!
+  //TODO: do a by month (i.e. I want to go this month)
 
   //TODO: ultimately it will be one link for month to populate iframe
   println(
-    "\n\nBy Price:\n" + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
-    "\n\nBy Destination:\n" + byOff.mkString("\n") +
-    "\n\nBy Origin:\n" + byBrd.mkString("\n") +
-    "\n\nDead Destination: " + deadOff.mkString(", ") +
-    "\nDead Origins:     " + deadBrd.mkString(", ") +
-   s"\n\n(${results.flatten.size})"
+    "\n\nBest by Price:\n" + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
+    "\n\nBest by Destination:\n" + byOff.mkString("\n") +
+    "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
+    "\n\nDead Destinations: " + deadOff.mkString(", ") +
+    "\nDead Origins:      " + deadBrd.mkString(", ") +
+   s"\nRoutes: ${results.flatten.size}"
   )
 }
 
