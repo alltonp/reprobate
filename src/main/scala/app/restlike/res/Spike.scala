@@ -183,17 +183,13 @@ object Spike extends App {
   //TODO: do a by month
 
   println(
-    "\n\nBy Price:\n" + byPrice.map(s => s + " " + GoogleFlight(s.brd, s.off, s.lowestMonth).url).mkString("\n") +
+    "\n\nBy Price:\n" + byPrice.map(s => s + " -> " + s.originalPrice + " " + GoogleFlight(s.brd, s.off, s.lowestMonth).url).mkString("\n") +
     "\n\nBy Destination:\n" + byOff.mkString("\n") +
     "\n\nBy Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destination: " + deadOff.mkString(", ") +
     "\nDead Origins:     " + deadBrd.mkString(", ") +
    s"\n\n(${results.flatten.size})"
   )
-
-  val test = byPrice.head
-  println(GoogleFlight(test.brd, test.off, test.lowestMonth).url)
-
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
@@ -223,12 +219,13 @@ case class Summary(records: Seq[Record]) {
   )
 
   val first = records.head
-  val bestRecords = records.sortBy(_.Price.Amount.Amount)//.head
+  private val bestRecords = records.sortBy(_.Price.Amount.Amount)//.head
   val lowestMonth = bestRecords.head.TravelMonth
   val lowestPrice = bestRecords.head.Price.Amount.Amount
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
   private val ccy = first.Price.Amount.CurrencyCode
+  val originalPrice = s"(${lowestPrice} ${ccy})"
 
   val lowestedFx = {
     val v = fxed(lowestPrice).toString
@@ -241,6 +238,6 @@ case class Summary(records: Seq[Record]) {
   }
 
 //  ${first.Price.Amount.CurrencyCode}
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx} (GBP): " +
+  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx}: " +
     records.map(r => s"${r.TravelMonth} ${fxed(r.Price.Amount.Amount.round)}").mkString(", ")
 }
