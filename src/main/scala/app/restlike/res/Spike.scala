@@ -86,6 +86,27 @@ object API {
   }
 }
 
+case class GoogleFlight(from: String, to: String, month: String) {
+  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${date(month, 1)};r=${date(month, 5)};sc=b;a=BA"
+
+  private def expand(code: String) =
+    if (code == "NYC") "JFK,EWR,LGA"
+    else code
+
+  private def date(month: String, day: Int) = {
+    val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+//    new SimpleDateFormat("MMM").format(cal.getTime()));
+    var now = systemClock().date.minusDays(systemClock().date.getDayOfMonth -1)
+    println(monthNames(now.getMonthOfYear -1) + month)
+    while (monthNames(now.getMonthOfYear -1) != month) {
+      now = now.plusMonths(1)
+//      println("more")
+    }
+//    println(now)
+    now.plusDays(day)
+  }
+}
+
 //TODO: look for 'F" too
 //CPH-NYC = hot!
 object Spike extends App {
@@ -96,7 +117,9 @@ object Spike extends App {
     "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
     "DUB", "BFS",
     "MAD", "BCN",
-    "AMS", "JER" , "CDG", "ZRH", "GVA", "LUX", "BRU",
+    "AMS",
+//    "JER",
+    "CDG", "ZRH", "GVA", "LUX", "BRU",
     "MXP", "FCO",
     "LIS", "OPO")
 
@@ -147,6 +170,7 @@ object Spike extends App {
   val deadOff = scenario.offs -- rights.map(_.off)
 
   //TODO: include TP and price per TP
+  //NYC: 140, CPH: 40 (360 round trip)
   //TODO: show completely dead routes
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
   //TODO: show diff between LON and arbitraged (include TP)
@@ -154,7 +178,11 @@ object Spike extends App {
 
   //to try:
   //brd:
-  //off: BJS CHI SHA
+  //off: BJS CHI SHA GRU SFO BUE
+
+  //a url ... https://www.google.com/flights/#search;f=HEL;t=JFK,EWR,LGA;d=2015-10-31;r=2015-11-02;sc=b;a=BA
+  //then click calendar - job done!
+  //could iframe this up!
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
@@ -164,6 +192,10 @@ object Spike extends App {
     "\nDead Origins:     " + deadBrd.mkString(", ") +
    s"\n\n(${results.flatten.size})"
   )
+
+  val test = byPrice.head
+  println(GoogleFlight(test.brd, test.off, "SEP").url)
+
 }
 
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
