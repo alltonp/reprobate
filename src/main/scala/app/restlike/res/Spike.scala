@@ -96,14 +96,14 @@ case class GoogleFlight(from: String, to: String, month: String) {
   private def date(month: String, day: Int) = {
     val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
 //    new SimpleDateFormat("MMM").format(cal.getTime()));
-    var now = systemClock().date.minusDays(systemClock().date.getDayOfMonth -1)
+    var now = systemClock().date.minusDays(systemClock().date.getDayOfMonth).plusDays(day)
 //    println(monthNames(now.getMonthOfYear -1) + month)
     while (monthNames(now.getMonthOfYear -1) != month) {
       now = now.plusMonths(1)
 //      println("more")
     }
 //    println(now)
-    now.plusDays(day)
+    now
   }
 }
 
@@ -184,6 +184,8 @@ object Spike extends App {
   //then click calendar - job done!
   //could iframe this up!
 
+  //TODO: do a by month
+
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
     "\n\nBy Destination:\n" + byOff.mkString("\n") +
@@ -194,7 +196,7 @@ object Spike extends App {
   )
 
   val test = byPrice.head
-  println(GoogleFlight(test.brd, test.off, "SEP").url)
+  println(GoogleFlight(test.brd, test.off, test.lowestMonth).url)
 
 }
 
@@ -225,13 +227,15 @@ case class Summary(records: Seq[Record]) {
   )
 
   val first = records.head
-  val lowest = records.map(_.Price.Amount.Amount).min
+  val bestRecords = records.sortBy(_.Price.Amount.Amount)//.head
+  val lowestMonth = bestRecords.head.TravelMonth
+  val lowestPrice = bestRecords.head.Price.Amount.Amount
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
   private val ccy = first.Price.Amount.CurrencyCode
 
   val lowestedFx = {
-    val v = fxed(lowest).toString
+    val v = fxed(lowestPrice).toString
     if (v.length == 3) " " + v else v
   }
 
