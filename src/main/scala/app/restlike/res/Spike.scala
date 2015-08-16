@@ -97,7 +97,7 @@ case class GoogleFlight(from: String, to: String, month: String) {
     val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
 //    new SimpleDateFormat("MMM").format(cal.getTime()));
     var now = systemClock().date.minusDays(systemClock().date.getDayOfMonth -1)
-    println(monthNames(now.getMonthOfYear -1) + month)
+//    println(monthNames(now.getMonthOfYear -1) + month)
     while (monthNames(now.getMonthOfYear -1) != month) {
       now = now.plusMonths(1)
 //      println("more")
