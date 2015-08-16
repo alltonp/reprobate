@@ -183,7 +183,7 @@ object Spike extends App {
   //TODO: do a by month
 
   println(
-    "\n\nBy Price:\n" + byPrice.mkString("\n") +
+    "\n\nBy Price:\n" + byPrice.map(s => s + " " + GoogleFlight(s.brd, s.off, s.lowestMonth).url).mkString("\n") +
     "\n\nBy Destination:\n" + byOff.mkString("\n") +
     "\n\nBy Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destination: " + deadOff.mkString(", ") +
