@@ -120,7 +120,7 @@ object Spike extends App {
     "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
-    brds = Set("LON") ++ arbitragable,
+    brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
       "BOS", "NYC", "PHL", "ORD", "LAX", "MIA",
       "DXB",
