@@ -105,7 +105,8 @@ object Spike extends App {
     offs = Set(
       "BOS", "NYC", "PHL", "ORD", "LAX", "MIA",
       "DXB",
-      "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "ICN",
+      "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK",
+//      "ICN",
       "SYD"//,
 //      "GIG"//,
 //      "EZE"
@@ -151,8 +152,9 @@ object Spike extends App {
   //TODO: show diff between LON and arbitraged (include TP)
   //TODO: feed fx rates for each day
 
-  //e.g found nothing for $off
-  //e.g found nothing for $brd
+  //to try:
+  //brd:
+  //off: BJS CHI SHA
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
