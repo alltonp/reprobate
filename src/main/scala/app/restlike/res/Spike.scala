@@ -102,7 +102,14 @@ object Spike extends App {
 
   val locationArbitrage = Scenario("Location Arbitrage",
     brds = Set("LON") ++ arbitragable,
-    offs = Set("BOS", "NYC", "PHL", "ORD", "LAX", "MIA", "DXB", "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "SYD")
+    offs = Set(
+      "BOS", "NYC", "PHL", "ORD", "LAX", "MIA",
+      "DXB",
+      "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK", "ICN",
+      "SYD"//,
+//      "GIG"//,
+//      "EZE"
+    )
   )
 
   val europeanBreaks = Scenario("European Breaks",
@@ -135,6 +142,9 @@ object Spike extends App {
     s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}"
   })
 
+  val deadBrd = scenario.brds -- rights.map(_.brd)
+  val deadOff = scenario.offs -- rights.map(_.off)
+
   //TODO: include TP and price per TP
   //TODO: show completely dead routes
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
@@ -146,8 +156,10 @@ object Spike extends App {
 
   println(
     "\n\nBy Price:\n" + byPrice.mkString("\n") +
-    "\n\nBy Off:\n" + byOff.mkString("\n") +
-    "\n\nBy Brd:\n" + byBrd.mkString("\n") +
+    "\n\nBy Destination:\n" + byOff.mkString("\n") +
+    "\n\nBy Origin:\n" + byBrd.mkString("\n") +
+    "\n\nDead Destination: " + deadOff.mkString(", ") +
+    "\nDead Origins:     " + deadBrd.mkString(", ") +
    s"\n\n(${results.flatten.size})"
   )
 }
