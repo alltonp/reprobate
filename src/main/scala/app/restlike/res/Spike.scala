@@ -124,13 +124,16 @@ object Spike extends App {
   })
   
   val byPrice = rights.sortBy(_.lowestedFx)
-  val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
 
+  val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
-    s"$k: ${groupByOff(k).take(5).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}"
+    s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}"
   })
 
-  val byBrd = rights.sortBy(s => (s.brd, s.lowestedFx) )
+  val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
+  val byBrd = groupByBrd.keys.toSeq.sorted.map(k => {
+    s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}"
+  })
 
   //TODO: include TP and price per TP
   //TODO: show completely dead routes
