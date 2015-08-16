@@ -92,7 +92,14 @@ object Spike extends App {
 //  val brds = Seq("DUB", "JER")
 //  val offs = Seq("LAX")
 
-  val arbitragable = Seq("DUB", "CPH", "OSL", "FRA", "DUS", "MUC", "HAM", "CGN", "TXL", "MAD", "AMS", "JER", "BCN", "CDG", "ARN", "HEL", "ZRH", "LUX", "BRU", "MXP", "FCO", "LIS", "OPO")
+  val arbitragable = Seq(
+    "CPH", "OSL", "HEL", "ARN", "GOT",
+    "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
+    "DUB", "BFS",
+    "MAD", "BCN",
+    "AMS", "JER" , "CDG", "ZRH", "GVA", "LUX", "BRU",
+    "MXP", "FCO",
+    "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
     brds = Seq("LON") ++ arbitragable,
@@ -165,6 +172,7 @@ case class Summary(records: Seq[Record]) {
   val fx = Map(
     "NOK" -> 0.0777638,
     "DKK" -> 0.0942893,
+    "SEK" -> 0.0750840,
     "EUR" -> 0.703649,
     "CHF" -> 0.654815,
     "GBP" -> 1.0
