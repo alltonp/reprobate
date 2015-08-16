@@ -181,7 +181,10 @@ case class Summary(records: Seq[Record]) {
   val brd = records.head.DepartureCityCode
   private val ccy = first.Price.Amount.CurrencyCode
 
-  val lowestedFx = fxed(lowest)
+  val lowestedFx = {
+    val v = fxed(lowest).toString
+    if (v.length == 3) " " + v else v
+  }
 
   def fxed(value: Double) = {
     if (!fx.contains(ccy)) throw new RuntimeException(s"no fx rate for: $ccy")
