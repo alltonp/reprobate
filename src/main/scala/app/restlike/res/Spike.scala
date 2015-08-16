@@ -87,6 +87,7 @@ object API {
 }
 
 case class GoogleFlight(from: String, to: String, month: String) {
+  //TODO: consider a=ONEWORLD
   def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${date(month, 1)};r=${date(month, 5)};sc=b;a=BA"
 
   private def expand(code: String) =
