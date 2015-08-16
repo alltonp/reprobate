@@ -173,6 +173,7 @@ object Spike extends App {
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
   //TODO: show diff between LON and arbitraged (include TP)
   //TODO: feed fx rates for each day
+  //TODO: use liftweb scheduling to get prices in the am
 
   //to try:
   //brd:
