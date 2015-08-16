@@ -127,7 +127,7 @@ object Spike extends App {
   val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
 
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
-    s"$k: ${groupByOff(k).take(5).map(s => s"${s.brd} ${s.lowestedFx}").mkString(", ")}"
+    s"$k: ${groupByOff(k).take(5).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}"
   })
 
   val byBrd = rights.sortBy(s => (s.brd, s.lowestedFx) )
