@@ -2,7 +2,7 @@ package app.restlike.res
 
 import java.nio.file.{Path, Paths}
 
-import app.ServiceFactory.{dateFormats, systemClock}
+import app.ServiceFactory._
 import im.mange.little.file.Filepath
 import io.shaka.http.Http._
 import io.shaka.http._
@@ -95,11 +95,11 @@ case class GoogleFlight(from: String, to: String, month: String) {
 
   private def date(month: String, day: Int) = {
     val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
-    var now = systemClock().date.minusDays(systemClock().date.getDayOfMonth).plusDays(day)
-    while (monthNames(now.getMonthOfYear -1) != month) {
-      now = now.plusMonths(1)
+    var when = systemClock().date.minusDays(systemClock().date.getDayOfMonth).plusDays(day)
+    while (monthNames(when.getMonthOfYear -1) != month) {
+      when = when.plusMonths(1)
     }
-    now
+    if (when.isBefore(systemClock().date)) systemClock().date.plusDays(day -1) else when
   }
 }
 
