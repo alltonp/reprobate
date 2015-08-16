@@ -161,7 +161,9 @@ object Spike extends App {
 
   val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
   val byBrd = groupByBrd.keys.toSeq.sorted.map(k => {
-    s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}"
+    val best = groupByBrd(k).head
+    s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}" +
+      " -> " + GoogleFlight(best.brd, best.off, best.lowestMonth).url + " " + best.originalPrice
   })
 
   val deadBrd = scenario.brds -- rights.map(_.brd)
@@ -231,7 +233,7 @@ case class Summary(records: Seq[Record]) {
   val first = records.head
   private val bestRecords = records.sortBy(_.Price.Amount.Amount)//.head
   val lowestMonth = bestRecords.head.TravelMonth
-  val lowestPrice = bestRecords.head.Price.Amount.Amount
+  val lowestPrice = bestRecords.head.Price.Amount.Amount.round
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
   private val ccy = first.Price.Amount.CurrencyCode
