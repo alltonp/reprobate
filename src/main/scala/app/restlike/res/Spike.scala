@@ -154,7 +154,9 @@ object Spike extends App {
 
   val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
-    s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}"
+    val best = groupByOff(k).head
+    s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}" +
+      " -> " + GoogleFlight(best.brd, best.off, best.lowestMonth).url + " " + best.originalPrice
   })
 
   val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
