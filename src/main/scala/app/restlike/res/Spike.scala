@@ -86,22 +86,35 @@ object API {
   }
 }
 
-case class GoogleFlight(from: String, to: String, month: String) {
-  //TODO: consider a=ONEWORLD
-  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${date(month, 1)};r=${date(month, 5)};sc=b;a=BA"
+object Months {
+  val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
 
-  private def expand(code: String) =
-    if (code == "NYC") "JFK,EWR,LGA"
-    else code
-
-  private def date(month: String, day: Int) = {
-    val monthNames = Seq("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+  def date(month: String, day: Int) = {
     var when = systemClock().date.minusDays(systemClock().date.getDayOfMonth).plusDays(day)
     while (monthNames(when.getMonthOfYear -1) != month) {
       when = when.plusMonths(1)
     }
     if (when.isBefore(systemClock().date)) systemClock().date.plusDays(day -1) else when
   }
+
+  def nextMonthsFromNow = {
+    var when = systemClock().date.minusDays(systemClock().date.getDayOfMonth).plusDays(1)
+    nextMonthsFrom(monthNames(when.getMonthOfYear -1))
+  }
+
+  private def nextMonthsFrom(month: String) = {
+    val current = monthNames.indexOf(month)
+    (monthNames.drop(current) ++ monthNames).take(12)
+  }
+}
+
+case class GoogleFlight(from: String, to: String, month: String) {
+  //TODO: consider a=ONEWORLD
+  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${Months.date(month, 1)};r=${Months.date(month, 5)};sc=b;a=BA"
+
+  private def expand(code: String) =
+    if (code == "NYC") "JFK,EWR,LGA"
+    else code
 }
 
 //TODO: look for 'F" too
@@ -190,8 +203,12 @@ object Spike extends App {
   //TODO: do a by month (i.e. I want to go this month)
 
   //TODO: ultimately it will be one link for month to populate iframe
+  val title = "        BEST  AUG  SEP  OCT  NOV  DEC  JAN  FEB  MAR  APR  MAY  JUN  JUL\n"
+
+  val title2 = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
+
   println(
-    "\n\nBest by Price:\n" + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
+    "\n\nBest by Price:\n" + title + title2 + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
     "\n\nBest by Destination:\n" + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destinations: " + deadOff.mkString(", ") +
