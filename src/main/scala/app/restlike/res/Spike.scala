@@ -110,23 +110,23 @@ object Spike extends App {
   val cache = Cache(systemClock().date)
 
   val arbitragable = Set(
-    "CPH", "OSL", "HEL", "ARN", "GOT",
+    "CPH", "OSL", "HEL", "STO", "GOT",
     "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
     "DUB", "BFS",
     "MAD", "BCN",
     "AMS",
 //    "JER",
-    "CDG", "ZRH", "GVA", "LUX", "BRU",
-    "MXP", "FCO",
+    "PAR", "ZRH", "GVA", "LUX", "BRU",
+    "MIL", "ROM",
     "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
-      "BOS", "NYC", "PHL", "ORD", "LAX", "MIA",
+      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA",
       "DXB",
       "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK",
-//      "ICN",
+//      "SEL",
       "SYD"//,
 //      "GIG"//,
 //      "EZE"
@@ -181,13 +181,8 @@ object Spike extends App {
   //to try:
   //brd:
   //off: BJS SHA SFO SAO
-  // (CHI instead of ORD)
   // (BUE instead of EZE)
-  // (MIL instead of MXP)
-  // (PAR instead of CDG)
   // (RIO instead of GIG)
-  // (ROM instead of FCO)
-  // (STO instead of ARN)
   // (SEL instead of ICN)
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
