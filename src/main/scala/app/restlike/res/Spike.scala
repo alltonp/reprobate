@@ -203,13 +203,12 @@ object Spike extends App {
   //TODO: do a by month (i.e. I want to go this month)
 
   //TODO: ultimately it will be one link for month to populate iframe
-  val title = "        BEST  AUG  SEP  OCT  NOV  DEC  JAN  FEB  MAR  APR  MAY  JUN  JUL\n"
 
-  val title2 = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
+  val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
-    "\n\nBest by Price:\n" + title + title2 + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
-    "\n\nBest by Destination:\n" + byOff.mkString("\n") +
+    "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
+    "\n\nBest by Destination:\n" + title + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destinations: " + deadOff.mkString(", ") +
     "\nDead Origins:      " + deadBrd.mkString(", ") +
@@ -262,7 +261,6 @@ case class Summary(records: Seq[Record]) {
     (value * fx(ccy)).round
   }
 
-//  ${first.Price.Amount.CurrencyCode}
   override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx}: " +
     records.map(r => s"${r.TravelMonth} ${fxed(r.Price.Amount.Amount.round)}").mkString(", ")
 }
