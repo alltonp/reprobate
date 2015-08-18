@@ -252,15 +252,14 @@ case class Summary(records: Seq[Record]) {
   private val ccy = first.Price.Amount.CurrencyCode
   val originalPrice = s"(${lowestPrice} ${ccy})"
 
-  val lowestedFx = {
-    val v = fxed(lowestPrice).toString
-    if (v.length == 3) " " + v else v
-  }
+  val lowestedFx = pad(fxed(lowestPrice).toString)
 
   def fxed(value: Double) = {
     if (!fx.contains(ccy)) throw new RuntimeException(s"no fx rate for: $ccy")
-    (value * fx(ccy)).round
+    pad((value * fx(ccy)).round.toString)
   }
+
+  private def pad(v: String) = if (v.length == 3) " " + v else v
 
   override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx}: " +
     records.map(r => s"${r.TravelMonth} ${fxed(r.Price.Amount.Amount.round)}").mkString(", ")
