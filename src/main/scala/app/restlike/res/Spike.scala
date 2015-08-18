@@ -205,6 +205,21 @@ object Spike extends App {
 
   //TODO: ultimately it will be one link for month to populate iframe
 
+  //TOD): this is a very interesting url ...
+  //https://www.britishairways.com/travel/fx/execclub/_gf/en_fi?eId=111054&data=
+  // F100LF251120150740BA0795JHELLHRT251120151215BA0295JLHRORDT011220151710BA0294JORDLHRF021220151115BA0794JLHRHELF&p=EUR1570.10&e=FE&c=J&source=FareQuoteEmail&isEmailHBOFareQuote=false&utm_source=HEL.ORD.flightsearch&utm_medium=com&utm_campaign=googleflightsearch&DM1_Channel=TS&DM1_Campaign=googleflightsearch&DM1_CD=HELORDRT
+
+  // F100LF
+  // 25112015 0740 BA0795 J HEL LHR T
+  // 25112015 1215 BA0295 J LHR ORD T
+  // 01122015 1710 BA0294 J ORD LHR F
+  // 02122015 1115 BA0794 J LHR HEL F
+  //
+  // &p=EUR1570.10&e=FE&c=J&source=FareQuoteEmail&isEmailHBOFareQuote=false&utm_source=HEL.ORD.flightsearch&utm_medium=com&utm_campaign=googleflightsearch&DM1_Channel=TS&DM1_Campaign=googleflightsearch&DM1_CD=HELORDRT
+
+  //TODO: this is also interesting ...
+  //https://www.google.com/flights/#search;f=HEL;t=CHI,ORD;d=2015-11-25;r=2015-12-01;sel=HELLHR0BA795-LHRORD0BA295,ORDLHR0BA294-LHRHEL1BA794;sc=b;a=BA;eo=e
+
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
