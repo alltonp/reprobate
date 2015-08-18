@@ -236,6 +236,7 @@ case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
   def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "39kj4ry2ktcxwwhjv9mqtm4w"))))
+//  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "faje8sxhy274vk2a9yhpeuth"))))
   def unapply(req: Request): Option[String] = if (req.method == Method.GET) Some(req.url) else None
 }
 
