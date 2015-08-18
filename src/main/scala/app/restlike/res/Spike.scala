@@ -139,10 +139,10 @@ object Spike extends App {
       "BOS", "NYC", "PHL", "CHI", "LAX", "MIA",
       "DXB",
       "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK",
-//      "SEL",
-      "SYD"//,
-//      "GIG"//,
-//      "EZE"
+      "SEL",
+      "SYD",
+      "RIO",
+      "BUE"
     )
   )
 
@@ -194,10 +194,11 @@ object Spike extends App {
   //to try:
   //brd:
   //off: BJS SHA SFO SAO
-  // (BUE instead of EZE)
-  // (RIO instead of GIG)
-  // (SEL instead of ICN)
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
+
+  //TIP: HEL is 160 TP
+  //and malta and FNC
+  //http://www.headforpoints.com/2015/08/18/160-tier-point-routes-british-airways-club-europe/
 
   //TODO: put link in iframe - job done!
   //TODO: do a by month (i.e. I want to go this month)
