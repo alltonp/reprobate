@@ -198,7 +198,7 @@ object Spike extends App {
 
   //to try:
   //brd:
-  //off: SFO SAO
+  //off: SFO
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
   //TIP: HEL is 160 TP
