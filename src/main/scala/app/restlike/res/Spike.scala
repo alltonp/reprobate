@@ -122,9 +122,11 @@ case class GoogleFlight(from: String, to: String, month: String) {
 object Spike extends App {
   val cache = Cache(systemClock().date)
 
+  //TODO: re-enable these
+
   val arbitragable = Set(
     "CPH", "OSL", "HEL", "STO", "GOT",
-    "FRA", "DUS", "MUC", "HAM", "CGN", "TXL",
+    "FRA", "DUS", "MUC", "HAM", /*"CGN" (dead),*/ /*"BER",*/
     "DUB", "BFS",
     "MAD", "BCN",
     "AMS",
@@ -138,10 +140,11 @@ object Spike extends App {
     offs = Set(
       "BOS", "NYC", "PHL", "CHI", "LAX", "MIA",
       "DXB",
-      "TYO", "HKG", "CTU" ,"SIN", "KUL", "PVG", "BKK", "PEK",
+      //TODO: re-enable these
+      "TYO", "HKG", "CTU" ,"SIN", "KUL", /*"SHA", */ "BKK", /*"BJS",*/
       "SEL",
       "SYD",
-      "RIO",
+      "RIO", /* "SAO", */
       "BUE"
     )
   )
@@ -184,7 +187,9 @@ object Spike extends App {
   val deadOff = scenario.offs -- rights.map(_.off)
 
   //TODO: include TP and price per TP
-  //NYC: 140, CPH: 40 (360 round trip)
+  //NYC, CTU: 140,
+  //CPH: 40
+  //HEL: 80
   //TODO: show completely dead routes
   //TODO: show by date - i.e. best fare ber month (colouring will kind of give that)
   //TODO: show diff between LON and arbitraged (include TP)
@@ -193,7 +198,7 @@ object Spike extends App {
 
   //to try:
   //brd:
-  //off: BJS SHA SFO SAO
+  //off: SFO SAO
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
   //TIP: HEL is 160 TP
