@@ -25,8 +25,11 @@ object Presentation {
   }
 
   def issuesForUser(model: Model, aka: String, issues: Seq[Issue]) = {
-    val r = issues.map(i => s"\n ${i.render(model, hideBy = true)}").mkString
-    s"${aka}: (${issues.size})" + r + "\n"
+    if (issues.isEmpty) ""
+    else {
+      val r = issues.map(i => s"\n ${i.render(model, hideBy = true)}").mkString
+      s"${aka}: (${issues.size})" + r + "\n"
+    }
   }
 
   def tags(all: Seq[Tag]) = sortedByPopularity(all).map(t => s"${t.name} (${t.count})").mkString(", ") :: Nil

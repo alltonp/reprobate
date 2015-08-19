@@ -305,7 +305,8 @@ object Commander {
       val by = if (newStatus == currentModel.beginState) None else Some(aka)
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
-      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
+      Out(Presentation.board(updatedModel, Seq(ref), aka),
+        Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
 

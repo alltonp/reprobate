@@ -1,5 +1,7 @@
 we really need +/1w etc ... hmmm (maybe they should always be 3 chars long)
 ---
+support do and remind in 1w, 1m, 1y etc - e.g. invoices and bills
+---
 might need to make things overdue ... although its a but iffy obv
 ---
 expert mode, when adding split on a char that isnt ';,|'
