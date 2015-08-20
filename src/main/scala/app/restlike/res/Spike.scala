@@ -138,7 +138,7 @@ object Spike extends App {
   val locationArbitrage = Scenario("Location Arbitrage",
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
-      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA",
+      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
       "DXB",
       //TODO: re-enable these
       "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
@@ -155,8 +155,9 @@ object Spike extends App {
   )
 
   val scenario = locationArbitrage
-  //seems broken .. largely current month only
-//  val scenario = europeanBreaks
+
+  //europe offers seems broken .. largely current month only
+  //val scenario = europeanBreaks
 
   val results = scenario.run(cache)
 
@@ -198,7 +199,7 @@ object Spike extends App {
 
   //to try:
   //brd:
-  //off: SFO
+  //off:
   //see: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
 
   //TIP: HEL is 160 TP
