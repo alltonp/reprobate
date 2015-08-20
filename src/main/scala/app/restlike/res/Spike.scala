@@ -126,7 +126,7 @@ object Spike extends App {
 
   val arbitragable = Set(
     "CPH", "OSL", "HEL", "STO", "GOT",
-    "FRA", "DUS", "MUC", "HAM", /*"CGN" (dead),*/ /*"BER",*/
+    "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/ /*"BER",*/
     "DUB", "BFS",
     "MAD", "BCN",
     "AMS",
@@ -141,10 +141,10 @@ object Spike extends App {
       "BOS", "NYC", "PHL", "CHI", "LAX", "MIA",
       "DXB",
       //TODO: re-enable these
-      "TYO", "HKG", "CTU" ,"SIN", "KUL", /*"SHA", */ "BKK", /*"BJS",*/
+      "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
       "SEL",
       "SYD",
-      "RIO", /* "SAO", */
+      "RIO", "SAO",
       "BUE"
     )
   )
@@ -229,7 +229,7 @@ object Spike extends App {
 
   println(
     "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
-    "\n\nBest by Destination:\n" + title + byOff.mkString("\n") +
+    "\n\nBest by Destination:\n" + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destinations: " + deadOff.mkString(", ") +
     "\nDead Origins:      " + deadBrd.mkString(", ") +
