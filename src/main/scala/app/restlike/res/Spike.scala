@@ -43,29 +43,33 @@ case class Scenario(name: String, brds: Set[String], offs: Set[String], ignored:
       if (brd == off) ApiCall(s"$brd-$off", Left(s"Pointless"))
       else if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
       else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
-      else { print("-"); API.doIt(brd, off, cache) }
+      else { print("-"); API.doIt(Route(brd, off), cache) }
     })
   })
+}
+
+case class Route(brd: String, off: String) {
+  def name = s"$brd-$off"
 }
 
 object API {
   private val debug = false
 
-  def doIt(brd: String, off: String, cache: Cache) = {
-    //    val cabin = "first"
-    val cabin = "business"
-    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=$brd;arrivalCity=$off;cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
+  def doIt(route: Route, cache: Cache) = {
+        val cabin = "first"
+//    val cabin = "business"
+    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${route.brd};arrivalCity=${route.off};cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
 
     //TODO: save down past results
 
     val json = getJson(url)
-    cache.store(s"$brd-$off", json)
+    cache.store(route.name, json)
     val resp: Either[String, Summary] = json match {
       case Some(j) => Right(parseToSummary(j))
       case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
-    ApiCall(s"$brd-$off", resp)
+    ApiCall(route.name, resp)
   }
 
   def parseToSummary(j: JValue) = {
@@ -110,7 +114,10 @@ object Months {
 
 case class GoogleFlight(from: String, to: String, month: String) {
   //TODO: consider a=ONEWORLD
-  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${Months.date(month, 1)};r=${Months.date(month, 5)};sc=b;a=BA"
+  private val cabin = "b"
+//  private val cabin = "f"
+
+  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${Months.date(month, 1)};r=${Months.date(month, 5)};sc=${cabin};a=BA"
 
   private def expand(code: String) =
     if (code == "NYC") "JFK,EWR,LGA"
@@ -122,17 +129,15 @@ case class GoogleFlight(from: String, to: String, month: String) {
 object Spike extends App {
   val cache = Cache(systemClock().date)
 
-  //TODO: re-enable these
-
   val arbitragable = Set(
     "CPH", "OSL", "HEL", "STO", "GOT",
-    "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/ /*"BER",*/
-    "DUB", "BFS",
-    "MAD", "BCN",
-    "AMS",
-//    "JER",
-    "PAR", "ZRH", "GVA", "LUX", "BRU",
-    "MIL", "ROM",
+//    "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/
+//    "DUB", "BFS",
+//    "MAD", "BCN",
+//    "AMS",
+////    "JER",
+//    "PAR", "ZRH", "GVA", "LUX", "BRU",
+//    "MIL", "ROM",
     "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
