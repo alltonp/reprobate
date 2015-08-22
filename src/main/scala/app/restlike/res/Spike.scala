@@ -48,6 +48,8 @@ case class Scenario(name: String, brds: Set[String], offs: Set[String], ignored:
   })
 }
 
+//TODO: Trip = route + cabin?
+
 case class Route(brd: String, off: String) {
   def name = s"$brd-$off"
 }
