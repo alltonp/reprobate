@@ -246,6 +246,23 @@ object Spike extends App {
   //https://www.google.com/flights/#search;f=HEL;t=CHI,ORD;d=2015-11-25;r=2015-12-01;sel=HELLHR0BA795-LHRORD0BA295,ORDLHR0BA294-LHRHEL1BA794;sc=b;a=BA;eo=e
 
   //TODO: use https://openexchangerates.org/
+  //do the same as routes .. store in the current days dirs
+  //  https://openexchangerates.org/api/latest.json?app_id=af8f4785fdeb4e98aec64a4ca522e794
+  //all in USD
+//  {
+//    "disclaimer": "Exchange rates are provided for informational purposes only, and do not constitute financial advice of any kind. Although every attempt is made to ensure quality, NO guarantees are given whatsoever of accuracy, validity, availability, or fitness for any purpose - please use at your own risk. All usage is subject to your acceptance of the Terms and Conditions of Service, available at: https://openexchangerates.org/terms/",
+//    "license": "Data sourced from various providers with public-facing APIs; copyright may apply; resale is prohibited; no warranties given of any kind. Bitcoin data provided by http://coindesk.com. All usage is subject to your acceptance of the License Agreement available at: https://openexchangerates.org/license/",
+//    "timestamp": 1440403208,
+//    "base": "USD",
+//    "rates": {
+//      "AED": 3.67311,
+//      "AFN": 63.880001,
+//      "ALL": 122.3689,
+//      "AMD": 477.702503,
+//      "ANG": 1.78875,
+//      "AOA": 125.927,
+//}
+//}
 
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
