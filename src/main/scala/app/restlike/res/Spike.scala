@@ -245,6 +245,8 @@ object Spike extends App {
   //TODO: this is also interesting ...
   //https://www.google.com/flights/#search;f=HEL;t=CHI,ORD;d=2015-11-25;r=2015-12-01;sel=HELLHR0BA795-LHRORD0BA295,ORDLHR0BA294-LHRHEL1BA794;sc=b;a=BA;eo=e
 
+  //TODO: use https://openexchangerates.org/
+
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
