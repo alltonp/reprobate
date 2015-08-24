@@ -131,15 +131,17 @@ case class GoogleFlight(from: String, to: String, month: String) {
 object Spike extends App {
   val cache = Cache(systemClock().date)
 
+//  val nonFirst = SEL, BUE, BKK, CTU
+
   val arbitragable = Set(
     "CPH", "OSL", "HEL", "STO", "GOT",
-//    "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/
-//    "DUB", "BFS",
-//    "MAD", "BCN",
-//    "AMS",
-////    "JER",
-//    "PAR", "ZRH", "GVA", "LUX", "BRU",
-//    "MIL", "ROM",
+    "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/
+    "DUB", "BFS",
+    "MAD", "BCN",
+    "AMS",
+//    "JER",
+    "PAR", "ZRH", "GVA", "LUX", "BRU",
+    "MIL", "ROM",
     "LIS", "OPO")
 
   val locationArbitrage = Scenario("Location Arbitrage",
@@ -147,7 +149,6 @@ object Spike extends App {
     offs = Set(
       "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
       "DXB",
-      //TODO: re-enable these
       "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
       "SEL",
       "SYD",
