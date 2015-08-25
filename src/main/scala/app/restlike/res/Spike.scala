@@ -248,6 +248,7 @@ object Spike extends App {
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
+    s"\n\nCabin: $cabin" +
     "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(Trip(cabin, Route(s.brd, s.off)), s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
     "\n\nBest by Destination:\n" + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
