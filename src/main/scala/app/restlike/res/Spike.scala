@@ -53,7 +53,13 @@ case class Trip(cabinCode: String, route: Route) {
   val baCabinName = cabinCode match {
     case "F" => "first"
     case "J" => "business"
-    case _ => throw new RuntimeException(s"Unsdupported cabin: $cabinCode")
+    case _ => throw new RuntimeException(s"Unsupported cabin: $cabinCode")
+  }
+
+  val gfCabinCode = cabinCode match {
+    case "F" => "f"
+    case "J" => "b"
+    case _ => throw new RuntimeException(s"Unsupported cabin: $cabinCode")
   }
 
   val name = s"${route.name}-${cabinCode}"
@@ -121,12 +127,8 @@ object Months {
   }
 }
 
-case class GoogleFlight(from: String, to: String, month: String) {
-  //TODO: consider a=ONEWORLD
-  private val cabin = "b"
-//  private val cabin = "f"
-
-  def url = s"https://www.google.com/flights/#search;f=${expand(from)};t=${expand(to)};d=${Months.date(month, 1)};r=${Months.date(month, 5)};sc=${cabin};a=BA"
+case class GoogleFlight(trip: Trip, month: String) {
+  def url = s"https://www.google.com/flights/#search;f=${expand(trip.route.brd)};t=${expand(trip.route.off)};d=${Months.date(month, 1)};r=${Months.date(month, 5)};sc=${trip.gfCabinCode};a=BA"
 
   private def expand(code: String) =
     if (code == "NYC") "JFK,EWR,LGA"
@@ -150,7 +152,9 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
-  val locationArbitrage = Scenario("Location Arbitrage", "F",
+  val cabin = "F"
+
+  val locationArbitrage = Scenario("Location Arbitrage", cabin,
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
 //      "BOS", "NYC", "PHL", "CHI", "LAX",
@@ -164,7 +168,7 @@ object Spike extends App {
     )
   )
 
-  val europeanBreaks = Scenario("European Breaks", "J",
+  val europeanBreaks = Scenario("European Breaks", cabin,
     brds = Set("LON"),
     offs = arbitragable ++ Set("RAK", "IBZ")
   )
