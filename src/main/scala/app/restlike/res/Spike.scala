@@ -41,9 +41,9 @@ case class Scenario(name: String, cabinCode: String, brds: Set[String], offs: Se
   def run(cache: Cache) = brds.toSeq.map(brd => {
     offs.toSeq.map(off => {
       val trip = Trip(cabinCode, Route(brd, off))
-      if (brd == off) ApiCall(trip.name, Left(s"Pointless"))
-      else if (ignored.contains(s"$brd-$off")) ApiCall(trip.name, Left(s"Ignored"))
-      else if (cache.contains(trip.name)) { /*print("+");*/ ApiCall(trip.name, cache.load(trip.name)) }
+      if (brd == off) ApiCall(trip, Left(s"Pointless"))
+      else if (ignored.contains(s"$brd-$off")) ApiCall(trip, Left(s"Ignored"))
+      else if (cache.contains(trip.name)) { /*print("+");*/ ApiCall(trip, cache.load(trip.name)) }
       else { print("-"); API.doIt(trip, cache) }
     })
   })
@@ -80,7 +80,7 @@ object API {
       case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
-    ApiCall(trip.name, resp)
+    ApiCall(trip, resp)
   }
 
   def parseToSummary(j: JValue) = {
@@ -153,7 +153,7 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
-  val locationArbitrage = Scenario("Location Arbitrage", "J",
+  val locationArbitrage = Scenario("Location Arbitrage", "F",
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
 //      "BOS", "NYC", "PHL", "CHI", "LAX",
@@ -271,7 +271,7 @@ case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMont
 case class Price(Amount: Amount)
 case class Amount(Amount: Double, CurrencyCode: String)
 
-case class ApiCall(query: String, outcome: Either[String, Summary])
+case class ApiCall(trip: Trip, outcome: Either[String, Summary])
 
 case class Summary(records: Seq[Record]) {
   val fx = Map(
