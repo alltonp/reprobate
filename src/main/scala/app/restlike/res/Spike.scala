@@ -152,7 +152,8 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
-  val cabin = "B"
+  //TODO: ultimately support both cabins
+  val cabin = "J"
 
   val locationArbitrage = Scenario("Location Arbitrage", cabin,
     brds = /*Set("LON") ++ */arbitragable,
@@ -265,6 +266,8 @@ object Spike extends App {
 //}
 
   //try parsing qatar offers ... http://www.qatarairways.com/global/en/special-offers.page
+
+  //TODO: deploy using heroku - https://github.com/heroku/sbt-heroku
 
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
