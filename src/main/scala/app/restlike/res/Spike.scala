@@ -152,7 +152,7 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
-  val cabin = "F"
+  val cabin = "B"
 
   val locationArbitrage = Scenario("Location Arbitrage", cabin,
     brds = /*Set("LON") ++ */arbitragable,
@@ -263,6 +263,8 @@ object Spike extends App {
 //      "AOA": 125.927,
 //}
 //}
+
+  //try parsing qatar offers ... http://www.qatarairways.com/global/en/special-offers.page
 
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
