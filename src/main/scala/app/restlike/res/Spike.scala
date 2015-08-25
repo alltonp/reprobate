@@ -193,14 +193,14 @@ object Spike extends App {
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
     val best = groupByOff(k).head
     s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}" +
-      " -> " + GoogleFlight(best.brd, best.off, best.lowestMonth).url + " " + best.originalPrice
+      " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
   val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
   val byBrd = groupByBrd.keys.toSeq.sorted.map(k => {
     val best = groupByBrd(k).head
     s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}" +
-      " -> " + GoogleFlight(best.brd, best.off, best.lowestMonth).url + " " + best.originalPrice
+      " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
   val deadBrd = scenario.brds -- rights.map(_.brd)
@@ -248,7 +248,7 @@ object Spike extends App {
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
-    "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(s.brd, s.off, s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
+    "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(Trip(cabin, Route(s.brd, s.off)), s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
     "\n\nBest by Destination:\n" + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destinations: " + deadOff.mkString(", ") +
