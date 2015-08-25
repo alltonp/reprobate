@@ -37,41 +37,50 @@ case class Cache(date: LocalDate) {
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
 
-case class Scenario(name: String, brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
+case class Scenario(name: String, cabinCode: String, brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
   def run(cache: Cache) = brds.toSeq.map(brd => {
     offs.toSeq.map(off => {
-      if (brd == off) ApiCall(s"$brd-$off", Left(s"Pointless"))
-      else if (ignored.contains(s"$brd-$off")) ApiCall(s"$brd-$off", Left(s"Ignored"))
-      else if (cache.contains(s"$brd-$off")) { /*print("+");*/ ApiCall(s"$brd-$off", cache.load(s"$brd-$off")) }
-      else { print("-"); API.doIt(Route(brd, off), cache) }
+      val trip = Trip(cabinCode, Route(brd, off))
+      if (brd == off) ApiCall(trip.name, Left(s"Pointless"))
+      else if (ignored.contains(s"$brd-$off")) ApiCall(trip.name, Left(s"Ignored"))
+      else if (cache.contains(trip.name)) { /*print("+");*/ ApiCall(trip.name, cache.load(trip.name)) }
+      else { print("-"); API.doIt(trip, cache) }
     })
   })
 }
 
-//TODO: Trip = route + cabin?
+case class Trip(cabinCode: String, route: Route) {
+  val cabinName = {
+    cabinCode match {
+      case "F" => "first"
+      case "J" => "business"
+      case _ => throw new RuntimeException(s"Unsdupported cabin: $cabinCode")
+    }
+  }
+
+  val name = s"${route.name}-${cabinCode}"
+}
 
 case class Route(brd: String, off: String) {
-  def name = s"$brd-$off"
+  val name = s"$brd-$off"
 }
 
 object API {
   private val debug = false
 
-  def doIt(route: Route, cache: Cache) = {
-        val cabin = "first"
-//    val cabin = "business"
-    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${route.brd};arrivalCity=${route.off};cabin=$cabin;journeyType=roundTrip;range=monthLow.json"
+  def doIt(trip: Trip, cache: Cache) = {
+    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${trip.route.brd};arrivalCity=${trip.route.off};cabin=${trip.cabinName};journeyType=roundTrip;range=monthLow.json"
 
     //TODO: save down past results
 
     val json = getJson(url)
-    cache.store(route.name, json)
+    cache.store(trip.name, json)
     val resp: Either[String, Summary] = json match {
       case Some(j) => Right(parseToSummary(j))
       case None => Left(s"Unavailable")
     }
     Thread.sleep(1000)
-    ApiCall(route.name, resp)
+    ApiCall(trip.name, resp)
   }
 
   def parseToSummary(j: JValue) = {
@@ -144,20 +153,21 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
-  val locationArbitrage = Scenario("Location Arbitrage",
+  val locationArbitrage = Scenario("Location Arbitrage", "J",
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
-      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
-      "DXB",
-      "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
-      "SEL",
-      "SYD",
-      "RIO", "SAO",
-      "BUE"
+//      "BOS", "NYC", "PHL", "CHI", "LAX",
+      "MIA", //"SFO",
+//      "DXB",
+//      "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
+//      "SEL",
+//      "SYD",
+      "RIO", "SAO"//,
+//      "BUE"
     )
   )
 
-  val europeanBreaks = Scenario("European Breaks",
+  val europeanBreaks = Scenario("European Breaks", "J",
     brds = Set("LON"),
     offs = arbitragable ++ Set("RAK", "IBZ")
   )
