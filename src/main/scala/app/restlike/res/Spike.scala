@@ -50,12 +50,10 @@ case class Scenario(name: String, cabinCode: String, brds: Set[String], offs: Se
 }
 
 case class Trip(cabinCode: String, route: Route) {
-  val cabinName = {
-    cabinCode match {
-      case "F" => "first"
-      case "J" => "business"
-      case _ => throw new RuntimeException(s"Unsdupported cabin: $cabinCode")
-    }
+  val baCabinName = cabinCode match {
+    case "F" => "first"
+    case "J" => "business"
+    case _ => throw new RuntimeException(s"Unsdupported cabin: $cabinCode")
   }
 
   val name = s"${route.name}-${cabinCode}"
@@ -69,7 +67,7 @@ object API {
   private val debug = false
 
   def doIt(trip: Trip, cache: Cache) = {
-    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${trip.route.brd};arrivalCity=${trip.route.off};cabin=${trip.cabinName};journeyType=roundTrip;range=monthLow.json"
+    val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${trip.route.brd};arrivalCity=${trip.route.off};cabin=${trip.baCabinName};journeyType=roundTrip;range=monthLow.json"
 
     //TODO: save down past results
 
@@ -135,7 +133,6 @@ case class GoogleFlight(from: String, to: String, month: String) {
     else code
 }
 
-//TODO: look for 'F" too
 //CPH-NYC = hot!
 object Spike extends App {
   val cache = Cache(systemClock().date)
