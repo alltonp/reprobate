@@ -75,6 +75,9 @@ object API {
   def doIt(trip: Trip, cache: Cache) = {
     val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${trip.route.brd};arrivalCity=${trip.route.off};cabin=${trip.baCabinName};journeyType=roundTrip;range=monthLow.json"
 
+    //TODO: next
+    //https://api.ba.com/rest-v1/v1/flightOfferMktAffiliates;departureDateTimeOutbound=2016-01-01T12:00:00:00Z;locationCodeOriginOutbound=LHR;locationCodeDestinationOutbound=JFK;departureDateTimeInbound=2016-01-08T12:00:00:00Z;locationCodeOriginInbound=JFK;locationCodeDestinationInbound=LHR;cabin=Economy;ADT=1;CHD=0;INF=0;format=.json
+
     //TODO: save down past results
 
     val json = getJson(url)
@@ -158,14 +161,13 @@ object Spike extends App {
   val locationArbitrage = Scenario("Location Arbitrage", cabin,
     brds = /*Set("LON") ++ */arbitragable,
     offs = Set(
-//      "BOS", "NYC", "PHL", "CHI", "LAX",
-      "MIA", //"SFO",
+      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
 //      "DXB",
 //      "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
 //      "SEL",
 //      "SYD",
-      "RIO", "SAO"//,
-//      "BUE"
+      "RIO", "SAO",
+      "BUE"
     )
   )
 
@@ -216,6 +218,7 @@ object Spike extends App {
   //TODO: show diff between LON and arbitraged (include TP)
   //TODO: feed fx rates for each day
   //TODO: use liftweb scheduling to get prices in the am
+  //TODO: seperate data retrievel from presenation, so we can show updates and do both F and J
 
   //to try:
   //brd:
@@ -285,7 +288,9 @@ object Spike extends App {
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
-  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "39kj4ry2ktcxwwhjv9mqtm4w"))))
+  //s4ybmj2vpp5vubspgj9dv6ag
+  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "2aavzxmrfa7aaak4a48jyj2z"))))
+//  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "39kj4ry2ktcxwwhjv9mqtm4w"))))
 //  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "faje8sxhy274vk2a9yhpeuth"))))
   def unapply(req: Request): Option[String] = if (req.method == Method.GET) Some(req.url) else None
 }
