@@ -165,9 +165,6 @@ object Spike extends App {
     "SYD"
   )
 
-  //TODO: ultimately support both cabins
-  val cabin = "F"
-
   val nonFoffS = Seq("SEL", "BUE", "BKK", "CTU")
 
   def locationArbitrage(cabin: String) = Scenario("Location Arbitrage", cabin, nonFoffS,
@@ -181,7 +178,7 @@ object Spike extends App {
     offs = arbitragable ++ Set("RAK", "IBZ")
   )
 
-  val scenarios = Seq(/*locationArbitrage("J"),*/ locationArbitrage("F"))
+  val scenarios = Seq(locationArbitrage("J"), locationArbitrage("F"))
 
   //europe offers seems broken .. largely current month only
   //val scenario = europeanBreaks
@@ -201,14 +198,14 @@ object Spike extends App {
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
     val best = groupByOff(k).head
     s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd}-${s.cabin})").mkString(", ")}" +
-      " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
+      " -> " + GoogleFlight(Trip(best.cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
   val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
   val byBrd = groupByBrd.keys.toSeq.sorted.map(k => {
     val best = groupByBrd(k).head
     s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off}-${s.cabin})").mkString(", ")}" +
-      " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
+      " -> " + GoogleFlight(Trip(best.cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
   val deadBrd = scenarios.map(_.brds).flatten.diff(rights.map(_.brd))
@@ -280,8 +277,7 @@ object Spike extends App {
   val title = "        BEST" + Months.nextMonthsFromNow.map(m => s"  $m").mkString + "\n"
 
   println(
-    s"\n\nCabin: $cabin" +
-    "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(Trip(cabin, Route(s.brd, s.off)), s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
+    "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(Trip(s.cabin, Route(s.brd, s.off)), s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
     "\n\nBest by Destination:\n" + byOff.mkString("\n") +
     "\n\nBest by Origin:\n" + byBrd.mkString("\n") +
     "\n\nDead Destinations: " + deadOff.mkString(", ") +
@@ -324,7 +320,11 @@ case class Summary(records: Seq[Record]) {
   val lowestPrice = bestRecords.head.Price.Amount.Amount.round
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
-  val cabin = records.head.Cabin(0).toUpper
+  val cabin = records.head.Cabin match {
+    case "first" => "F"
+    case "business" => "J"
+    case x => throw new RuntimeException(s"Unsupported cabin: ${records.head.Cabin}")
+  }
   private val ccy = first.Price.Amount.CurrencyCode
   val originalPrice = s"(${lowestPrice} ${ccy})"
 
