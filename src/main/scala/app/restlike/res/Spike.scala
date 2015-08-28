@@ -170,23 +170,23 @@ object Spike extends App {
 
   val nonFoffS = Seq("SEL", "BUE", "BKK", "CTU")
 
-  val locationArbitrage = Scenario("Location Arbitrage", cabin, nonFoffS,
+  def locationArbitrage(cabin: String) = Scenario("Location Arbitrage", cabin, nonFoffS,
     brds = /*Set("LON") ++ */arbitragable,
     offs = east
   )
 
   //TODO: almost all will have no 'F' here
-  val europeanBreaks = Scenario("European Breaks", cabin, nonFoffS,
+  def europeanBreaks(cabin: String) = Scenario("European Breaks", cabin, nonFoffS,
     brds = Set("LON"),
     offs = arbitragable ++ Set("RAK", "IBZ")
   )
 
-  val scenario = locationArbitrage
+  val scenarios = Seq(/*locationArbitrage("J"),*/ locationArbitrage("F"))
 
   //europe offers seems broken .. largely current month only
   //val scenario = europeanBreaks
 
-  val results = scenario.run(cache)
+  val results = scenarios.map(_.run(cache)).flatten
 
   val rights = results.flatten.flatMap(r => {
     r.outcome match {
@@ -211,8 +211,8 @@ object Spike extends App {
       " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
-  val deadBrd = scenario.brds -- rights.map(_.brd)
-  val deadOff = scenario.offs -- rights.map(_.off)
+  val deadBrd = scenarios.map(_.brds).flatten.diff(rights.map(_.brd))
+  val deadOff = scenarios.map(_.offs).flatten.diff(rights.map(_.off))
 
   //TODO: include TP and price per TP
   //NYC, CTU: 140,
@@ -293,7 +293,7 @@ object Spike extends App {
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
-  private var keys = Iterator.continually(Seq("2aavzxmrfa7aaak4a48jyj2z", "s4ybmj2vpp5vubspgj9dv6ag").toStream).flatten
+  private var keys = Iterator.continually(Seq(/*"2aavzxmrfa7aaak4a48jyj2z",*/ "s4ybmj2vpp5vubspgj9dv6ag").toStream).flatten
 
   def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, keys.next()))))
   def unapply(req: Request): Option[String] = if (req.method == Method.GET) Some(req.url) else None
