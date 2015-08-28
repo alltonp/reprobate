@@ -43,7 +43,7 @@ case class Scenario(name: String, cabinCode: String, nonFoffS: Seq[String], brds
       val trip = Trip(cabinCode, Route(brd, off))
       if (brd == off) ApiCall(trip, Left(s"Pointless"))
       else if (ignored.contains(s"$brd-$off")) ApiCall(trip, Left(s"Ignored"))
-      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { println(s"ignored $cabinCode for $off"); ApiCall(trip, Left(s"Cabin not available")) }
+      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { ApiCall(trip, Left(s"Cabin not available")) }
       else if (cache.contains(trip.name)) { ApiCall(trip, cache.load(trip.name)) }
       else { print("-"); API.doIt(trip, cache) }
     })
