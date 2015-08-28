@@ -153,7 +153,7 @@ object Spike extends App {
     "LIS", "OPO")
 
   val west = Set(
-    "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", "AUS", //"SFO",
+    "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", "AUS", "SFO",
     "RIO", "SAO",
     "BUE"
   )
