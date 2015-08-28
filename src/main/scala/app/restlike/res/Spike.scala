@@ -38,15 +38,15 @@ case class Cache(date: LocalDate) {
 }
 
 case class Scenario(name: String, cabinCode: String, nonFoffS: Seq[String], brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
-  def run(cache: Cache) = brds.toSeq.map(brd => {
+  def run(cache: Cache, dryRun: Boolean = false) = brds.toSeq.map(brd => {
     offs.toSeq.map(off => {
       val trip = Trip(cabinCode, Route(brd, off))
-      if (brd == off) ApiCall(trip, Left(s"Pointless"))
-      else if (ignored.contains(s"$brd-$off")) ApiCall(trip, Left(s"Ignored"))
-      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { ApiCall(trip, Left(s"Cabin not available")) }
-      else if (cache.contains(trip.name)) { ApiCall(trip, cache.load(trip.name)) }
-      else { print("-"); API.doIt(trip, cache) }
-    })
+      if (brd == off) Some(ApiCall(trip, Left(s"Pointless")))
+      else if (ignored.contains(s"$brd-$off")) Some(ApiCall(trip, Left(s"Ignored")))
+      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { Some(ApiCall(trip, Left(s"Cabin not available"))) }
+      else if (cache.contains(trip.name)) { Some(ApiCall(trip, cache.load(trip.name))) }
+      else { if (dryRun) None else { print("-"); Some(API.doIt(trip, cache)) }  }
+    }).flatten
   })
 }
 
@@ -183,7 +183,7 @@ object Spike extends App {
   //europe offers seems broken .. largely current month only
   //val scenario = europeanBreaks
 
-  val results = scenarios.map(_.run(cache)).flatten
+  val results = scenarios.map(_.run(cache, dryRun = true)).flatten
 
   val rights = results.flatten.flatMap(r => {
     r.outcome match {
