@@ -175,7 +175,7 @@ object Spike extends App {
     offs = west
   )
 
-  //TODO: almost all ewill have now 'F' here
+  //TODO: almost all will have no 'F' here
   val europeanBreaks = Scenario("European Breaks", cabin, nonFoffS,
     brds = Set("LON"),
     offs = arbitragable ++ Set("RAK", "IBZ")
