@@ -142,7 +142,9 @@ object Spike extends App {
   val cache = Cache(systemClock().date)
 
   val arbitragable = Set(
-    "CPH", "OSL", "HEL", "STO", "GOT",
+    "CPH",
+    "OSL", //try BGO and SVG too
+    "HEL", "STO", "GOT",
     "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/
     "DUB", "BFS",
     "MAD", "BCN",
@@ -154,7 +156,7 @@ object Spike extends App {
 
   val west = Set(
     "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", "AUS", "SFO",
-    "SJD", "SJO",
+//    "SJD", "SJO", - upcoming
     "RIO", "SAO", "BUE"
   )
 
