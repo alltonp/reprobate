@@ -41,9 +41,9 @@ case class Scenario(name: String, cabinCode: String, nonFoffS: Seq[String], brds
   def run(cache: Cache, dryRun: Boolean = false) = brds.toSeq.map(brd => {
     offs.toSeq.map(off => {
       val trip = Trip(cabinCode, Route(brd, off))
-      if (brd == off) Some(ApiCall(trip, Left(s"Pointless")))
+      if (brd == off) None //Some(ApiCall(trip, Left(s"Pointless")))
       else if (ignored.contains(s"$brd-$off")) Some(ApiCall(trip, Left(s"Ignored")))
-      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { Some(ApiCall(trip, Left(s"Cabin not available"))) }
+      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { None /*Some(ApiCall(trip, Left(s"Cabin not available")))*/ }
       else if (cache.contains(trip.name)) { Some(ApiCall(trip, cache.load(trip.name))) }
       else { if (dryRun) None else { print("-"); Some(API.doIt(trip, cache)) }  }
     }).flatten
@@ -154,8 +154,8 @@ object Spike extends App {
 
   val west = Set(
     "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", "AUS", "SFO",
-    "RIO", "SAO",
-    "BUE"
+    "SJD", "SJO",
+    "RIO", "SAO", "BUE"
   )
 
   val east = Set(
@@ -183,7 +183,7 @@ object Spike extends App {
   //europe offers seems broken .. largely current month only
   //val scenario = europeanBreaks
 
-  val results = scenarios.map(_.run(cache, dryRun = false)).flatten
+  val results = scenarios.map(_.run(cache, dryRun = true)).flatten
 
   val rights = results.flatten.flatMap(r => {
     r.outcome match {
@@ -290,7 +290,7 @@ case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
   private val keys = Iterator.continually(Seq(
-//    "2aavzxmrfa7aaak4a48jyj2z",
+    "2aavzxmrfa7aaak4a48jyj2z",
     "s4ybmj2vpp5vubspgj9dv6ag"
   ).toStream).flatten
 
