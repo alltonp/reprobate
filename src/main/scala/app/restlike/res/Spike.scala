@@ -37,13 +37,14 @@ case class Cache(date: LocalDate) {
   private def fileFor(route: String) = Paths.get(s"${dir.path}/${route}.json")
 }
 
-case class Scenario(name: String, cabinCode: String, brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
+case class Scenario(name: String, cabinCode: String, nonFoffS: Seq[String], brds: Set[String], offs: Set[String], ignored: Set[String] = Set.empty) {
   def run(cache: Cache) = brds.toSeq.map(brd => {
     offs.toSeq.map(off => {
       val trip = Trip(cabinCode, Route(brd, off))
       if (brd == off) ApiCall(trip, Left(s"Pointless"))
       else if (ignored.contains(s"$brd-$off")) ApiCall(trip, Left(s"Ignored"))
-      else if (cache.contains(trip.name)) { /*print("+");*/ ApiCall(trip, cache.load(trip.name)) }
+      else if (cabinCode == "F" && nonFoffS.contains(trip.route.off)) { println(s"ignored $cabinCode for $off"); ApiCall(trip, Left(s"Cabin not available")) }
+      else if (cache.contains(trip.name)) { ApiCall(trip, cache.load(trip.name)) }
       else { print("-"); API.doIt(trip, cache) }
     })
   })
@@ -140,8 +141,6 @@ case class GoogleFlight(trip: Trip, month: String) {
 object Spike extends App {
   val cache = Cache(systemClock().date)
 
-//  val nonFirst = SEL, BUE, BKK, CTU
-
   val arbitragable = Set(
     "CPH", "OSL", "HEL", "STO", "GOT",
     "FRA", "DUS", "MUC", "HAM", "BER", /*"CGN" (dead),*/
@@ -167,14 +166,17 @@ object Spike extends App {
   )
 
   //TODO: ultimately support both cabins
-  val cabin = "J"
+  val cabin = "F"
 
-  val locationArbitrage = Scenario("Location Arbitrage", cabin,
+  val nonFoffS = Seq("SEL", "BUE", "BKK", "CTU")
+
+  val locationArbitrage = Scenario("Location Arbitrage", cabin, nonFoffS,
     brds = /*Set("LON") ++ */arbitragable,
     offs = west
   )
 
-  val europeanBreaks = Scenario("European Breaks", cabin,
+  //TODO: almost all ewill have now 'F' here
+  val europeanBreaks = Scenario("European Breaks", cabin, nonFoffS,
     brds = Set("LON"),
     offs = arbitragable ++ Set("RAK", "IBZ")
   )
