@@ -3,13 +3,8 @@ package app.agent
 import app.ServiceFactory.dateFormats
 import app.model.Incident
 import app.server.AllRunsStatusUpdate
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
 import im.mange.jetboot._
-import im.mange.jetboot.bootstrap3.Bootstrap._
-import im.mange.jetboot.bootstrap3.GridSystem
-import im.mange.jetboot.bootstrap3.GridSystem._
-import im.mange.jetboot.widget.SimpleTable._
+import im.mange.jetpac._
 import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
 
 import scala.xml.Unparsed
@@ -24,11 +19,11 @@ case class IncidentsAgent() extends Renderable {
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) =
     if (update.totalIncidents == 0) body.empty else body.fill(layout(update))
 
-  private def layout(update: AllRunsStatusUpdate) = GridSystem.row(col(12, render(update.openIncidents, update.closedIncidents)))
+  private def layout(update: AllRunsStatusUpdate) = Bs.row(col(12, render(update.openIncidents, update.closedIncidents)))
 
   //TODO: pull out presentation
   private def render(open: List[Incident], closed: List[Incident]) = {
-    Composite(
+    R(
       if (!open.isEmpty) tablify(tableHeaders("Open Incidents: " + open.size), rows(open)) else R(),
       if (!closed.isEmpty) tablify(tableHeaders("Closed Incidents: " + closed.size), rows(closed)) else R())
   }
@@ -56,5 +51,5 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(None, simpleTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
 }

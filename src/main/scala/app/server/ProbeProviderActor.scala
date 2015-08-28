@@ -9,9 +9,11 @@ import app.model._
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.dogfood.{GetProbeStatuses, ProbeStatuses}
-import im.mange.jetboot.comet.{Subscribe, Subscriber, Unsubscribe}
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
+import im.mange.jetboot._
+import im.mange.jetpac._
+import im.mange.jetpac.comet._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._

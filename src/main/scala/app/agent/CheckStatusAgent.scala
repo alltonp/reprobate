@@ -2,14 +2,11 @@ package app.agent
 
 import app.model.Probe
 import app.server.{ProbeFailure, ProbeStatusUpdate}
-import im.mange.jetboot.Renderable
+import im.mange.jetboot._
+import im.mange.jetpac._
 import im.mange.jetboot.widget.Spacer
 
 case class CheckStatusAgent(probe: Probe) extends Renderable {
-  import im.mange.jetboot.Css._
-  import im.mange.jetboot.Html._
-  import im.mange.jetboot.bootstrap3.Bootstrap._
-
   private val content = div(id = Some("checkStatus_" + probe.id))
 
   def render = content.render

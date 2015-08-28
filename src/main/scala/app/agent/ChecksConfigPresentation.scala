@@ -1,13 +1,10 @@
 package app.agent
 
 import app.model.ChecksHistory
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
-import im.mange.jetboot.bootstrap3.Bootstrap._
-import im.mange.jetboot.widget.SimpleTable._
+import im.mange.jetboot._
+import im.mange.jetpac._
 import im.mange.jetboot.widget._
 import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
-import im.mange.jetboot.{R, Renderable}
 
 //TODO: consider making this live and encode the status in the row colour for inactive, open etc
 //TODO: maybe ENV first
@@ -72,13 +69,11 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(None, simpleTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
 }
 
 @deprecated("Use LinkAnchor() instead", "01/05/2015")
 trait LinkButton extends Button {
-  import im.mange.jetboot.Js._
-
   //TODO: target should be configurable
   def url: String
   val onClick = nothing

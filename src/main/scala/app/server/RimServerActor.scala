@@ -1,12 +1,12 @@
 package app.server
 
 import app.restlike.rim.Model
-import im.mange.jetboot.Bangable
-import im.mange.jetboot.comet.{PushToAllSubscribers, Subscriber, MulticastLiftActor, MessageCapturingLiftActor}
+import im.mange.jetpac.Bangable
+import im.mange.jetpac.comet.{PushToAllSubscribers, Subscriber, MulticastLiftActor, MessageCapturingLiftActor}
 import net.liftweb.actor.LiftActor
 
 class RimServerActor extends MessageCapturingLiftActor with MulticastLiftActor with Bangable[Any] {
-  override def onCapturedMessage(message: Any, actor: LiftActor) { println(s"$this: $message $actor") }
+  override def onCapturedMessage(message: Any) { }
 
   def handleMessage: PartialFunction[Any, Unit] = {
     case i:ModelChanged => this ! PushToAllSubscribers(i)

@@ -1,7 +1,7 @@
 package app.server
 
 import app.model._
-import im.mange.jetboot.comet.Subscriber
+import im.mange.jetpac.comet.Subscriber
 
 //import app.comet.Subscriber
 import org.joda.time.LocalDateTime

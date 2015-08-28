@@ -2,12 +2,10 @@ package app.agent
 
 import app.ServiceFactory._
 import im.mange.jetboot.widget.Spacer
-import im.mange.jetboot.{Composite, R, Renderable}
-import im.mange.jetboot.Html._
-import im.mange.jetboot.Css._
+import im.mange.jetboot._
+import im.mange.jetpac._
 import app.server.AllRunsStatusUpdate
 import java.text.DecimalFormat
-import im.mange.jetboot.bootstrap3.Bootstrap._
 
 case class ChecksSummaryAgent() extends Renderable {
   private val formatter = new DecimalFormat( "#,###,###,###" )
@@ -16,12 +14,12 @@ case class ChecksSummaryAgent() extends Renderable {
 
   def render = panel.render
 
-  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = body.fill(Composite(
+  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = body.fill(
     div(
       span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h4").styles(padding("40px")),
       span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h4").styles(padding("40px")),
       span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px")),
       span(R(<small>last updated</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime))).classes("h4").styles(padding("40px"))
     )
-  ))
+  )
 }

@@ -4,14 +4,15 @@ import app.ServiceFactory._
 import app.agent.RootAgent
 import app.model.Broadcast
 import app.server._
-import im.mange.jetboot.Js._
-import im.mange.jetboot.comet._
+import im.mange.jetboot._
+import im.mange.jetpac._
+import im.mange.jetpac.comet._
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 
 //TODO: push probeProviderActor into the Agent (and rename the agent)
 class AppCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
-  override def onCapturedMessage(message: Any, actor: LiftActor) { /*println(s"$this got a $message")*/ }
+  override def onCapturedMessage(message: Any) { /*println(s"$this got a $message")*/ }
 
   private var rootAgent: RootAgent = _
 

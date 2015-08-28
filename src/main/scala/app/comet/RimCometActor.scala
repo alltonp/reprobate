@@ -5,14 +5,11 @@ import app.restlike.common.Colours
 import app.restlike.common.Colours._
 import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
-import im.mange.jetboot.bootstrap3.Bootstrap
-import im.mange.jetboot.bootstrap3.GridSystem._
-import im.mange.jetboot.comet._
-import im.mange.jetboot.css.{Styles, Classes}
-import im.mange.jetboot.page.CometPage
 import im.mange.jetboot._
+import im.mange.jetpac.comet._
+import im.mange.jetpac._
+import im.mange.jetpac.css.{Classes, Styles}
+import im.mange.jetpac.page.CometPage
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 import net.liftweb.http.{SHtml, S}
@@ -89,7 +86,7 @@ case class ToggleButton(id: String, label: String, buttonClasses: Classes, expan
 }
 
 //TODO: pull up
-case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
+case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Renderable {
   import Html._
 
   println("refresh")
@@ -103,18 +100,17 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
   def render = {
-    import im.mange.jetboot.bootstrap3.GridSystem._
     import Css._
 
     div(
-      containerFluid(
-        row(col(12,
+      Bs.containerFluid(
+        Bs.row(col(12,
           div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
             span(backlogToggle).styles(marginLeft("2px"))
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
-        row(col(12,
+        Bs.row(col(12,
           div(
             div(
               div(boardTerminal).styles(display("table-cell")),
@@ -168,7 +164,7 @@ case class RimAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rende
 }
 
 class RimCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
-  override def onCapturedMessage(message: Any, actor: LiftActor) {}
+  override def onCapturedMessage(message: Any) {}
 
   private var rootAgent: RimAgent = _
 

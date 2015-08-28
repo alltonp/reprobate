@@ -1,6 +1,7 @@
 package app.agent
 
-import im.mange.jetboot.Html._
+import im.mange.jetboot._
+import im.mange.jetpac._
 import im.mange.jetboot.widget.{Button, ButtonPresentation}
 
 //TODO: theres a widget in here somewhere ... jetpac

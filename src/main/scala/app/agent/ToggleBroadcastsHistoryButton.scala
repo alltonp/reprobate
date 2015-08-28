@@ -1,7 +1,8 @@
 package app.agent
 
 import im.mange.jetboot.widget.ButtonPresentation
-import im.mange.jetboot.Html._
+import im.mange.jetboot._
+import im.mange.jetpac._
 
 case class ToggleBroadcastsHistoryButton(parent: RootAgent) extends ServerSideButton {
   private var shown = false

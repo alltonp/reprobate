@@ -2,9 +2,8 @@ package app.agent
 
 import app.server.ProbeConfigResponse
 import app.ui.BigSpinner
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
-import im.mange.jetboot.Renderable
+import im.mange.jetboot._
+import im.mange.jetpac._
 
 case class ChecksConfigAgent() extends Renderable {
   private val holder = div(Some("checksConfig")).classes("hidden").styles(marginTop("5px"))

@@ -10,7 +10,7 @@ import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
 import app.view.{RimView, AppView}
 import app.{ServiceFactory}
-import im.mange.jetboot.page.Pages
+import im.mange.jetpac.page.Pages
 import net.liftmodules.JQueryModule
 import net.liftweb.common._
 import net.liftweb.http._
@@ -46,11 +46,8 @@ class Boot extends Loggable {
 //    }
 
     val protectedPages = Seq(
-//      //      Nick(topBar, requiresAuth),
       AppPage("index"),
       RimPage("rim", topBar)//,
-//      RimPage("index")//,
-//      //      CustodianRec(topBar, requiresAuth)
     )
     Pages(
       protectedPages ++ Seq(

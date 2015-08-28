@@ -2,16 +2,14 @@ package app.agent
 
 import app.ServiceFactory.dateFormats
 import app.server.ProbeFailure
-import im.mange.jetboot._
-import Css._
-import Js._
-import im.mange.jetboot.Html._
+import im.mange.jetboot.Bss
+import im.mange.jetpac._
 import java.util.UUID
-import im.mange.jetboot.bootstrap3.Bootstrap._
 import im.mange.jetboot.widget.Spacer
 import net.liftweb.http.js.jquery.JqJsCmds.FadeOut
 import app.model.Broadcast
 import scala.xml.Unparsed
+import Bss._
 
 case class BroadcastFlashAgent() extends Renderable {
   private val body = div(id = Some("broadcastFlash"))//.styles(float(left))

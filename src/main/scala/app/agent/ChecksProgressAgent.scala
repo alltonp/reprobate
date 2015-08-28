@@ -1,9 +1,8 @@
 package app.agent
 
 import app.server.CurrentRunStatusUpdate
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
 import im.mange.jetboot._
+import im.mange.jetpac._
 
 case class ChecksProgressAgent() extends Renderable {
   private val body = div(id = Some("checksProgress"))

@@ -3,16 +3,15 @@ package app.agent
 //import app.comet.Subscriber
 
 import app.comet.AppCometActor
-import im.mange.jetboot.bootstrap3.{Bootstrap, GridSystem}
 import app.server._
-import im.mange.jetboot.Css._
+import im.mange.jetboot._
+import im.mange.jetpac._
 import app.server.AllRunsStatusUpdate
 import app.server.ProbeFailure
 import app.server.CurrentRunStatusUpdate
 import app.model.{Broadcast, Probe}
-import im.mange.jetboot.page.CometPage
-import im.mange.jetboot.{Js, Renderable, Composite}
 import app.server.ProbeStatusUpdate
+import im.mange.jetpac.page.CometPage
 import net.liftweb.sitemap.Loc
 
 //TODO:
@@ -49,11 +48,7 @@ import net.liftweb.sitemap.Loc
 
 case class AppPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[AppCometActor]
 
-case class RootAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Renderable {
-  import im.mange.jetboot.Html._
-  import Js._
-  import GridSystem._
-
+case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Renderable {
   private val allProbesStatus = div(id = Some("allProbesStatus"))
   private val checksProgressAgent = ChecksProgressAgent()
   private val checksSummaryAgent = ChecksSummaryAgent()
@@ -83,20 +78,20 @@ case class RootAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rend
 
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
-  private def layout = container(
-    row(col(12, Composite(broadcastButton, configButton, statusMessageAgent))),
-    row(col(12, checksProgressAgent)),
-    row(col(12, checksSummaryAgent)),
-    row(col(12, broadcastFlashAgent)),
-    row(col(12, allProbesStatus)),
-    row(col(12, incidentsAgent)),
-    row(col(12, checksConfigAgent)),
-    row(col(12, broadcastsHistoryAgent))
+  private def layout = Bs.container(
+    Bs.row(col(12, R(broadcastButton, configButton, statusMessageAgent))),
+    Bs.row(col(12, checksProgressAgent)),
+    Bs.row(col(12, checksSummaryAgent)),
+    Bs.row(col(12, broadcastFlashAgent)),
+    Bs.row(col(12, allProbesStatus)),
+    Bs.row(col(12, incidentsAgent)),
+    Bs.row(col(12, checksConfigAgent)),
+    Bs.row(col(12, broadcastsHistoryAgent))
   )
 
   def onInit(allProbes: List[Probe]) = {
     checkStatusAgents = allProbes.map(CheckStatusAgent(_))
-    allProbesStatus.fill(Composite(checkStatusAgents:_*))
+    allProbesStatus.fill(R(checkStatusAgents))
   }
 
   def onProbeStatusUpdate(update: ProbeStatusUpdate) =
@@ -120,6 +115,6 @@ case class RootAgent(subscriber: im.mange.jetboot.comet.Subscriber) extends Rend
   def cleanup() {}
 
   //TODO: should probably be a ButtonGroup
-  private def configButton = span(toggleCheckConfigButton).classes(Bootstrap.pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(Bootstrap.pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }

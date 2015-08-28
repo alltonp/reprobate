@@ -1,10 +1,9 @@
 package app.agent
 
 import app.server.Message
-import im.mange.jetboot.Css._
-import im.mange.jetboot.Html._
+import im.mange.jetboot._
+import im.mange.jetpac._
 import im.mange.jetboot.widget.Spacer
-import im.mange.jetboot.{R, Renderable}
 
 //TODO: is there a widget here ... something with a body div that we fill, empty etc ContainerAgent perhaps?
 case class StatusMessageAgent() extends Renderable {
