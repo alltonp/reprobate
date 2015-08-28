@@ -76,9 +76,7 @@ object API {
     val url = s"https://api.ba.com/rest-v1/v1/flightOfferBasic;departureCity=${trip.route.brd};arrivalCity=${trip.route.off};cabin=${trip.baCabinName};journeyType=roundTrip;range=monthLow.json"
 
     //TODO: next
-    //https://api.ba.com/rest-v1/v1/flightOfferMktAffiliates;departureDateTimeOutbound=2016-01-01T12:00:00:00Z;locationCodeOriginOutbound=LHR;locationCodeDestinationOutbound=JFK;departureDateTimeInbound=2016-01-08T12:00:00:00Z;locationCodeOriginInbound=JFK;locationCodeDestinationInbound=LHR;cabin=Economy;ADT=1;CHD=0;INF=0;format=.json
-
-    //TODO: save down past results
+    //https://api.ba.com/rest-v1/v1/flightOfferMktAffiliates;departureDateTimeOutbound=2016-01-01T12:00:00Z;locationCodeOriginOutbound=LHR;locationCodeDestinationOutbound=JFK;departureDateTimeInbound=2016-01-08T12:00:00Z;locationCodeOriginInbound=JFK;locationCodeDestinationInbound=LHR;cabin=Business;ADT=1;CHD=0;INF=0;format=.json
 
     val json = getJson(url)
     cache.store(trip.name, json)
@@ -155,20 +153,25 @@ object Spike extends App {
     "MIL", "ROM",
     "LIS", "OPO")
 
+  val west = Set(
+    "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
+    "RIO", "SAO",
+    "BUE"
+  )
+
+  val east = Set(
+    "DXB",
+    "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
+    "SEL",
+    "SYD"
+  )
+
   //TODO: ultimately support both cabins
   val cabin = "J"
 
   val locationArbitrage = Scenario("Location Arbitrage", cabin,
     brds = /*Set("LON") ++ */arbitragable,
-    offs = Set(
-      "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
-//      "DXB",
-//      "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
-//      "SEL",
-//      "SYD",
-      "RIO", "SAO",
-      "BUE"
-    )
+    offs = west
   )
 
   val europeanBreaks = Scenario("European Breaks", cabin,
