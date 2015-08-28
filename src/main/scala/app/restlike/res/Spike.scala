@@ -172,7 +172,7 @@ object Spike extends App {
 
   val locationArbitrage = Scenario("Location Arbitrage", cabin, nonFoffS,
     brds = /*Set("LON") ++ */arbitragable,
-    offs = west
+    offs = east
   )
 
   //TODO: almost all will have no 'F' here
@@ -293,10 +293,9 @@ object Spike extends App {
 case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
-  //s4ybmj2vpp5vubspgj9dv6ag
-  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "2aavzxmrfa7aaak4a48jyj2z"))))
-//  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "39kj4ry2ktcxwwhjv9mqtm4w"))))
-//  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, "faje8sxhy274vk2a9yhpeuth"))))
+  private var keys = Iterator.continually(Seq("2aavzxmrfa7aaak4a48jyj2z", "s4ybmj2vpp5vubspgj9dv6ag").toStream).flatten
+
+  def apply(url: Url) = Request(Method.GET, url, Headers(List((CLIENT_KEY, keys.next()))))
   def unapply(req: Request): Option[String] = if (req.method == Method.GET) Some(req.url) else None
 }
 
