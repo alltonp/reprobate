@@ -153,13 +153,13 @@ object Spike extends App {
     "LIS", "OPO")
 
   val west = Set(
-    "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", //"SFO",
+    "BOS", "NYC", "PHL", "CHI", "LAX", "MIA", "AUS", //"SFO",
     "RIO", "SAO",
     "BUE"
   )
 
   val east = Set(
-    "DXB",
+//    "DXB",
     "TYO", "HKG", "CTU" ,"SIN", "KUL", "SHA", "BKK", "BJS",
     "SEL",
     "SYD"
@@ -169,7 +169,7 @@ object Spike extends App {
 
   def locationArbitrage(cabin: String) = Scenario("Location Arbitrage", cabin, nonFoffS,
     brds = /*Set("LON") ++ */arbitragable,
-    offs = east
+    offs = east ++ west
   )
 
   //TODO: almost all will have no 'F' here
@@ -183,7 +183,7 @@ object Spike extends App {
   //europe offers seems broken .. largely current month only
   //val scenario = europeanBreaks
 
-  val results = scenarios.map(_.run(cache, dryRun = true)).flatten
+  val results = scenarios.map(_.run(cache, dryRun = false)).flatten
 
   val rights = results.flatten.flatMap(r => {
     r.outcome match {
@@ -208,8 +208,8 @@ object Spike extends App {
       " -> " + GoogleFlight(Trip(best.cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
-  val deadBrd = scenarios.map(_.brds).flatten.diff(rights.map(_.brd))
-  val deadOff = scenarios.map(_.offs).flatten.diff(rights.map(_.off))
+  val deadBrd = scenarios.map(_.brds).flatten.distinct.diff(rights.map(_.brd))
+  val deadOff = scenarios.map(_.offs).flatten.distinct.diff(rights.map(_.off))
 
   //TODO: include TP and price per TP
   //NYC, CTU: 140,
@@ -290,7 +290,7 @@ case object CLIENT_KEY extends HttpHeader {val name = "client-key"}
 
 object JSON_GET {
   private val keys = Iterator.continually(Seq(
-    "2aavzxmrfa7aaak4a48jyj2z",
+//    "2aavzxmrfa7aaak4a48jyj2z",
     "s4ybmj2vpp5vubspgj9dv6ag"
   ).toStream).flatten
 
