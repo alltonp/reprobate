@@ -279,9 +279,9 @@ object Spike extends App {
   println(
     "\n\nBest by Price:\n" + title + byPrice.map(s => s + " -> " + GoogleFlight(Trip(s.cabin, Route(s.brd, s.off)), s.lowestMonth).url + " " + s.originalPrice).mkString("\n") +
     s"\n\nBest by Destination (${byOff.size}):\n" + byOff.mkString("\n") +
-    s"\n\nBest by Origin (${byBrd.size}):\n" + byBrd.mkString("\n") +
-    "\n\nDead Destinations: " + deadOff.mkString(", ") +
-    "\nDead Origins:      " + deadBrd.mkString(", ") +
+    s"\n\nBest by Origin (${byBrd.size}):\n" + byBrd.mkString("\n") + "\n" +
+    (if (deadOff.isEmpty) "" else "\nDead Destinations: " + deadOff.mkString(", ")) +
+    (if (deadBrd.isEmpty) "" else "\nDead Origins:      " + deadBrd.mkString(", ")) +
    s"\nRoutes: ${results.flatten.size}"
   )
 }
