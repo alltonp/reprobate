@@ -200,14 +200,14 @@ object Spike extends App {
   val groupByOff = rights.sortBy(s => (s.off, s.lowestedFx) ).groupBy(_.off)
   val byOff = groupByOff.keys.toSeq.sorted.map(k => {
     val best = groupByOff(k).head
-    s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd})").mkString(", ")}" +
+    s"$k: ${groupByOff(k).take(10).map(s => s"${s.lowestedFx} (${s.brd}-${s.cabin})").mkString(", ")}" +
       " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
   val groupByBrd = rights.sortBy(s => (s.brd, s.lowestedFx) ).groupBy(_.brd)
   val byBrd = groupByBrd.keys.toSeq.sorted.map(k => {
     val best = groupByBrd(k).head
-    s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off})").mkString(", ")}" +
+    s"$k: ${groupByBrd(k).take(10).map(s => s"${s.lowestedFx} (${s.off}-${s.cabin})").mkString(", ")}" +
       " -> " + GoogleFlight(Trip(cabin, Route(best.brd, best.off)), best.lowestMonth).url + " " + best.originalPrice
   })
 
@@ -299,7 +299,7 @@ object JSON_GET {
   def unapply(req: Request): Option[String] = if (req.method == Method.GET) Some(req.url) else None
 }
 
-case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMonth: String, Price: Price) {
+case class Record(DepartureCityCode: String, ArrivalCityCode: String, TravelMonth: String, Price: Price, Cabin: String) {
   override def toString() = s"$DepartureCityCode-$ArrivalCityCode $TravelMonth ${Price.Amount.Amount} ${Price.Amount.CurrencyCode}"
 }
 
@@ -324,6 +324,7 @@ case class Summary(records: Seq[Record]) {
   val lowestPrice = bestRecords.head.Price.Amount.Amount.round
   val off = records.head.ArrivalCityCode
   val brd = records.head.DepartureCityCode
+  val cabin = records.head.Cabin(0).toUpper
   private val ccy = first.Price.Amount.CurrencyCode
   val originalPrice = s"(${lowestPrice} ${ccy})"
 
@@ -336,6 +337,6 @@ case class Summary(records: Seq[Record]) {
 
   private def pad(v: String) = if (v.length == 3) " " + v else v
 
-  override def toString() = s"${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx}: " +
+  override def toString() = s"${cabin}-${first.DepartureCityCode}-${first.ArrivalCityCode} ${lowestedFx}: " +
     records.map(r => s"${r.TravelMonth} ${fxed(r.Price.Amount.Amount.round)}").mkString(", ")
 }
