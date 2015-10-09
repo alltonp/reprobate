@@ -160,19 +160,40 @@ object Commander {
   }
 
   private def onDeferIssue(ref: String, args: List[String], currentModel: Model) = {
+    val pattern = """(\d+)([dwmy])""".r
+
     //TODO: we need to properly process args
     //TODO: we need to handle dodgy input
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
-      val deferredDate = args.head.trim match {
-        case "1d" => systemClock().date.plusDays(1)
-        case "1w" => systemClock().date.plusWeeks(1)
-        case "1m" => systemClock().date.plusMonths(1)
-        case "1y" => systemClock().date.plusYears(1)
-        case _ => systemClock().date//.plusYears(1)
+      val deferFor = args.head.trim
+
+      val parsed = pattern.findAllMatchIn(deferFor.toLowerCase).map(f => {
+        (f.group(1).trim, f.group(2).trim)
+      }).toSeq.headOption
+
+      val deferredDate = parsed match {
+        case Some((i, "d")) => Some(systemClock().date.plusDays(i.toInt))
+        case Some((i, "w")) => Some(systemClock().date.plusWeeks(i.toInt))
+        case Some((i, "m")) => Some(systemClock().date.plusMonths(i.toInt))
+        case Some((i, "y")) => Some(systemClock().date.plusYears(i.toInt))
+        case _ => None
       }
-      val updatedThing = found.copy(date = Some(deferredDate))
-      val updatedModel = currentModel.updateIssue(updatedThing)
-      Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(updatedThing)), Some(updatedModel))
+
+//      val deferredDate = args.head.trim match {
+//        case "1d" => systemClock().date.plusDays(1)
+//        case "1w" => systemClock().date.plusWeeks(1)
+//        case "1m" => systemClock().date.plusMonths(1)
+//        case "1y" => systemClock().date.plusYears(1)
+//        case _ => systemClock().date//.plusYears(1)
+//      }
+
+//      println(parsed)
+
+      deferredDate.fold(Out(Messages.problem(s"$deferFor is a not a valid duration"), None))(df => {
+        val updatedThing = found.copy(date = Some(df))
+        val updatedModel = currentModel.updateIssue(updatedThing)
+        Out(Presentation.basedOnUpdateContext(updatedModel, Seq(ref), Some(updatedThing)), Some(updatedModel))
+      })
     }
   }
 

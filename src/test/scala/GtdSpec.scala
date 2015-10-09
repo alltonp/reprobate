@@ -128,32 +128,46 @@ class GtdSpec extends WordSpec with MustMatchers {
     runAndExpect("1 /", current, expected)
   }
 
-  "defer a thing 1d" in {
+  "defer a thing xd" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusDays(1)), someTags)))
-    runAndExpect("1 / 1d", current, expected)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusDays(2)), someTags)))
+    runAndExpect("1 / 2d", current, expected)
   }
 
-  "defer a thing 1w" in {
+  "defer a thing xw" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusWeeks(1)), someTags)))
-    runAndExpect("1 / 1w", current, expected)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusWeeks(2)), someTags)))
+    runAndExpect("1 / 2w", current, expected)
   }
 
-  "defer a thing 1m" in {
+  "defer a thing xm" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusMonths(1)), someTags)))
-    runAndExpect("1 / 1m", current, expected)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusMonths(2)), someTags)))
+    runAndExpect("1 / 2m", current, expected)
   }
 
-  "defer a thing 1y" in {
+  "defer a thing xy" in {
     val issue = Thing("1", "an item", someDate, someTags)
     val current = modelWithThing(issue)
-    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusYears(1)), someTags)))
-    runAndExpect("1 / 1y", current, expected)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusYears(2)), someTags)))
+    runAndExpect("1 / 2y", current, expected)
+  }
+
+  "defer with invalid "in {
+    (pending)
+    val issue = Thing("1", "an item", someDate, someTags)
+    val current = modelWithThing(issue)
+    runAndExpect("1 / xy", current, current)
+  }
+
+  "defer with whitespace" in {
+    val issue = Thing("1", "an item", someDate, someTags)
+    val current = modelWithThing(issue)
+    val expected = current.copy(things = List(Thing("1", "an item", Some(systemClock().date.plusDays(2)), someTags)))
+    runAndExpect("1 / 2d ", current, expected)
   }
 
   //tagging
