@@ -162,8 +162,6 @@ object Commander {
   private def onDeferIssue(ref: String, args: List[String], currentModel: Model) = {
     val pattern = """(\d+)([dwmy])""".r
 
-    //TODO: we need to properly process args
-    //TODO: we need to handle dodgy input
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None)){found =>
       val deferFor = args.head.trim
 
@@ -178,16 +176,6 @@ object Commander {
         case Some((i, "y")) => Some(systemClock().date.plusYears(i.toInt))
         case _ => None
       }
-
-//      val deferredDate = args.head.trim match {
-//        case "1d" => systemClock().date.plusDays(1)
-//        case "1w" => systemClock().date.plusWeeks(1)
-//        case "1m" => systemClock().date.plusMonths(1)
-//        case "1y" => systemClock().date.plusYears(1)
-//        case _ => systemClock().date//.plusYears(1)
-//      }
-
-//      println(parsed)
 
       deferredDate.fold(Out(Messages.problem(s"$deferFor is a not a valid duration"), None))(df => {
         val updatedThing = found.copy(date = Some(df))
