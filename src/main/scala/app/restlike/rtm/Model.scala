@@ -28,30 +28,31 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
   private val renderBlocked = customRed(blocked.getOrElse(""))
 
-  private def renderStatus(model: Option[Model]) = {
-    val value = status.fold("")(" ^" + _)
-    colouredForStatus(model, value)
-  }
+//  private def renderStatus(model: Option[Model]) = {
+//    val value = status.fold("")(" ^" + _)
+//    colouredForStatus(model, value)
+//  }
 
-  private def colouredForStatus(model: Option[Model], value: String) = {
-    model.fold(value)(m =>
-      status match {
-        case None => customGrey(value)
-        case Some(x) if blocked.isDefined => customRed(value)
-        case Some(x) if x == m.beginState => customYellow(value)
-        case Some(x) if x == m.endState => customGreen(value)
-        case Some("released") => customMagenta(value)
-        case _ => customOrange(value)
-      })
-  }
+//  private def colouredForStatus(model: Option[Model], value: String) = {
+//    model.fold(value)(m =>
+//      status match {
+//        case None => customGrey(value)
+//        case Some(x) if blocked.isDefined => customRed(value)
+//        case Some(x) if x == m.beginState => customYellow(value)
+//        case Some(x) if x == m.endState => customGreen(value)
+//        case Some("released") => customMagenta(value)
+//        case _ => customOrange(value)
+//      })
+//  }
 
-  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
+//  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
 
-  def search(query: String) = indexed.contains(query)
+//  def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
+//    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
+    "???"
   }
 }
 
@@ -61,9 +62,9 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(facts: immutable.Map[String, immutable.Map[String, String]], workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
+case class Model(facts: immutable.Map[String, immutable.Map[String, String]], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
   def knows_?(who: String) = userToAka.contains(who)
-  def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
+//  def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
 
   def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
@@ -98,10 +99,10 @@ case class Model(facts: immutable.Map[String, immutable.Map[String, String]], wo
   def aka(who: String) = userToAka(who)
   def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
-  def beginState = workflowStates.head
-  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
-  def endState = workflowStates.reverse.head
-  def releasableIssues = issues.filter(_.status == Some(endState))
+//  def beginState = workflowStates.head
+//  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
+//  def endState = workflowStates.reverse.head
+//  def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
   def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 

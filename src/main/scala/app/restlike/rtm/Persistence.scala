@@ -11,13 +11,13 @@ import scala.collection.immutable
 //TODO: use app name
 object Persistence {
   private val file = Paths.get(s"${Rtm.appName}.json")
-  private val defaultStatuses = List("next", "doing", "done")
+//  private val defaultStatuses = List("next", "doing", "done")
 
   //TODO: could Model be 'T'ed up?
   def load: Universe = {
     if (!file.toFile.exists()) save(
       Universe(
-        Map("---email---" -> Model(immutable.Map[String, immutable.Map[String, String]](), defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
+        Map("---email---" -> Model(immutable.Map[String, immutable.Map[String, String]](), immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
         Map("---token---" -> "---email---")
       )
     )
