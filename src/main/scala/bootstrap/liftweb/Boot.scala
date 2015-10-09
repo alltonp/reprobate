@@ -8,6 +8,7 @@ import app.restlike.demo.Demo
 import app.restlike.rem.Rem
 import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
+import app.restlike.rtm.Rtm
 import app.view.{RimView, AppView}
 import app.{ServiceFactory}
 import im.mange.jetpac.page.Pages
@@ -73,6 +74,7 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(Rim)
     LiftRules.statelessDispatch.append(Rem)
     LiftRules.statelessDispatch.append(Gtd)
+    LiftRules.statelessDispatch.append(Rtm)
 
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
