@@ -1,8 +1,6 @@
 package app.agent
 
 import app.ServiceFactory
-import app.ServiceFactory._
-import app.restlike.common.RefProvider
 import app.restlike.rtm._
 import im.mange.little.clock.FrozenClock
 import org.joda.time.DateTime
@@ -14,11 +12,6 @@ class RtmSpec extends WordSpec with MustMatchers {
 
   //TODO: work out what examples are missing
 
-  private val next = "next"
-  private val doing = "doing"
-  private val done = "done"
-  private val released = "released"
-  private val workflowStates = List(next, doing, done)
   private val aka = "A"
   private val aka2 = "B"
   private val facts = Map[String,Map[String,String]]()
