@@ -61,7 +61,7 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
+case class Model(facts: immutable.Map[String, immutable.Map[String, String]], workflowStates: List[String], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
   def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
 
