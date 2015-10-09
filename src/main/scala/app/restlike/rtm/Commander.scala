@@ -5,7 +5,7 @@ import app.restlike.common.Colours._
 import app.restlike.common._
 
 object Commander {
-  def process(value: String, who: String, currentModel: Model, refProvider: RefProvider, token: String): Out = {
+  def process(value: String, who: String, currentModel: Model, /*refProvider: RefProvider,*/ token: String): Out = {
     val bits = value.split(" ").map(_.trim).filterNot(_.isEmpty)
     val cmd = In(bits.headOption, if (bits.isEmpty) Nil else bits.tail.toList)
 
@@ -17,21 +17,21 @@ object Commander {
     cmd match {
 //      case In(None, Nil) => onShowBoard(currentModel, aka)
       case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
-      case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
-      case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
+//      case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
+//      case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
       case In(Some("help"), Nil) => onHelp(currentModel, aka)
-      case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
+//      case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
 //      case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+//"), args) => onAddAndForwardIssue(args, currentModel, refProvider, aka)
 //      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
 //      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
 //      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
-      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
+//      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
 //      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
 //      case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
 //      case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
-      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
+//      case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
 //      case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
@@ -45,15 +45,15 @@ object Commander {
 //      case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
 //      case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
-      case In(Some(":"), Nil) => onShowTags(currentModel)
-      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
-      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
+//      case In(Some(":"), Nil) => onShowTags(currentModel)
+//      case In(Some(oldTag), args) if args.nonEmpty && args.size == 2 && args.head == ":=" => onMigrateTag(oldTag, args.drop(1).head, currentModel)
+//      case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
 //      case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
 //      case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
 //      case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
-      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
+//      case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
-      case In(Some(ref), Nil) => onShowHistoryIssue(ref, currentModel, token)
+//      case In(Some(ref), Nil) => onShowHistoryIssue(ref, currentModel, token)
       case In(head, tail) => onUnknownCommand(head, tail)
     }
   }
@@ -65,12 +65,12 @@ object Commander {
 
   private def onHelp(currentModel: Model, aka: String) = Out(Messages.help(aka), None, Nil)
 
-  private def onShowReleases(currentModel: Model, aka: String) = {
-    val all = currentModel.released.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
-    val result = if (all.isEmpty) Messages.success(s"no releases found")
-    else all
-    Out(result, None, Nil)
-  }
+//  private def onShowReleases(currentModel: Model, aka: String) = {
+//    val all = currentModel.released.reverse.flatMap(Presentation.release(currentModel, _, Some(aka)))
+//    val result = if (all.isEmpty) Messages.success(s"no releases found")
+//    else all
+//    Out(result, None, Nil)
+//  }
 
 //  private def onShowWhoIsDoingWhat(currentModel: Model) = {
 //    val akas = currentModel.akas
@@ -84,58 +84,58 @@ object Commander {
 //    Out(result, None, Nil)
 //  }
 
-  private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
-    //TODO: problem now is that history with missing email is not included .. hence the gaps
-    val all = Rtm.history(token)
-      .filter(_.ref == Some(ref))
-      .filter(_.action.isDefined)
-      .filter(_.who.isDefined)
-      .filter(_.when.isDefined)
+//  private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
+//    //TODO: problem now is that history with missing email is not included .. hence the gaps
+//    val all = Rtm.history(token)
+//      .filter(_.ref == Some(ref))
+//      .filter(_.action.isDefined)
+//      .filter(_.who.isDefined)
+//      .filter(_.when.isDefined)
+//
+////    println(s"$ref:${all.size}")
+//
+//    val addable = List("+", "+/", "+//", "+!").map(Some(_))
+//    val adds = Rtm.history(token).filter(h => addable.contains(h.ref)).reverse
+//
+//    currentModel.allIssuesIncludingReleased.map(i => {
+//      val r = adds.find(a => {
+////        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
+//        val d = a.action.getOrElse("")
+////        println(s"%${a.action} $d => ${i.description}")
+//        d == i.description
+//      })
+//      println(s"$i => $r")
+//      r
+//    })
+//    //(1) using just + +/ +// +!
+//    //for each model issue with created = None
+//    //find the first addable where description == issue.description
+//    //set created = Some(Created(addable.when, addable.who))
+//
+//    //this bit is lossy ... if we went through backwards we could in theory migrate back
+//    //(2) repeat using =
+//
+//    //save changes - will need to process issues and released seperately
+//
+//    //TODO: report on issues that are created.isEmpty
+//    //TODO: run this is as part of rim {display} for a bit
+//
+////    println(adds.mkString("\n"))
+//
+//    val issue = currentModel.findIssue(ref)
+//
+//    val result = if (issue.isEmpty) Messages.notFound(ref)
+//    else if (all.isEmpty) Messages.problem(s"no history for: $ref")
+//    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
+//    Out(result, None, Nil)
+//  }
 
-//    println(s"$ref:${all.size}")
-
-    val addable = List("+", "+/", "+//", "+!").map(Some(_))
-    val adds = Rtm.history(token).filter(h => addable.contains(h.ref)).reverse
-
-    currentModel.allIssuesIncludingReleased.map(i => {
-      val r = adds.find(a => {
-//        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
-        val d = a.action.getOrElse("")
-//        println(s"%${a.action} $d => ${i.description}")
-        d == i.description
-      })
-      println(s"$i => $r")
-      r
-    })
-    //(1) using just + +/ +// +!
-    //for each model issue with created = None
-    //find the first addable where description == issue.description
-    //set created = Some(Created(addable.when, addable.who))
-
-    //this bit is lossy ... if we went through backwards we could in theory migrate back
-    //(2) repeat using =
-
-    //save changes - will need to process issues and released seperately
-
-    //TODO: report on issues that are created.isEmpty
-    //TODO: run this is as part of rim {display} for a bit
-
-//    println(adds.mkString("\n"))
-
-    val issue = currentModel.findIssue(ref)
-
-    val result = if (issue.isEmpty) Messages.notFound(ref)
-    else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
-    Out(result, None, Nil)
-  }
-
-  private def onShowTags(currentModel: Model) = {
-    val all = currentModel.tags
-    val result = if (all.isEmpty) Messages.success(s"no tags found")
-    else Presentation.tags(all)
-    Out(result, None, Nil)
-  }
+//  private def onShowTags(currentModel: Model) = {
+//    val all = currentModel.tags
+//    val result = if (all.isEmpty) Messages.success(s"no tags found")
+//    else Presentation.tags(all)
+//    Out(result, None, Nil)
+//  }
 
 //  private def onShowAllForTag(tag: String, currentModel: Model) = {
 //    val issuesWithTag = currentModel.allIssuesIncludingReleased.filter(_.tags.contains(tag))
@@ -173,42 +173,42 @@ object Commander {
 //    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = Nil)
 //  }
 
-  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
-    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
+//    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
+//    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//
+//    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"), changed = Nil)
+//    else if (currentModel.tags.map(_.name).contains(oldTag)) {
+//      val updatedModel = currentModel.copy(
+//        issues = currentModel.issues.map(i => {
+//          migrateIssue(i)
+//        }),
+//        released = currentModel.released.map(r => {
+//          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+//        })
+//      )
+//      //TODO: should show the issues that have changed as a result
+//      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
+//    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
+//  }
 
-    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"), changed = Nil)
-    else if (currentModel.tags.map(_.name).contains(oldTag)) {
-      val updatedModel = currentModel.copy(
-        issues = currentModel.issues.map(i => {
-          migrateIssue(i)
-        }),
-        released = currentModel.released.map(r => {
-          r.copy(issues = r.issues.map(i => migrateIssue(i)))
-        })
-      )
-      //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
-    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
-  }
-
-  private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
-    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
-
-    if (currentModel.tags.map(_.name).contains(oldTag)) {
-      val updatedModel = currentModel.copy(
-        issues = currentModel.issues.map(i => {
-          migrateIssue(i)
-        }),
-        released = currentModel.released.map(r => {
-          r.copy(issues = r.issues.map(i => migrateIssue(i)))
-        })
-      )
-      //TODO: should show the issues that have changed as a result
-      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
-    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
-  }
+//  private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
+//    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
+//    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+//
+//    if (currentModel.tags.map(_.name).contains(oldTag)) {
+//      val updatedModel = currentModel.copy(
+//        issues = currentModel.issues.map(i => {
+//          migrateIssue(i)
+//        }),
+//        released = currentModel.released.map(r => {
+//          r.copy(issues = r.issues.map(i => migrateIssue(i)))
+//        })
+//      )
+//      //TODO: should show the issues that have changed as a result
+//      Out(Presentation.tags(updatedModel.tags), Some(updatedModel), changed = Nil)
+//    } else Out(Messages.problem(s"$oldTag does not exist"), changed = Nil)
+//  }
 
 //  private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
@@ -333,12 +333,12 @@ object Commander {
 //    }
 //  }
 
-  private def onRemoveIssue(ref: String, currentModel: Model) = {
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
-      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel), Nil)
-    }
-  }
+//  private def onRemoveIssue(ref: String, currentModel: Model) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+//      val updatedModel = currentModel.copy(issues = currentModel.issues.filterNot(i => i == found))
+//      Out(Messages.successfulUpdate(s"${found.render(currentModel)}"), Some(updatedModel), Nil)
+//    }
+//  }
 
   //TODO: add search to Model
 //  private def onQueryIssues(currentModel: Model, terms: List[String], aka: String) = {
@@ -355,9 +355,9 @@ object Commander {
 //    Out(result, None, Nil)
 //  }
 
-  private def onShowBacklog(currentModel: Model, aka: String) = {
-    Out(Presentation.backlog(currentModel, Some(aka)), None, Nil)
-  }
+//  private def onShowBacklog(currentModel: Model, aka: String) = {
+//    Out(Presentation.backlog(currentModel, Some(aka)), None, Nil)
+//  }
 
 //  private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
 //    val matching = currentModel.issues//.filterNot(i => i.status.isEmpty)
@@ -382,12 +382,12 @@ object Commander {
 //    Out(result, None, Nil)
 //  }
 
-  private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, None, None, refProvider) match {
-      case Left(e) => Out(e, None, Nil)
-      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel), Seq(r.created.ref))
-    }
-  }
+//  private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
+//    currentModel.createIssue(args, None, None, refProvider) match {
+//      case Left(e) => Out(e, None, Nil)
+//      case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel), Seq(r.created.ref))
+//    }
+//  }
 
 //  private def onAddAndBeginIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
 //    currentModel.createIssue(args, Some(currentModel.beginState), None, refProvider) match {
@@ -416,16 +416,16 @@ object Commander {
     Out(Messages.help(aka.toUpperCase), Some(updatedModel), Nil)
   }
 
-  private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
-    val updatedModel = currentModel.copy(priorityTags = tags)
-    //TODO: de-dupe message (using this version)
-    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
-  }
+//  private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
+//    val updatedModel = currentModel.copy(priorityTags = tags)
+//    //TODO: de-dupe message (using this version)
+//    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
+//  }
 
-  private def onShowTagPriority(who: String, currentModel: Model): Out = {
-    //TODO: de-dupe message (not this version)
-    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None, Nil)
-  }
+//  private def onShowTagPriority(who: String, currentModel: Model): Out = {
+//    //TODO: de-dupe message (not this version)
+//    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None, Nil)
+//  }
 }
 
 //TODO: move this out

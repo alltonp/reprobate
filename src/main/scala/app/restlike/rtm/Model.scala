@@ -62,55 +62,55 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Model(facts: immutable.Map[String, immutable.Map[String, String]], userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
+case class Model(facts: immutable.Map[String, immutable.Map[String, String]], userToAka: immutable.Map[String, String]) {
   def knows_?(who: String) = userToAka.contains(who)
 //  def onBoard_?(issue: Issue) = issue.status.fold(false)(workflowStates.contains(_))
 
-  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
-    if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
+//  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
+//    if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
+//
+//    //TODO: this is well shonky!
+//    var descriptionBits = List.empty[String]
+//    var tagBits = List.empty[String]
+//    var tagging = false
+//
+//    args.foreach(a => {
+//      if (a == ":") tagging = true
+//      else {
+//        if (tagging) tagBits = a.replaceAll(":", "") :: tagBits
+//        else descriptionBits = a :: descriptionBits
+//      }
+//    })
+//
+//    val description = descriptionBits.reverse.mkString(" ")
+//    val maybeDupe = issues.find(i => i.description == description)
+//    if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
+//    val newRef = refProvider.next
+//    val created = Issue(newRef, description, status, by, None, tagBits.toSet)
+//    val updatedModel = this.copy(issues = created :: this.issues)
+//    Right(IssueCreation(created, updatedModel))
+//  }
 
-    //TODO: this is well shonky!
-    var descriptionBits = List.empty[String]
-    var tagBits = List.empty[String]
-    var tagging = false
-
-    args.foreach(a => {
-      if (a == ":") tagging = true
-      else {
-        if (tagging) tagBits = a.replaceAll(":", "") :: tagBits
-        else descriptionBits = a :: descriptionBits
-      }
-    })
-
-    val description = descriptionBits.reverse.mkString(" ")
-    val maybeDupe = issues.find(i => i.description == description)
-    if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
-    val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by, None, tagBits.toSet)
-    val updatedModel = this.copy(issues = created :: this.issues)
-    Right(IssueCreation(created, updatedModel))
-  }
-
-  def updateIssue(updated: Issue) = {
-    val index = this.issues.indexOf(findIssue(updated.ref).get)
-    this.copy(issues = this.issues.updated(index, updated))
-  }
+//  def updateIssue(updated: Issue) = {
+//    val index = this.issues.indexOf(findIssue(updated.ref).get)
+//    this.copy(issues = this.issues.updated(index, updated))
+//  }
 
   def aka(who: String) = userToAka(who)
   def akas = userToAka.values.toList.distinct
-  def findIssue(ref: String) = issues.find(_.ref == ref)
+//  def findIssue(ref: String) = issues.find(_.ref == ref)
 //  def beginState = workflowStates.head
 //  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
 //  def endState = workflowStates.reverse.head
 //  def releasableIssues = issues.filter(_.status == Some(endState))
-  def releaseTags = released.map(_.tag)
-  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
+//  def releaseTags = released.map(_.tag)
+//  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 
-  def tags = {
-    val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten
-    val uniqueTags = allTheTags.distinct
-    uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
-  }
+//  def tags = {
+//    val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten
+//    val uniqueTags = allTheTags.distinct
+//    uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
+//  }
 }
 
 case class In(head: Option[String], tail: List[String])
