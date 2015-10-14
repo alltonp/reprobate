@@ -6,6 +6,7 @@ import app.restlike.common.Colours._
 import app.restlike.rim.{Presentation, Persistence}
 import app.server.ModelChanged
 import im.mange.jetboot._
+import im.mange.jetboot.widget.button.ToggleButton
 import im.mange.jetpac.comet._
 import im.mange.jetpac._
 import im.mange.jetpac.css.{Classes, Styles}
@@ -54,36 +55,7 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
   private def echo(line: String): JsCmd = JsRaw( s"""${instance}.echo("$line");""")
 }
 
-//TODO: move to jetboot
-case class ToggleButton(id: String, label: String, buttonClasses: Classes, expandedByDefault: Boolean = false, onCollapse: () => JsCmd, onExpand: () => JsCmd) extends Renderable {
-  private var expanded = expandedByDefault
-  private val link = span(Some(s"${id}_link"), icon())
 
-  def render = {
-    //TODO: use Html.a()
-
-    R(SHtml.a(() => toggle(),
-      <button type="button" class={s"btn ${buttonClasses.render}" + (if (expanded) " active" else "")} data-toggle="button" style="font-weight: bold;" id={id + "_toggle"}>{link.render}</button>,
-      "style" -> "text-decoration: none;"
-    )).render
-  }
-
-  private def toggle() = {
-    if (expanded) {
-      expanded = false
-      collapse() & onCollapse()
-    } else {
-      expanded = true
-      expand() & onExpand()
-    }
-  }
-
-  private def expand() = link.fill(closeIcon())
-  private def collapse() = link.fill(openIcon())
-  private def openIcon() = R(<span><i class="fa fa-toggle-off fa-lg"></i>&nbsp;{label}</span>)
-  private def closeIcon() = R(<span><i class="fa fa-toggle-on fa-lg"></i>&nbsp;{label}</span>)
-  private def icon() = if (expanded) closeIcon() else openIcon()
-}
 
 //TODO: pull up
 case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Renderable {
