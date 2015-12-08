@@ -31,6 +31,8 @@ libraryDependencies ++= {
       exclude("joda-time", "joda-time")
     ,
 //    ,
-    "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+    "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+     //
+    "com.github.piltt" %% "silky-persistence" % "1.0.57"
   )
 }
