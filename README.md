@@ -2,6 +2,8 @@
 
 ### Reprobate - continuous assertion monitoring
 
+![reprobate](http://giphy.com/embed/l2SpRVOmmrHj7jlcc)
+
 ### Quick start (if you already know what this is)
 
 **Install:**
