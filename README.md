@@ -2,7 +2,7 @@
 
 ### Reprobate - continuous assertion monitoring
 
-![reprobate](http://giphy.com/embed/l2SpRVOmmrHj7jlcc)
+![](https://media.giphy.com/media/l2SpRVOmmrHj7jlcc/giphy.gif)
 
 ### Quick start (if you already know what this is)
 
@@ -106,4 +106,4 @@
 
 -----
 
-Copyright © 2014-2015 Flatmap Ltd
+Copyright © 2015-2016 Spabloshi Ltd
