@@ -11,14 +11,19 @@ import app.model.FailedProbe
 
 object Blink1 extends RestHelper {
   serve {
-    case Req("blink1" :: "status" :: env :: Nil, _, GetRequest) ⇒ () ⇒ {
-      Full(PlainTextResponse(if (OkProbe(env).run.failures.isEmpty) "#00FF00" else "#FF0000")) }
+    case Req("blink1" :: "status" :: Nil, _, GetRequest) ⇒ () ⇒ doIt("")
+    case Req("blink1" :: "status" :: env :: Nil, _, GetRequest) ⇒ () ⇒ doIt(env)
   }
+
+  private def doIt(env: String): Full[PlainTextResponse] =
+    Full(PlainTextResponse(if (OkProbe(env).run.failures.isEmpty) "#00FF00" else "#FF0000"))
 }
 
 //TODO: use new RestHelper
 object Dogfood extends RestHelper {
   serve {
+    //TODO: don't like this name much ... think of something better (reprobate in the name?)
+    case Req("check" :: "probes" :: "ok" :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(OkProbe("")) }
     case Req("check" :: "probes" :: "ok" :: env :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(OkProbe(env)) }
     case Req("check" :: "alive" :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(Alive) }
   }
