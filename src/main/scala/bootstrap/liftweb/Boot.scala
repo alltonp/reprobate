@@ -2,15 +2,15 @@ package bootstrap.liftweb
 
 import app.Control._
 import app.agent.AppPage
-import app.comet.{RimPage}
+import app.comet.RimPage
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.demo.Demo
 import app.restlike.rem.Rem
 import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
 import app.restlike.rtm.Rtm
-import app.view.{RimView, AppView}
-import app.{ServiceFactory}
+import app.view.{AppView, RimView}
+import app.ServiceFactory
 import im.mange.jetpac.page.Pages
 import net.liftmodules.JQueryModule
 import net.liftweb.common._
@@ -19,7 +19,7 @@ import net.liftweb.sitemap.Loc.LocGroup
 import net.liftweb.sitemap._
 import net.liftweb.util._
 import app.restlike.iam.Iam
-import app.restlike.dogfood.Dogfood
+import app.restlike.dogfood.{Blink1, Dogfood}
 
 class Boot extends Loggable {
   def boot() {
@@ -66,6 +66,7 @@ class Boot extends Loggable {
     LiftRules.stripComments.default.set(() ⇒ false)
     LiftRules.explicitlyParsedSuffixes += "csv"
 
+    LiftRules.statelessDispatch.append(Blink1)
     LiftRules.statelessDispatch.append(Dogfood)
     LiftRules.statelessDispatch.append(BroadcastFlash)
     LiftRules.statelessDispatch.append(Demo)

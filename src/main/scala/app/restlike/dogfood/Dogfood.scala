@@ -4,10 +4,17 @@ import im.mange.reprobate.api.Runner
 import im.mange.shoreditch.api.Check
 import im.mange.shoreditch.check.Alive
 import net.liftweb.http.rest.RestHelper
-import net.liftweb.http.{GetRequest, Req}
+import net.liftweb.http.{GetRequest, PlainTextResponse, Req}
 import app.ServiceFactory
-import net.liftweb.common.{Box, Full, Failure}
+import net.liftweb.common.{Box, Failure, Full}
 import app.model.FailedProbe
+
+object Blink1 extends RestHelper {
+  serve {
+    case Req("blink1" :: "status" :: env :: Nil, _, GetRequest) ⇒ () ⇒ {
+      Full(PlainTextResponse(if (OkProbe(env).run.failures.isEmpty) "#00FF00" else "#FF0000")) }
+  }
+}
 
 //TODO: use new RestHelper
 object Dogfood extends RestHelper {
