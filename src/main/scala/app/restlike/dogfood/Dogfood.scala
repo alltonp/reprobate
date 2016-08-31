@@ -32,7 +32,8 @@ case class OkProbe(env: String) extends Check {
     result match {
       case Full(x) if x.failures.isEmpty => success
       case Full(x) => {
-        val probesMatchingEnv = x.failures.filter(p => env.isEmpty || p.probe.env.toLowerCase == env.toLowerCase)
+        val probesMatchingEnv = x.failures.filter(p => env.isEmpty || env == "index" || p.probe.env.toLowerCase.contains(env.toLowerCase))
+        println(env + "=" + probesMatchingEnv)
         if (probesMatchingEnv.isEmpty) success else failure(probesMatchingEnv.map(fp => fp.probe.name + ": " + fp.failures.head).toList)
       }
       case Failure(f, _, _) => failure(List(f))
