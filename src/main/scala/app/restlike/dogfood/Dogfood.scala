@@ -15,6 +15,8 @@ object Blink1 extends RestHelper {
     case Req("blink1" :: "status" :: env :: Nil, _, GetRequest) ⇒ () ⇒ doIt(env)
   }
 
+  //TODO: use: 0000FF for no probes setup (or broadcasts)
+  //TODO: use: E77B00 for has some inactive (maybe)
   private def doIt(env: String): Full[PlainTextResponse] =
     Full(PlainTextResponse(if (OkProbe(env).run.failures.isEmpty) "#00FF00" else "#FF0000"))
 }
