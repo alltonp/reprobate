@@ -22,14 +22,15 @@ object IncidentRegistry {
 
   def updateIncidents(newValue: List[Incident]) {
     synchronized {
+      //TODO: this ultimately weill not scale well, ultimately we should write the incident to it's own file
+      //TODO: but then need a way to get them sll easily ...
+      //TODO: or we could limit to the last x entries, so they eventually fall off ....
       val current = load
       val newIds = newValue.map(_.id)
       val onlyPreviousIncidents = current.incidents.filterNot(i => newIds.contains(i.id))
       save(current.copy(incidents = (newValue.map(i =>
         IncidentState(i.id, i.probe.description, i.probe.env, i.start.toDateTime, i.finish.map(_.toDateTime), i.failures)
       )) ::: onlyPreviousIncidents ))
-
-
     }
   }
   
