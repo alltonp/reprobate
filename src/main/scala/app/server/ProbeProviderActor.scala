@@ -151,8 +151,15 @@ class ProbeProviderActor extends LiftActor {
   private def probeFailed(message: String, probe: Probe) = ProbeFailure(List(message))
 
   private def unsafeRun(probe: Probe) = {
-    val probeResponse = Json.deserialise(HttpClient.unsafeGet(probe.url, probe.needsProxy))
-    if (probeResponse.failures.isEmpty) ProbeSuccess else ProbeFailure(probeResponse.failures)
+    val raw = HttpClient.unsafeGet(probe.url, probe.needsProxy)
+    try {
+      val probeResponse = Json.deserialise(raw)
+      if (probeResponse.failures.isEmpty) ProbeSuccess else ProbeFailure(probeResponse.failures)
+    }
+
+    catch {
+      case e: Exception => ProbeFailure(List("Probe returned unexpected response", raw))
+    }
   }
 
   private def createCurrentRunStatusUpdate = CurrentRunStatusUpdate(currentRun.successCount, currentRun.failureCount,
