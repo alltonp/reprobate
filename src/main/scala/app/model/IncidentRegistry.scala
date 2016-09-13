@@ -22,11 +22,19 @@ object IncidentRegistry {
 
   def updateIncidents(newValue: List[Incident]) {
     synchronized {
-      //TODO: load ...
       val current = IncidentsState(Nil) //load
       save(current.copy(incidents = newValue.map(i => 
         IncidentState(i.id, i.probe.description, i.probe.env, i.start.toDateTime, i.finish.map(_.toDateTime), i.failures)
       )))
+
+      //TODO: load ...
+      // careful though ...
+      //      val current = load
+//      save(current.copy(incidents = (newValue.map(i =>
+//        IncidentState(i.id, i.probe.description, i.probe.env, i.start.toDateTime, i.finish.map(_.toDateTime), i.failures)
+//      )) ::: current.incidents ))
+
+
     }
   }
   
