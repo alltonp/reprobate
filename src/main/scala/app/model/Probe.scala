@@ -9,7 +9,7 @@ import scala.collection.immutable.HashMap
 case class Probe(id: String, config: String) {
   private val bits = config.split(",")
 
-  if (bits.length < 7) throw new RuntimeException("Invalid probe: " + config)
+  if (bits.length < 7) throw new RuntimeException("Invalid check: " + config)
 
   private val host = bits(0)
   private val resource = bits(1)

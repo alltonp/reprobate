@@ -134,13 +134,13 @@ class ProbeProviderActor extends LiftActor {
       //TODO: might need to have a handler for this
       case e: TimeoutException => {
         println("### e:" + e + " with " + probe.description)
-        probeFailed("Probe took too long", probe)
+        probeFailed("Check took too long", probe)
       }
       //TODO: more gracefully handle ...
       //net.liftweb.json.JsonParser.ParseException
       //CancellationException
       //InterruptedException
-      case e: FileNotFoundException => probeFailed("Probe does not exist", probe)
+      case e: FileNotFoundException => probeFailed("Check does not exist", probe)
       case e: ConnectException => probeFailed("Server not responding", probe)
       case e: Exception => probeFailed(exceptionMessage(e), probe)
     }
@@ -158,7 +158,7 @@ class ProbeProviderActor extends LiftActor {
     }
 
     catch {
-      case e: Exception => ProbeFailure(List("Probe returned unexpected response", raw))
+      case e: Exception => ProbeFailure(List("Check returned unexpected response", raw))
     }
   }
 
