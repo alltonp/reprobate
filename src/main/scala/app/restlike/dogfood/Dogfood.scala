@@ -4,10 +4,10 @@ import im.mange.reprobate.api.Runner
 import im.mange.shoreditch.api.Check
 import im.mange.shoreditch.check.Alive
 import net.liftweb.http.rest.RestHelper
-import net.liftweb.http.{GetRequest, PlainTextResponse, Req}
+import net.liftweb.http.{JsonResponse, GetRequest, PlainTextResponse, Req}
 import app.ServiceFactory
 import net.liftweb.common.{Box, Failure, Full}
-import app.model.FailedProbe
+import app.model.{Json, IncidentRegistry, IncidentsState, FailedProbe}
 
 object Blink1 extends RestHelper {
   serve {
@@ -28,6 +28,9 @@ object Dogfood extends RestHelper {
     case Req("check" :: "all" :: "ok" :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(OkProbe("")) }
     case Req("check" :: "all" :: "ok" :: env :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(OkProbe(env)) }
     case Req("check" :: "alive" :: Nil, _, GetRequest) ⇒ () ⇒ { Runner.run(Alive) }
+
+    //TODO: I'm not really dogfood, because I'm not a check ...
+    case Req("incidents" :: Nil, _, GetRequest) ⇒ () ⇒ { Full(JsonResponse(Json.serialise(IncidentRegistry.load))) }
   }
 }
 
