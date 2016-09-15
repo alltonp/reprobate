@@ -27,13 +27,14 @@
 3. that's it!
 
 ### What is it?
-- A simple monitor that loops through a supplied list of "checks", alerting you in suitably annoying fashion should any checks fail. Ideally displayed on a huge monitor, for all to see.
+- A simple lightweight monitor that loops through a supplied list of "checks", alerting you in suitably annoying fashion should any checks fail. Ideally displayed on a huge monitor, for all to see.
 
 ### Why would I use it?
 - You have a stack of applications/services and need to know they are working **all** the time.
 - You want to be notified of production problems **before** your users report them
 - You need to "keep it up without touching it" (tm) - you probably work for an investment bank and enjoy segregation of duties etc
 - Generally we check our assertions only run at dev/build time - why wouldn't you want to run them all the time?
+- Easy integration with other monitoring tools and [blink(1)](https://blink1.thingm.com/)
 
 ### What is a check?
 - An assertion or invariant of your system, exposed as a JSON endpoint - adhering to the following contract:
@@ -84,9 +85,10 @@
 ### Does reprobate have an API?
 - Reprobate hosts a 'check' for that - `http://{hostname}:8473/check/probes/ok/{query}`
 
-	e.g.
+	e.g. (query is optional)
 
-	`http://localhost:8473/check/probes/ok/prod`
+	`http://localhost:8473/check/all/ok`
+	`http://localhost:8473/check/all/ok/prod`
 
 - all checks successful:
 
@@ -102,7 +104,19 @@
       ]
     }
 	```
-- This is useful if you have multiple stacks monitored by reprobate you can aggregate them all into one uber reprobate, or you want to integrate with other monitoring tools.
+- This is useful if you have multiple stacks monitored by reprobate you can aggregate them all into one uber reprobate
+- Integrating with other monitoring tools.
+
+
+### How do I integrate with my blink(1)?
+- Configure blink-control to poll the following endpoint - `http://{hostname}:8473/blink1/status/{query}`
+
+	e.g. (query is optional)
+
+	`http://localhost:8473/blink1/status/`
+	`http://localhost:8473/blink1/status/prod`
+
+- Reprobate will return an appropriate colour to reflect the overall status
 
 -----
 
