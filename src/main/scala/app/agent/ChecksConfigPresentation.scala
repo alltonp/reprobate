@@ -69,7 +69,7 @@ case class ChecksConfigPresentation(checks: List[ChecksHistory]) extends Rendera
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(width("100%"), marginBottom("0px"))).classes("round-corners")
 }
 
 @deprecated("Use LinkAnchor() instead", "01/05/2015")
