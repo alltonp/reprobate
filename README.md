@@ -116,7 +116,7 @@
 	e.g. (query is optional)
 
 	```
-	http://localhost:8473/blink1/status/
+	http://localhost:8473/blink1/status
 	http://localhost:8473/blink1/status/prod
 	```
 
