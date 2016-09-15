@@ -6,6 +6,8 @@ import im.mange.jetboot.widget.{Button, ButtonPresentation}
 
 //TODO: theres a widget in here somewhere ... jetpac
 case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
+  val title = "Toggle Config"
+
   private var shown = false
 
   def id = "toggleCheckConfig"
@@ -21,7 +23,10 @@ case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
 
 @deprecated("Use A() instead", "01/05/2015")
 trait ServerSideButton extends Button {
+  val title: String
   import net.liftweb.http.SHtml._
   //TODO: we do this in a few places .. id, class, style etc
-  def render = a(() ⇒ onClick, presentation.body, "id" → id, "style" → presentation.styles.render, "class" → presentation.classes.render)
+  def render = a(() ⇒ onClick, presentation.body, "id" → id, "title" → title,
+    "style" → presentation.styles.render,
+    "class" → presentation.classes.render)
 }

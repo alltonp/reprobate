@@ -5,6 +5,8 @@ import im.mange.jetboot._
 import im.mange.jetpac._
 
 case class ToggleBroadcastsHistoryButton(parent: RootAgent) extends ServerSideButton {
+  val title = "Toggle Broadcast History"
+
   private var shown = false
 
   def id = "toggleBroadcastsHistory"
