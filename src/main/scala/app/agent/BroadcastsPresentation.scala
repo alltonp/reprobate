@@ -35,5 +35,5 @@ case class BroadcastsPresentation(broadcasts: List[Broadcast]) extends Renderabl
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(width("100%"), marginBottom("0px"))).classes("round-corners")
 }
