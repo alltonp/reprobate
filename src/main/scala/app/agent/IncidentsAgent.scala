@@ -24,8 +24,8 @@ case class IncidentsAgent() extends Renderable {
   //TODO: pull out presentation
   private def render(open: List[Incident], closed: List[Incident]) = {
     R(
-      if (!open.isEmpty) tablify(tableHeaders("Open Incidents: " + open.size), rows(open)) else R(),
-      if (!closed.isEmpty) tablify(tableHeaders("Closed Incidents: " + closed.size), rows(closed)) else R())
+      if (open.nonEmpty) tablify(tableHeaders("Open Incidents: " + open.size), rows(open)) else R(),
+      if (closed.nonEmpty) tablify(tableHeaders("Closed Incidents: " + closed.size), rows(closed)) else R())
   }
 
   //TODO: ideally lets give 1 and 3 more room
@@ -51,5 +51,5 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: pull out a widget
   private def tablify(h: TableHeaders, r: List[TableRow]) =
-    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(marginBottom("0px"))).classes("round-corners")
+    div(None, bsTable(h, r).classes(tableCondensed, tableStriped).styles(width("100%"), marginBottom("0px"))).classes("round-corners")
 }
