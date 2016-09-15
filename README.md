@@ -87,8 +87,10 @@
 
 	e.g. (query is optional)
 
-	`http://localhost:8473/check/all/ok`
-	`http://localhost:8473/check/all/ok/prod`
+	```
+	http://localhost:8473/check/all/ok
+	http://localhost:8473/check/all/ok/prod
+	```
 
 - all checks successful:
 
@@ -113,8 +115,10 @@
 
 	e.g. (query is optional)
 
-	`http://localhost:8473/blink1/status/`
-	`http://localhost:8473/blink1/status/prod`
+	```
+	http://localhost:8473/blink1/status/
+	http://localhost:8473/blink1/status/prod
+	```
 
 - Reprobate will return an appropriate colour to reflect the overall status
 
