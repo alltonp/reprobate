@@ -2,6 +2,7 @@ package app.agent
 
 //import app.comet.Subscriber
 
+import app.agent.columneditor.{ColumnEditableAgent, Column, ColumnConfig, ColumnEditorAgent}
 import app.comet.AppCometActor
 import app.server._
 import im.mange.jetboot._
@@ -60,13 +61,22 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
   private val toggleBroadcastsHistoryButton = ToggleBroadcastsHistoryButton(this)
 
+  private val columnEditorAgent = ColumnEditorAgent(
+    ColumnConfig(Seq(Column("one", true, false), Column("two", true, false))),
+    subscriber, new ColumnEditableAgent() {
+      override def onColumnsChanged: Unit = println("changed")
+      override def onColumnsSaved: Unit = println("saved")
+    }
+  )
+
+
   private var checkStatusAgents: List[CheckStatusAgent] = _
 
   def render = <form class="lift:form.ajax"><br/>{layout.render}</form>
 
   private[agent] def requestConfig = {
     subscriber ! SendProbeConfig
-    checksConfigAgent.requestConfig
+    checksConfigAgent.requestConfig & columnEditorAgent.onInit
   }
 
   private[agent] def hideConfig = checksConfigAgent.hide
@@ -86,7 +96,8 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
     Bs.row(col(12, allProbesStatus)),
     Bs.row(col(12, incidentsAgent)),
     Bs.row(col(12, checksConfigAgent)),
-    Bs.row(col(12, broadcastsHistoryAgent))
+    Bs.row(col(12, broadcastsHistoryAgent)),
+    Bs.row(col(12, columnEditorAgent))
   )
 
   def onInit(allProbes: List[Probe]) = {
