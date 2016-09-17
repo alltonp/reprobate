@@ -96,8 +96,9 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
     Bs.row(col(12, allProbesStatus)),
     Bs.row(col(12, incidentsAgent)),
     Bs.row(col(12, checksConfigAgent)),
-    Bs.row(col(12, broadcastsHistoryAgent)),
-    Bs.row(col(12, columnEditorAgent))
+    Bs.row(col(12, broadcastsHistoryAgent))
+//    ,
+//    Bs.row(col(12, columnEditorAgent))
   )
 
   def onInit(allProbes: List[Probe]) = {
