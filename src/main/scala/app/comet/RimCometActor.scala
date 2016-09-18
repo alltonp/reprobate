@@ -68,9 +68,9 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 //  println(s"path: ${S.request.get.path}")
 //  println(s"params2: ${S.queryString}")
 //  S.request.get.params
-  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
-//  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "+ hello")
-//  println(r.mkString("\n"))
+//  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
+  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "+ hello")
+  println(r.mkString("\n"))
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
