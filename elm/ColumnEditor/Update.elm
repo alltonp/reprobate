@@ -95,10 +95,15 @@ update action model =
 
     CommandChanged command -> { model | command = command } ! []
 
-    RunCommand -> model ! []
+    RunCommand -> (model, columnEditorAgentToLift (runCommand model.command))
 
 
 
 columnsChanged : List Column -> PortMessage
 columnsChanged editedColumns =
     PortMessage "ColumnsChanged" (columnsEncoder editedColumns)
+
+
+runCommand : String -> PortMessage
+runCommand command =
+    PortMessage "RunCommand" (command)
