@@ -18,6 +18,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 //TODO: 'by' should really be something else
+//TODO: status should be an Int and workflowStatuses should include the first and last stastes (maybe)
 case class Issue(ref: String, name: String, ts: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
@@ -56,6 +57,7 @@ case class Issue(ref: String, name: String, ts: Long, status: Option[String], by
   }
 }
 
+//TODO: when shoould be a ts
 case class Release(tag: String, issues: List[Issue], when: Option[DateTime])
 
 case class IssueCreation(created: Issue, updatedModel: Model)
