@@ -17,7 +17,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 //TODO: 'by' should really be something else
-case class Issue(ref: String, description: String, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty/*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, name: String, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -45,13 +45,13 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
       })
   }
 
-  private val indexed = List(ref, description, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
+  private val indexed = List(ref, name, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
 
   def search(query: String) = indexed.contains(query)
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(description) else customGrey(description)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
+    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
   }
 }
 
@@ -82,7 +82,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     })
 
     val description = descriptionBits.reverse.mkString(" ")
-    val maybeDupe = issues.find(i => i.description == description)
+    val maybeDupe = issues.find(i => i.name == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
     val created = Issue(newRef, description, status, by, None, tagBits.toSet)

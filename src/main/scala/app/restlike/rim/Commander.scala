@@ -102,7 +102,7 @@ object Commander {
 //        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
         val d = a.action.getOrElse("")
 //        println(s"%${a.action} $d => ${i.description}")
-        d == i.description
+        d == i.name
       })
       println(s"$i => $r")
       r
@@ -322,7 +322,7 @@ object Commander {
   private def onEditIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newDescription = args.mkString(" ")
-      val updatedIssue = found.copy(description = newDescription)
+      val updatedIssue = found.copy(name = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the backlog or releases

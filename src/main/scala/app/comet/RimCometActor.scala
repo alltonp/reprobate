@@ -75,8 +75,8 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   //TODO: this should be done automatically since it makes little sense here .. use email perhaps?
   //TODO: whatever, capture with original email
   //  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
-  val r = Controller.execute("PA", RimToken.token, "+ hello")
-  println(r.mkString("\n"))
+//  val r = Controller.execute("PA", RimToken.token, "+ hello")
+//  println(r.mkString("\n"))
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
