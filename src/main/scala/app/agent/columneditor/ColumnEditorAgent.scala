@@ -1,8 +1,9 @@
 package app.agent.columneditor
 
+import app.comet.{Init, RimToken}
+import app.restlike.rim.Controller
 import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
 import org.json4s.NoTypeHints
-
 import im.mange.belch.{Belch, PortMessage, ToLiftPort}
 import im.mange.jetpac.Renderable
 import im.mange.jetpac.comet.Subscriber
@@ -38,7 +39,11 @@ case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
         parent.onColumnsSaved
 //        subscriber ! Init()
 
-      case x => throw new RuntimeException(s"Don't know how to handle: x")
+      case PortMessage("RunCommand", command) =>
+        Controller.execute("PA", RimToken.token, command)
+        subscriber ! Init
+
+      case x => throw new RuntimeException(s"Don't know how to handle: $x")
     }
   }
 
