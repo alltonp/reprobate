@@ -4,7 +4,6 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import ColumnEditor.Model as Model exposing (..)
-import ColumnEditor.Util exposing (..)
 import ColumnEditor.Msg as Msg exposing (..)
 import String
 import Dict

@@ -2,7 +2,6 @@ module ColumnEditor.Update exposing (..)
 
 
 import ColumnEditor.Model exposing (..)
-import ColumnEditor.Util exposing (..)
 import ColumnEditor.Msg as Msg exposing (..)
 import ColumnEditor.Port exposing (..)
 import ColumnEditor.Codec exposing (..)
