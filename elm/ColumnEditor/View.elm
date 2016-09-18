@@ -29,18 +29,48 @@ view model =
 
 agentView : Model -> Html Msg
 agentView model =
-  userNameEditor "" False
+    div [] [
+      div [ class "form-inline" ] [
+        div [ style [ ( "margin" => "7px" ) ] ]
+          [
+          --TODO: has-feedback
+          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
+            [ commandEditor "" False
+            --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
+            ]
+--          , div [ class ("form-group " ++ if Dict.member "Fullname" model.validationErrors then "has-error" else ""), style [ "padding-right" => "3px" ] ] [ fullNameEditor newUser.fullName disabled ]
+--          , div [ class ("form-group " ++ if Dict.member "Email" model.validationErrors then "has-error" else ""), style [ "padding-right" => "3px" ] ] [ emailEditor newUser.email disabled ]
+--          , div [ class "form-group", style [ "padding-right" => "3px" ] ] [ roleEditor role roles disabled ]
+          , div [ class "form-group" ] [ addButton (False) ]
+          ]
+      ]
+    ]
 
 
-userNameEditor : String -> Bool -> Html Msg
-userNameEditor v disable =
+
+commandEditor : String -> Bool -> Html Msg
+commandEditor v disable =
   input [ type' "text"
-        , placeholder "Username"
+        , placeholder "Command"
         , class "form-control input-sm"
 --        , onInput (\v -> (UserNameChanged v))
         , disabled disable
         , value v
         ] []
+
+
+addButton : Bool -> Html Msg
+addButton disable =
+  button
+      [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
+--      , onClick AddUser
+      , title "Add User"
+      , disabled disable
+      ]
+      [
+      i [ class "fa fa-plus-circle fa-2x" ] []
+      ]
+
 
 
 editButton : Html Msg

@@ -9701,14 +9701,14 @@ var _theorem$thing$ColumnEditor_Update$update = F2(
 	});
 var _theorem$thing$ColumnEditor_Update$init = {ctor: '_Tuple2', _0: _theorem$thing$ColumnEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
 
-var _theorem$thing$ColumnEditor_View$userNameEditor = F2(
+var _theorem$thing$ColumnEditor_View$commandEditor = F2(
 	function (v, disable) {
 		return A2(
 			_elm_lang$html$Html$input,
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_elm_lang$html$Html_Attributes$type$('text'),
-					_elm_lang$html$Html_Attributes$placeholder('Username'),
+					_elm_lang$html$Html_Attributes$placeholder('Command'),
 					_elm_lang$html$Html_Attributes$class('form-control input-sm'),
 					_elm_lang$html$Html_Attributes$disabled(disable),
 					_elm_lang$html$Html_Attributes$value(v)
@@ -9716,8 +9716,93 @@ var _theorem$thing$ColumnEditor_View$userNameEditor = F2(
 			_elm_lang$core$Native_List.fromArray(
 				[]));
 	});
+var _theorem$thing$ColumnEditor_View_ops = _theorem$thing$ColumnEditor_View_ops || {};
+_theorem$thing$ColumnEditor_View_ops['=>'] = F2(
+	function (v0, v1) {
+		return {ctor: '_Tuple2', _0: v0, _1: v1};
+	});
+var _theorem$thing$ColumnEditor_View$addButton = function (disable) {
+	return A2(
+		_elm_lang$html$Html$button,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('btn btn-link'),
+				_elm_lang$html$Html_Attributes$style(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'padding', '0px'),
+						A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'margin', '0px')
+					])),
+				_elm_lang$html$Html_Attributes$title('Add User'),
+				_elm_lang$html$Html_Attributes$disabled(disable)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$i,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('fa fa-plus-circle fa-2x')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]))
+			]));
+};
 var _theorem$thing$ColumnEditor_View$agentView = function (model) {
-	return A2(_theorem$thing$ColumnEditor_View$userNameEditor, '', false);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('form-inline')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[
+										A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'margin', '7px')
+									]))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('form-group'),
+										_elm_lang$html$Html_Attributes$style(
+										_elm_lang$core$Native_List.fromArray(
+											[
+												A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'padding-right', '3px')
+											]))
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										A2(_theorem$thing$ColumnEditor_View$commandEditor, '', false)
+									])),
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('form-group')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_theorem$thing$ColumnEditor_View$addButton(false)
+									]))
+							]))
+					]))
+			]));
 };
 var _theorem$thing$ColumnEditor_View$view = function (model) {
 	return A2(
@@ -9755,11 +9840,6 @@ var _theorem$thing$ColumnEditor_View$view = function (model) {
 					]))
 			]));
 };
-var _theorem$thing$ColumnEditor_View_ops = _theorem$thing$ColumnEditor_View_ops || {};
-_theorem$thing$ColumnEditor_View_ops['=>'] = F2(
-	function (v0, v1) {
-		return {ctor: '_Tuple2', _0: v0, _1: v1};
-	});
 var _theorem$thing$ColumnEditor_View$simpleIconButton = F3(
 	function (name, icon, msg) {
 		return A2(
