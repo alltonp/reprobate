@@ -95,7 +95,9 @@ update action model =
 
     CommandChanged command -> { model | command = command } ! []
 
-    RunCommand -> (model, columnEditorAgentToLift (runCommand model.command))
+    RunCommand ->
+        let model' = { model | command = "" }
+        in (model', columnEditorAgentToLift (runCommand model.command))
 
 
 
