@@ -95,6 +95,8 @@ update action model =
 
     CommandChanged command -> { model | command = command } ! []
 
+    RunCommand -> model ! []
+
 
 
 columnsChanged : List Column -> PortMessage

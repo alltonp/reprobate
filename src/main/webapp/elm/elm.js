@@ -9338,6 +9338,7 @@ var _theorem$thing$ColumnEditor_Codec$decodeAgentModel = function (serialised) {
 	return A2(_elm_lang$core$Json_Decode$decodeString, _theorem$thing$ColumnEditor_Codec$agentModelDecoder, serialised);
 };
 
+var _theorem$thing$ColumnEditor_Msg$RunCommand = {ctor: 'RunCommand'};
 var _theorem$thing$ColumnEditor_Msg$CommandChanged = function (a) {
 	return {ctor: 'CommandChanged', _0: a};
 };
@@ -9701,12 +9702,18 @@ var _theorem$thing$ColumnEditor_Update$update = F2(
 					_1: _theorem$thing$ColumnEditor_Port$columnEditorAgentToLift(
 						_theorem$thing$ColumnEditor_Update$columnsChanged(editedColumns$))
 				};
-			default:
+			case 'CommandChanged':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{command: _p0._0}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 		}
@@ -9737,7 +9744,7 @@ _theorem$thing$ColumnEditor_View_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _theorem$thing$ColumnEditor_View$addButton = function (disable) {
+var _theorem$thing$ColumnEditor_View$runButton = function (disable) {
 	return A2(
 		_elm_lang$html$Html$button,
 		_elm_lang$core$Native_List.fromArray(
@@ -9749,7 +9756,8 @@ var _theorem$thing$ColumnEditor_View$addButton = function (disable) {
 						A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'padding', '0px'),
 						A2(_theorem$thing$ColumnEditor_View_ops['=>'], 'margin', '0px')
 					])),
-				_elm_lang$html$Html_Attributes$title('Add User'),
+				_elm_lang$html$Html_Events$onClick(_theorem$thing$ColumnEditor_Msg$RunCommand),
+				_elm_lang$html$Html_Attributes$title('Run Command'),
 				_elm_lang$html$Html_Attributes$disabled(disable)
 			]),
 		_elm_lang$core$Native_List.fromArray(
@@ -9814,7 +9822,7 @@ var _theorem$thing$ColumnEditor_View$agentView = function (model) {
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_theorem$thing$ColumnEditor_View$addButton(false)
+										_theorem$thing$ColumnEditor_View$runButton(false)
 									]))
 							]))
 					]))

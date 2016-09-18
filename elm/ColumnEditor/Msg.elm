@@ -14,3 +14,4 @@ type Msg
     | MoveLeft (String)
     | MoveRight (String)
     | CommandChanged (String)
+    | RunCommand

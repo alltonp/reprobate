@@ -41,7 +41,7 @@ agentView model =
 --          , div [ class ("form-group " ++ if Dict.member "Fullname" model.validationErrors then "has-error" else ""), style [ "padding-right" => "3px" ] ] [ fullNameEditor newUser.fullName disabled ]
 --          , div [ class ("form-group " ++ if Dict.member "Email" model.validationErrors then "has-error" else ""), style [ "padding-right" => "3px" ] ] [ emailEditor newUser.email disabled ]
 --          , div [ class "form-group", style [ "padding-right" => "3px" ] ] [ roleEditor role roles disabled ]
-          , div [ class "form-group" ] [ addButton (False) ]
+          , div [ class "form-group" ] [ runButton (False) ]
           ]
       ]
     ]
@@ -59,12 +59,12 @@ commandEditor v disable =
         ] []
 
 
-addButton : Bool -> Html Msg
-addButton disable =
+runButton : Bool -> Html Msg
+runButton disable =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
---      , onClick AddUser
-      , title "Add User"
+      , onClick RunCommand
+      , title "Run Command"
       , disabled disable
       ]
       [
