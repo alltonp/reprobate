@@ -30,3 +30,7 @@ initialModel : Model
 initialModel = Model Nothing False Nothing ""
 
 
+--TODO:
+-- run on enter
+-- feedback on command
+-- start to populate board, gonna need some json for that
