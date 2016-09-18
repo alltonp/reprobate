@@ -1,7 +1,6 @@
-module ColumnEditor.Codec exposing (decodeAgentModel, columnsEncoder)
+module ColumnEditor.Codec exposing (decodeAgentModel)
 
 
-import Json.Encode as JsonEncode exposing (encode)
 import Json.Decode as JsonDecode exposing (Decoder, (:=), succeed, fail, andThen)
 import ColumnEditor.Model exposing (..)
 
@@ -33,24 +32,3 @@ stringBoolDecoder =
       "true" -> succeed True
       "false" -> succeed False
       _ -> fail <| "Expecting \"true\" or \"false\" but found " ++ val
-
-
-columnsEncoder : List Column -> String
-columnsEncoder columns =
-  JsonEncode.encode 0 (columnsEncoderValue columns)
-
-
-columnsEncoderValue : List Column -> JsonEncode.Value
-columnsEncoderValue columns =
-    JsonEncode.object
-        [ ("columns", JsonEncode.list (List.map (\t -> columnEncoderValue t) columns))
-        ]
-
-
-columnEncoderValue : Column -> JsonEncode.Value
-columnEncoderValue column =
-    JsonEncode.object
-        [ ("name", JsonEncode.string column.name)
-        , ("selected", JsonEncode.bool column.selected)
-        , ("system", JsonEncode.bool column.system)
-        ]
