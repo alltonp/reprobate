@@ -11,7 +11,6 @@ type Msg
     | SaveChanges
     | CancelChanges
     | ToggleSelected (String)
-    | MoveLeft (String)
-    | MoveRight (String)
+
     | CommandChanged (String)
     | RunCommand

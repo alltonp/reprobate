@@ -47,52 +47,6 @@ update action model =
         model' = { model | editedColumns = editedColumns' }
       in (model', columnEditorAgentToLift (columnsChanged editedColumns') )
 
-    MoveLeft name ->
-      let
-        current = indexOf name (List.map (\t -> t.name) model.editedColumns)
-        editedColumns' = case current of
-          Nothing -> model.editedColumns
-          Just index ->
-            let
-              beforeAndThis = List.take (index + 1) model.editedColumns
-              after = List.drop (index + 1) model.editedColumns
-              this = List.drop index beforeAndThis
-              oldBefore = (List.take index beforeAndThis)
-              newBefore = (List.take (index - 1) beforeAndThis)
-              --d0 = Debug.log "oldbefore" (toString oldBefore)
-              --d1 = Debug.log "newbefore" (toString newBefore)
-              --d2 = Debug.log "this" (toString this)
-              --d3 = Debug.log "after" (toString after)
-              updated = newBefore ++ this ++ (List.drop (index - 1) oldBefore) ++ after
-              --u = Debug.log "updated" (toString updated)
-            in
-              updated
-        model' = { model | editedColumns = editedColumns' }
-      in (model', columnEditorAgentToLift (columnsChanged editedColumns') )
-
-    MoveRight name ->
-      let
-        current = indexOf name (List.map (\t -> t.name) model.editedColumns)
-        editedColumns' = case current of
-          Nothing -> model.editedColumns
-          Just index ->
-            let
-              before = List.take index model.editedColumns
-              thisAndAfter = List.drop (index) model.editedColumns
-              this = List.take 1 thisAndAfter
-              oldAfter = (List.drop 1 thisAndAfter)
-              newAfter = (List.drop 2 thisAndAfter)
-              --d0 = Debug.log "oldAfter" (toString oldAfter)
-              --d1 = Debug.log "newAfter" (toString newAfter)
-              --d2 = Debug.log "this" (toString this)
-              --d3 = Debug.log "before" (toString before)
-              updated = before ++ (List.take 1 oldAfter) ++ this ++ newAfter
-              --u = Debug.log "updated" (toString updated)
-            in
-              updated
-        model' = { model | editedColumns = editedColumns' }
-      in (model', columnEditorAgentToLift (columnsChanged editedColumns') )
-
     CommandChanged command -> { model | command = command } ! []
 
     RunCommand ->
