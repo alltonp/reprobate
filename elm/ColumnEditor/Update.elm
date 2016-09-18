@@ -20,7 +20,7 @@ update action model =
   case action of
     Error message -> { model | error = Just message } ! []
 
-    Load agentModel -> { model | agentModel = Just agentModel, editedColumns = agentModel.columns } ! []
+    Load agentModel -> { model | agentModel = Just agentModel } ! []
 
     CommandChanged command -> { model | command = command } ! []
 

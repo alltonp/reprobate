@@ -10,7 +10,6 @@ type alias Model =
    { agentModel : Maybe AgentModel
    , editing : Bool
    , error : Maybe String
-   , editedColumns : List Column
    , command : String
    }
 
@@ -28,6 +27,6 @@ type alias AgentModel =
 
 
 initialModel : Model
-initialModel = Model Nothing False Nothing [] ""
+initialModel = Model Nothing False Nothing ""
 
 
