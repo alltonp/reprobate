@@ -1,9 +1,9 @@
 package app.comet
 
-import app.ServiceFactory.{systemClock, rimServerActor}
+import app.ServiceFactory.{rimServerActor, systemClock}
 import app.restlike.common.Colours
 import app.restlike.common.Colours._
-import app.restlike.rim.{Presentation, Persistence}
+import app.restlike.rim.{Controller, Persistence, Presentation}
 import app.server.ModelChanged
 import im.mange.jetboot._
 import im.mange.jetboot.widget.button.ToggleButton
@@ -13,7 +13,7 @@ import im.mange.jetpac.css.{Classes, Styles}
 import im.mange.jetpac.page.CometPage
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
-import net.liftweb.http.{SHtml, S}
+import net.liftweb.http.{S, SHtml}
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
@@ -21,7 +21,6 @@ import net.liftweb.http.js.JE.{JsRaw, ValById}
 import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
 import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
-
 import net.liftweb.http.js.JE.{JsRaw, ValById}
 import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
@@ -64,7 +63,12 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   println("refresh")
   private val params: Map[String, List[String]] = S.request.get.params
   //TODO: ultimately lookup "token" param - but use a read only token ...
+  println(s"request: ${S.request}")
   println(s"params: ${params}")
+//  println(s"path: ${S.request.get.path}")
+//  println(s"params2: ${S.queryString}")
+//  S.request.get.params
+  Controller
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
@@ -102,6 +106,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     //
     //TODO: we need this back again ....
     //
+    //TODO: this needs to be a request arg ...
     if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b" && modelChanged.token != "test") return Js.nothing
     //
     //

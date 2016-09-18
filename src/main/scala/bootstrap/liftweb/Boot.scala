@@ -15,7 +15,7 @@ import im.mange.jetpac.page.Pages
 import net.liftmodules.JQueryModule
 import net.liftweb.common._
 import net.liftweb.http._
-import net.liftweb.sitemap.Loc.LocGroup
+import net.liftweb.sitemap.Loc.{LocGroup, QueryParameters}
 import net.liftweb.sitemap._
 import net.liftweb.util._
 import app.restlike.iam.Iam
@@ -48,7 +48,7 @@ class Boot extends Loggable {
 
     val protectedPages = Seq(
       AppPage("index"),
-      RimPage("rim", topBar)//,
+      RimPage("rim", topBar, QueryParameters(() => List(("a", "b"))))//,
     )
     Pages(
       protectedPages ++ Seq(

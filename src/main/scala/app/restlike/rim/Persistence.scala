@@ -15,12 +15,17 @@ object Persistence {
 
   //TODO: could Model be 'T'ed up?
   def load: Universe = {
-    if (!file.toFile.exists()) save(
-      Universe(
-        Map("---email---" -> Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
-        Map("---token---" -> "---email---")
+    if (!file.toFile.exists()) {
+      val email = "---email---"
+      val token = java.util.UUID.randomUUID.toString
+
+      save(
+        Universe(
+          Map(email -> Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
+          Map(token -> email)
+        )
       )
-    )
+    }
     Json.deserialise(Filepath.load(file))
   }
 
