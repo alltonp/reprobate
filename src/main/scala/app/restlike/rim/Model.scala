@@ -1,5 +1,6 @@
 package app.restlike.rim
 
+import app.ServiceFactory
 import app.restlike.common.Colours._
 import app.restlike.common._
 import org.joda.time.DateTime
@@ -17,7 +18,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
 //TODO: 'by' should really be something else
-case class Issue(ref: String, name: String, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, name: String, timestamp: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -85,7 +86,7 @@ case class Model(workflowStates: List[String], userToAka: immutable.Map[String, 
     val maybeDupe = issues.find(i => i.name == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, status, by, None, tagBits.toSet)
+    val created = Issue(newRef, description, ServiceFactory.systemClock().dateTime.getMillis, status, by, None, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
