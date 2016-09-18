@@ -63,12 +63,14 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   println("refresh")
   private val params: Map[String, List[String]] = S.request.get.params
   //TODO: ultimately lookup "token" param - but use a read only token ...
-  println(s"request: ${S.request}")
+  println(s"request: ${S.request.get._params}")
   println(s"params: ${params}")
 //  println(s"path: ${S.request.get.path}")
 //  println(s"params2: ${S.queryString}")
 //  S.request.get.params
-  Controller
+//  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
+//  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "+ hello")
+//  println(r.mkString("\n"))
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
@@ -108,6 +110,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     //
     //TODO: this needs to be a request arg ...
     if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b" && modelChanged.token != "test") return Js.nothing
+    if (modelChanged.token != "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b" && modelChanged.token != "test") return Js.nothing
     //
     //
     //
