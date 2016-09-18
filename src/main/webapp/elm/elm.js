@@ -9701,6 +9701,60 @@ var _theorem$thing$ColumnEditor_Update$update = F2(
 	});
 var _theorem$thing$ColumnEditor_Update$init = {ctor: '_Tuple2', _0: _theorem$thing$ColumnEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
 
+var _theorem$thing$ColumnEditor_View$userNameEditor = F2(
+	function (v, disable) {
+		return A2(
+			_elm_lang$html$Html$input,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$type$('text'),
+					_elm_lang$html$Html_Attributes$placeholder('Username'),
+					_elm_lang$html$Html_Attributes$class('form-control input-sm'),
+					_elm_lang$html$Html_Attributes$disabled(disable),
+					_elm_lang$html$Html_Attributes$value(v)
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	});
+var _theorem$thing$ColumnEditor_View$agentView = function (model) {
+	return A2(_theorem$thing$ColumnEditor_View$userNameEditor, '', false);
+};
+var _theorem$thing$ColumnEditor_View$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('col-md-12')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$style(
+								_elm_lang$core$Native_List.fromArray(
+									[
+										{ctor: '_Tuple2', _0: 'margin-top', _1: '3px'}
+									]))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(
+								A2(_elm_lang$core$Maybe$withDefault, '', model.error))
+							])),
+						_theorem$thing$ColumnEditor_View$agentView(model)
+					]))
+			]));
+};
 var _theorem$thing$ColumnEditor_View_ops = _theorem$thing$ColumnEditor_View_ops || {};
 _theorem$thing$ColumnEditor_View_ops['=>'] = F2(
 	function (v0, v1) {
@@ -10104,50 +10158,6 @@ var _theorem$thing$ColumnEditor_View$spinner = A2(
 			_elm_lang$core$Native_List.fromArray(
 				[]))
 		]));
-var _theorem$thing$ColumnEditor_View$agentView = function (model) {
-	var _p2 = model.agentModel;
-	if (_p2.ctor === 'Nothing') {
-		return _theorem$thing$ColumnEditor_View$spinner;
-	} else {
-		return model.editing ? A2(_theorem$thing$ColumnEditor_View$editColumnsView, _p2._0, model) : _theorem$thing$ColumnEditor_View$editButton;
-	}
-};
-var _theorem$thing$ColumnEditor_View$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('row')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('col-md-12')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$style(
-								_elm_lang$core$Native_List.fromArray(
-									[
-										{ctor: '_Tuple2', _0: 'margin-top', _1: '3px'}
-									]))
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text(
-								A2(_elm_lang$core$Maybe$withDefault, '', model.error))
-							])),
-						_theorem$thing$ColumnEditor_View$agentView(model)
-					]))
-			]));
-};
 
 var _theorem$thing$ColumnEditorAgent$subscriptions = function (model) {
 	return _theorem$thing$ColumnEditor_Port$columnEditorAgentFromLift(_theorem$thing$ColumnEditor_Messaging$portMessageToMsg);

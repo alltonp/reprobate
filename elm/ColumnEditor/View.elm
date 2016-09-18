@@ -29,9 +29,18 @@ view model =
 
 agentView : Model -> Html Msg
 agentView model =
-    case model.agentModel of
-      Nothing -> spinner
-      Just agentModel -> if model.editing then (editColumnsView agentModel model) else editButton
+  userNameEditor "" False
+
+
+userNameEditor : String -> Bool -> Html Msg
+userNameEditor v disable =
+  input [ type' "text"
+        , placeholder "Username"
+        , class "form-control input-sm"
+--        , onInput (\v -> (UserNameChanged v))
+        , disabled disable
+        , value v
+        ] []
 
 
 editButton : Html Msg
