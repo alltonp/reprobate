@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 import org.scalatest.{MustMatchers, WordSpec}
 
 class RimSpec extends WordSpec with MustMatchers {
-  //TOOD: this is naughty
+  //TODO: this is naughty
   ServiceFactory.systemClock.default.set(FrozenClock(new DateTime()))
 
   //TODO: work out what examples are missing

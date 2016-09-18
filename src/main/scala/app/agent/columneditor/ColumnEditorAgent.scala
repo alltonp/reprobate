@@ -38,7 +38,8 @@ case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
 //        subscriber ! Init()
 
       case PortMessage("RunCommand", command) =>
-        Controller.execute("PA", RimToken.token, command)
+        val r = Controller.execute("PA", RimToken.token, command)
+        println(r)
         subscriber ! Init
 
       case x => throw new RuntimeException(s"Don't know how to handle: $x")
