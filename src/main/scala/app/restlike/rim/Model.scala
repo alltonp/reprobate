@@ -17,8 +17,12 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/
-//TODO: 'by' should really be something else
+//TODO: 'by' should really be something else - like what?
 //TODO: status should be an Int and workflowStatuses should include the first and last stastes (maybe)
+//TODO: later we probably want who created it
+//TODO: replace tds with when: Option - for when things are moved out of the backlog
+//TODO: try to lose the status 'released' .. should be None at this point
+//TODO: ultimately first and last states could be moved out to seperate persistence
 case class Issue(ref: String, name: String, ts: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
