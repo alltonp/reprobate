@@ -13,3 +13,4 @@ type Msg
     | ToggleSelected (String)
     | MoveLeft (String)
     | MoveRight (String)
+    | CommandChanged (String)

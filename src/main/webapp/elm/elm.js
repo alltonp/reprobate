@@ -9238,17 +9238,18 @@ var _theorem$thing$Belch$PortMessage = F2(
 		return {typeName: a, payload: b};
 	});
 
-var _theorem$thing$ColumnEditor_Model$Model = F4(
-	function (a, b, c, d) {
-		return {agentModel: a, editing: b, error: c, editedColumns: d};
+var _theorem$thing$ColumnEditor_Model$Model = F5(
+	function (a, b, c, d, e) {
+		return {agentModel: a, editing: b, error: c, editedColumns: d, command: e};
 	});
-var _theorem$thing$ColumnEditor_Model$initialModel = A4(
+var _theorem$thing$ColumnEditor_Model$initialModel = A5(
 	_theorem$thing$ColumnEditor_Model$Model,
 	_elm_lang$core$Maybe$Nothing,
 	false,
 	_elm_lang$core$Maybe$Nothing,
 	_elm_lang$core$Native_List.fromArray(
-		[]));
+		[]),
+	'');
 var _theorem$thing$ColumnEditor_Model$Column = F3(
 	function (a, b, c) {
 		return {name: a, selected: b, system: c};
@@ -9337,6 +9338,9 @@ var _theorem$thing$ColumnEditor_Codec$decodeAgentModel = function (serialised) {
 	return A2(_elm_lang$core$Json_Decode$decodeString, _theorem$thing$ColumnEditor_Codec$agentModelDecoder, serialised);
 };
 
+var _theorem$thing$ColumnEditor_Msg$CommandChanged = function (a) {
+	return {ctor: 'CommandChanged', _0: a};
+};
 var _theorem$thing$ColumnEditor_Msg$MoveRight = function (a) {
 	return {ctor: 'MoveRight', _0: a};
 };
@@ -9657,7 +9661,7 @@ var _theorem$thing$ColumnEditor_Update$update = F2(
 					_1: _theorem$thing$ColumnEditor_Port$columnEditorAgentToLift(
 						_theorem$thing$ColumnEditor_Update$columnsChanged(editedColumns$))
 				};
-			default:
+			case 'MoveRight':
 				var current = A2(
 					_theorem$thing$ColumnEditor_Util$indexOf,
 					_p0._0,
@@ -9697,6 +9701,14 @@ var _theorem$thing$ColumnEditor_Update$update = F2(
 					_1: _theorem$thing$ColumnEditor_Port$columnEditorAgentToLift(
 						_theorem$thing$ColumnEditor_Update$columnsChanged(editedColumns$))
 				};
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{command: _p0._0}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 		}
 	});
 var _theorem$thing$ColumnEditor_Update$init = {ctor: '_Tuple2', _0: _theorem$thing$ColumnEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
@@ -9710,6 +9722,10 @@ var _theorem$thing$ColumnEditor_View$commandEditor = F2(
 					_elm_lang$html$Html_Attributes$type$('text'),
 					_elm_lang$html$Html_Attributes$placeholder('Command'),
 					_elm_lang$html$Html_Attributes$class('form-control input-sm'),
+					_elm_lang$html$Html_Events$onInput(
+					function (v) {
+						return _theorem$thing$ColumnEditor_Msg$CommandChanged(v);
+					}),
 					_elm_lang$html$Html_Attributes$disabled(disable),
 					_elm_lang$html$Html_Attributes$value(v)
 				]),
@@ -9788,7 +9804,7 @@ var _theorem$thing$ColumnEditor_View$agentView = function (model) {
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
-										A2(_theorem$thing$ColumnEditor_View$commandEditor, '', false)
+										A2(_theorem$thing$ColumnEditor_View$commandEditor, model.command, false)
 									])),
 								A2(
 								_elm_lang$html$Html$div,

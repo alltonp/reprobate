@@ -35,7 +35,7 @@ agentView model =
           [
           --TODO: has-feedback
           div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
-            [ commandEditor "" False
+            [ commandEditor model.command False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
             ]
 --          , div [ class ("form-group " ++ if Dict.member "Fullname" model.validationErrors then "has-error" else ""), style [ "padding-right" => "3px" ] ] [ fullNameEditor newUser.fullName disabled ]
@@ -53,7 +53,7 @@ commandEditor v disable =
   input [ type' "text"
         , placeholder "Command"
         , class "form-control input-sm"
---        , onInput (\v -> (UserNameChanged v))
+        , onInput (\v -> (CommandChanged v))
         , disabled disable
         , value v
         ] []

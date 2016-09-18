@@ -93,6 +93,9 @@ update action model =
         model' = { model | editedColumns = editedColumns' }
       in (model', columnEditorAgentToLift (columnsChanged editedColumns') )
 
+    CommandChanged command -> { model | command = command } ! []
+
+
 
 columnsChanged : List Column -> PortMessage
 columnsChanged editedColumns =
