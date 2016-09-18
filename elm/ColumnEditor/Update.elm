@@ -28,6 +28,8 @@ update action model =
         let model' = { model | command = "" }
         in (model', columnEditorAgentToLift (runCommand model.command))
 
+    NoOp -> model ! []
+
 
 runCommand : String -> PortMessage
 runCommand command =

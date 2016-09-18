@@ -10,3 +10,4 @@ type Msg
 
     | CommandChanged (String)
     | RunCommand
+    | NoOp

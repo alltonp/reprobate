@@ -48,9 +48,21 @@ commandEditor v disable =
         , placeholder "Command"
         , class "form-control input-sm"
         , onInput (\v -> (CommandChanged v))
+        , onEnter RunCommand
         , disabled disable
         , value v
         ] []
+
+
+--TIP: borrowed from https://github.com/evancz/elm-todomvc/blob/master/Todo.elm
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+  let
+    tagger code =
+      if code == 13 then msg else NoOp
+  in
+    on "keydown" (JsonDecode.map tagger keyCode)
+
 
 
 runButton : Bool -> Html Msg
