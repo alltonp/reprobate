@@ -31,6 +31,8 @@ initialModel = Model Nothing False Nothing ""
 
 
 --TODO:
--- run on enter
 -- feedback on command
 -- start to populate board, gonna need some json for that
+-- up arrow for history etc
+-- one shown, click on an issue to get context sensitive
+-- store timestamp and who on create
