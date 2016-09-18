@@ -36,3 +36,7 @@ initialModel = Model Nothing False Nothing ""
 -- up arrow for history etc
 -- one shown, click on an issue to get context sensitive
 -- store timestamp and who on create
+-- need to know if a command worked, either a left or right or something
+-- we will always want the board back (in some way)
+-- it would be good if help could be useful too ...
+  -- using different Responses to Elm, HelpResponse, BoardResponse etc
