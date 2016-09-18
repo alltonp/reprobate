@@ -1,6 +1,7 @@
 package app.comet
 
 import app.ServiceFactory.{rimServerActor, systemClock}
+import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, ColumnEditorAgent}
 import app.restlike.common.Colours
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}
@@ -70,7 +71,10 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 //  println(s"path: ${S.request.get.path}")
 //  println(s"params2: ${S.queryString}")
 //  S.request.get.params
-//  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
+
+  //TODO: this should be done automatically since it makes little sense here .. use email perhaps?
+  //TODO: whatever, capture with original email
+  //  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
   val r = Controller.execute("PA", RimToken.token, "+ hello")
   println(r.mkString("\n"))
 
@@ -79,11 +83,23 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
+  private val columnEditorAgent = ColumnEditorAgent(
+    ColumnConfig(Seq(Column("one", true, false), Column("two", true, false))),
+    subscriber, new ColumnEditableAgent() {
+      override def onColumnsChanged: Unit = println("changed")
+      override def onColumnsSaved: Unit = println("saved")
+    }
+  )
+
+
   def render = {
     import Css._
 
     div(
       Bs.containerFluid(
+        Bs.row(col(12,
+          columnEditorAgent
+        )),
         Bs.row(col(12,
           div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
@@ -102,7 +118,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     ).render
   }
 
-  def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide
+  def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide & columnEditorAgent.onInit
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 
