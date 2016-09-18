@@ -42,4 +42,4 @@ initialModel = Model Nothing False Nothing ""
   -- using different Responses to Elm, HelpResponse, BoardResponse etc
 -- use auth (email) to get the list of tokens the user is allowed access to
   -- then have a dropdown for the user to choose, next to command, changes it changes the rim instance
-
+-- make status be based on index
