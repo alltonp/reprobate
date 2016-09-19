@@ -11,6 +11,8 @@ import net.liftweb.json._
 object Controller {
   private var universe = Persistence.load
 
+  val tokensHead = universe.tokenToUser.keys.head
+
   def process(who: String, req: Req, token: String) = {
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")

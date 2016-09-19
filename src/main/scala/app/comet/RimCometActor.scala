@@ -56,7 +56,8 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 }
 
 object RimToken {
-  val token = "8fa39d32-a7e7-4e2a-801e-102b85ef9419"
+  val token = Controller.tokensHead
+  println(token)
 }
 
 //TODO: pull up
