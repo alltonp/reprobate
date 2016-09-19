@@ -57,7 +57,7 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 
 object RimToken {
   val token = Controller.tokensHead
-  println(s"/rim/install/$token")
+  val script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
 }
 
 //TODO: pull up
