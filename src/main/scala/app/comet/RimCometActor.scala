@@ -102,7 +102,8 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
         Bs.row(col(12,
           div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
-            span(backlogToggle).styles(marginLeft("2px"))
+            span(backlogToggle).styles(marginLeft("2px")),
+            LinkAnchor("", RimToken.script, span(R(<i class="fa fa-terminal" aria-hidden="true"></i>)).styles(marginRight("3px")).classes(pullRight), Some("_blank"))
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
         Bs.row(col(12,
@@ -113,8 +114,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
             ).styles(display("table-row"), padding("1px"))
           ).styles(display("table"), width("100%"))
         )),
-        Bs.row(col(12, columnEditorAgent)),
-        Bs.row(col(12, LinkAnchor("", RimToken.script, span(R("*")).classes(pullRight), Some("_blank"))))
+        Bs.row(col(12, columnEditorAgent))
       )
     ).render
   }
