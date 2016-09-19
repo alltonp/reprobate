@@ -81,7 +81,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 //  println(r.mkString("\n"))
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
-  private val boardTerminal = Terminal("board"/*, Styles(fontSize(xSmall))*/)
+  private val boardTerminal = Terminal("board", Styles(marginBottom("0px")))
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
@@ -113,7 +113,8 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
             ).styles(display("table-row"), padding("1px"))
           ).styles(display("table"), width("100%"))
         )),
-        Bs.row(col(11, columnEditorAgent), col(1, LinkAnchor("", RimToken.script, span(R("*")).classes(pullRight), Some("_blank"))))
+        Bs.row(col(12, columnEditorAgent)),
+        Bs.row(col(12, LinkAnchor("", RimToken.script, span(R("*")).classes(pullRight), Some("_blank"))))
       )
     ).render
   }

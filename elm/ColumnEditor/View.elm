@@ -29,16 +29,17 @@ view model =
 agentView : Model -> Html Msg
 agentView model =
     div [] [
-      div [ class "form-inline" ] [
-        div [ style [ ( "margin" => "7px" ) ] ]
-          [
-          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
-            [ commandEditor model.command False
+--      div [ class "form-inline" ] [
+--        div [ style [ ( "margin" => "7px" ) ] ]
+--          [
+--          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
+--            [
+            commandEditor model.command False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
-            ]
+--            ]
           --, div [ class "form-group" ] [ runButton (False) ]
-          ]
-      ]
+--          ]
+--      ]
     ]
 
 
