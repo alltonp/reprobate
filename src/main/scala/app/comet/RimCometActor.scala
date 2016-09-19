@@ -57,7 +57,7 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 
 object RimToken {
   val token = Controller.tokensHead
-  println(token)
+  println(s"/rim/install/$token")
 }
 
 //TODO: pull up
