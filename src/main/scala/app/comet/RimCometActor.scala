@@ -11,6 +11,7 @@ import im.mange.jetboot.widget.button.ToggleButton
 import im.mange.jetpac.comet._
 import im.mange.jetpac._
 import im.mange.jetpac.css.{Classes, Styles}
+import im.mange.jetpac.html.{A, LinkAnchor}
 import im.mange.jetpac.page.CometPage
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
@@ -112,9 +113,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
             ).styles(display("table-row"), padding("1px"))
           ).styles(display("table"), width("100%"))
         )),
-        Bs.row(col(12,
-          columnEditorAgent
-        ))
+        Bs.row(col(11, columnEditorAgent), col(1, LinkAnchor("", RimToken.script, span(R("*")).classes(pullRight), Some("_blank"))))
       )
     ).render
   }

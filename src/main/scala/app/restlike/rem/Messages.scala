@@ -14,7 +14,7 @@ object Messages {
   //TODO: use appName everywhere
   //TODO: how about advance and retreat instead of forward/back or push/pull or left/right
   def help(who: String) = List(
-    s"hello ${who}, welcome to rem - the thing rememberer © 2015 spabloshi ltd",
+    s"hello ${who}, welcome to rem - the thing rememberer © 2015-2016 spabloshi ltd",
     "",
     "things:",
     "  - create                         ⇒ 'rem + [key] = {value} {: tag1 tag2 tagX}'",
