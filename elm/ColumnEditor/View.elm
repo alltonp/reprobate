@@ -36,7 +36,7 @@ agentView model =
             [ commandEditor model.command False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
             ]
-          , div [ class "form-group" ] [ runButton (False) ]
+          --, div [ class "form-group" ] [ runButton (False) ]
           ]
       ]
     ]

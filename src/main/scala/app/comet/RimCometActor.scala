@@ -98,9 +98,6 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     div(
       Bs.containerFluid(
         Bs.row(col(12,
-          columnEditorAgent
-        )),
-        Bs.row(col(12,
           div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
             span(backlogToggle).styles(marginLeft("2px"))
@@ -113,6 +110,9 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
               div(backlogTerminal).styles(display("table-cell"))
             ).styles(display("table-row"), padding("1px"))
           ).styles(display("table"), width("100%"))
+        )),
+        Bs.row(col(12,
+          columnEditorAgent
         ))
       )
     ).render
