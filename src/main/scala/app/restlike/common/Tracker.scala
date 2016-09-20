@@ -19,7 +19,9 @@ case class History(content: String) {
     val who = contentBits.lift(2)
     val token = contentBits.lift(0)
 
-    val printable = contentBits.drop(1).mkString("|")
+    println(s"$content -> ${contentBits.size}")
+    val maybePrintable: List[String] = contentBits.drop(1).toList
+    val printable = (if (maybePrintable.size == 3) maybePrintable else maybePrintable ++ " ").mkString("|")
 //    println(s"$content - $ref $email $who $action")
 
 //  } catch {
