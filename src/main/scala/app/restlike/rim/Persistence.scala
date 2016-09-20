@@ -21,7 +21,7 @@ object Persistence {
 
       save(
         Universe(
-          Map(email -> Model(defaultStatuses, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
+          Map(email -> Model(Config(defaultStatuses), immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
           Map(token -> email)
         )
       )

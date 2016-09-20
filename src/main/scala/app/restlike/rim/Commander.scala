@@ -259,8 +259,8 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = if (found.status.isEmpty) None
       else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        if (currentIndex <= 0) None else Some(currentModel.workflowStates(currentIndex - 1))
+        val currentIndex = currentModel.config.workflowStates.indexOf(found.status.get)
+        if (currentIndex <= 0) None else Some(currentModel.config.workflowStates(currentIndex - 1))
       }
       val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
       val updatedIssue = found.copy(status = newStatus, by = by)
@@ -298,9 +298,9 @@ object Commander {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
       val newStatus = if (found.status.isEmpty) currentModel.beginState
       else {
-        val currentIndex = currentModel.workflowStates.indexOf(found.status.get)
-        val newIndex = if (currentIndex >= currentModel.workflowStates.size - 1) currentIndex else currentIndex + 1
-        currentModel.workflowStates(newIndex)
+        val currentIndex = currentModel.config.workflowStates.indexOf(found.status.get)
+        val newIndex = if (currentIndex >= currentModel.config.workflowStates.size - 1) currentIndex else currentIndex + 1
+        currentModel.config.workflowStates(newIndex)
       }
       val by = if (newStatus == currentModel.beginState) None else Some(aka)
       val updatedIssue = found.copy(status = Some(newStatus), by = by)
@@ -431,7 +431,7 @@ object Commander {
 //TODO: move this out
 object SortByStatus {
   def apply(issues: Seq[Issue], currentModel: Model) = {
-    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
+    val statusToIndex = ("" :: currentModel.config.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
     issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
   }
