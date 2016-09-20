@@ -42,7 +42,7 @@ object Presentation {
 
   //TODO: render or remove release
   //TODO: we should show the release name if its a release ...
-  def pointyHairedManagerView(release: String, issues: Seq[Issue], blessedTags: List[String], currentModel: Model, aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean, hideCount: Boolean) = {
+  def pointyHairedManagerView(issues: Seq[Issue], blessedTags: List[String], currentModel: Model, aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean, hideCount: Boolean) = {
     val tagNames = issues.flatMap(_.tags).distinct
     val tags = currentModel.tags.filter(t => tagNames.contains(t.name))
     sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, aka, hideStatus, hideBy, hideTags, hideId, hideCount)
