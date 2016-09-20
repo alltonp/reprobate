@@ -26,7 +26,6 @@ object Commander {
 //      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
 //      case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
 //      case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
-//      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
 //      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
 //      case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)

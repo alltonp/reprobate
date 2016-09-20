@@ -23,6 +23,11 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 //TODO: replace tds with when: Option - for when things are moved out of the backlog
 //TODO: try to lose the status 'released' .. should be None at this point
 //TODO: ultimately first and last states could be moved out to seperate persistence
+
+//TODO: so we kind of want status to be None when released
+//TODO: so maybe Some(-1) when in backlog, but that would look pants in the jsons ..
+//TODO: so we atcually want None on either .. hmmm ... how will rim ? work
+
 case class Issue(ref: String, name: String, added: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {

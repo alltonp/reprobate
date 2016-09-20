@@ -9,14 +9,14 @@ object Presentation {
     else Messages.successfulUpdate(s"${updatedIssue.render(model)}")
   }
 
-  def backlog(model: Model, aka: Option[String]) = {
+  def preWorkflowState(model: Model, aka: Option[String]) = {
     val matching = model.issues.filter(i => i.status.isEmpty)
-    if (matching.isEmpty) s"backlog is empty" :: Nil
+    if (matching.isEmpty) s"${model.config.preWorkflowState} is empty" :: Nil
     else matching.map(i => i.render(model, highlightAka = aka))
   }
 
   def board(model: Model, changed: Seq[String], aka: String, hideBy: Boolean = false) = {
-    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includeBacklog = false, hideBy = hideBy, hideTags = false, model.issues, model, changed, Some(aka))
+    groupByStatus(model, compressEmptyStates = false, includeReleased = false, includePreWorkflowState = false, hideBy = hideBy, hideTags = false, model.issues, model, changed, Some(aka))
   }
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {
@@ -37,7 +37,7 @@ object Presentation {
   //TODO: we should include the released on the board too
   //TODO: render or remove tag
   def tagDetail(tag: String, issues: Seq[Issue], currentModel: Model) = {
-    groupByStatus(currentModel, compressEmptyStates = true, includeReleased = true, includeBacklog = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
+    groupByStatus(currentModel, compressEmptyStates = true, includeReleased = true, includePreWorkflowState = true, hideBy = true, hideTags = true, issues, currentModel, Nil, None)
   }
 
   //TODO: render or remove release
@@ -51,10 +51,10 @@ object Presentation {
   //TODO: introduce a DisplayOptions()
   //TODO: this is getting well shonky
   //TODO: this should show a nice "there is nothing to see" if that is the case
-  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
+  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includePreWorkflowState: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse(model.config.preWorkflowState))
-    val interestingStates = (if (includeBacklog) List(model.config.preWorkflowState) else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.postWorkflowState) else Nil)
+    val interestingStates = (if (includePreWorkflowState) List(model.config.preWorkflowState) else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.postWorkflowState) else Nil)
     interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)
       val issues = issuesForState.map(i => s"\n ${

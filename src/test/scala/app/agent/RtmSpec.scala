@@ -165,14 +165,14 @@ class RtmSpec extends WordSpec with MustMatchers {
 //  }
 
   //TODO: by should be None
-//  "move back a state (into backlog)" in {
+//  "move back a state (into preWorkflowState)" in {
 //    val issue = Issue("1", "an item", Some(next), None, None)
 //    val current = modelWithIssue(issue)
 //    val expected = current.copy(issues = List(issue.copy(status = None, by = None)))
 //    runAndExpect("1 .", current, expected)
 //  }
 
-//  "move back to begin state (into backlog)" in {
+//  "move back to begin state (into preWorkflowState)" in {
 //    val issue = Issue("1", "an item", Some(done), None, None)
 //    val current = modelWithIssue(issue)
 //    val expected = current.copy(issues = List(issue.copy(status = None, by = None)))

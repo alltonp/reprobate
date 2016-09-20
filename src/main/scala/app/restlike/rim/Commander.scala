@@ -26,7 +26,7 @@ object Commander {
       case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil, aka)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms, aka)
-      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
+      case In(Some("."), Nil) => onShowPreWorkflowState(currentModel, aka)
       case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
       case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
       case In(Some(release), args) if args.nonEmpty && args.head == "^" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = false)
@@ -325,7 +325,7 @@ object Commander {
       val updatedIssue = found.copy(name = newDescription)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
-      //also, depended on context might want to show the backlog or releases
+      //also, depended on context might want to show the preWorkflowState or releases
 //      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
 //                         else
 //        Messages.successfulUpdate(s"${updatedIssue.render()}")
@@ -355,8 +355,8 @@ object Commander {
     Out(result, None, Nil)
   }
 
-  private def onShowBacklog(currentModel: Model, aka: String) = {
-    Out(Presentation.backlog(currentModel, Some(aka)), None, Nil)
+  private def onShowPreWorkflowState(currentModel: Model, aka: String) = {
+    Out(Presentation.preWorkflowState(currentModel, Some(aka)), None, Nil)
   }
 
   private def onShowBoardManagementSummary(currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {

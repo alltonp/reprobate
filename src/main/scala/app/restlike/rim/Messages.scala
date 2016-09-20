@@ -38,6 +38,7 @@ object Messages {
     "  - move to end                    ⇒ 'rim [ref] /!'",
     "  - move backward                  ⇒ 'rim [ref] .'",
     //    "  - move backward many         ⇒ 'rim [ref] ..'",
+    //TODO: this should be dynamic off of preWorkflowState
     "  - return to backlog              ⇒ 'rim [ref] .!'",
     "  - block                          ⇒ 'rim [ref] % [reason]'",
     "  - unblock                        ⇒ 'rim [ref] %'",
@@ -46,6 +47,7 @@ object Messages {
     //is this 'reports'
     "show:",
     "  - board                          ⇒ 'rim'",
+    //TODO: this should be dynamic off of preWorkflowState
     "  - backlog                        ⇒ 'rim .'",
     "  - phb board summary              ⇒ 'rim ^{_} {tag1 tag2 tagX}'                      ⇒ i.e. in tag priority order",
     "  - phb release summary            ⇒ 'rim [release] ^{_} {tag1 tag2 tagX}'",

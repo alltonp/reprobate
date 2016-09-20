@@ -29,7 +29,6 @@ object Commander {
 //      case In(Some("+!"), args) => onAddAndEndIssue(args, currentModel, refProvider, aka)
       case In(Some("?"), Nil) => onQueryIssues(currentModel, Nil)
       case In(Some("?"), terms) => onQueryIssues(currentModel, terms)
-//      case In(Some("."), Nil) => onShowBacklog(currentModel, aka)
 //      case In(Some("^"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = false)
 //      case In(Some("^_"), providedTags) => onShowBoardManagementSummary(currentModel, providedTags, aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
