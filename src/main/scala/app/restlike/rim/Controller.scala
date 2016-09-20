@@ -29,7 +29,7 @@ object Controller {
             else model.allIssuesIncludingReleased.map(_.ref.toLong).max
           )
 
-          Tracker(s"${Rim.appName}.tracking").track(who, value, universe.tokenToUser(token))
+          Tracker(s"${Rim.appName}.tracking").track(who, value, token)
           val out = Commander.process(value, who, model, refProvider, token)
           out.updatedModel.foreach(m => {
             universe = universe.updateModelFor(token, m)

@@ -17,7 +17,7 @@ case class History(content: String) {
     val action = whatBits.flatMap(_.lift(1))
     val when = contentBits.lift(0).map(new DateTime(_))
     val who = contentBits.lift(1)
-    val email = contentBits.lift(3)
+    val token = contentBits.lift(3)
 //    println(s"$content - $ref $email $who $action")
 
 //  } catch {
@@ -30,10 +30,10 @@ case class History(content: String) {
 case class Tracker(filename: String) {
   private val file = Paths.get(filename)
 
-  def track(who: String, what: String, email: String) {
-    val content = List(DateTime.now, who, what, email).mkString("|") + "\n"
+  def track(who: String, what: String, token: String) {
+    val content = List(DateTime.now, who, what, token).mkString("|") + "\n"
     Filepath.append(content, file)
   }
 
-  def view(email: String) = Filepath.load(file).split("\n").filterNot(_.isEmpty).reverse.map(History(_)).filter(_.email == Some(email)).toSeq
+  def view(token: String) = Filepath.load(file).split("\n").filterNot(_.isEmpty).reverse.map(History(_)).filter(_.token == Some(token)).toSeq
 }
