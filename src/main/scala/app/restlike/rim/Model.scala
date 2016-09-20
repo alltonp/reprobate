@@ -70,7 +70,7 @@ case class Issue(ref: String, name: String, added: Long, status: Option[String],
 
 //TODO: when shoould be a timestamp
 //TODO: issues should no longer need a status .. avoid "released" everwhere
-case class Release(tag: String, issues: List[Issue], when: Option[DateTime])
+case class Release(tag: String, issues: List[Issue], when: Option[Long])
 
 case class IssueCreation(created: Issue, updatedModel: Model)
 

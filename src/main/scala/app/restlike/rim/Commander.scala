@@ -85,7 +85,7 @@ object Commander {
   }
 
   private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
-    //TODO: problem now is that history with missing email is not included .. hence the gaps
+    //TODO: history doesnt work on released .. is that oksy? msynbe it is?
     val all = Rim.history(token)
       .filter(_.ref == Some(ref))
       .filter(_.action.isDefined)
@@ -168,7 +168,7 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None, Nil)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None, Nil)
 
-    val release = Release(tag, releaseable.map(_.copy(status = Some(currentModel.config.postWorkflowState))), Some(systemClock().dateTime))
+    val release = Release(tag, releaseable.map(_.copy(status = Some(currentModel.config.postWorkflowState))), Some(systemClock().dateTime.getMillis))
     //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )

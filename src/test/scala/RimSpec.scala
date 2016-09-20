@@ -288,7 +288,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "releasing moves done issue and status to released" in {
     val issue = Issue("1", "an item", ts, Some(done), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime))))
+    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime.getMillis))))
     runAndExpect("± a", current, expected)
   }
 
@@ -329,5 +329,5 @@ class RimSpec extends WordSpec with MustMatchers {
   private def modelWithIssue(issue: Issue) = Model(config, usersToAka, List(issue), Nil)
 
   private def modelWithReleasedIssue(issue: Issue) =
-    Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))))
+    Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime.getMillis))))
 }

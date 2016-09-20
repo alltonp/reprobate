@@ -1,6 +1,7 @@
 package app.restlike.rim
 
 import app.ServiceFactory.dateFormats
+import org.joda.time.DateTime
 
 //TODO: add issue
 object Presentation {
@@ -21,7 +22,7 @@ object Presentation {
 
   def release(model: Model, release: Release, highlightAka: Option[String]) = {
     val r = release.issues.map(i => s"\n ${i.render(model, hideStatus = true, highlightAka = highlightAka)}").mkString
-    s"${release.tag}: (${release.issues.size})${release.when.fold("")(" - " + dateFormats().today(_))}" + r + "\n" :: Nil
+    s"${release.tag}: (${release.issues.size})${release.when.fold("")(ts => " - " + dateFormats().today(new DateTime(ts)))}" + r + "\n" :: Nil
   }
 
   def issuesForUser(model: Model, aka: String, issues: Seq[Issue]) = {
