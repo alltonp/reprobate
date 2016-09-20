@@ -81,6 +81,13 @@ case class Tag(name: String, count: Int)
 //or email to list of tokens have access to
 //somewhere else list of users to encrypted passwords/aka
 
+//(1) web users auth and use their email to get list of tokens
+//(2) cli users know token, can just look up
+//(3) to lock out all change token
+//(4) to lock out webuser remove email
+//(5) borrow the bcrypt from thing
+//(6) be able to create new from ui/url create/name/email - sends token to email
+
 case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
 
 case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
