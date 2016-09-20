@@ -23,7 +23,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 //TODO: replace tds with when: Option - for when things are moved out of the backlog
 //TODO: try to lose the status 'released' .. should be None at this point
 //TODO: ultimately first and last states could be moved out to seperate persistence
-case class Issue(ref: String, name: String, ts: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, name: String, added: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
