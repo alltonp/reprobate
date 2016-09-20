@@ -30,6 +30,7 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 
 //TODO: I need and updated: Option[Long] ... find easy way to update everywhere
 //TODO: maybe add creator - but where would we show it?
+//TODO: if we do history right we won't need it actually ...
 case class Issue(ref: String, name: String, added: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
