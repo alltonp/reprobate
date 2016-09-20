@@ -104,7 +104,10 @@ object Commander {
 //        println(s"%${a.action} $d => ${i.description}")
         d == i.name
       })
-      println(s"$i => $r")
+//      println(s"$i => $r")
+      //TODO: at the end we should simulate an event ... using the added ...
+      //hmm .. not sure what top do in the case of +! etc
+      //maybe token should be at the start and support extra args for the ref on creation
       r
     })
     //(1) using just + +/ +// +!
