@@ -59,6 +59,7 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 object RimToken {
   def token = Controller.tokensHead
   def script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
+  def state = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/state/$token"
 }
 
 //TODO: pull up
@@ -103,7 +104,10 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
           div(
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
             span(backlogToggle).styles(marginLeft("2px")),
-            LinkAnchor("", RimToken.script, span(R(<i class="fa fa-terminal" aria-hidden="true"></i>)).styles(marginRight("3px")).classes(pullRight), Some("_blank"))
+            span(
+              LinkAnchor("", RimToken.script, span(R(<i class="fa fa-terminal" aria-hidden="true"></i>)).styles(marginRight("5px")), Some("_blank")),
+              LinkAnchor("", RimToken.state, span(R(<i class="fa fa-database" aria-hidden="true"></i>)).styles(marginRight("5px")), Some("_blank"))
+            ).classes(pullRight)
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),
         Bs.row(col(12,
