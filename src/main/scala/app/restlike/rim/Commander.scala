@@ -373,7 +373,7 @@ object Commander {
   }
 
   private def onShowManagementSummary(matching: List[Issue], currentModel: Model, providedTags: List[String], aka: String, sanitise: Boolean) = {
-    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.priorityTags
+    val blessedTags = if (providedTags.nonEmpty) providedTags else currentModel.config.priorityTags
     //TODO: this string will be wrong when we support releases - or maybe not
     //TODO: the empty check should be inside the Presentation
     val result = if (matching.isEmpty) s"board is empty" :: Nil
@@ -417,14 +417,14 @@ object Commander {
   }
 
   private def onSetTagPriority(who: String, tags: List[String], currentModel: Model): Out = {
-    val updatedModel = currentModel.copy(priorityTags = tags)
+    val updatedModel = currentModel.copy(config = currentModel.config.copy(priorityTags =  tags))
     //TODO: de-dupe message (using this version)
-    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.priorityTags.isEmpty) "none" else updatedModel.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
+    Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.config.priorityTags.isEmpty) "none" else updatedModel.config.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
   }
 
   private def onShowTagPriority(who: String, currentModel: Model): Out = {
     //TODO: de-dupe message (not this version)
-    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None, Nil)
+    Out(Messages.success(s"tag priority: ${if (currentModel.config.priorityTags.isEmpty) "none" else currentModel.config.priorityTags.mkString(" ")}"), None, Nil)
   }
 }
 

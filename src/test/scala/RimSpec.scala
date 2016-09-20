@@ -20,27 +20,27 @@ class RimSpec extends WordSpec with MustMatchers {
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val config = Config("backlog", workflowStates, released)
-  private val emptyModelWithWorkflow = Model(config, usersToAka, Nil, Nil, Nil)
+  private val config = Config("backlog", workflowStates, released, Nil)
+  private val emptyModelWithWorkflow = Model(config, usersToAka, Nil, Nil)
   private val ts = systemClock().dateTime.getMillis
 
   //config
 
   "set aka" in {
-    val current = Model(Config("backlog", Nil, released), Map("anon2" -> aka2), Nil, Nil, Nil)
+    val current = Model(Config("backlog", Nil, released, Nil), Map("anon2" -> aka2), Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
     runAndExpect("aka a", current, expected)
   }
 
   "set priority tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(priorityTags = List("a", "b", "c"))
+    val expected = current.copy(config = current.config.copy ( priorityTags = List("a", "b", "c")))
     runAndExpect("tags = a b c", current, expected)
   }
 
   "unset priority tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(priorityTags = Nil)
+    val expected = current.copy(config = current.config.copy (priorityTags = Nil))
     runAndExpect("tags =", current, expected)
   }
 
@@ -319,16 +319,15 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("", current, expected)
   }
 
-
   private def runAndExpect(in: String, current: Model, expected: Model) {
     run(s"$in", current).updatedModel.mustEqual(Some(expected))
   }
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0), "")
 
-  private def modelWithTags(tags: List[String]) = Model(config, usersToAka, Nil, Nil, tags)
-  private def modelWithIssue(issue: Issue) = Model(config, usersToAka, List(issue), Nil, Nil)
+  private def modelWithTags(tags: List[String]) = Model(config.copy(priorityTags = tags), usersToAka, Nil, Nil)
+  private def modelWithIssue(issue: Issue) = Model(config, usersToAka, List(issue), Nil)
 
   private def modelWithReleasedIssue(issue: Issue) =
-    Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))), Nil)
+    Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))))
 }

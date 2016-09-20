@@ -137,7 +137,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 
       //this is v. useful - http://labs.funkhausdesign.com/examples/terminal/cmd_controlled_terminal.html
       val what = List(customBlue("blue"), customGreen("green")).mkString("")
-      val blessedTags = model.priorityTags
+      val blessedTags = model.config.priorityTags
 
       val board = Presentation.board(model, changed, aka.getOrElse(""), hideBy = true)
       val phmv = Presentation.pointyHairedManagerView(model.issues.filter(_.status.isEmpty), blessedTags, model, aka.getOrElse(""), hideStatus = true, hideBy = true, hideTags = false, hideId = false, hideCount = false)

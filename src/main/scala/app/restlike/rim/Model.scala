@@ -74,10 +74,9 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-//TODO: add priorityTags
-case class Config(preWorkflowState: String, workflowStates: List[String], postWorkflowState: String)
+case class Config(preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
 
-case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
+case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Issue) = issue.status.fold(false)(config.workflowStates.contains(_))
 
