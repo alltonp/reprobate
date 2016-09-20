@@ -72,6 +72,9 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   //TODO: ultimately lookup "token" param - but use a read only token ...
   println(s"request: ${S.request.get._params}")
   println(s"params: ${params}")
+  println(s"params2: ${S.param("foo")}")
+//  println(s"params2: ${S.uriAndQueryString}")
+
 //  println(s"path: ${S.request.get.path}")
 //  println(s"params2: ${S.queryString}")
 //  S.request.get.params
