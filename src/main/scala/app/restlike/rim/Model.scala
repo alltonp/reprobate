@@ -74,6 +74,13 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
+//TODO: thoughts about auth etc
+//so 1 token per instance (outside json)
+//list of writers email (can be inside json)
+//read only token (can be inside json) - put share link in ui
+//or email to list of tokens have access to
+//somewhere else list of users to encrypted passwords/aka
+
 case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
 
 case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
