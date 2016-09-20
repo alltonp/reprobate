@@ -18,6 +18,8 @@ case class History(content: String) {
     val when = contentBits.lift(0).map(new DateTime(_))
     val who = contentBits.lift(1)
     val token = contentBits.lift(3)
+
+  val printable = contentBits.reverse.drop(1).reverse.mkString("|")
 //    println(s"$content - $ref $email $who $action")
 
 //  } catch {
