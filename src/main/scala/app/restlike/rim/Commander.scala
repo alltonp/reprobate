@@ -165,9 +165,9 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None, Nil)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None, Nil)
 
-    val release = Release(tag, releaseable.map(_.copy(status = Some(currentModel.config.bankedState))), Some(systemClock().dateTime))
+    val release = Release(tag, releaseable.map(_.copy(status = Some(currentModel.config.postWorkflowState))), Some(systemClock().dateTime))
     //TODO: this can die soon ...
-    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.bankedState)))))
+    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
     Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = Nil)
@@ -431,7 +431,7 @@ object Commander {
 //TODO: move this out
 object SortByStatus {
   def apply(issues: Seq[Issue], currentModel: Model) = {
-    val statusToIndex = ("" :: currentModel.config.workflowStates ::: currentModel.config.bankedState :: Nil).zipWithIndex.toMap
+    val statusToIndex = ("" :: currentModel.config.workflowStates ::: currentModel.config.postWorkflowState :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
     issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
   }

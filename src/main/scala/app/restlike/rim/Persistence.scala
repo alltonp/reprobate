@@ -12,7 +12,7 @@ import scala.collection.immutable
 object Persistence {
   private val file = Paths.get(s"${Rim.appName}.json")
   private val defaultStatuses = List("next", "doing", "done")
-  private val config = Config(defaultStatuses, "released")
+  private val config = Config("backlog", defaultStatuses, "released")
 
   //TODO: could Model be 'T'ed up?
   def load: Universe = {
