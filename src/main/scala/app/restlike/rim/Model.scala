@@ -26,8 +26,9 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 
 //TODO: so we kind of want status to be None when released
 //TODO: so maybe Some(-1) when in backlog, but that would look pants in the jsons ..
-//TODO: so we atcually want None on either .. hmmm ... how will rim ? work
+//TODO: so we actually want None on either .. hmmm ... how will rim ? work
 
+//TODO: I need and updated: Option[Long] ... find easy way to update everywhere
 case class Issue(ref: String, name: String, added: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
