@@ -60,6 +60,7 @@ object RimToken {
   def token = Controller.tokensHead
   def script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
   def state = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/state/$token"
+  def tracking = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/tracking/$token"
 }
 
 //TODO: pull up
@@ -105,8 +106,9 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
             span(boardToggle).styles(marginLeft("1px"), marginRight("1px")),
             span(backlogToggle).styles(marginLeft("2px")),
             span(
-              LinkAnchor("", RimToken.script, span(R(<i class="fa fa-terminal" aria-hidden="true"></i>)).styles(marginRight("5px")), Some("_blank")),
-              LinkAnchor("", RimToken.state, span(R(<i class="fa fa-database" aria-hidden="true"></i>)).styles(marginRight("5px")), Some("_blank"))
+              LinkAnchor("", RimToken.script, span(R(<i class="fa fa-terminal" aria-hidden="true"></i>)).styles(marginRight("10px")), Some("_blank")),
+              LinkAnchor("", RimToken.state, span(R(<i class="fa fa-database" aria-hidden="true"></i>)).styles(marginRight("10px")), Some("_blank")),
+              LinkAnchor("", RimToken.tracking, span(R(<i class="fa fa-history" aria-hidden="true"></i>)).styles(marginRight("10px")), Some("_blank"))
             ).classes(pullRight)
           ).styles(/*textAlign(center), */marginBottom("0px")))
         ),

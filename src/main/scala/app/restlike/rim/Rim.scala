@@ -17,8 +17,8 @@ object Rim extends RestHelper {
     case r@Req(`appName` :: "install" :: token :: Nil, _, GetRequest) ⇒ () ⇒
       t(Script.install(appName, token), downcase = false)
     //TODO: this should be filtered for the token
-//    case r@Req(`appName` :: "tracking" :: token :: Nil, _, GetRequest) ⇒ () ⇒
-//      t(history(token), downcase = false)
+    case r@Req(`appName` :: "tracking" :: token :: Nil, _, GetRequest) ⇒ () ⇒
+      t(history(token).map(_.content).toList, downcase = false)
     case r@Req(`appName` :: "state" :: token :: Nil, _, GetRequest) ⇒ () ⇒
       Full(PlainTextResponse(JsonMethods.pretty(JsonMethods.render(Json.serialise(Persistence.load.modelFor(token))))))
     case r@Req(`appName` :: who :: token :: Nil, _, PostRequest) ⇒ () ⇒
