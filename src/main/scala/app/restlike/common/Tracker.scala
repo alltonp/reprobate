@@ -15,7 +15,7 @@ case class History(content: String) {
 //  try {
     val ref = whatBits.flatMap(_.lift(0))
     val action = whatBits.flatMap(_.lift(1))
-    val when = contentBits.lift(0).map(new DateTime(_))
+    val when = contentBits.lift(0).map(ms => new DateTime(ms.toLong))
     val who = contentBits.lift(1)
     val token = contentBits.lift(3)
 
@@ -33,7 +33,7 @@ case class Tracker(filename: String) {
   private val file = Paths.get(filename)
 
   def track(who: String, what: String, token: String) {
-    val content = List(DateTime.now, who, what, token).mkString("|") + "\n"
+    val content = List(DateTime.now.getMillis, who, what, token).mkString("|") + "\n"
     Filepath.append(content, file)
   }
 
