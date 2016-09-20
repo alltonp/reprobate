@@ -20,7 +20,8 @@ class RimSpec extends WordSpec with MustMatchers {
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val emptyModelWithWorkflow = Model(Config(workflowStates), usersToAka, Nil, Nil, Nil)
+  private val config = Config(workflowStates)
+  private val emptyModelWithWorkflow = Model(config, usersToAka, Nil, Nil, Nil)
   private val ts = systemClock().dateTime.getMillis
 
   //config
@@ -325,9 +326,9 @@ class RimSpec extends WordSpec with MustMatchers {
 
   private def run(in: String, current: Model) = Commander.process(in, "anon", current, RefProvider(0), "")
 
-  private def modelWithTags(tags: List[String]) = Model(Config(workflowStates), usersToAka, Nil, Nil, tags)
-  private def modelWithIssue(issue: Issue) = Model(Config(workflowStates), usersToAka, List(issue), Nil, Nil)
+  private def modelWithTags(tags: List[String]) = Model(config, usersToAka, Nil, Nil, tags)
+  private def modelWithIssue(issue: Issue) = Model(config, usersToAka, List(issue), Nil, Nil)
 
   private def modelWithReleasedIssue(issue: Issue) =
-    Model(Config(workflowStates), usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))), Nil)
+    Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime))), Nil)
 }
