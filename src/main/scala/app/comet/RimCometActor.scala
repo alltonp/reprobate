@@ -57,8 +57,8 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 }
 
 object RimToken {
-  val token = Controller.tokensHead
-  val script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
+  def token = Controller.tokensHead
+  def script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
 }
 
 //TODO: pull up
@@ -130,9 +130,6 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     //TODO: this needs to be a request arg ...
 //    if (modelChanged.token != "4d30e06a-5107-4330-a8c7-7e9b472f716b" && modelChanged.token != "test") return Js.nothing
     if (modelChanged.token != RimToken.token && modelChanged.token != "test") return Js.nothing
-    //
-    //
-    //
 
     modelChanged.updated.fold(Js.nothing) { model =>
       val aka: Option[String] = None
@@ -147,18 +144,6 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 
       boardTerminal.refresh(board.mkString("\n")) & backlogTerminal.refresh(phmv.mkString("\n"))
     }
-
-//    $('#some_id').terminal(function(command, term) {
-//      if (command == 'test') {
-//        term.echo("you just typed 'test'");
-//      } else {
-//        term.echo('unknown command');
-//      }
-//    }, { prompt: '>', name: 'test' });
-
-//    $('#some_id').terminal(function(command, term) {
-//        term.echo("you just typed 'test'");
-//    }, { prompt: '>', name: 'test' });
   }
 }
 

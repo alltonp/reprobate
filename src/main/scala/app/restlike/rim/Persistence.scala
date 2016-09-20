@@ -12,6 +12,7 @@ import scala.collection.immutable
 object Persistence {
   private val file = Paths.get(s"${Rim.appName}.json")
   private val defaultStatuses = List("next", "doing", "done")
+  private val config = Config(defaultStatuses, "released")
 
   //TODO: could Model be 'T'ed up?
   def load: Universe = {
@@ -21,7 +22,7 @@ object Persistence {
 
       save(
         Universe(
-          Map(email -> Model(Config(defaultStatuses), immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
+          Map(email -> Model(config, immutable.Map[String, String](), List[Issue](), List[Release](), List[String]())),
           Map(token -> email)
         )
       )

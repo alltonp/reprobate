@@ -20,14 +20,14 @@ class RimSpec extends WordSpec with MustMatchers {
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)
-  private val config = Config(workflowStates)
+  private val config = Config(workflowStates, released)
   private val emptyModelWithWorkflow = Model(config, usersToAka, Nil, Nil, Nil)
   private val ts = systemClock().dateTime.getMillis
 
   //config
 
   "set aka" in {
-    val current = Model(Config(Nil), Map("anon2" -> aka2), Nil, Nil, Nil)
+    val current = Model(Config(Nil, released), Map("anon2" -> aka2), Nil, Nil, Nil)
     val expected = current.copy(userToAka = usersToAka)
     runAndExpect("aka a", current, expected)
   }
@@ -305,7 +305,7 @@ class RimSpec extends WordSpec with MustMatchers {
     (pending) // fails presumably because nothing to release
     val issue = Issue("1", "an item", ts, Some(done), None, None)
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some("released"))))))
+    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some(released))))))
     runAndExpect("± a", current, expected)
   }
 

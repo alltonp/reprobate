@@ -158,21 +158,6 @@ object Commander {
 //    Out(result, None)
 //  }
 
-//  private def onRelease(tag: String, currentModel: Model, aka: String): Out = {
-//    val releaseable = currentModel.releasableIssues
-//    val remainder = currentModel.issues diff releaseable
-//
-//    if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None, Nil)
-//    if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None, Nil)
-//
-//    val release = Release(tag, releaseable.map(_.copy(status = Some("released"))), Some(systemClock().dateTime))
-//    //TODO: this can die soon ...
-//    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some("released")))))
-//    val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
-//
-//    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = Nil)
-//  }
-
 //  private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
 //    def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
 //    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
@@ -427,13 +412,3 @@ object Commander {
 //    Out(Messages.success(s"tag priority: ${if (currentModel.priorityTags.isEmpty) "none" else currentModel.priorityTags.mkString(" ")}"), None, Nil)
 //  }
 }
-
-//TODO: move this out
-//object SortByStatus {
-//  def apply(issues: Seq[Issue], currentModel: Model) = {
-//    val statusToIndex = ("" :: currentModel.workflowStates ::: "released" :: Nil).zipWithIndex.toMap
-////    println(statusToIndex)
-//    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
-//  }
-//}
-

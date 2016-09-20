@@ -46,7 +46,7 @@ case class Issue(ref: String, name: String, added: Long, status: Option[String],
         case Some(x) if blocked.isDefined => customRed(value)
         case Some(x) if x == m.beginState => customYellow(value)
         case Some(x) if x == m.endState => customGreen(value)
-        case Some("released") => customMagenta(value)
+        case Some(m.config.`bankedState`) => customMagenta(value)
         case _ => customOrange(value)
       })
   }
@@ -61,14 +61,16 @@ case class Issue(ref: String, name: String, added: Long, status: Option[String],
   }
 }
 
-//TODO: when shoould be a ts
+//TODO: when shoould be a timestamp
+//TODO: issues should no longer need a status .. avoid "released" everwhere
 case class Release(tag: String, issues: List[Issue], when: Option[DateTime])
 
 case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Config(workflowStates: List[String])
+//TODO: add priorityTags
+case class Config(workflowStates: List[String], bankedState: String)
 
 case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release], priorityTags: List[String]) {
   def knows_?(who: String) = userToAka.contains(who)

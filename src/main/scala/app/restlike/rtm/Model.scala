@@ -40,7 +40,6 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 //        case Some(x) if blocked.isDefined => customRed(value)
 //        case Some(x) if x == m.beginState => customYellow(value)
 //        case Some(x) if x == m.endState => customGreen(value)
-//        case Some("released") => customMagenta(value)
 //        case _ => customOrange(value)
 //      })
 //  }

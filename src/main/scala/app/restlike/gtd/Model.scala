@@ -67,7 +67,6 @@ object ColouredForStatus {
       case "next-overdue" => customOrange(value)
       case "next" => customYellow(value)
       //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
-      //        case Some("released") => customMagenta(value)
       case _ => customGrey(value) //customYellow(value)
     }
 }

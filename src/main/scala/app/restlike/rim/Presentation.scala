@@ -54,7 +54,7 @@ object Presentation {
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
-    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List("released") else Nil)
+    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.bankedState) else Nil)
     interestingStates.map(s => {
       val issuesForState = stateToIssues.getOrElse(s, Nil)
       val issues = issuesForState.map(i => s"\n ${

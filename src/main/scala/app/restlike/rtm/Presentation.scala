@@ -48,22 +48,6 @@ object Presentation {
 //    sieveByTag(sortedByImportance(tags, blessedTags), issues, currentModel, aka, hideStatus, hideBy, hideTags, hideId, hideCount)
 //  }
 
-  //TODO: introduce a DisplayOptions()
-  //TODO: this is getting well shonky
-  //TODO: this should show a nice "there is nothing to see" if that is the case
-//  private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includeBacklog: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
-//                            changed: Seq[String], aka: Option[String]) = {
-//    val stateToIssues = issues.groupBy(_.status.getOrElse("backlog"))
-//    val interestingStates = (if (includeBacklog) List("backlog") else Nil) ::: currentModel.workflowStates ::: (if (includeReleased) List("released") else Nil)
-//    interestingStates.map(s => {
-//      val issuesForState = stateToIssues.getOrElse(s, Nil)
-//      val issues = issuesForState.map(i => s"\n ${
-//        i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
-//      }").mkString
-//      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
-//    }).flatten
-//  }
-
 //  private def sieveByTag(tags: Seq[Tag], issues: Seq[Issue], currentModel: Model, aka: String, hideStatus: Boolean, hideBy: Boolean, hideTags: Boolean, hideId: Boolean, hideCount: Boolean) = {
 //    case class TagAndIssues(tag: String, issues: Seq[Issue])
 ////    println(tags.mkString(", "))

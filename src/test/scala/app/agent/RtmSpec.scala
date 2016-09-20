@@ -295,14 +295,6 @@ class RtmSpec extends WordSpec with MustMatchers {
 //    runAndExpect("± a", current, expected)
 //  }
 
-//  "migrate legacy 'done' to 'released'" in {
-//    (pending) // fails presumably because nothing to release
-//    val issue = Issue("1", "an item", Some(done), None, None)
-//    val current = modelWithReleasedIssue(issue)
-//    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(status = Some("released"))))))
-//    runAndExpect("± a", current, expected)
-//  }
-
   //show
 
 //  "show board" in {
