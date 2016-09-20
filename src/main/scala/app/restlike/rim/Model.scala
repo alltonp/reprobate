@@ -74,7 +74,7 @@ case class IssueCreation(created: Issue, updatedModel: Model)
 
 case class Tag(name: String, count: Int)
 
-case class Config(preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
+case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
 
 case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
