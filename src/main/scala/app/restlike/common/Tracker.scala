@@ -34,8 +34,8 @@ case class History(content: String) {
 case class Tracker(filename: String) {
   private val file = Paths.get(filename)
 
-  def track(who: String, what: String, token: String) {
-    val content = List(token, DateTime.now.getMillis, who, what).mkString("|") + "\n"
+  def track(who: String, what: String, token: String, changed: Seq[String]) {
+    val content = List(token, DateTime.now.getMillis, who, what, changed.mkString(",")).mkString("|") + "\n"
     Filepath.append(content, file)
   }
 

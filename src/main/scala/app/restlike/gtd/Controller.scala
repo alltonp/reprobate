@@ -23,7 +23,7 @@ object Controller {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
 
             //TODO: if we do this later we could potentially bend in the ref of the reseult .. fo reasier parsing
-            Tracker(s"${Gtd.appName}.tracking").track(who, value, universe.tokenToUser(token))
+            Tracker(s"${Gtd.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
 
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {

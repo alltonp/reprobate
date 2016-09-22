@@ -29,12 +29,14 @@ object Controller {
             else model.allIssuesIncludingReleased.map(_.ref.toLong).max
           )
 
-          Tracker(s"${Rim.appName}.tracking").track(who, value, token)
           val out = Commander.process(value, who, model, refProvider, token)
+
+          Tracker(s"${Rim.appName}.tracking").track(who, value, token, out.changed)
+
           out.updatedModel.foreach(m => {
             universe = universe.updateModelFor(token, m)
             rimServerActor() ! ModelChanged(Some(m), token, out.changed)
-            println("rimServerActor notified")
+//            println("rimServerActor notified")
             Persistence.save(universe)
           })
           val result = s"> ${Rim.appName} $value" :: "" :: out.messages.toList
