@@ -22,7 +22,7 @@ case class History(content: String) {
     val who = contentBits.lift(2)
     val token = contentBits.lift(0)
 
-    println(s"$content -> ${contentBits.size} $refs")
+//    println(s"$content -> ${contentBits.size} $refs")
     val maybePrintable: List[String] = contentBits.drop(1).toList
     val printable = (if (maybePrintable.size == 3) maybePrintable else maybePrintable ++ " ").mkString("|")
 

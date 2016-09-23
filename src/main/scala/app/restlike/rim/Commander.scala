@@ -125,7 +125,7 @@ object Commander {
 
 //    println(adds.mkString("\n"))
 
-    val issue = currentModel.findIssue(ref)
+    val issue = currentModel.allIssuesIncludingReleased.find(i => i.ref == ref)
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
