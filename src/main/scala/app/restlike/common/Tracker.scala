@@ -9,19 +9,25 @@ import org.joda.time.DateTime
 //actually, can have generic History, but extned/wrap for the rim specific bits
 case class History(content: String) {
   private val contentBits = content.split("\\|")
-  private val what = contentBits.lift(3)
+  val what = contentBits.lift(3)
   private val whatBits = what.map(_.split(" "))
 
 //  try {
-    val ref = whatBits.flatMap(_.lift(0))
-    val action = whatBits.flatMap(_.lift(1))
+//    val ref = whatBits.flatMap(_.lift(0))
+    val refs = contentBits.lift(4).map(_.split(",").toList).getOrElse(Nil)
+
+//    val action = whatBits.flatMap(_.lift(1))
+
     val when = contentBits.lift(1).map(ms => new DateTime(ms.toLong))
     val who = contentBits.lift(2)
     val token = contentBits.lift(0)
 
-    println(s"$content -> ${contentBits.size}")
+    println(s"$content -> ${contentBits.size} $refs")
     val maybePrintable: List[String] = contentBits.drop(1).toList
     val printable = (if (maybePrintable.size == 3) maybePrintable else maybePrintable ++ " ").mkString("|")
+
+  //rim 1 is broken ... history wise
+
 //    println(s"$content - $ref $email $who $action")
 
 //  } catch {

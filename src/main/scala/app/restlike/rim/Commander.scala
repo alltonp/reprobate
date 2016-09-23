@@ -87,29 +87,29 @@ object Commander {
   private def onShowHistoryIssue(ref: String, currentModel: Model, token: String) = {
     //TODO: history doesnt work on released .. is that oksy? msynbe it is?
     val all = Rim.history(token)
-      .filter(_.ref == Some(ref))
-      .filter(_.action.isDefined)
+      .filter(_.refs.contains(ref))
+      .filter(_.what.isDefined)
       .filter(_.who.isDefined)
       .filter(_.when.isDefined)
 
 //    println(s"$ref:${all.size}")
 
-    val addable = List("+", "+/", "+//", "+!").map(Some(_))
-    val adds = Rim.history(token).filter(h => addable.contains(h.ref)).reverse
+//    val addable = List("+", "+/", "+//", "+!").map(Some(_))
+//    val adds = Rim.history(token).filter(h => addable.contains(h.ref)).reverse
 
-    currentModel.allIssuesIncludingReleased.map(i => {
-      val r = adds.find(a => {
-//        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
-        val d = a.action.getOrElse("")
-//        println(s"%${a.action} $d => ${i.description}")
-        d == i.name
-      })
-//      println(s"$i => $r")
-      //TODO: at the end we should simulate an event ... using the added ...
-      //hmm .. not sure what top do in the case of +! etc
-      //maybe token should be at the start and support extra args for the ref on creation
-      r
-    })
+//    currentModel.allIssuesIncludingReleased.map(i => {
+//      val r = adds.find(a => {
+////        val d = a.action.fold("")(_.split(" ").init.mkString(" "))
+//        val d = a.action.getOrElse("")
+////        println(s"%${a.action} $d => ${i.description}")
+//        d == i.name
+//      })
+////      println(s"$i => $r")
+//      //TODO: at the end we should simulate an event ... using the added ...
+//      //hmm .. not sure what top do in the case of +! etc
+//      //maybe token should be at the start and support extra args for the ref on creation
+//      r
+//    })
     //(1) using just + +/ +// +!
     //for each model issue with created = None
     //find the first addable where description == issue.description
@@ -129,7 +129,7 @@ object Commander {
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.action.get}").toList
+    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.what.get}").toList
     Out(result, None, Nil)
   }
 
