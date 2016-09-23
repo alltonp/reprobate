@@ -173,7 +173,7 @@ object Commander {
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
 
-    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = Nil)
+    Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = releaseable.map(_.ref))
   }
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
