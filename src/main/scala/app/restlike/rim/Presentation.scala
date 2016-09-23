@@ -11,7 +11,7 @@ object Presentation {
   }
 
   def preWorkflowState(model: Model, aka: Option[String]) = {
-    val matching = model.issues.filter(i => i.status.isEmpty)
+    val matching = model.issues.filter(i => i.status.getOrElse("") == model.config.preWorkflowState)
     if (matching.isEmpty) s"${model.config.preWorkflowState} is empty" :: Nil
     else matching.map(i => i.render(model, highlightAka = aka))
   }

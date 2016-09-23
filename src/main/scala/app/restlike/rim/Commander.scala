@@ -168,7 +168,7 @@ object Commander {
     if (currentModel.releaseTags.contains(tag)) return Out(Messages.problem(s"$tag has already been released"), None, Nil)
     if (releaseable.isEmpty) return Out(Messages.problem(s"nothing to release for $tag"), None, Nil)
 
-    val release = Release(tag, releaseable.map(_.copy(status = Some(currentModel.config.postWorkflowState))), Some(systemClock().dateTime.getMillis))
+    val release = Release(tag, releaseable.map(_.copy(status = None)), Some(systemClock().dateTime.getMillis))
     //TODO: this can die soon ...
     val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
     val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
@@ -348,13 +348,13 @@ object Commander {
     def query(issues: List[Issue], terms: List[String]): List[Issue] = {
       terms match {
         case Nil => issues
-        case(ts) => query(issues.filter(i => i.search(ts.head)), ts.tail)
+        case(ts) => query(issues.filter(i => i.search(ts.head, currentModel.config)), ts.tail)
       }
     }
 
     val matching = query(currentModel.allIssuesIncludingReleased, terms)
     val result = if (matching.isEmpty) (s"no issues found" + (if (terms.nonEmpty) s" for: ${terms.mkString(" ")}" else "")) :: Nil
-    else SortByStatus(matching, currentModel).map(i => i.render(currentModel,highlightAka = Some(aka)))
+    else SortByStatus(matching, currentModel).map(i => i.render(currentModel, highlightAka = Some(aka)))
     Out(result, None, Nil)
   }
 
@@ -386,7 +386,7 @@ object Commander {
   }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, None, None, refProvider) match {
+    currentModel.createIssue(args, Some(currentModel.config.preWorkflowState), None, refProvider) match {
       case Left(e) => Out(e, None, Nil)
       case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel), Seq(r.created.ref))
     }
@@ -436,7 +436,7 @@ object SortByStatus {
   def apply(issues: Seq[Issue], currentModel: Model) = {
     val statusToIndex = ("" :: currentModel.config.workflowStates ::: currentModel.config.postWorkflowState :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
-    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(""), -1))
+    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(currentModel.config.postWorkflowState), -1))
   }
 }
 

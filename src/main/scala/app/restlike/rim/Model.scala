@@ -42,30 +42,37 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[S
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
   private val renderBlocked = customRed(blocked.getOrElse(""))
 
-  private def renderStatus(model: Option[Model]) = {
-    val value = status.fold("")(" ^" + _)
+  private def renderStatus(model: Option[Model], config: Config) = {
+    val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + _)
     colouredForStatus(model, value)
   }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
     model.fold(value)(m =>
       status match {
-        case None => customGrey(value)
+//        case None => customGrey(value)
         case Some(x) if blocked.isDefined => customRed(value)
         case Some(x) if x == m.beginState => customYellow(value)
         case Some(x) if x == m.endState => customGreen(value)
-        case Some(m.config.`postWorkflowState`) => customMagenta(value)
+        case Some(x) if x == m.config.preWorkflowState => customGrey(value)
+        case None => customMagenta(value)
         case _ => customOrange(value)
       })
   }
 
-  private val indexed = List(ref, name, renderStatus(None), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" ")
+  private var indexed: Option[String] = None
 
-  def search(query: String) = indexed.contains(query)
+  def search(query: String, config: Config) = {
+    if (indexed.isEmpty) {
+      indexed = Some(List(ref, name, renderStatus(None, config), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" "))
+    }
+
+    indexed.contains(query)
+  }
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
-    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model))} $renderBlocked"
+    s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model), model.config)} $renderBlocked"
   }
 }
 

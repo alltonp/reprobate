@@ -48,13 +48,13 @@ class RimSpec extends WordSpec with MustMatchers {
 
   "add issue" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, None, None, None)))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.preWorkflowState), None, None)))
     runAndExpect("+ an item", current, expected)
   }
 
   "add issue (ignoring surplus noise)" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, None, None, None)))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.preWorkflowState), None, None)))
     runAndExpect("+ an   item  ", current, expected)
   }
 
@@ -78,13 +78,13 @@ class RimSpec extends WordSpec with MustMatchers {
 
   "add with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, None, None, None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.preWorkflowState), None, None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : tag1 tag2", current, expected)
   }
 
   "strip dodgy chars from tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, None, None, None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.preWorkflowState), None, None, Set("tag1", "tag2"))))
     runAndExpect("+ an item : :tag1 :tag2", current, expected)
   }
 
@@ -285,10 +285,10 @@ class RimSpec extends WordSpec with MustMatchers {
 
   //releases
 
-  "releasing moves done issue and status to released" in {
+  "releasing moves done issue and status to none" in {
     val issue = Issue("1", "an item", None, Some(done), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = Some(released))), Some(systemClock().dateTime.getMillis))))
+    val expected = current.copy(issues = Nil, released = List(Release("a", List(issue.copy(status = None)), Some(systemClock().dateTime.getMillis))))
     runAndExpect("± a", current, expected)
   }
 
