@@ -29,11 +29,10 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 //TODO: so we actually want None on either .. hmmm ... how will rim ? work
 
 //TODO: I need and updated: Option[Long] ... find easy way to update everywhere
-//TODO: maybe add creator - but where would we show it?
 //TODO: if we do history right we won't need it actually ...
 //TODO: I need a new name, something more generic, thing?
 //TODO: added is more of a when to review next, if we do the defer 3M thing etc
-case class Issue(ref: String, name: String, added: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, name: String, when: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
