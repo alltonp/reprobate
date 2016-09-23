@@ -28,11 +28,10 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 //TODO: so maybe Some(-1) when in backlog, but that would look pants in the jsons ..
 //TODO: so we actually want None on either .. hmmm ... how will rim ? work
 
-//TODO: I need and updated: Option[Long] ... find easy way to update everywhere
-//TODO: if we do history right we won't need it actually ...
 //TODO: I need a new name, something more generic, thing?
-//TODO: added is more of a when to review next, if we do the defer 3M thing etc
-case class Issue(ref: String, name: String, when: Long, status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+//TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
+//TODO: think about dependsOn ...
+case class Issue(ref: String, name: String, when: Option[Long], status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -118,7 +117,7 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
     val maybeDupe = issues.find(i => i.name == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, ServiceFactory.systemClock().dateTime.getMillis, status, by, None, tagBits.toSet)
+    val created = Issue(newRef, description, None, status, by, None, tagBits.toSet)
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
