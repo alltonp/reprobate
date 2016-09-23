@@ -138,7 +138,7 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
   def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = config.workflowStates.head
-  def state(number: Int) = config.workflowStates(number) //TODO: this obviously needs thinking about if the states change
+  def state(number: Int) = (config.workflowStates ::: config.preWorkflowState :: Nil)(number) //TODO: this obviously needs thinking about if the states change
   def endState = config.workflowStates.reverse.head
   def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
