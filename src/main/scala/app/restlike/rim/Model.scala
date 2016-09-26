@@ -31,7 +31,9 @@ case class Universe(userToModel: immutable.Map[String, Model], tokenToUser: immu
 //TODO: I need a new name, something more generic, thing?
 //TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
 //TODO: think about dependsOn ...
-case class Issue(ref: String, name: String, when: Option[Long], status: Option[String], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String], blocked: Option[String], tags: Set[String] = Set.empty /*, history: Seq[History] = Seq.empty*/) {
+
+  //TODO: this should not be in colour for search indexing ...
   private def renderBy(highlightAka: Option[String]) = {
     (by, highlightAka) match {
       case (Some(b), a) => val r = " @" + b.toUpperCase; if (b == a.getOrElse("")) customBlue(r) else cyan(r)
@@ -43,18 +45,17 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[S
   private val renderBlocked = customRed(blocked.getOrElse(""))
 
   private def renderStatus(model: Option[Model], config: Config) = {
-    val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + _)
+    val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + config.allStates(_))
     colouredForStatus(model, value)
   }
 
   private def colouredForStatus(model: Option[Model], value: String) = {
     model.fold(value)(m =>
       status match {
-//        case None => customGrey(value)
         case Some(x) if blocked.isDefined => customRed(value)
+        case Some(x) if x == 0 => customGrey(value)
         case Some(x) if x == m.beginState => customYellow(value)
         case Some(x) if x == m.endState => customGreen(value)
-        case Some(x) if x == m.config.preWorkflowState => customGrey(value)
         case None => customMagenta(value)
         case _ => customOrange(value)
       })
@@ -62,12 +63,15 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[S
 
   private var indexed: Option[String] = None
 
+// TODO - BUG --- rim ? : ^ @ 1 .... this seems to match 1
   def search(query: String, config: Config) = {
     if (indexed.isEmpty) {
       indexed = Some(List(ref, name, renderStatus(None, config), renderBy(None).toLowerCase, renderBlocked, renderTags).mkString(" "))
+//      println("indexed: " + indexed)
     }
 
-    indexed.contains(query)
+//    println("contains: " + query + " -> " + indexed.getOrElse("").contains(query) + " <- " + indexed.getOrElse(""))
+    indexed.getOrElse("").contains(query)
   }
 
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
@@ -98,13 +102,16 @@ case class Tag(name: String, count: Int)
 //(5) borrow the bcrypt from thing
 //(6) be able to create new from ui/url create/name/email - sends token to email
 
-case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String])
+case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String]) {
+  val allStates = (Seq(preWorkflowState) ++ workflowStates)
+  val lastWorkflowStateIncludingPre = workflowStates.size
+}
 
 case class Model(config: Config, userToAka: immutable.Map[String, String], issues: List[Issue], released: List[Release]) {
   def knows_?(who: String) = userToAka.contains(who)
   def onBoard_?(issue: Issue) = issue.status.fold(false)(config.workflowStates.contains(_))
 
-  def createIssue(args: List[String], status: Option[String], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
+  def createIssue(args: List[String], status: Option[Int], by: Option[String], refProvider: RefProvider): Either[List[String], IssueCreation] = {
     if (args.mkString("").trim.isEmpty) return Left(Messages.descriptionEmpty)
 
     //TODO: this is well shonky!
@@ -137,9 +144,13 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
   def aka(who: String) = userToAka(who)
   def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
-  def beginState = config.workflowStates.head
-  def state(number: Int) = (config.workflowStates ::: config.preWorkflowState :: Nil)(number) //TODO: this obviously needs thinking about if the states change
-  def endState = config.workflowStates.reverse.head
+  def beginState = 1
+  def state(number: Int) = (allSomeStates)(number)
+
+  private def allSomeStates = config.workflowStates ::: config.preWorkflowState :: Nil
+
+  //TODO: this obviously needs thinking about if the states change
+  def endState = allSomeStates.size -1
   def releasableIssues = issues.filter(_.status == Some(endState))
   def releaseTags = released.map(_.tag)
   def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues

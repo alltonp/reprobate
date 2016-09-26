@@ -11,9 +11,9 @@ object Presentation {
   }
 
   def preWorkflowState(model: Model, aka: Option[String]) = {
-    val matching = model.issues.filter(i => i.status.getOrElse("") == model.config.preWorkflowState)
+    val matching = model.issues.filter(i => i.status == Some(0))
     if (matching.isEmpty) s"${model.config.preWorkflowState} is empty" :: Nil
-    else matching.map(i => i.render(model, highlightAka = aka))
+    else matching.map(i => i.render(model, highlightAka = aka, hideStatus = true))
   }
 
   def board(model: Model, changed: Seq[String], aka: String, hideBy: Boolean = false) = {
@@ -54,14 +54,21 @@ object Presentation {
   //TODO: this should show a nice "there is nothing to see" if that is the case
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includePreWorkflowState: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
-    val stateToIssues = issues.groupBy(_.status.getOrElse(model.config.preWorkflowState))
-    val interestingStates = (if (includePreWorkflowState) List(model.config.preWorkflowState) else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.postWorkflowState) else Nil)
-    interestingStates.map(s => {
-      val issuesForState = stateToIssues.getOrElse(s, Nil)
+    val stateToIssues: Map[Int, Seq[Issue]] = issues.groupBy(_.status.getOrElse(currentModel.config.lastWorkflowStateIncludingPre + 1))
+    val interestingStates = currentModel.config.allStates ++ (if (includeReleased) Seq(currentModel.config.postWorkflowState) else Nil)
+//      (if (includePreWorkflowState) List(model.config.preWorkflowState) else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.postWorkflowState) else Nil)
+
+    val interestingStates2 = interestingStates.zipWithIndex.filter(sAndI => {
+      if (!includePreWorkflowState && sAndI._2 == 0) false
+      else true
+    })
+
+    interestingStates2.map(s => {
+      val issuesForState = stateToIssues.getOrElse(s._2, Nil)
       val issues = issuesForState.map(i => s"\n ${
         i.render(model, hideStatus = true, hideBy = hideBy, hideTags = hideTags, highlight = changed.contains(i.ref), highlightAka = aka)
       }").mkString
-      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"$s: (${issuesForState.size})" + issues + "\n")
+      if (issuesForState.isEmpty && compressEmptyStates) None else Some(s"${s._1}: (${issuesForState.size})" + issues + "\n")
     }).flatten
   }
 

@@ -170,8 +170,8 @@ object Commander {
 
     val release = Release(tag, releaseable.map(_.copy(status = None)), Some(systemClock().dateTime.getMillis))
     //TODO: this can die soon ...
-    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
-    val updatedModel = currentModel.copy(issues = remainder, released = release :: releasesToMigrate )
+//    val releasesToMigrate = currentModel.released.map(r => r.copy(issues = r.issues.map(i => i.copy(status = Some(currentModel.config.postWorkflowState)))))
+    val updatedModel = currentModel.copy(issues = remainder, released = release :: currentModel.released/* :: releasesToMigrate */)
 
     Out(Presentation.release(currentModel, release, Some(aka)), Some(updatedModel), changed = releaseable.map(_.ref))
   }
@@ -260,12 +260,13 @@ object Commander {
   //TODO: model.backwardAState
   private def onBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val newStatus = if (found.status.isEmpty) None
+      val newStatus = if (found.status == Some(0)) Some(0)
       else {
-        val currentIndex = currentModel.config.workflowStates.indexOf(found.status.get)
-        if (currentIndex <= 0) None else Some(currentModel.config.workflowStates(currentIndex - 1))
+//        val currentIndex = currentModel.config.workflowStates.indexOf(found.status.get)
+//        if (currentIndex <= 0) None else Some(currentModel.config.workflowStates(currentIndex - 1))
+        found.status.map(i => i -1)
       }
-      val by = if (newStatus.isEmpty || newStatus == Some(currentModel.beginState)) None else Some(aka)
+      val by = if (newStatus.getOrElse(999) < 2) None else Some(aka)
       val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
@@ -290,7 +291,7 @@ object Commander {
 
   private def onFastBackwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val newStatus = None
+      val newStatus = Some(0)
       val updatedIssue = found.copy(status = newStatus, by = None)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
@@ -299,14 +300,20 @@ object Commander {
 
   private def onForwardIssue(ref: String, currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val newStatus = if (found.status.isEmpty) currentModel.beginState
-      else {
-        val currentIndex = currentModel.config.workflowStates.indexOf(found.status.get)
-        val newIndex = if (currentIndex >= currentModel.config.workflowStates.size - 1) currentIndex else currentIndex + 1
-        currentModel.config.workflowStates(newIndex)
-      }
-      val by = if (newStatus == currentModel.beginState) None else Some(aka)
-      val updatedIssue = found.copy(status = Some(newStatus), by = by)
+      val newStatus = found.status.map(s => {
+        if (s < currentModel.endState) s + 1 else s
+      })
+//      {
+//        if (found.status.isEmpty) currentModel.beginState
+//      else {
+//        val currentIndex = found.status.get
+//        val newIndex = if (currentIndex >= currentModel.config.workflowStates.size - 1) currentIndex else currentIndex + 1
+        //        currentModel.config.workflowStates(newIndex)
+//        newIndex
+//      }
+//      }
+      val by = if (newStatus.getOrElse(999) < 2) None else Some(aka)
+      val updatedIssue = found.copy(status = newStatus, by = by)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.board(updatedModel, Seq(ref), aka),
         Some(updatedModel), Seq(updatedIssue.ref))
@@ -386,7 +393,7 @@ object Commander {
   }
 
   private def onAddIssue(args: List[String], currentModel: Model, refProvider: RefProvider) = {
-    currentModel.createIssue(args, Some(currentModel.config.preWorkflowState), None, refProvider) match {
+    currentModel.createIssue(args, Some(0), None, refProvider) match {
       case Left(e) => Out(e, None, Nil)
       case Right(r) => Out(Messages.successfulUpdate(s"${r.created.render(currentModel)}"), Some(r.updatedModel), Seq(r.created.ref))
     }
@@ -400,7 +407,8 @@ object Commander {
   }
 
   private def onAddAndForwardIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-    currentModel.createIssue(args, Some(currentModel.state(1)), Some(aka), refProvider) match {
+    //TODO: ultimately count the /
+    currentModel.createIssue(args, Some(2), Some(aka), refProvider) match {
       case Left(e) => Out(e, None, Nil)
       case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel), Seq(r.created.ref))
     }
@@ -434,9 +442,9 @@ object Commander {
 //TODO: move this out
 object SortByStatus {
   def apply(issues: Seq[Issue], currentModel: Model) = {
-    val statusToIndex = ("" :: currentModel.config.workflowStates ::: currentModel.config.postWorkflowState :: Nil).zipWithIndex.toMap
+//    val statusToIndex: Map[String, Int] = (currentModel.config.preWorkflowState :: currentModel.config.workflowStates ::: currentModel.config.postWorkflowState :: Nil).zipWithIndex.toMap
 //    println(statusToIndex)
-    issues.sortBy(i => statusToIndex.getOrElse(i.status.getOrElse(currentModel.config.postWorkflowState), -1))
+    issues.sortBy(i => i.status.getOrElse(999))
   }
 }
 

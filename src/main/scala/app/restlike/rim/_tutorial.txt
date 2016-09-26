@@ -8,11 +8,11 @@ rim
 #show the backlog, its there
 rim .
 #move it onto the board
-rim 40 /
+rim 1 /
 #move along the board
-rim 40 /
+rim 1 /
 #until it's done
-rim 40 /
+rim 1 /
 
 #tag it
 
