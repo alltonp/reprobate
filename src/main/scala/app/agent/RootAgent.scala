@@ -121,6 +121,6 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   //TODO: should probably be a ButtonGroup
   private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)), Some("_blank"))
+  private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)).title("Open Incident History"), Some("_blank"))
   ).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }

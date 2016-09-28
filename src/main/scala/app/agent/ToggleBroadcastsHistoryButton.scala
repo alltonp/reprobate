@@ -11,7 +11,7 @@ case class ToggleBroadcastsHistoryButton(parent: RootAgent) extends ServerSideBu
 
   def id = "toggleBroadcastsHistory"
 
-  def presentation = ButtonPresentation(span(R(<i class="fa fa-bullhorn" aria-hidden="true"></i>)).render)
+  def presentation = ButtonPresentation(span(R(<i class="fa fa-bullhorn" aria-hidden="true"></i>)).title(title).render)
 
   def onClick = {
     shown = !shown

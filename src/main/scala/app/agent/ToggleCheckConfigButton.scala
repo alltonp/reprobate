@@ -6,7 +6,7 @@ import im.mange.jetboot.widget.{Button, ButtonPresentation}
 
 //TODO: theres a widget in here somewhere ... jetpac
 case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
-  val title = "Toggle Config"
+  val title = "Toggle Check Summary"
 
   private var shown = false
 
@@ -14,7 +14,7 @@ case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
 
   //TODO: this blows somewhat
 //  def presentation = ButtonPresentation(span().classes("glyphicon glyphicon-cog").render)
-  def presentation = ButtonPresentation(span(R(<i class="fa fa-info" aria-hidden="true"></i>)).render)
+  def presentation = ButtonPresentation(span(R(<i class="fa fa-info" aria-hidden="true"></i>)).title(title).render)
 
   def onClick = {
     shown = !shown
