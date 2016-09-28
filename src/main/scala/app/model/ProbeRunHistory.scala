@@ -14,23 +14,30 @@ case class ProbeRunHistory(allProbes: List[Probe], incidentLog: IncidentLog, his
   //TIP: leaving the println here to remind me to do fix it ...
 
   //TODO: this is really nasty, there must be a better way/
-  def add(probeRun: ProbeRun) {
+  def add(probeRun: ProbeRun): Unit = {
+
     currentRun.map(cr => {
-      summarisedHistory = summarisedHistory.map(ph => {
-        val r = cr.resultFor(ph.probe)
+      if (cr.probes == probeRun.probes) {
+        summarisedHistory = summarisedHistory.map(ph => {
+          val r = cr.resultFor(ph.probe)
 
-        val newPB = r match {
-          case Some(ProbeSuccess) => ph.copy(executedCount = ph.executedCount + 1)
-          case Some(ProbeFailure(_)) => ph.copy(executedCount = ph.executedCount + 1, failedCount = ph.failedCount + 1)
-          case Some(ProbeInactive) => ph.copy(inactiveCount = ph.inactiveCount + 1)
-          case _ => ph
-        }
+          val newPB = r match {
+            case Some(ProbeSuccess) => ph.copy(executedCount = ph.executedCount + 1)
+            case Some(ProbeFailure(_)) => ph.copy(executedCount = ph.executedCount + 1, failedCount = ph.failedCount + 1)
+            case Some(ProbeInactive) => ph.copy(inactiveCount = ph.inactiveCount + 1)
+            case _ => ph
+          }
 
-        newPB.copy(incidentCount = incidentLog.incidentCount(newPB.probe))
-      })
+          newPB.copy(incidentCount = incidentLog.incidentCount(newPB.probe))
+        })
+      }
+      else {
+//        println("resetting")
+        summarisedHistory = probeRun.probes.map(ChecksHistory(_, 0, 0, 0, 0))
+      }
     })
 
-    currentRun = Some(probeRun)
+      currentRun = Some(probeRun)
 //    history = probeRun :: history
 //    println("### history: " + history.size + ":" + history.map(_.when))
     ProbateRegistry.updateChecksExecuted(totalExecuted)
