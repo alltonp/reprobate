@@ -5,12 +5,12 @@ import im.mange.jetpac._
 import im.mange.jetboot.widget.{Button, ButtonPresentation}
 
 //TODO: theres a widget in here somewhere ... jetpac
-case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
+case class ToggleCheckSummaryButton(parent: RootAgent) extends ServerSideButton {
   val title = "Toggle Check Summary"
 
   private var shown = false
 
-  def id = "toggleCheckConfig"
+  def id = "toggleCheckSummary"
 
   //TODO: this blows somewhat
 //  def presentation = ButtonPresentation(span().classes("glyphicon glyphicon-cog").render)

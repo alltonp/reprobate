@@ -59,7 +59,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private val broadcastFlashAgent = BroadcastFlashAgent()
   private val checksConfigAgent = ChecksConfigAgent()
   private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
-  private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
+  private val toggleCheckSummaryButton = ToggleCheckSummaryButton(this)
   private val toggleBroadcastsHistoryButton = ToggleBroadcastsHistoryButton(this)
 
   private var checkStatusAgents: List[CheckStatusAgent] = _
@@ -81,7 +81,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = Bs.container(
-    Bs.row(col(12, R(broadcastButton, configButton, incidentsButton, statusMessageAgent))),
+    Bs.row(col(12, R(broadcastButton, infoButton, incidentsButton, statusMessageAgent))),
     Bs.row(col(12, checksProgressAgent)),
     Bs.row(col(12, checksSummaryAgent)),
     Bs.row(col(12, broadcastFlashAgent)),
@@ -119,8 +119,8 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def cleanup() {}
 
   //TODO: should probably be a ButtonGroup
-  private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def infoButton = span(toggleCheckSummaryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)).title("Open Incident History"), Some("_blank"))
-  ).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)).title("Open Incident History"), Some("_blank"))).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }

@@ -98,7 +98,6 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
     }
   )
 
-
   def render = {
     import Css._
 
