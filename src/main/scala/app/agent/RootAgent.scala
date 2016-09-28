@@ -2,7 +2,7 @@ package app.agent
 
 //import app.comet.Subscriber
 
-import app.agent.columneditor.{ColumnEditableAgent, Column, ColumnConfig, ColumnEditorAgent}
+import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, ColumnEditorAgent}
 import app.comet.AppCometActor
 import app.server._
 import im.mange.jetboot._
@@ -12,6 +12,7 @@ import app.server.ProbeFailure
 import app.server.CurrentRunStatusUpdate
 import app.model.{Broadcast, Probe}
 import app.server.ProbeStatusUpdate
+import im.mange.jetpac.html.LinkAnchor
 import im.mange.jetpac.page.CometPage
 import net.liftweb.sitemap.Loc
 
@@ -80,7 +81,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = Bs.container(
-    Bs.row(col(12, R(broadcastButton, configButton, statusMessageAgent))),
+    Bs.row(col(12, R(broadcastButton, configButton, incidentsButton, statusMessageAgent))),
     Bs.row(col(12, checksProgressAgent)),
     Bs.row(col(12, checksSummaryAgent)),
     Bs.row(col(12, broadcastFlashAgent)),
@@ -120,4 +121,6 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   //TODO: should probably be a ButtonGroup
   private def configButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)), Some("_blank"))
+  ).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }
