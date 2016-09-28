@@ -58,6 +58,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
   private val checksSummaryAgent = ChecksSummaryAgent()
+  private val checksConfigAgent = ChecksConfigAgent()
   private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
   private val toggleCheckSummaryButton = ToggleCheckSummaryButton(this)
   private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
@@ -74,6 +75,13 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
 
   private[agent] def hideCheckSummary = checksSummaryAgent.hide
 
+  private[agent] def requestCheckConfig = {
+    subscriber ! SendProbeConfig
+    checksConfigAgent.requestSummary
+  }
+
+  private[agent] def hideCheckConfig = checksConfigAgent.hide
+
   private[agent] def showBroadcasts = {
     subscriber ! SendBroadcasts
     broadcastsHistoryAgent.onShowRequest
@@ -82,14 +90,15 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = Bs.container(
-    Bs.row(col(12, R(broadcastButton, checkSummaryButton, incidentsButton, checkConfigButton, statusMessageAgent))),
+    Bs.row(col(12, R(broadcastButton, checkSummaryButton, checkConfigButton, incidentsButton, statusMessageAgent))),
     Bs.row(col(12, checksProgressAgent)),
     Bs.row(col(12, summaryAgent)),
     Bs.row(col(12, broadcastFlashAgent)),
     Bs.row(col(12, allProbesStatus)),
     Bs.row(col(12, incidentsAgent)),
+    Bs.row(col(12, broadcastsHistoryAgent)),
     Bs.row(col(12, checksSummaryAgent)),
-    Bs.row(col(12, broadcastsHistoryAgent))
+    Bs.row(col(12, checksConfigAgent))
 //    ,
 //    Bs.row(col(12, columnEditorAgent))
   )
@@ -111,7 +120,8 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = summaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
 
-  def onProbeConfigResponse(response: ProbeSummaryResponse) = checksSummaryAgent.show(response)
+  def onProbeSummaryResponse(response: ProbeSummaryResponse) = checksSummaryAgent.show(response)
+  def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)

@@ -9,8 +9,12 @@ object ProbeRegistry {
   def load: List[Probe] = {
 //    println("loading checks ...")
     val counter = ProbeIdCounter()
+    loadRaw.filterNot(l => l.trim.isEmpty || l.startsWith("-")).map(Probe(counter.next, _)).toList
+  }
+
+  def loadRaw = {
     if (!file.exists()) writeToFile(template)
-    Source.fromFile(file).getLines().filterNot(l => l.trim.isEmpty || l.startsWith("-")).map(Probe(counter.next, _)).toList
+    Source.fromFile(file).getLines()
   }
 
   private def writeToFile(content: String) {

@@ -46,6 +46,11 @@ case class ProbeSummaryRequest(subscriber: Subscriber)
 case class ProbeSummaryResponse(probes: List[ChecksHistory])
 
 //TODO: this is all a bit manky - needing two messages for the request
+case object SendProbeConfig
+case class ProbeConfigRequest(subscriber: Subscriber)
+case class ProbeConfigResponse(config: String)
+
+//TODO: this is all a bit manky - needing two messages for the request
 case object SendBroadcasts
 case class BroadcastsRequest(subscriber: Subscriber)
 case class BroadcastsResponse(broadcasts: List[Broadcast])

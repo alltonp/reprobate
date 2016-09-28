@@ -9,7 +9,7 @@ import java.text.DecimalFormat
 
 case class SummaryAgent() extends Renderable {
   private val formatter = new DecimalFormat( "#,###,###,###" )
-  private val body = div(id = Some("checksSummary")).styles(display(inlineBlock))
+  private val body = div(id = Some("summary")).styles(display(inlineBlock))
   private val panel = div(body).classes(textCenter, "center-block").styles(marginBottom("10px"))
 
   def render = panel.render

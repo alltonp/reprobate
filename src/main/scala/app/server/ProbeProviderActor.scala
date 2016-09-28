@@ -44,7 +44,8 @@ class ProbeProviderActor extends LiftActor {
     case u:ProbeStatusUpdate => onProbeStatusUpdate(u)
     case Subscribe(s) => onSubscribe(s)
     case Unsubscribe(s) => onUnsubscribe(s)
-    case ProbeSummaryRequest(s) => onProbeConfigRequest(s)
+    case ProbeSummaryRequest(s) => onProbeSummaryRequest(s)
+    case ProbeConfigRequest(s) => onProbeConfigRequest(s)
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
     //TODO: should probably rename this to StatusMessage
     case b:BroadcastFlash => onBroadcast(b)
@@ -207,8 +208,12 @@ class ProbeProviderActor extends LiftActor {
     println("### " + dateFormats().timeNow + " - subscriber removed, now have: " + subscribers.size)
   }
 
-  private def onProbeConfigRequest(subscriber: Subscriber) {
+  private def onProbeSummaryRequest(subscriber: Subscriber) {
     subscriber ! ProbeSummaryResponse(probeRunHistory.probesWithHistory)
+  }
+
+  private def onProbeConfigRequest(subscriber: Subscriber) {
+    subscriber ! ProbeConfigResponse(ProbeRegistry.loadRaw.mkString("\n"))
   }
 
   private def onBroadcastsRequest(subscriber: Subscriber) {
