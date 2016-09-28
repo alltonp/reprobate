@@ -71,11 +71,16 @@ class ProbeProviderActor extends LiftActor {
           in = in - 1
         }
 
-        thisInstance ! createMessageUpdate("refreshing", "Check configuration")
-        //TODO: make me a config - sleep between probe runs
-        currentRun = createProbeRun
+        val nextRun = createProbeRun
+
+        if (currentRun.probes != nextRun.probes) {
+          println("### " + dateFormats().timeNow + " - check configuration changed")
+          thisInstance ! createMessageUpdate("detected", "Check configuration change")
+          Thread.sleep(2000)
+        }
+
+        currentRun = nextRun
         probeRunHistory.add(currentRun)
-        Thread.sleep(1000)
 
         thisInstance ! PreExecuteProbe(currentRun.nextToRun)
       }
