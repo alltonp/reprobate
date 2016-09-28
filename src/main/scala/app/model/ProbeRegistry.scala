@@ -6,7 +6,8 @@ import scala.io.Source
 object ProbeRegistry {
   private val file = new File("checks.csv")
 
-  def load = {
+  def load: List[Probe] = {
+//    println("loading checks ...")
     val counter = ProbeIdCounter()
     if (!file.exists()) writeToFile(template)
     Source.fromFile(file).getLines().filterNot(l => l.trim.isEmpty || l.startsWith("-")).map(Probe(counter.next, _)).toList

@@ -64,16 +64,18 @@ class ProbeProviderActor extends LiftActor {
 
     new Thread(new Runnable() {
       override def run() {
-        //TODO: make me a config - sleep between probe runs
-        currentRun = createProbeRun
-        probeRunHistory.add(currentRun)
-
         var in = 10
         while (in > 0) {
           Thread.sleep(1000)
           thisInstance ! createMessageUpdate("waiting", "Next run starting in ... " + in)
           in = in - 1
         }
+
+        thisInstance ! createMessageUpdate("refreshing", "Check configuration")
+        //TODO: make me a config - sleep between probe runs
+        currentRun = createProbeRun
+        probeRunHistory.add(currentRun)
+        Thread.sleep(1000)
 
         thisInstance ! PreExecuteProbe(currentRun.nextToRun)
       }
