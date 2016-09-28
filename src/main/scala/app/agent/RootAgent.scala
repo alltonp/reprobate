@@ -53,25 +53,26 @@ case class AppPage(override val path: String, override val params: Loc.LocParam[
 case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Renderable {
   private val allProbesStatus = div(id = Some("allProbesStatus"))
   private val checksProgressAgent = ChecksProgressAgent()
-  private val checksSummaryAgent = ChecksSummaryAgent()
+  private val summaryAgent = SummaryAgent()
   private val incidentsAgent = IncidentsAgent()
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
-  private val checksConfigAgent = ChecksConfigAgent()
+  private val checksSummaryAgent = ChecksSummaryAgent()
   private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
   private val toggleCheckSummaryButton = ToggleCheckSummaryButton(this)
+  private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
   private val toggleBroadcastsHistoryButton = ToggleBroadcastsHistoryButton(this)
 
   private var checkStatusAgents: List[CheckStatusAgent] = _
 
   def render = <form class="lift:form.ajax"><br/>{layout.render}</form>
 
-  private[agent] def requestConfig = {
+  private[agent] def requestCheckSummary = {
     subscriber ! SendProbeConfig
-    checksConfigAgent.requestConfig
+    checksSummaryAgent.requestSummary
   }
 
-  private[agent] def hideConfig = checksConfigAgent.hide
+  private[agent] def hideCheckSummary = checksSummaryAgent.hide
 
   private[agent] def showBroadcasts = {
     subscriber ! SendBroadcasts
@@ -81,13 +82,13 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private[agent] def hideBroadcasts = broadcastsHistoryAgent.onHide
 
   private def layout = Bs.container(
-    Bs.row(col(12, R(broadcastButton, infoButton, incidentsButton, statusMessageAgent))),
+    Bs.row(col(12, R(broadcastButton, checkSummaryButton, incidentsButton, checkConfigButton, statusMessageAgent))),
     Bs.row(col(12, checksProgressAgent)),
-    Bs.row(col(12, checksSummaryAgent)),
+    Bs.row(col(12, summaryAgent)),
     Bs.row(col(12, broadcastFlashAgent)),
     Bs.row(col(12, allProbesStatus)),
     Bs.row(col(12, incidentsAgent)),
-    Bs.row(col(12, checksConfigAgent)),
+    Bs.row(col(12, checksSummaryAgent)),
     Bs.row(col(12, broadcastsHistoryAgent))
 //    ,
 //    Bs.row(col(12, columnEditorAgent))
@@ -107,10 +108,10 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
 
   def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) = checksProgressAgent.onCurrentRunStatusUpdate(update)
 
-  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = checksSummaryAgent.onAllRunsStatusUpdate(update) &
+  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = summaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
 
-  def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
+  def onProbeConfigResponse(response: ProbeConfigResponse) = checksSummaryAgent.show(response)
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
@@ -119,8 +120,8 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def cleanup() {}
 
   //TODO: should probably be a ButtonGroup
-  private def infoButton = span(toggleCheckSummaryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
-  private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def checkSummaryButton = span(toggleCheckSummaryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
+  private def checkConfigButton = span(toggleCheckConfigButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def broadcastButton = span(toggleBroadcastsHistoryButton).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
   private def incidentsButton = span(LinkAnchor("", "/incidents", span(R(<i class="fa fa-history" aria-hidden="true"></i>)).title("Open Incident History"), Some("_blank"))).classes(pullLeft).styles(paddingTop("9px"), paddingRight("10px"))
 }

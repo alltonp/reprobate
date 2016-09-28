@@ -18,7 +18,7 @@ case class ToggleCheckSummaryButton(parent: RootAgent) extends ServerSideButton 
 
   def onClick = {
     shown = !shown
-    if (shown) parent.requestConfig else parent.hideConfig
+    if (shown) parent.requestCheckSummary else parent.hideCheckSummary
   }
 }
 

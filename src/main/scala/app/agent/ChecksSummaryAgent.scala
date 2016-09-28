@@ -1,25 +1,15 @@
 package app.agent
 
-import app.ServiceFactory._
-import im.mange.jetboot.widget.Spacer
+import app.server.ProbeConfigResponse
+import app.ui.BigSpinner
 import im.mange.jetboot._
 import im.mange.jetpac._
-import app.server.AllRunsStatusUpdate
-import java.text.DecimalFormat
 
 case class ChecksSummaryAgent() extends Renderable {
-  private val formatter = new DecimalFormat( "#,###,###,###" )
-  private val body = div(id = Some("checksSummary")).styles(display(inlineBlock))
-  private val panel = div(body).classes(textCenter, "center-block").styles(marginBottom("10px"))
+  private val holder = div(Some("checksConfig")).classes("hidden").styles(marginTop("5px"))
 
-  def render = panel.render
-
-  def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = body.fill(
-    div(
-      span(R(<small>checks executed</small>), Spacer(), R(formatter.format(update.totalExecuted))).classes("h4").styles(padding("40px")),
-      span(R(<small>incidents reported</small>), Spacer(), R(formatter.format(update.totalIncidents))).classes("h4").styles(padding("40px")),
-      span(R(<small>open incidents</small>), Spacer(), R(formatter.format(update.openIncidents.size))).classes("h4").styles(padding("40px")),
-      span(R(<small>last updated</small>), Spacer(), R(dateFormats().standardTimeFormat.print(systemClock().dateTime))).classes("h4").styles(padding("40px"))
-    )
-  )
+  def render = holder.render
+  def requestSummary = holder.show & holder.fill(BigSpinner("checksConfigSpinner", "Loading checks..."))
+  def show(response: ProbeConfigResponse) = holder.fill(ChecksConfigPresentation(response.probes))
+  def hide = holder.empty & holder.hide
 }
