@@ -13,7 +13,8 @@ case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
   def id = "toggleCheckConfig"
 
   //TODO: this blows somewhat
-  def presentation = ButtonPresentation(span().classes("glyphicon glyphicon-cog").render)
+//  def presentation = ButtonPresentation(span().classes("glyphicon glyphicon-cog").render)
+  def presentation = ButtonPresentation(span(R(<i class="fa fa-info" aria-hidden="true"></i>)).render)
 
   def onClick = {
     shown = !shown
