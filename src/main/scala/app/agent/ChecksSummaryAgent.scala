@@ -1,6 +1,6 @@
 package app.agent
 
-import app.server.ProbeConfigResponse
+import app.server.ProbeSummaryResponse
 import app.ui.BigSpinner
 import im.mange.jetboot._
 import im.mange.jetpac._
@@ -10,6 +10,6 @@ case class ChecksSummaryAgent() extends Renderable {
 
   def render = holder.render
   def requestSummary = holder.show & holder.fill(BigSpinner("checksConfigSpinner", "Loading checks..."))
-  def show(response: ProbeConfigResponse) = holder.fill(ChecksConfigPresentation(response.probes))
+  def show(response: ProbeSummaryResponse) = holder.fill(ChecksConfigPresentation(response.probes))
   def hide = holder.empty & holder.hide
 }

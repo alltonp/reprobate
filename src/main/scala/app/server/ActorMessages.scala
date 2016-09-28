@@ -41,9 +41,9 @@ case class Message(subject: String, detail: String)
 case class AllRunsStatusUpdate(totalExecuted: Long, totalIncidents: Long, openIncidents: List[Incident], closedIncidents: List[Incident])
 
 //TODO: this is all a bit manky - needing two messages for the request
-case object SendProbeConfig
-case class ProbeConfigRequest(subscriber: Subscriber)
-case class ProbeConfigResponse(probes: List[ChecksHistory])
+case object SendProbeSummary
+case class ProbeSummaryRequest(subscriber: Subscriber)
+case class ProbeSummaryResponse(probes: List[ChecksHistory])
 
 //TODO: this is all a bit manky - needing two messages for the request
 case object SendBroadcasts

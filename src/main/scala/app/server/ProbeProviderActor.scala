@@ -44,7 +44,7 @@ class ProbeProviderActor extends LiftActor {
     case u:ProbeStatusUpdate => onProbeStatusUpdate(u)
     case Subscribe(s) => onSubscribe(s)
     case Unsubscribe(s) => onUnsubscribe(s)
-    case ProbeConfigRequest(s) => onProbeConfigRequest(s)
+    case ProbeSummaryRequest(s) => onProbeConfigRequest(s)
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
     //TODO: should probably rename this to StatusMessage
     case b:BroadcastFlash => onBroadcast(b)
@@ -208,7 +208,7 @@ class ProbeProviderActor extends LiftActor {
   }
 
   private def onProbeConfigRequest(subscriber: Subscriber) {
-    subscriber ! ProbeConfigResponse(probeRunHistory.probesWithHistory)
+    subscriber ! ProbeSummaryResponse(probeRunHistory.probesWithHistory)
   }
 
   private def onBroadcastsRequest(subscriber: Subscriber) {

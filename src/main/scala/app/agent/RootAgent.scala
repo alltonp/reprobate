@@ -68,7 +68,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def render = <form class="lift:form.ajax"><br/>{layout.render}</form>
 
   private[agent] def requestCheckSummary = {
-    subscriber ! SendProbeConfig
+    subscriber ! SendProbeSummary
     checksSummaryAgent.requestSummary
   }
 
@@ -111,7 +111,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) = summaryAgent.onAllRunsStatusUpdate(update) &
                                                            incidentsAgent.onAllRunsStatusUpdate(update)
 
-  def onProbeConfigResponse(response: ProbeConfigResponse) = checksSummaryAgent.show(response)
+  def onProbeConfigResponse(response: ProbeSummaryResponse) = checksSummaryAgent.show(response)
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
