@@ -58,7 +58,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   private val statusMessageAgent = StatusMessageAgent()
   private val broadcastFlashAgent = BroadcastFlashAgent()
   private val checksSummaryAgent = ChecksSummaryAgent()
-  private val checksConfigAgent = ChecksConfigAgent()
+  private val checksConfigAgent = ChecksConfigAgent(subscriber)
   private val broadcastsHistoryAgent = BroadcastsHistoryAgent()
   private val toggleCheckSummaryButton = ToggleCheckSummaryButton(this)
   private val toggleCheckConfigButton = ToggleCheckConfigButton(this)
