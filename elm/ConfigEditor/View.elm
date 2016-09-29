@@ -71,7 +71,7 @@ runButton disable =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
       , onClick RunCommand
-      , title "Run Command"
+      , title "Save Config"
       , disabled disable
       ]
       [
