@@ -40,7 +40,7 @@ case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
       case PortMessage("RunCommand", command) =>
         //TODO: this should be the authorised users initials or email ....
         //.. probsbly email and then have an aka to the email, so doesnt clash with cli versions
-        val r = Controller.execute("PA", RimToken.token, command)
+        val r = Controller.execute("anon", RimToken.token, command)
         println(r)
         subscriber ! Init
 
