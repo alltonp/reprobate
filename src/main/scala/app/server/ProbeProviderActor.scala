@@ -50,6 +50,11 @@ class ProbeProviderActor extends LiftActor {
     //TODO: should probably rename this to StatusMessage
     case b:BroadcastFlash => onBroadcast(b)
     case GetProbeStatuses => reply(ProbeStatuses(currentProbeStatuses.failures))
+    case c:ConfigChanged => onConfigChanged(c)
+  }
+
+  private def onConfigChanged(configChanged: ConfigChanged) {
+    subscribers.foreach(_ ! configChanged)
   }
 
   private def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
@@ -77,6 +82,7 @@ class ProbeProviderActor extends LiftActor {
         if (currentRun.probes != nextRun.probes) {
           incidentLog.onConfigChanged()
           currentProbeStatuses.onConfigChanged()
+          thisInstance ! ConfigChanged(nextRun.probes)
           println("### " + dateFormats().timeNow + " - configuration change")
           thisInstance ! createMessageUpdate("detected", "Configuration change")
           Thread.sleep(2000)

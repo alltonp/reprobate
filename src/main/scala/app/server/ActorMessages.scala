@@ -20,6 +20,7 @@ case class PreExecuteProbe(probe: Probe)
 case class ReallyExecuteProbe(probe: Probe)
 case class PostExecuteProbe(probe: Probe, result: ProbeStatus)
 case class ProbeStatusUpdate(probe: Probe, status: ProbeStatus, incident: Option[Incident])
+case class ConfigChanged(allProbes: List[Probe])
 
 sealed trait ProbeStatus
 case object ProbeSuccess extends ProbeStatus

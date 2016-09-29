@@ -129,6 +129,8 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
 
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
+  def onConfigChanged(allProbes: List[Probe]) = onInit(allProbes)
+
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
   def onBroadcast(broadcast: Broadcast) = broadcastFlashAgent.onBroadcast(broadcast)
 
