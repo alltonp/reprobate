@@ -45,6 +45,10 @@ case class CurrentProbeStatuses(probes: List[app.model.Probe]) {
     probeToStatus = probeToStatus.updated(probe, status)
   }
 
+  def onConfigChanged() {
+    probeToStatus = new HashMap[Probe,ProbeStatus]()
+  }
+
   def failures = probeToStatus.flatMap(pts => {
     pts._2 match {
       case ProbeFailure(f) => Some(FailedProbe(pts._1, f))
