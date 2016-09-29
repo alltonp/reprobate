@@ -34,10 +34,11 @@ agentView model =
 --          [
 --          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
 --            [
-            configEditor ((Maybe.map (\m -> m.config) model.agentModel) |> Maybe.withDefault "") False
+--            configEditor ((Maybe.map (\m -> m.config) model.agentModel) |> Maybe.withDefault "") False
+            configEditor (model.command) False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
 --            ]
-          --, div [ class "form-group" ] [ runButton (False) ]
+          , div [ class "form-group" ] [ runButton (False) ]
 --          ]
 --      ]
     ]
@@ -47,7 +48,7 @@ configEditor : String -> Bool -> Html Msg
 configEditor v disable =
   textarea [ class "form-control input-sm"
         , onInput (\v -> (CommandChanged v))
-        , onEnter RunCommand
+        --, onEnter RunCommand
         , disabled disable
         , value v
         , rows 30
@@ -74,5 +75,5 @@ runButton disable =
       , disabled disable
       ]
       [
-      i [ class "fa fa-plus-circle fa-2x" ] []
+      i [ class "fa fa-check fa-2x" ] []
       ]
