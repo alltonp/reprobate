@@ -30,7 +30,7 @@ case class IncidentLog(historicIncidentsReported: Long) {
   def currentOpenIncident(probe: Probe) = incidents.find(i => i.probe == probe && i.isOpen)
 
   def onConfigChanged(): Unit = {
-    incidents = incidents.map(i => { i.copy(finish = Some(systemClock().dateTime)) })
+    incidents = incidents.map(i => { i.copy(finish = if (i.finish.isEmpty) Some(systemClock().dateTime) else i.finish) })
     IncidentRegistry.updateIncidents(incidents)
   }
 
