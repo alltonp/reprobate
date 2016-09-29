@@ -5,7 +5,7 @@ import im.mange.jetpac._
 
 //TODO: theres a widget in here somewhere ... jetpac
 case class ToggleCheckConfigButton(parent: RootAgent) extends ServerSideButton {
-  val title = "Toggle Check Config"
+  val title = "Toggle Edit Config"
 
   private var shown = false
 
