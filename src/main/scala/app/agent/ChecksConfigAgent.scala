@@ -20,6 +20,6 @@ case class ChecksConfigAgent(subscriber: Subscriber) extends Renderable {
 
   def render = holder.render
   def requestSummary = holder.show & holder.fill(BigSpinner("checksConfigSpinner", "Loading checks config..."))
-  def show(response: ProbeConfigResponse) = configEditorAgent.onLoad(response.config) & holder.fill(R(configEditorAgent))
+  def show(response: ProbeConfigResponse) = holder.fill(R(configEditorAgent)) & configEditorAgent.onLoad(response.config)
   def hide = holder.empty & holder.hide
 }
