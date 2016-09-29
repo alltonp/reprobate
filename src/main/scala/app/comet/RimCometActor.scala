@@ -70,9 +70,9 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   println("refresh")
   private val params: Map[String, List[String]] = S.request.get.params
   //TODO: ultimately lookup "token" param - but use a read only token ...
-  println(s"request: ${S.request.get._params}")
-  println(s"params: ${params}")
-  println(s"params2: ${S.param("foo")}")
+//  println(s"request: ${S.request.get._params}")
+//  println(s"params: ${params}")
+//  println(s"params2: ${S.param("foo")}")
 //  println(s"params2: ${S.uriAndQueryString}")
 
 //  println(s"path: ${S.request.get.path}")
