@@ -12,8 +12,9 @@ decodeAgentModel serialised =
 
 agentModelDecoder : Decoder AgentModel
 agentModelDecoder =
-  JsonDecode.object1 AgentModel
+  JsonDecode.object2 AgentModel
     ("columns" := JsonDecode.list columnDecoder)
+    (JsonDecode.at ["config"] JsonDecode.string)
 
 
 columnDecoder : Decoder Column

@@ -23,7 +23,7 @@ type alias Column =
 
 type alias AgentModel =
    { columns : List Column
---   , config : String
+   , config : String
    }
 
 
