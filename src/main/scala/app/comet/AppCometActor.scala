@@ -2,7 +2,7 @@ package app.comet
 
 import app.ServiceFactory._
 import app.agent.RootAgent
-import app.model.Broadcast
+import app.model.{Broadcast, ProbeRegistry}
 import app.server._
 import im.mange.jetboot._
 import im.mange.jetpac._
@@ -51,9 +51,11 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
     case m:Broadcast ⇒ partialUpdate(rootAgent.onBroadcast(m))
     case SendProbeSummary ⇒ partialUpdate(onSendProbeSummary)
     case SendProbeConfig ⇒ partialUpdate(onSendProbeConfig)
+    case r:SaveProbeConfig ⇒ partialUpdate(onSaveProbeConfig(r.config))
     case SendBroadcasts ⇒ partialUpdate(onShowBroadcasts)
     case r:ProbeSummaryResponse ⇒ partialUpdate(rootAgent.onProbeSummaryResponse(r))
     case r:ProbeConfigResponse ⇒ partialUpdate(rootAgent.onProbeConfigResponse(r))
+    case r:HaveSavedProbeConfig ⇒ partialUpdate(rootAgent.onHaveSavedProbeConfig)
     case r:BroadcastsResponse ⇒ partialUpdate(rootAgent.onBroadcastsResponse(r))
     case e => logger.error(s"${getClass.getSimpleName}: unexpected message received: $e")
   }
@@ -67,6 +69,15 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
   private def onSendProbeConfig = {
     probeProviderActor() ! ProbeConfigRequest(this)
     nothing
+  }
+
+  private def onSaveProbeConfig(config: String) = {
+    //TODO: this is dirty .. should do it on the server ... and the naming is terrible
+    ProbeRegistry.saveRaw(config)
+    this ! HaveSavedProbeConfig()
+
+    //    probeProviderActor() ! ProbeConfigRequest(this)
+//    nothing
   }
 
   private def onShowBroadcasts = {

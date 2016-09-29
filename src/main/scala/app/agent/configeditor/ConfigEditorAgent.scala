@@ -1,7 +1,9 @@
 package app.agent.configeditor
 
 import app.comet.{Init, RimToken}
+import app.model.ProbeRegistry
 import app.restlike.rim.Controller
+import app.server.SaveProbeConfig
 import im.mange.belch.{Belch, PortMessage, ToLiftPort}
 import im.mange.jetpac.Renderable
 import im.mange.jetpac.comet.Subscriber
@@ -43,7 +45,9 @@ case class ConfigEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
         //.. probsbly email and then have an aka to the email, so doesnt clash with cli versions
 //        val r = Controller.execute("PA", RimToken.token, command)
 //        println(r)
-        subscriber ! Init
+//        subscriber ! Init
+//        parent.onColumnsSaved
+        subscriber ! SaveProbeConfig(command)
 
       case x => throw new RuntimeException(s"Don't know how to handle: $x")
     }

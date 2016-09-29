@@ -17,6 +17,10 @@ object ProbeRegistry {
     Source.fromFile(file).getLines()
   }
 
+  def saveRaw(config: String): Unit = {
+    writeToFile(config)
+  }
+
   private def writeToFile(content: String) {
     val pw = new java.io.PrintWriter(file)
     try pw.write(content) finally pw.close()

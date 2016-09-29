@@ -49,6 +49,8 @@ case class ProbeSummaryResponse(probes: List[ChecksHistory])
 case object SendProbeConfig
 case class ProbeConfigRequest(subscriber: Subscriber)
 case class ProbeConfigResponse(config: String)
+case class SaveProbeConfig(config: String)
+case class HaveSavedProbeConfig()
 
 //TODO: this is all a bit manky - needing two messages for the request
 case object SendBroadcasts

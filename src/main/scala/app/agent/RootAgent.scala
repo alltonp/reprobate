@@ -14,6 +14,7 @@ import app.model.{Broadcast, Probe}
 import app.server.ProbeStatusUpdate
 import im.mange.jetpac.html.LinkAnchor
 import im.mange.jetpac.page.CometPage
+import net.liftweb.http.js.JsCmd
 import net.liftweb.sitemap.Loc
 
 //TODO:
@@ -122,6 +123,10 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
 
   def onProbeSummaryResponse(response: ProbeSummaryResponse) = checksSummaryAgent.show(response)
   def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
+
+  //TODO: this is nasty too...
+  def onHaveSavedProbeConfig = toggleCheckConfigButton.onClick & checksConfigAgent.hide
+
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 
   def onMessage(message: Message) = statusMessageAgent.onMessage(message)
