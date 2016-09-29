@@ -9,7 +9,7 @@ import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
-case class AgentModel(columns: Seq[Column])
+case class AgentModel(columns: Seq[Column], config: String)
 case class Column(name: String, selected: Boolean, system: Boolean)
 case class ColumnConfig(columns: Seq[Column])
 
@@ -21,7 +21,8 @@ case class ConfigEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
 
   def render = belch.render
 
-  def onInit = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns))))
+//  def onInit = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns))))
+  def onLoad(config: String) = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns, config))))
 
   def currentColumnConfig = columnConfig
 
