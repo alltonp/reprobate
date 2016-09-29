@@ -45,13 +45,12 @@ agentView model =
 
 configEditor : String -> Bool -> Html Msg
 configEditor v disable =
-  input [ type' "text"
-        , placeholder "Command"
-        , class "form-control input-sm"
+  textarea [ class "form-control input-sm"
         , onInput (\v -> (CommandChanged v))
         , onEnter RunCommand
         , disabled disable
         , value v
+        , rows 30
         ] []
 
 
