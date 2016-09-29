@@ -34,7 +34,7 @@ agentView model =
 --          [
 --          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
 --            [
-            configEditor model.command False
+            configEditor ((Maybe.map (\m -> m.config) model.agentModel) |> Maybe.withDefault "") False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
 --            ]
           --, div [ class "form-group" ] [ runButton (False) ]
