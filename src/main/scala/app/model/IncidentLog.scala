@@ -29,6 +29,11 @@ case class IncidentLog(historicIncidentsReported: Long) {
   def incidentCount(probe: Probe) = incidents.filter(_.probe == probe).size
   def currentOpenIncident(probe: Probe) = incidents.find(i => i.probe == probe && i.isOpen)
 
+  def onConfigChanged(): Unit = {
+    incidents = incidents.map(i => { i.copy(finish = Some(systemClock().dateTime)) })
+    IncidentRegistry.updateIncidents(incidents)
+  }
+
   //TODO: we should probably have a property for auto-close at midnight
   private def onFailure(probe: Probe, failure: ProbeFailure) {
     if (firstTimeFailed(probe)) openAnIncident(probe, failure)

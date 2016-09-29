@@ -75,6 +75,7 @@ class ProbeProviderActor extends LiftActor {
         val nextRun = createProbeRun
 
         if (currentRun.probes != nextRun.probes) {
+          incidentLog.onConfigChanged()
           println("### " + dateFormats().timeNow + " - configuration change")
           thisInstance ! createMessageUpdate("detected", "Configuration change")
           Thread.sleep(2000)
