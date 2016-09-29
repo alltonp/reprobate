@@ -28,9 +28,18 @@ update action model =
         let model' = { model | command = "" }
         in (model', configEditorAgentToLift (runCommand model.command))
 
+    CancelCommand ->
+        let model' = { model | command = "" }
+        in (model', configEditorAgentToLift (cancelCommand ""))
+
     NoOp -> model ! []
 
 
 runCommand : String -> PortMessage
 runCommand command =
     PortMessage "RunCommand" (command)
+
+
+cancelCommand : String -> PortMessage
+cancelCommand command =
+    PortMessage "CancelCommand" (command)

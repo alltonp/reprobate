@@ -125,7 +125,7 @@ case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Rende
   def onProbeConfigResponse(response: ProbeConfigResponse) = checksConfigAgent.show(response)
 
   //TODO: this is nasty too...
-  def onHaveSavedProbeConfig = toggleCheckConfigButton.onClick & checksConfigAgent.hide
+  def onSavedOrCancelProbeConfig = toggleCheckConfigButton.onClick & checksConfigAgent.hide
 
   def onBroadcastsResponse(response: BroadcastsResponse) = broadcastsHistoryAgent.onShowResponse(response)
 

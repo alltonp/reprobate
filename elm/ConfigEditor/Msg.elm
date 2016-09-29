@@ -10,4 +10,5 @@ type Msg
 
     | CommandChanged (String)
     | RunCommand
+    | CancelCommand
     | NoOp

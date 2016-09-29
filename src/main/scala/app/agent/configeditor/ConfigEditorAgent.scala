@@ -3,7 +3,7 @@ package app.agent.configeditor
 import app.comet.{Init, RimToken}
 import app.model.ProbeRegistry
 import app.restlike.rim.Controller
-import app.server.SaveProbeConfig
+import app.server.{CancelProbeConfig, SaveProbeConfig}
 import im.mange.belch.{Belch, PortMessage, ToLiftPort}
 import im.mange.jetpac.Renderable
 import im.mange.jetpac.comet.Subscriber
@@ -36,9 +36,10 @@ case class ConfigEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
         columnConfig = tagsFromJson(payload)
 //        subscriber ! Init()
 
-      case PortMessage("SaveColumns", _) =>
-        parent.onColumnsSaved
+      case PortMessage("CancelCommand", _) =>
+//        parent.onColumnsSaved
 //        subscriber ! Init()
+        subscriber ! CancelProbeConfig()
 
       case PortMessage("RunCommand", command) =>
         //TODO: this should be the authorised users initials or email ....

@@ -52,10 +52,11 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
     case SendProbeSummary ⇒ partialUpdate(onSendProbeSummary)
     case SendProbeConfig ⇒ partialUpdate(onSendProbeConfig)
     case r:SaveProbeConfig ⇒ partialUpdate(onSaveProbeConfig(r.config))
+    case r:CancelProbeConfig ⇒ partialUpdate(rootAgent.onSavedOrCancelProbeConfig)
     case SendBroadcasts ⇒ partialUpdate(onShowBroadcasts)
     case r:ProbeSummaryResponse ⇒ partialUpdate(rootAgent.onProbeSummaryResponse(r))
     case r:ProbeConfigResponse ⇒ partialUpdate(rootAgent.onProbeConfigResponse(r))
-    case r:HaveSavedProbeConfig ⇒ partialUpdate(rootAgent.onHaveSavedProbeConfig)
+    case r:HaveSavedProbeConfig ⇒ partialUpdate(rootAgent.onSavedOrCancelProbeConfig)
     case r:BroadcastsResponse ⇒ partialUpdate(rootAgent.onBroadcastsResponse(r))
     case e => logger.error(s"${getClass.getSimpleName}: unexpected message received: $e")
   }

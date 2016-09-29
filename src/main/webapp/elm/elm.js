@@ -9447,6 +9447,7 @@ var _theorem$thing$ConfigEditor_Codec$decodeAgentModel = function (serialised) {
 };
 
 var _theorem$thing$ConfigEditor_Msg$NoOp = {ctor: 'NoOp'};
+var _theorem$thing$ConfigEditor_Msg$CancelCommand = {ctor: 'CancelCommand'};
 var _theorem$thing$ConfigEditor_Msg$RunCommand = {ctor: 'RunCommand'};
 var _theorem$thing$ConfigEditor_Msg$CommandChanged = function (a) {
 	return {ctor: 'CommandChanged', _0: a};
@@ -9496,6 +9497,9 @@ var _theorem$thing$ConfigEditor_Port$configEditorAgentToLift = _elm_lang$core$Na
 		return {typeName: v.typeName, payload: v.payload};
 	});
 
+var _theorem$thing$ConfigEditor_Update$cancelCommand = function (command) {
+	return A2(_theorem$thing$Belch$PortMessage, 'CancelCommand', command);
+};
 var _theorem$thing$ConfigEditor_Update$runCommand = function (command) {
 	return A2(_theorem$thing$Belch$PortMessage, 'RunCommand', command);
 };
@@ -9542,6 +9546,16 @@ var _theorem$thing$ConfigEditor_Update$update = F2(
 					_0: model$,
 					_1: _theorem$thing$ConfigEditor_Port$configEditorAgentToLift(
 						_theorem$thing$ConfigEditor_Update$runCommand(model.command))
+				};
+			case 'CancelCommand':
+				var model$ = _elm_lang$core$Native_Utils.update(
+					model,
+					{command: ''});
+				return {
+					ctor: '_Tuple2',
+					_0: model$,
+					_1: _theorem$thing$ConfigEditor_Port$configEditorAgentToLift(
+						_theorem$thing$ConfigEditor_Update$cancelCommand(''))
 				};
 			default:
 				return A2(
@@ -9598,7 +9612,7 @@ var _theorem$thing$ConfigEditor_View$runButton = function (disable) {
 						A2(_theorem$thing$ConfigEditor_View_ops['=>'], 'margin', '0px')
 					])),
 				_elm_lang$html$Html_Events$onClick(_theorem$thing$ConfigEditor_Msg$RunCommand),
-				_elm_lang$html$Html_Attributes$title('Save Config'),
+				_elm_lang$html$Html_Attributes$title('Save'),
 				_elm_lang$html$Html_Attributes$disabled(disable)
 			]),
 		_elm_lang$core$Native_List.fromArray(
@@ -9608,6 +9622,34 @@ var _theorem$thing$ConfigEditor_View$runButton = function (disable) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html_Attributes$class('fa fa-check fa-2x')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]))
+			]));
+};
+var _theorem$thing$ConfigEditor_View$cancelButton = function (disable) {
+	return A2(
+		_elm_lang$html$Html$button,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('btn btn-link'),
+				_elm_lang$html$Html_Attributes$style(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(_theorem$thing$ConfigEditor_View_ops['=>'], 'padding', '0px'),
+						A2(_theorem$thing$ConfigEditor_View_ops['=>'], 'margin', '0px')
+					])),
+				_elm_lang$html$Html_Events$onClick(_theorem$thing$ConfigEditor_Msg$CancelCommand),
+				_elm_lang$html$Html_Attributes$title('Cancel'),
+				_elm_lang$html$Html_Attributes$disabled(disable)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$i,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('fa fa-times fa-2x')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[]))
@@ -9629,7 +9671,8 @@ var _theorem$thing$ConfigEditor_View$agentView = function (model) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_theorem$thing$ConfigEditor_View$runButton(false)
+						_theorem$thing$ConfigEditor_View$runButton(false),
+						_theorem$thing$ConfigEditor_View$cancelButton(false)
 					]))
 			]));
 };

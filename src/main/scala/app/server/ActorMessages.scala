@@ -51,6 +51,7 @@ case class ProbeConfigRequest(subscriber: Subscriber)
 case class ProbeConfigResponse(config: String)
 case class SaveProbeConfig(config: String)
 case class HaveSavedProbeConfig()
+case class CancelProbeConfig()
 
 //TODO: this is all a bit manky - needing two messages for the request
 case object SendBroadcasts

@@ -38,7 +38,7 @@ agentView model =
             configEditor (model.command) False
             --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
 --            ]
-          , div [ class "form-group" ] [ runButton (False) ]
+          , div [ class "form-group" ] [ runButton (False), cancelButton (False) ]
 --          ]
 --      ]
     ]
@@ -71,9 +71,22 @@ runButton disable =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
       , onClick RunCommand
-      , title "Save Config"
+      , title "Save"
       , disabled disable
       ]
       [
       i [ class "fa fa-check fa-2x" ] []
+      ]
+
+
+cancelButton : Bool -> Html Msg
+cancelButton disable =
+  button
+      [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
+      , onClick CancelCommand
+      , title "Cancel"
+      , disabled disable
+      ]
+      [
+      i [ class "fa fa-times fa-2x" ] []
       ]
