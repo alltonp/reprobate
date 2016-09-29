@@ -1,5 +1,11 @@
+import java.io.File
+import java.nio.charset.StandardCharsets._
+import java.nio.file.{Files, Path}
+import java.nio.file.Files._
+import java.nio.file.StandardOpenOption._
+
 import sbt.Keys._
-import sbt._
+import sbt.{File, _}
 
 import scala.util.Try
 
@@ -27,6 +33,7 @@ object Build {
         val distdir = targetDir / dist
         val jars = libs.map(_.data).pair(flatRebase(s"$dist/lib"))
         val script = file("package/reprobate.sh").pair(flatRebase(dist))
+        IO.write(file("target/dist/version.txt"), ver)
         val files = Seq(artifact -> s"$dist/lib/$dist.jar")
         println(s"### Building $dist.zip")
         IO.zip(files ++ jars ++ script, targetDir / "dist.zip")
