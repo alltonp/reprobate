@@ -33,7 +33,7 @@ object Commander {
       case In(Some(release), args) if args.nonEmpty && args.head == "^_" => onShowReleaseManagementSummary(release, currentModel, args.drop(1), aka, sanitise = true)
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
-      case In(Some(ref), args) if args.size == 1 && args.head.contains("=") => onValueIssue(ref, args, currentModel, aka)
+      case In(Some(ref), args) if args.nonEmpty && args.forall(_.contains("=")) => onValueIssue(ref, args, currentModel, aka)
       case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
@@ -346,8 +346,8 @@ object Commander {
 
   private def onValueIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val value = args.head
-      val updatedIssue = found.copy(values = found.values ++ Set(value))
+      val values = args
+      val updatedIssue = found.copy(values = found.values ++ values)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the preWorkflowState or releases
