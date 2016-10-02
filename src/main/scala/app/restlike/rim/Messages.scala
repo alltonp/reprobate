@@ -31,8 +31,6 @@ object Messages {
     "  - own                            ⇒ 'rim [ref] @'",
     "  - disown                         ⇒ 'rim [ref] @-'",
     "  - assign                         ⇒ 'rim [ref] @= [aka]'",
-    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
-    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
     "  - move forward                   ⇒ 'rim [ref] /'",
     //    "  - move forward many              ⇒ 'rim [ref] //'",
     "  - move to end                    ⇒ 'rim [ref] /!'",
@@ -42,6 +40,8 @@ object Messages {
     "  - return to backlog              ⇒ 'rim [ref] .!'",
     "  - block                          ⇒ 'rim [ref] % [reason]'",
     "  - unblock                        ⇒ 'rim [ref] %'",
+    "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
+    "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
     "  - history                        ⇒ 'rim [ref]'",
     "",
     //is this 'reports'
