@@ -27,7 +27,7 @@ object Persistence {
     //TODO: blow up if email and name combo already exists ... return Either error or token
 
     val model = Model(
-      Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]()), Map.empty, Nil, Nil
+      Config(name, preWorkflowState, workflowStates, postWorkflowState, Nil), Map.empty, Nil, Nil
     )
 
     val token = java.util.UUID.randomUUID.toString
