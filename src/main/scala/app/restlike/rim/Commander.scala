@@ -346,8 +346,12 @@ object Commander {
 
   private def onValueIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val values = args
-      val updatedIssue = found.copy(values = found.values ++ values)
+      val values = args.map(kv => {
+        val b = kv.split("=")
+        (b(0), b(1))
+      }).toMap
+      val mergedValues = (found.values.keySet ++ values.keySet).map (i=> (i, if (values.contains(i)) values(i) else found.values(i)) ).toMap
+      val updatedIssue = found.copy(values = mergedValues)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the preWorkflowState or releases
