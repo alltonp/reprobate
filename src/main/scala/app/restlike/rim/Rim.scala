@@ -20,7 +20,7 @@ object Rim extends RestHelper {
     case r@Req(`appName` :: "tracking" :: token :: Nil, _, GetRequest) ⇒ () ⇒
       t(history(token).map(_.printable).toList, downcase = false)
     case r@Req(`appName` :: "state" :: token :: Nil, _, GetRequest) ⇒ () ⇒
-      Full(PlainTextResponse(JsonMethods.pretty(JsonMethods.render(Json.serialise(Persistence.load.modelFor(token))))))
+      Full(PlainTextResponse(JsonMethods.pretty(JsonMethods.render(Json.serialise(Persistence.load.modelForCli(token))))))
     case r@Req(`appName` :: who :: token :: Nil, _, PostRequest) ⇒ () ⇒
       Controller.process(who, r, token)
   }

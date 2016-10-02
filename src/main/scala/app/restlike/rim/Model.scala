@@ -7,13 +7,13 @@ import org.joda.time.DateTime
 
 import scala.collection.immutable
 
+case class Access(write: String)
 
-case class Universe(tokenToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, String]) {
-  def modelFor(token: String) = if (tokenToUser.contains(token)) Some(tokenToModel(tokenToUser(token)))
-  else None
+case class Universe(tokenToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, Access]) {
+  def modelForCli(token: String) = tokenToModel.get(token)
 
   def updateModelFor(token: String, updatedModel: Model) =
-    copy(tokenToModel = tokenToModel.updated(tokenToUser(token), updatedModel))
+    copy(tokenToModel = tokenToModel.updated(token, updatedModel))
 }
 
 //TIP: useful chars - http://www.chriswrites.com/how-to-type-common-symbols-and-special-characters-in-os-x/

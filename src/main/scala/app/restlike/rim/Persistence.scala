@@ -23,7 +23,7 @@ object Persistence {
       save(
         Universe(
           Map(token -> Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())),
-          Map(token -> email)
+          Map(token -> Access(email))
         )
       )
     }

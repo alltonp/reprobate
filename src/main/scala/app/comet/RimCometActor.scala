@@ -177,7 +177,7 @@ class RimCometActor extends RefreshableCometActor with MessageCapturingCometActo
     //TODO: this forces refresh
     this ! app.server.Init()
     //TODO: pull out obv
-    this ! ModelChanged(Persistence.load.modelFor(RimToken.token), RimToken.token, Nil)
+    this ! ModelChanged(Persistence.load.modelForCli(RimToken.token), RimToken.token, Nil)
   }
 
   def doRender = {

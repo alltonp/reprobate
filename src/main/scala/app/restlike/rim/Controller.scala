@@ -22,7 +22,7 @@ object Controller {
 
   def execute(who: String, token: String, value: String): List[String] = {
     synchronized {
-      universe.modelFor(token) match {
+      universe.modelForCli(token) match {
         case Some(model) => {
           val refProvider = RefProvider(
             if (model.allIssuesIncludingReleased.isEmpty) 0
