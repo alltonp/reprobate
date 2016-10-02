@@ -12,7 +12,7 @@ import im.mange.jetpac.comet._
 import im.mange.jetpac._
 import im.mange.jetpac.css.{Classes, Styles}
 import im.mange.jetpac.html.{A, LinkAnchor}
-import im.mange.jetpac.page.CometPage
+import im.mange.jetpac.page.{CometPage, StaticPage}
 import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 import net.liftweb.http.{S, SHtml}
@@ -28,10 +28,22 @@ import net.liftweb.http.js.JsCmds.{SetHtml, _}
 import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
 import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
 
+import scala.reflect.ClassTag
 import scala.xml.Unparsed
 
+abstract class CometPageWithRequestArgs[T: ClassTag] extends StaticPage {
+  def cometActorName: String = implicitly[ClassTag[T]].runtimeClass.getSimpleName
+
+  def render() = {
+    println(S.request.get.param("foo"))
+    println(S.request.get.params)
+    //TODO: stash request params in a session var
+    decorate( <lift:comet type={cometActorName}/> <div style="clear:both"></div> )
+  }
+}
+
 //TODO: pull up
-case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[RimCometActor]
+case class RimPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPageWithRequestArgs[RimCometActor]
 
 //TODO: pull up
 case class Terminal(id: String, styles: Styles = Styles()) extends Renderable with Hideable {
@@ -68,22 +80,10 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   import Html._
 
   println("refresh")
-  private val params: Map[String, List[String]] = S.request.get.params
-  //TODO: ultimately lookup "token" param - but use a read only token ...
-//  println(s"request: ${S.request.get._params}")
-//  println(s"params: ${params}")
-//  println(s"params2: ${S.param("foo")}")
-//  println(s"params2: ${S.uriAndQueryString}")
-
-//  println(s"path: ${S.request.get.path}")
-//  println(s"params2: ${S.queryString}")
-//  S.request.get.params
+  //TODO: ultimately lookup "token" param from session - but use a read only token ...
 
   //TODO: this should be done automatically since it makes little sense here .. use email perhaps?
   //TODO: whatever, capture with original email
-  //  val r = Controller.execute("PA", "388740ee-ac0f-44f2-a02f-d6b9f6e2f07b", "aka pa")
-//  val r = Controller.execute("PA", RimToken.token, "+ hello")
-//  println(r.mkString("\n"))
 
   private val backlogTerminal = Terminal("backlog"/*, Styles(fontSize(xSmall))*/)
   private val boardTerminal = Terminal("board", Styles(marginBottom("0px")))
