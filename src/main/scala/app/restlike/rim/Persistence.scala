@@ -17,22 +17,24 @@ object Persistence {
     Json.deserialise(Filepath.load(file))
   }
 
+  //TODO: ultimately do this in the ui and return the token
   def add(email: String, name: String,
           preWorkflowState: String = "backlog",
           workflowStates: List[String] = List("next", "doing", "done"),
           postWorkflowState: String = "released") {
 
-    val config = Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]())
-    val model = Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())
-    val token = java.util.UUID.randomUUID.toString
-    val access = Access(Seq(email))
+    val model = Model(
+      Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]()),
+      immutable.Map[String, String](), List[Issue](), List[Release]()
+    )
 
+    val token = java.util.UUID.randomUUID.toString
     val universe = load
 
     save(
       universe.copy(
         tokenToModel = universe.tokenToModel.updated(token, model),
-        tokenToAccess = universe.tokenToAccess.updated(token, access)
+        tokenToAccess = universe.tokenToAccess.updated(token, Access(Seq(email)))
       )
     )
   }
