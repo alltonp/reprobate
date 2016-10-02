@@ -11,7 +11,7 @@ import net.liftweb.json._
 object Controller {
   private var universe = Persistence.load
 
-  val tokensHead = universe.tokenToUser.keys.head
+  val tokensHead = universe.tokenToAccess.keys.head
 
   def process(who: String, req: Req, token: String) = {
     JsonRequestHandler.handle(req)((json, req) ⇒ {

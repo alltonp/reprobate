@@ -9,7 +9,7 @@ import scala.collection.immutable
 
 case class Access(write: Seq[String])
 
-case class Universe(tokenToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, Access]) {
+case class Universe(tokenToModel: immutable.Map[String, Model], tokenToAccess: immutable.Map[String, Access]) {
   def modelForCli(token: String) = tokenToModel.get(token)
 
   def updateModelFor(token: String, updatedModel: Model) =
