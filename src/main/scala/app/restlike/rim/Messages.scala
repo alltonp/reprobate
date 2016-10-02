@@ -42,6 +42,8 @@ object Messages {
     "  - unblock                        ⇒ 'rim [ref] %'",
     "  - tag                            ⇒ 'rim [ref] : [tag1] {tag2} {tagX}'",
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
+    "  - set values                     ⇒ 'rim [ref] [key1=value1] {key2=value2} {key3=value3}'",
+    "  - unset values                   ⇒ 'rim [ref] [key1=-] {key2=-} {key3=-}'",
     "  - history                        ⇒ 'rim [ref]'",
     "",
     //is this 'reports'

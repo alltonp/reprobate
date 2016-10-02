@@ -350,8 +350,13 @@ object Commander {
         val b = kv.split("=")
         (b(0), b(1))
       }).toMap
-      val mergedValues = (found.values.keySet ++ values.keySet).map (i=> (i, if (values.contains(i)) values(i) else found.values(i)) ).toMap
-      val updatedIssue = found.copy(values = mergedValues)
+      val mergedValues = (found.values.keySet ++ values.keySet).map (i=> (
+        i, if (values.contains(i)) values(i) else found.values(i))
+      ).toMap
+
+      val toRemove = values.filter(_._2 == "-")
+      val mergedAndDeleted = mergedValues.filterKeys(!toRemove.contains(_))
+      val updatedIssue = found.copy(values = mergedAndDeleted)
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the preWorkflowState or releases

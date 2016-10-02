@@ -190,25 +190,32 @@ class RimSpec extends WordSpec with MustMatchers {
 
   //values
 
-  "add a value" in {
+  "set a value" in {
     val issue = Issue("1", "an item", None, Some(2), None, None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(values = Map("key" -> "value"))))
     runAndExpect("1 key=value", current, expected)
   }
 
-  "add multiple values" in {
+  "set multiple values" in {
     val issue = Issue("1", "an item", None, Some(2), None, None)
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(values = Map("key1" -> "value1", "key2" -> "value2"))))
     runAndExpect("1 key1=value1 key2=value2", current, expected)
   }
 
-  "add values merges, overwriting newer values" in {
+  "set values merges, overwriting newer values" in {
     val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
     val current = modelWithIssue(issue)
     val expected = current.copy(issues = List(issue.copy(values = Map("key1" -> "value1a", "key3" -> "value3", "key2" -> "value2"))))
     runAndExpect("1 key1=value1a key3=value3", current, expected)
+  }
+
+  "unset values" in {
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(values = Map("key2" -> "value2"))))
+    runAndExpect("1 key1=-", current, expected)
   }
 
 
