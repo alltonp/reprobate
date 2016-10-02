@@ -15,19 +15,16 @@ object Persistence {
   def load: Universe = {
     if (!file.toFile.exists()) {
       save(createEmpty)
-      println(add("demo@rim.com", "rim"))
+      println(add("demo@rim.com", "rim", "backlog", List("next", "doing", "done"), "released"))
       println(add("demo@rim.com", "timesheets", "unprocessed", List("submitted", "invoiced", "paid"), "archived"))
     }
     Json.deserialise(Filepath.load(file))
   }
 
   //TODO: ultimately do this in the ui/endpoint
-  def add(email: String, name: String,
-          preWorkflowState: String = "backlog",
-          workflowStates: List[String] = List("next", "doing", "done"),
-          postWorkflowState: String = "released") = {
+  def add(email: String, name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String) = {
 
-    //TODO: blow up if email and name combo already exists
+    //TODO: blow up if email and name combo already exists ... return Either error or token
 
     val model = Model(
       Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]()),
