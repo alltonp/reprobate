@@ -48,7 +48,7 @@ class Boot extends Loggable {
 
     val protectedPages = Seq(
       AppPage("index"),
-      RimPage("rim", topBar, QueryParameters(() => List(("a", "b"))))//,
+      RimPage("rim", topBar)//,
     )
     Pages(
       protectedPages ++ Seq(
