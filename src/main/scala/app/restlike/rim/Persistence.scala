@@ -8,6 +8,8 @@ import org.json4s.native.JsonMethods._
 
 import scala.collection.immutable
 
+case class NewRim(toke: String, access: Access, model: Model)
+
 //TODO: use app name
 object Persistence {
   private val file = Paths.get(s"${Rim.appName}.json")
@@ -17,13 +19,15 @@ object Persistence {
   //TODO: could Model be 'T'ed up?
   def load: Universe = {
     if (!file.toFile.exists()) {
-      val email = "---email---"
       val token = java.util.UUID.randomUUID.toString
+      val access = Access(Seq("---email---"))
+      val model = Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())
+      val newRim = NewRim(token, access, model)
 
       save(
         Universe(
-          Map(token -> Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())),
-          Map(token -> Access(email))
+          Map(token -> model),
+          Map(token -> access)
         )
       )
     }

@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 
 import scala.collection.immutable
 
-case class Access(write: String)
+case class Access(write: Seq[String])
 
 case class Universe(tokenToModel: immutable.Map[String, Model], tokenToUser: immutable.Map[String, Access]) {
   def modelForCli(token: String) = tokenToModel.get(token)
