@@ -13,15 +13,21 @@ object Persistence {
   private val file = Paths.get(s"${Rim.appName}.json")
 
   def load: Universe = {
-    if (!file.toFile.exists()) { save(createEmpty) }
+    if (!file.toFile.exists()) {
+      save(createEmpty)
+      println(add("demo@rim.com", "rim"))
+      println(add("demo@rim.com", "timesheets", "unprocessed", List("submitted", "invoiced", "paid"), "archived"))
+    }
     Json.deserialise(Filepath.load(file))
   }
 
-  //TODO: ultimately do this in the ui and return the token
+  //TODO: ultimately do this in the ui/endpoint
   def add(email: String, name: String,
           preWorkflowState: String = "backlog",
           workflowStates: List[String] = List("next", "doing", "done"),
-          postWorkflowState: String = "released") {
+          postWorkflowState: String = "released") = {
+
+    //TODO: blow up if email and name combo already exists
 
     val model = Model(
       Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]()),
@@ -29,6 +35,7 @@ object Persistence {
     )
 
     val token = java.util.UUID.randomUUID.toString
+
     val universe = load
 
     save(
@@ -37,6 +44,8 @@ object Persistence {
         tokenToAccess = universe.tokenToAccess.updated(token, Access(Seq(email)))
       )
     )
+
+    token
   }
 
   def save(state: Universe) {
