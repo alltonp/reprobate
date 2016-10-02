@@ -11,16 +11,14 @@ import scala.collection.immutable
 //TODO: use app name
 object Persistence {
   private val file = Paths.get(s"${Rim.appName}.json")
-  private val defaultStatuses = List("next", "doing", "done")
-  private val config = Config("rim", "backlog", defaultStatuses, "released", List[String]())
 
-  //TODO: could Model be 'T'ed up?
   def load: Universe = {
     if (!file.toFile.exists()) { save(createEmpty) }
     Json.deserialise(Filepath.load(file))
   }
 
-  def add(email: String) = {
+  def add(email: String, name: String) {
+    val config = Config(name, "backlog", List("next", "doing", "done"), "released", List[String]())
     val model = Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())
     val token = java.util.UUID.randomUUID.toString
     val access = Access(Seq(email))
