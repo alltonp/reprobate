@@ -17,8 +17,12 @@ object Persistence {
     Json.deserialise(Filepath.load(file))
   }
 
-  def add(email: String, name: String) {
-    val config = Config(name, "backlog", List("next", "doing", "done"), "released", List[String]())
+  def add(email: String, name: String,
+          preWorkflowState: String = "backlog",
+          workflowStates: List[String] = List("next", "doing", "done"),
+          postWorkflowState: String = "released") {
+
+    val config = Config(name, preWorkflowState, workflowStates, postWorkflowState, List[String]())
     val model = Model(config, immutable.Map[String, String](), List[Issue](), List[Release]())
     val token = java.util.UUID.randomUUID.toString
     val access = Access(Seq(email))
