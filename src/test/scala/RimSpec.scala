@@ -193,36 +193,43 @@ class RimSpec extends WordSpec with MustMatchers {
   "set a value" in {
     val issue = Issue("1", "an item", None, Some(2), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Map("key" -> "value"))))
+    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key" -> "value")))))
     runAndExpect("1 key=value", current, expected)
   }
 
   "set multiple values" in {
     val issue = Issue("1", "an item", None, Some(2), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Map("key1" -> "value1", "key2" -> "value2"))))
+    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key1" -> "value1", "key2" -> "value2")))))
     runAndExpect("1 key1=value1 key2=value2", current, expected)
   }
 
   "set values merges, overwriting newer values" in {
-    val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("key1" -> "value1", "key2" -> "value2")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Map("key1" -> "value1a", "key3" -> "value3", "key2" -> "value2"))))
+    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key1" -> "value1a", "key3" -> "value3", "key2" -> "value2")))))
     runAndExpect("1 key1=value1a key3=value3", current, expected)
   }
 
   "unset values" in {
-    val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("key1" -> "value1", "key2" -> "value2")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Map("key2" -> "value2"))))
+    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key2" -> "value2")))))
     runAndExpect("1 key1=-", current, expected)
   }
 
   "set and unset values in one go" in {
-    val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("key1" -> "value1", "key2" -> "value2")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Map("key2" -> "value2", "key3" -> "value3"))))
+    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key2" -> "value2", "key3" -> "value3")))))
     runAndExpect("1 key1=- key3=value3", current, expected)
+  }
+
+  "last unset values results in None" in {
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("key1" -> "value1")))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(values = None)))
+    runAndExpect("1 key1=-", current, expected)
   }
 
 

@@ -350,8 +350,10 @@ object Commander {
         val b = kv.split("=")
         (b(0), b(1))
       }).toMap
-      val mergedValues = (found.values.keySet ++ values.keySet).map (i=> (
-        i, if (values.contains(i)) values(i) else found.values(i))
+
+      val existingValues = found.values.getOrElse(Map.empty)
+      val mergedValues = (existingValues.keySet ++ values.keySet).map (i=> (
+        i, if (values.contains(i)) values(i) else existingValues(i))
       ).toMap
 
       //TODO: when deleting, show a message if key does not exist ... key- or key=-
@@ -359,7 +361,7 @@ object Commander {
 
       val toRemove = values.filter(_._2 == "-")
       val mergedAndDeleted = mergedValues.filterKeys(!toRemove.contains(_))
-      val updatedIssue = found.copy(values = mergedAndDeleted)
+      val updatedIssue = found.copy(values = if (mergedAndDeleted.isEmpty) None else Some(mergedAndDeleted))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       //TODO: abstract this away somewhere
       //also, depended on context might want to show the preWorkflowState or releases

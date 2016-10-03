@@ -32,7 +32,7 @@ case class Universe(tokenToModel: immutable.Map[String, Model], tokenToAccess: i
 //TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
 //TODO: think about dependsOn ...
 case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String], blocked: Option[String],
-                 tags: Set[String] = Set.empty, values: immutable.Map[String, String] = Map.empty) {
+                 tags: Set[String] = Set.empty, values: Option[immutable.Map[String, String]] = None) {
 
   //TODO: this should not be in colour for search indexing ...
   private def renderBy(highlightAka: Option[String]) = {
@@ -78,7 +78,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
     val blockString = if (renderBlocked.isEmpty) "" else s" $renderBlocked"
-    val valueString = if (values.isEmpty) "" else customGrey(" " + values.toList.sorted.map(v => s"${v._1}: ${v._2}").mkString(", "))
+    val valueString = if (values.isEmpty) "" else customGrey(" " + values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}: ${v._2}").mkString(", "))
     s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model), model.config)}${customRed(blockString)}$valueString"
   }
 }
