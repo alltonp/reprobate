@@ -218,6 +218,13 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 key1=-", current, expected)
   }
 
+  "set and unset values in one go" in {
+    val issue = Issue("1", "an item", None, Some(2), None, None, values = Map("key1" -> "value1", "key2" -> "value2"))
+    val current = modelWithIssue(issue)
+    val expected = current.copy(issues = List(issue.copy(values = Map("key2" -> "value2", "key3" -> "value3"))))
+    runAndExpect("1 key1=- key3=value3", current, expected)
+  }
+
 
   //blocking
 

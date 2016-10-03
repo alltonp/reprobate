@@ -354,6 +354,9 @@ object Commander {
         i, if (values.contains(i)) values(i) else found.values(i))
       ).toMap
 
+      //TODO: when deleting, show a message if key does not exist ... key- or key=-
+      //TODO: make it an Option[Map] .. for better json's when values are empty (check for and set to None)
+
       val toRemove = values.filter(_._2 == "-")
       val mergedAndDeleted = mergedValues.filterKeys(!toRemove.contains(_))
       val updatedIssue = found.copy(values = mergedAndDeleted)
