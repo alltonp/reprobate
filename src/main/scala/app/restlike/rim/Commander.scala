@@ -281,18 +281,6 @@ object Commander {
         else Presentation.preWorkflowState(updatedModel, Some(aka))
 
       Out(presentation, Some(updatedModel), Nil)
-
-//      Some(Model(Config(rim,backlog,List(next, doing, done),released,List()),Map(anon -> A, anon2 -> B),
-      // List(
-      // Issue(1,an item,None,Some(2),None,None,Set(),None),
-      // Issue(2,an item,None,Some(2),None,None,Set(),None),
-      // Issue(3,an item,None,Some(2),None,None,Set(),None)),List())) did not equal
-      // Some(Model(Config(rim,backlog,List(next, doing, done),released,List()),Map(anon -> A, anon2 -> B),
-      // List(
-      // Issue(2,an item,None,Some(2),None,None,Set(),None),
-      // Issue(1,an item,None,Some(2),None,None,Set(),None),
-      // Issue(3,an item,None,Some(2),None,None,Set(),None)),List()))
-
     }
   }
 
