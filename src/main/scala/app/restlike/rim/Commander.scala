@@ -276,8 +276,10 @@ object Commander {
 //      println(split._2)
 //      println(updatedModel)
 
-      //TODO: this should be based on status me thinks ...
-      val presentation = Presentation.board(updatedModel, Nil, aka)
+      val presentation =
+        if (currentModel.onBoard_?(found)) Presentation.board(updatedModel, Nil, aka)
+        else Presentation.preWorkflowState(updatedModel, Some(aka))
+
       Out(presentation, Some(updatedModel), Nil)
 
 //      Some(Model(Config(rim,backlog,List(next, doing, done),released,List()),Map(anon -> A, anon2 -> B),
