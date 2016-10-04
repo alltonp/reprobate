@@ -100,6 +100,8 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("+! an item : tag1 tag2", current, expected)
   }
 
+  //TOOD: should we support value setting on creation too?
+
   //editing
 
   "edit issue retains by, tags and status" in {

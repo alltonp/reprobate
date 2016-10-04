@@ -278,7 +278,8 @@ object Commander {
 //      println(updatedModel)
 
       val presentation =
-        if (currentModel.onBoard_?(found)) Presentation.board(updatedModel, Nil, aka)
+//        if (currentModel.onBoard_?(found)) Presentation.board(updatedModel, Nil, aka)
+        if (found.status.getOrElse(-1) > 0) Presentation.board(updatedModel, Nil, aka)
         else Presentation.preWorkflowState(updatedModel, Some(aka))
 
       Out(presentation, Some(updatedModel), Nil)
