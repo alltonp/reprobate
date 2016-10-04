@@ -37,6 +37,7 @@ object Messages {
     "  - move backward                  ⇒ 'rim [ref] .'",
     //    "  - move backward many         ⇒ 'rim [ref] ..'",
     //TODO: this should be dynamic off of preWorkflowState
+    "  - move under                     ⇒ 'rim [ref] _ [under ref]'",
     "  - return to backlog              ⇒ 'rim [ref] .!'",
     "  - block                          ⇒ 'rim [ref] % [reason]'",
     "  - unblock                        ⇒ 'rim [ref] %'",
