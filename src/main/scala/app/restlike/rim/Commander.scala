@@ -182,7 +182,7 @@ object Commander {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
     def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
 
-    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"i would prefer it if the tags were different"), changed = Nil)
+    if (oldTag.trim == newTag.trim) Out(Messages.problem(s"old tag and new tag must be different"), changed = Nil)
     else if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
         issues = currentModel.issues.map(i => {
@@ -259,6 +259,7 @@ object Commander {
   }
 
   private def onMoveIssueUnder(underRef: String, ref: String, currentModel: Model, aka: String): Out = {
+    if (underRef == ref) return Out(Messages.problem(s"refs must different"), changed = Nil)
     if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
 //      val updatedIssue = found.copy(by = Some(underRef))
