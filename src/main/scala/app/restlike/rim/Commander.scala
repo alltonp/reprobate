@@ -43,6 +43,7 @@ object Commander {
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
+      case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(args.drop(1).head, ref, currentModel, aka)
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
@@ -254,6 +255,42 @@ object Commander {
       val updatedIssue = found.copy(by = Some(assignee))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
+    }
+  }
+
+  private def onMoveIssueUnder(underRef: String, ref: String, currentModel: Model, aka: String): Out = {
+    if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+//      val updatedIssue = found.copy(by = Some(underRef))
+      val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
+      val issueToBeUnder = issuesWithRefRemoved.find(_.ref == underRef).get
+      val split: (List[Issue], List[Issue]) = issuesWithRefRemoved.splitAt(issuesWithRefRemoved.indexOf(issueToBeUnder) + 1)
+      val newIssues = split._1 ++ List(found) ++ split._2
+      val updatedModel = currentModel.copy(issues = newIssues)
+
+//      println(ref)
+//      println(underRef)
+//      println(issuesWithRefRemoved)
+//      println(issueToBeUnder)
+//      println(split._1)
+//      println(split._2)
+//      println(updatedModel)
+
+      //TODO: this should be based on status me thinks ...
+      val presentation = Presentation.board(updatedModel, Nil, aka)
+      Out(presentation, Some(updatedModel), Nil)
+
+//      Some(Model(Config(rim,backlog,List(next, doing, done),released,List()),Map(anon -> A, anon2 -> B),
+      // List(
+      // Issue(1,an item,None,Some(2),None,None,Set(),None),
+      // Issue(2,an item,None,Some(2),None,None,Set(),None),
+      // Issue(3,an item,None,Some(2),None,None,Set(),None)),List())) did not equal
+      // Some(Model(Config(rim,backlog,List(next, doing, done),released,List()),Map(anon -> A, anon2 -> B),
+      // List(
+      // Issue(2,an item,None,Some(2),None,None,Set(),None),
+      // Issue(1,an item,None,Some(2),None,None,Set(),None),
+      // Issue(3,an item,None,Some(2),None,None,Set(),None)),List()))
+
     }
   }
 

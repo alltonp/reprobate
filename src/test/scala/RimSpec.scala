@@ -232,6 +232,60 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 key1=-", current, expected)
   }
 
+  //priority
+
+  "move x under y" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue2, issue1, issue3))
+    runAndExpect("1 _ 2", current, expected)
+  }
+
+  "move x under y so last" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue2, issue3, issue1))
+    runAndExpect("1 _ 3", current, expected)
+  }
+
+  "move x under y already there" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue1, issue2, issue3))
+    runAndExpect("3 _ 2", current, expected)
+  }
+
+  "move x under y already there and last" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue1, issue3, issue2))
+    runAndExpect("3 _ 1", current, expected)
+  }
+
+  "move x under y missing x" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    run("4 _ 3", current).updatedModel mustEqual None
+  }
+
+  "move x under y missing y" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    run("1 _ 4", current).updatedModel mustEqual None
+  }
+
 
   //blocking
 
@@ -375,6 +429,7 @@ class RimSpec extends WordSpec with MustMatchers {
 
   private def modelWithTags(tags: List[String]) = Model(config.copy(priorityTags = tags), usersToAka, Nil, Nil)
   private def modelWithIssue(issue: Issue) = Model(config, usersToAka, List(issue), Nil)
+  private def modelWithIssues(issues: Issue*) = Model(config, usersToAka, issues.toList, Nil)
 
   private def modelWithReleasedIssue(issue: Issue) =
     Model(config, usersToAka, Nil, List(Release("release", List(issue), Some(systemClock().dateTime.getMillis))))
