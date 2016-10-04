@@ -296,6 +296,33 @@ class RimSpec extends WordSpec with MustMatchers {
     run("1 _ 1", current).updatedModel mustEqual None
   }
 
+  "move x under nothing" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue3, issue1, issue2))
+    runAndExpect("3 _", current, expected)
+  }
+
+  "move x under nothing already there" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue1, issue2, issue3))
+    runAndExpect("1 _", current, expected)
+  }
+
+  "move x under nothing when missing" in {
+    val issue1 = Issue("1", "an item", None, Some(2), None, None)
+    val issue2 = Issue("2", "an item", None, Some(2), None, None)
+    val issue3 = Issue("3", "an item", None, Some(2), None, None)
+    val current = modelWithIssues(issue1, issue2, issue3)
+    val expected = current.copy(issues = List(issue3, issue1, issue2))
+    run("4 _", current).updatedModel mustEqual None
+  }
+
 
   //blocking
 
