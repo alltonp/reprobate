@@ -44,7 +44,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
   private val renderBlocked = blocked.getOrElse("")
-  private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s":${v._1}=${v._2}").mkString(", ")
+  private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}:${v._2}").mkString(", ")
 
   private def renderStatus(model: Option[Model], config: Config) = {
     val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + config.allStates(_))
