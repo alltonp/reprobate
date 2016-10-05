@@ -44,6 +44,10 @@ object Commander {
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(args.drop(1).head, ref, currentModel, aka)
+
+//      case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(Some(args.drop(1).head), ref, currentModel, aka)
+//      case In(Some(ref), args) if args.size == 1 && args.head == "_" => onMoveIssueUnder(None, ref, currentModel, aka)
+
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
@@ -261,6 +265,7 @@ object Commander {
   private def onMoveIssueUnder(underRef: String, ref: String, currentModel: Model, aka: String): Out = {
     if (underRef == ref) return Out(Messages.problem(s"refs must different"), changed = Nil)
     if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
+
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
 //      val updatedIssue = found.copy(by = Some(underRef))
       val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
@@ -282,7 +287,7 @@ object Commander {
         if (found.status.getOrElse(-1) > 0) Presentation.board(updatedModel, Nil, aka)
         else Presentation.preWorkflowState(updatedModel, Some(aka))
 
-      Out(presentation, Some(updatedModel), Nil)
+      Out(presentation, Some(updatedModel), changed = Seq(ref, underRef))
     }
   }
 
