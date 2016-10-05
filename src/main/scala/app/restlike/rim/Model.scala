@@ -44,7 +44,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
 
   private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
   private val renderBlocked = blocked.getOrElse("")
-  private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}:${v._2}").mkString(", ")
+  private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}=${v._2}").mkString(", ")
 
   private def renderStatus(model: Option[Model], config: Config) = {
     val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + config.allStates(_))
@@ -79,7 +79,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
   def render(model: Model, hideStatus: Boolean = false, hideBy: Boolean = false, hideTags: Boolean = false, hideId: Boolean = false, highlight: Boolean = false, highlightAka: Option[String] = None) = {
     val theRef = s"$ref: "
     val blockString = if (renderBlocked.isEmpty) "" else s" $renderBlocked"
-    val valueString = if (renderValues.isEmpty) "" else customGrey(s" [$renderValues]")
+    val valueString = if (renderValues.isEmpty) "" else customGrey(s" $renderValues")
     s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model), model.config)}${customRed(blockString)}$valueString"
   }
 }
