@@ -135,7 +135,7 @@ object Commander {
 
     val result = if (issue.isEmpty) Messages.notFound(ref)
     else if (all.isEmpty) Messages.problem(s"no history for: $ref")
-    else List(issue.get.render(currentModel)) ::: all.map(h => s" > ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.what.get}").toList
+    else List(issue.get.render(currentModel)) ::: all.map(h => s"> ${dateFormats().fileDateTimeFormat.print(h.when.get)}: ${currentModel.aka(h.who.get)} ${h.what.get}").toList
     Out(result, None, Nil)
   }
 
