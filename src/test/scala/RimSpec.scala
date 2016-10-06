@@ -24,6 +24,14 @@ class RimSpec extends WordSpec with MustMatchers {
   private val emptyModelWithWorkflow = Model(config, usersToAka, Nil, Nil)
   private val ts = systemClock().dateTime.getMillis
 
+  //TIP - free chars:
+  //{}[]$£€
+  //§ (bit osx-like)
+  //± (bit osx-like) ... maybe use £ or $ (for bank) and £ (show me the money)
+  //, == comment?
+  //rim 1 + == comment?
+
+
   //config
 
   "set aka" in {
