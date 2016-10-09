@@ -25,7 +25,7 @@ object Messages {
     s"hello ${who}, welcome to rim - rudimentary issue management © 2015-2016 spabloshi ltd",
     "",
     "issues:",
-    "  - create                         ⇒ 'rim + [the description] {: tag1 tag2 tagX}'     ⇒ e.g. 'rim + description : tag1 tag2'",
+    "  - create                         ⇒ 'rim + [the name] {: tag1 tag2 tagX}'     ⇒ e.g. 'rim + description : tag1 tag2'",
     "  - update                         ⇒ 'rim [ref] ='",
     "  - delete                         ⇒ 'rim [ref] -'",
     "  - own                            ⇒ 'rim [ref] @'",
@@ -46,6 +46,7 @@ object Messages {
     "  - detag                          ⇒ 'rim [ref] :- [tag1] {tag2} {tagX}'",
     "  - set values                     ⇒ 'rim [ref] [key1=value1] {key2=value2} {key3=value3}'",
     "  - unset values                   ⇒ 'rim [ref] [key1=-] {key2=-} {key3=-}'",
+    "  - add comment                    ⇒ 'rim [ref] _ the comment'",
     "  - history                        ⇒ 'rim [ref]'",
     "",
     //is this 'reports'
