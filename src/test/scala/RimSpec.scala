@@ -304,7 +304,7 @@ class RimSpec extends WordSpec with MustMatchers {
     run("1 _ 1", current).updatedModel mustEqual None
   }
 
-  "move x under nothing" in {
+  "move x under nothing (aka move top)" in {
     val issue1 = Issue("1", "an item", None, Some(2), None, None)
     val issue2 = Issue("2", "an item", None, Some(2), None, None)
     val issue3 = Issue("3", "an item", None, Some(2), None, None)
@@ -313,7 +313,7 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("3 _", current, expected)
   }
 
-  "move x under nothing already there" in {
+  "move x under nothing already there (aka move top)" in {
     val issue1 = Issue("1", "an item", None, Some(2), None, None)
     val issue2 = Issue("2", "an item", None, Some(2), None, None)
     val issue3 = Issue("3", "an item", None, Some(2), None, None)

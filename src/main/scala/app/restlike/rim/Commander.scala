@@ -43,10 +43,8 @@ object Commander {
       case In(Some(ref), List("@")) => onOwnIssue(who, ref, currentModel, aka)
       case In(Some(ref), List("@-")) => onDisownIssue(who, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
-      case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(args.drop(1).head, ref, currentModel, aka)
-
-//      case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(Some(args.drop(1).head), ref, currentModel, aka)
-//      case In(Some(ref), args) if args.size == 1 && args.head == "_" => onMoveIssueUnder(None, ref, currentModel, aka)
+      case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(Some(args.drop(1).head), ref, currentModel, aka)
+      case In(Some(ref), args) if args.size == 1 && args.head == "_" => onMoveIssueUnder(None, ref, currentModel, aka)
 
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
@@ -262,33 +260,44 @@ object Commander {
     }
   }
 
-  private def onMoveIssueUnder(underRef: String, ref: String, currentModel: Model, aka: String): Out = {
-    if (underRef == ref) return Out(Messages.problem(s"refs must different"), changed = Nil)
-    if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
+  private def onMoveIssueUnder(maybeUnderRef: Option[String], ref: String, currentModel: Model, aka: String): Out = {
+    maybeUnderRef match {
+      case Some(underRef) => {
+        if (underRef == ref) return Out(Messages.problem(s"refs must different"), changed = Nil)
 
-    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-//      val updatedIssue = found.copy(by = Some(underRef))
-      val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
-      val issueToBeUnder = issuesWithRefRemoved.find(_.ref == underRef).get
-      val split: (List[Issue], List[Issue]) = issuesWithRefRemoved.splitAt(issuesWithRefRemoved.indexOf(issueToBeUnder) + 1)
-      val newIssues = split._1 ++ List(found) ++ split._2
-      val updatedModel = currentModel.copy(issues = newIssues)
+        if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
 
-//      println(ref)
-//      println(underRef)
-//      println(issuesWithRefRemoved)
-//      println(issueToBeUnder)
-//      println(split._1)
-//      println(split._2)
-//      println(updatedModel)
+        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+          val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
+          val issueToBeUnder = issuesWithRefRemoved.find(_.ref == underRef).get
+          val split: (List[Issue], List[Issue]) = issuesWithRefRemoved.splitAt(issuesWithRefRemoved.indexOf(issueToBeUnder) + 1)
+          val newIssues = split._1 ++ List(found) ++ split._2
+          val updatedModel = currentModel.copy(issues = newIssues)
 
-      val presentation =
-//        if (currentModel.onBoard_?(found)) Presentation.board(updatedModel, Nil, aka)
-        if (found.status.getOrElse(-1) > 0) Presentation.board(updatedModel, Nil, aka)
-        else Presentation.preWorkflowState(updatedModel, Some(aka))
+          val presentation =
+            if (found.status.getOrElse(-1) > 0) Presentation.board(updatedModel, Nil, aka)
+            else Presentation.preWorkflowState(updatedModel, Some(aka))
 
-      Out(presentation, Some(updatedModel), changed = Seq(ref, underRef))
+          Out(presentation, Some(updatedModel), changed = Seq(ref, underRef))
+        }
+
+      }
+      case None => {
+        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+          val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
+          val newIssues = List(found) ++ issuesWithRefRemoved
+          val updatedModel = currentModel.copy(issues = newIssues)
+
+          val presentation =
+            if (found.status.getOrElse(-1) > 0) Presentation.board(updatedModel, Nil, aka)
+            else Presentation.preWorkflowState(updatedModel, Some(aka))
+
+          Out(presentation, Some(updatedModel), changed = Seq(ref))
+        }
+
+      }
     }
+
   }
 
   //TODO: model.forwardAState
