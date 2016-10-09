@@ -70,7 +70,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
 // TODO - BUG --- rim ? : ^ @ 1 .... this seems to match 1
   def search(query: String, config: Config) = {
     if (indexed.isEmpty) {
-      indexed = Some(List(ref, name, renderStatus(None, config), renderBy(None).toLowerCase, renderBlocked, renderTags, renderValues).mkString(" "))
+      indexed = Some(List(ref, name, renderStatus(None, config), renderBy(None).toLowerCase, renderBlocked, renderTags, renderValues, comments.getOrElse(Nil).mkString(" ")).mkString(" "))
 //      println("indexed: " + indexed)
     }
 
