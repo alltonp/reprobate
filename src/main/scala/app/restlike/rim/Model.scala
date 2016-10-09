@@ -31,8 +31,10 @@ case class Universe(tokenToModel: immutable.Map[String, Model], tokenToAccess: i
 //TODO: I need a new name, something more generic, thing?
 //TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
 //TODO: think about dependsOn ...
-case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String], blocked: Option[String],
-                 tags: Option[Set[String]] = None, values: Option[immutable.Map[String, String]] = None) {
+case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String],
+                 blocked: Option[String], tags: Option[Set[String]] = None,
+                 values: Option[immutable.Map[String, String]] = None,
+                 comments : Option[List[String]] = None) {
 
   //TODO: this should not be in colour for search indexing ...
   private def renderBy(highlightAka: Option[String]) = {
