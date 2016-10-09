@@ -86,25 +86,25 @@ class RimSpec extends WordSpec with MustMatchers {
 
   "add with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(0), None, None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(0), None, None, Some(Set("tag1", "tag2")))))
     runAndExpect("+ an item : tag1 tag2", current, expected)
   }
 
   "strip dodgy chars from tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(0), None, None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(0), None, None, Some(Set("tag1", "tag2")))))
     runAndExpect("+ an item : :tag1 :tag2", current, expected)
   }
 
   "add and move forward to begin state with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(1), None, None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(1), None, None, Some(Set("tag1", "tag2")))))
     runAndExpect("+/ an item : tag1 tag2", current, expected)
   }
 
   "add and move forward to end state with tags" in {
     val current = emptyModelWithWorkflow
-    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), Some(aka), None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), Some(aka), None, Some(Set("tag1", "tag2")))))
     runAndExpect("+! an item : tag1 tag2", current, expected)
   }
 
@@ -113,17 +113,17 @@ class RimSpec extends WordSpec with MustMatchers {
   //editing
 
   "edit issue retains by, tags and status" in {
-    val issue = Issue("1", "an item", None, Some(2), Some(aka), None, Set("tag1", "tag2"))
+    val issue = Issue("1", "an item", None, Some(2), Some(aka), None, Some(Set("tag1", "tag2")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(Issue("1", "an item edited", None, Some(2), Some(aka), None, Set("tag1", "tag2"))))
+    val expected = current.copy(issues = List(Issue("1", "an item edited", None, Some(2), Some(aka), None, Some(Set("tag1", "tag2")))))
     runAndExpect("1 = an item edited", current, expected)
   }
 
   "edit with tags adds tags" in {
     (pending)
-    val issue = Issue("1", "an item", None, Some(2), Some(aka), None, Set("tag1", "tag2"))
+    val issue = Issue("1", "an item", None, Some(2), Some(aka), None, Some(Set("tag1", "tag2")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(Issue("1", "an item edited", None, Some(2), None, None, Set("tag1", "tag2", "tags3"))))
+    val expected = current.copy(issues = List(Issue("1", "an item edited", None, Some(2), None, None, Some(Set("tag1", "tag2", "tags3")))))
     runAndExpect("1 = an item edited : tag3", current, expected)
   }
 
@@ -384,49 +384,49 @@ class RimSpec extends WordSpec with MustMatchers {
   "tag" in {
     val issue = Issue("1", "an item", None, Some(1), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag"))))
+    val expected = current.copy(issues = List(issue.copy(tags = Some(Set("tag")))))
     runAndExpect("1 : tag", current, expected)
   }
 
   "detag" in {
-    val issue = Issue("1", "an item", None, Some(1), None, None, Set("tag"))
+    val issue = Issue("1", "an item", None, Some(1), None, None, Some(Set("tag")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set.empty)))
+    val expected = current.copy(issues = List(issue.copy(tags = None)))
     runAndExpect("1 :- tag", current, expected)
   }
 
   "tag multi" in {
     val issue = Issue("1", "an item", None, Some(1), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tag2", "tagN"))))
+    val expected = current.copy(issues = List(issue.copy(tags = Some(Set("tag1", "tag2", "tagN")))))
     runAndExpect("1 : tag1 tag2 tagN", current, expected)
   }
 
   "migrate tag" in {
-    val issue = Issue("1", "an item", None, Some(1), None, None, tags = Set("tag1", "tag2", "tagN"))
+    val issue = Issue("1", "an item", None, Some(1), None, None, tags = Some(Set("tag1", "tag2", "tagN")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))
+    val expected = current.copy(issues = List(issue.copy(tags = Some(Set("tagX", "tag2", "tagN")))))
     runAndExpect("tag1 := tagX", current, expected)
   }
 
   "migrate tag in released" in {
-    val issue = Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), None, None, tags = Set("tag1", "tag2", "tagN"))
+    val issue = Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), None, None, tags = Some(Set("tag1", "tag2", "tagN")))
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tagX", "tag2", "tagN"))))))
+    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Some(Set("tagX", "tag2", "tagN")))))))
     runAndExpect("tag1 := tagX", current, expected)
   }
 
   "delete tag" in {
-    val issue = Issue("1", "an item", None, Some(1), None, None, tags = Set("tag1", "tag2", "tagN"))
+    val issue = Issue("1", "an item", None, Some(1), None, None, tags = Some(Set("tag1", "tag2", "tagN")))
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))
+    val expected = current.copy(issues = List(issue.copy(tags = Some(Set("tag1", "tagN")))))
     runAndExpect("tag2 :--", current, expected)
   }
 
   "delete tag in released" in {
-    val issue = Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), None, None, tags = Set("tag1", "tag2", "tagN"))
+    val issue = Issue("1", "an item", None, Some(config.lastWorkflowStateIncludingPre), None, None, tags = Some(Set("tag1", "tag2", "tagN")))
     val current = modelWithReleasedIssue(issue)
-    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Set("tag1", "tagN"))))))
+    val expected = current.copy(released = List(current.released.head.copy(issues = List(issue.copy(tags = Some(Set("tag1", "tagN")))))))
     runAndExpect("tag2 :--", current, expected)
   }
 

@@ -81,7 +81,10 @@ object Presentation {
 //      println(s"\n$t: $issuesForTag")
       remainingIssues = remainingIssues.diff(issuesForTag)
 //      renderTagAndIssues(t.name, issuesForTag)
-      TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => i.copy(tags = i.tags.-(t.name))), currentModel))
+      TagAndIssues(t.name, SortByStatus(issuesForTag.map(i => {
+        val all = i.tags.getOrElse(Set.empty).-(t.name)
+        i.copy(tags = if (all.isEmpty) None else Some(all))
+      }), currentModel))
     }) ++ Seq(TagAndIssues("?", SortByStatus(remainingIssues, currentModel)))
     r.filterNot(_.issues.isEmpty)/*.sortBy(_.issues.size)*/.map(tai =>
       renderTagAndIssues(currentModel, tai.tag, tai.issues, aka, hideStatus, hideBy, hideTags, hideId, hideCount)

@@ -32,7 +32,7 @@ case class Universe(tokenToModel: immutable.Map[String, Model], tokenToAccess: i
 //TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
 //TODO: think about dependsOn ...
 case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String], blocked: Option[String],
-                 tags: Set[String] = Set.empty, values: Option[immutable.Map[String, String]] = None) {
+                 tags: Option[Set[String]] = None, values: Option[immutable.Map[String, String]] = None) {
 
   //TODO: this should not be in colour for search indexing ...
   private def renderBy(highlightAka: Option[String]) = {
@@ -42,7 +42,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
     }
   }
 
-  private val renderTags = customIvory(tags.toList.sorted.map(t => s" :$t").mkString)
+  private val renderTags = customIvory(tags.getOrElse(Set.empty).toList.sorted.map(t => s" :$t").mkString)
   private val renderBlocked = blocked.getOrElse("")
   private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}=${v._2}").mkString(", ")
 
@@ -135,7 +135,7 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
     val maybeDupe = issues.find(i => i.name == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, None, status, by, None, tagBits.toSet)
+    val created = Issue(newRef, description, None, status, by, None, if (tagBits.isEmpty) None else Some(tagBits.toSet))
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
@@ -160,7 +160,7 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
   def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 
   def tags = {
-    val allTheTags = allIssuesIncludingReleased.map(_.tags).flatten
+    val allTheTags = allIssuesIncludingReleased.map(_.tags.getOrElse(Set.empty)).flatten
     val uniqueTags = allTheTags.distinct
     uniqueTags.map(t => Tag(t, allTheTags.count(_ == t)))
   }

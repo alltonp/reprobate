@@ -182,7 +182,11 @@ object Commander {
 
   private def onMigrateTag(oldTag: String, newTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag + newTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+    def migrateIssue(i: Issue): Issue = i.copy(tags = {
+      val allTags = i.tags.getOrElse(Set.empty)
+      val migratedTasgs = if (allTags.contains(oldTag)) migrateTags(allTags) else allTags
+      if (migratedTasgs.isEmpty) None else Some(migratedTasgs)
+    })
 
     if (oldTag.trim == newTag.trim) Out(Messages.problem(s"old tag and new tag must be different"), changed = Nil)
     else if (currentModel.tags.map(_.name).contains(oldTag)) {
@@ -201,7 +205,11 @@ object Commander {
 
   private def onDeleteTagUsages(oldTag: String, currentModel: Model) = {
     def migrateTags(tags: Set[String]): Set[String] = tags - oldTag
-    def migrateIssue(i: Issue): Issue = i.copy(tags = if (i.tags.contains(oldTag)) migrateTags(i.tags) else i.tags)
+    def migrateIssue(i: Issue): Issue = i.copy(tags = {
+      val allTags = i.tags.getOrElse(Set.empty)
+      val newTags = if (allTags.contains(oldTag)) migrateTags(allTags) else allTags
+      if (newTags.isEmpty) None else Some(newTags)
+    })
 
     if (currentModel.tags.map(_.name).contains(oldTag)) {
       val updatedModel = currentModel.copy(
@@ -219,8 +227,8 @@ object Commander {
 
   private def onDetagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val newTags = found.tags -- args
-      val updatedIssue = found.copy(tags = newTags)
+      val newTags = found.tags.getOrElse(Set.empty) -- args
+      val updatedIssue = found.copy(tags = if (newTags.isEmpty) None else Some(newTags))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
@@ -228,8 +236,8 @@ object Commander {
 
   private def onTagIssue(ref: String, args: List[String], currentModel: Model, aka: String) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-      val newTags = found.tags ++ args
-      val updatedIssue = found.copy(tags = newTags)
+      val newTags = found.tags.getOrElse(Set.empty) ++ args
+      val updatedIssue = found.copy(tags = if (newTags.isEmpty) None else Some(newTags))
       val updatedModel = currentModel.updateIssue(updatedIssue)
       Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
