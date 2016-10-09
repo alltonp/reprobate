@@ -45,7 +45,7 @@ object Commander {
       case In(Some(ref), args) if args.size == 2 && args.head == "@=" => onAssignIssue(args.drop(1).head.toUpperCase, ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 2 && args.head == "_" => onMoveIssueUnder(Some(args.drop(1).head), ref, currentModel, aka)
       case In(Some(ref), args) if args.size == 1 && args.head == "_" => onMoveIssueUnder(None, ref, currentModel, aka)
-
+      case In(Some(ref), args) if args.size > 1 && args.head == "," => onCommentOnIssue(args.drop(1), ref, currentModel, aka)
       case In(Some("@"), Nil) => onShowWhoIsDoingWhat(currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":" => onTagIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), args) if args.nonEmpty && args.size > 1 && args.head == ":-" => onDetagIssue(ref, args.drop(1), currentModel, aka)
@@ -275,7 +275,7 @@ object Commander {
 
         if (currentModel.findIssue(underRef).isEmpty) return Out(Messages.notFound(underRef), changed = Nil)
 
-        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)) { found =>
           val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
           val issueToBeUnder = issuesWithRefRemoved.find(_.ref == underRef).get
           val split: (List[Issue], List[Issue]) = issuesWithRefRemoved.splitAt(issuesWithRefRemoved.indexOf(issueToBeUnder) + 1)
@@ -291,7 +291,7 @@ object Commander {
 
       }
       case None => {
-        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+        currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)) { found =>
           val issuesWithRefRemoved = currentModel.issues.filterNot(_.ref == ref)
           val newIssues = List(found) ++ issuesWithRefRemoved
           val updatedModel = currentModel.copy(issues = newIssues)
@@ -305,7 +305,16 @@ object Commander {
 
       }
     }
+  }
 
+  private def onCommentOnIssue(args: List[String], ref: String, currentModel: Model, aka: String): Out = {
+    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+      val comment = args.mkString(" ")
+      val newComments = found.comments.getOrElse(Nil) ++ List(comment)
+      val updatedIssue = found.copy(comments = Some(newComments))
+      val updatedModel = currentModel.updateIssue(updatedIssue)
+      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
+    }
   }
 
   //TODO: model.forwardAState

@@ -336,7 +336,7 @@ class RimSpec extends WordSpec with MustMatchers {
   "add a comment" in {
     val issue = Issue("1", "an item", None, Some(2), None, None)
     val current = modelWithIssue(issue)
-    val expected = current.copy(issues = List(issue.copy(values = Some(Map("key" -> "value")))))
+    val expected = current.copy(issues = List(issue.copy(comments = Some(List("a comment")))))
     runAndExpect("1 , a comment", current, expected)
   }
 
