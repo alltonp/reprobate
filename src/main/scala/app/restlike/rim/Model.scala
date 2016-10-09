@@ -82,6 +82,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
     val theRef = s"$ref: "
     val blockString = if (renderBlocked.isEmpty) "" else s" $renderBlocked"
     val valueString = if (renderValues.isEmpty) "" else customGrey(s" $renderValues")
+    //TODO: consider 1 dot per comment
     val commentString = if (comments.isEmpty) "" else customGrey(" ...")
     s"${if (hideId) "" else colouredForStatus(Some(model), "◼︎ ")}${if (hideId) "" else if (highlight) customGreen(theRef) else customGrey(theRef)}${if (highlight) customGreen(name) else customGrey(name)}${if (hideTags) "" else renderTags}${if (hideBy) "" else renderBy(highlightAka)}${if (hideStatus) "" else renderStatus(Some(model), model.config)}${customRed(blockString)}$valueString$commentString"
   }
