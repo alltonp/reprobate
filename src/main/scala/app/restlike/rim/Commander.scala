@@ -19,6 +19,7 @@ object Commander {
       case In(Some("aka"), List(myAka)) => onAka(who, myAka, currentModel)
       case In(Some("tags"), Nil) => onShowTagPriority(who, currentModel)
       case In(Some("tags"), args) if args.nonEmpty && args.head == "=" => onSetTagPriority(who, args.drop(1), currentModel)
+      case In(Some("workflow"), args) if args.nonEmpty && args.head == "=" => onSetWorkflow(who, args.drop(1), currentModel)
       case In(Some("help"), Nil) => onHelp(currentModel, aka)
       case In(Some("+"), args) => onAddIssue(args, currentModel, refProvider)
       case In(Some("+/"), args) => onAddAndBeginIssue(args, currentModel, refProvider, aka)
@@ -520,6 +521,12 @@ object Commander {
     val updatedModel = currentModel.copy(config = currentModel.config.copy(priorityTags =  tags))
     //TODO: de-dupe message (using this version)
     Out(Messages.successfulUpdate(s"tag priority: ${if (updatedModel.config.priorityTags.isEmpty) "none" else updatedModel.config.priorityTags.mkString(" ")}"), Some(updatedModel), Nil)
+  }
+
+  private def onSetWorkflow(who: String, states: List[String], currentModel: Model): Out = {
+    val updatedModel = currentModel.copy(config = currentModel.config.copy(workflowStates = states.map(State)))
+    //TODO: de-dupe message (using this version)
+    Out(Messages.successfulUpdate(s"workflow: ${if (updatedModel.config.workflowStates.isEmpty) "none" else updatedModel.config.workflowStates.map(_.name).mkString(" ")}"), Some(updatedModel), Nil)
   }
 
   private def onShowTagPriority(who: String, currentModel: Model): Out = {

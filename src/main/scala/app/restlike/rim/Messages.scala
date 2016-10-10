@@ -81,6 +81,7 @@ object Messages {
     "  - set aka                        ⇒ 'rim aka [initials]'",
     "  - show tag priority              ⇒ 'rim tags'",
     "  - set tag priority               ⇒ 'rim tags = {tag1 tag2 tagX}'                    ⇒ i.e. in tag priority order",
+    "  - set workflow                   ⇒ 'rim workflow = {state1 state2 stateX}'",
     "",
     "expert mode:",
     "  - create, forward and tag        ⇒ 'rim +/ description {: tag1 tag2 tagX}'",
