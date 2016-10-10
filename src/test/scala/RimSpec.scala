@@ -53,10 +53,6 @@ class RimSpec extends WordSpec with MustMatchers {
   }
 
   "set workflow" in {
-//Some(Model(Config(rim,backlog,List(State(next), State(doing), State(done)),released,List(foo, bar, baz, bareta)),Map(anon -> A, anon2 -> B),List(),List())) did not equal
-//Some(Model(Config(rim,backlog,List(State(foo), State(bar), State(baz), State(bareta)),released,List()),Map(anon -> A, anon2 -> B),List(),List()))
-
-
     val current = emptyModelWithWorkflow
     val updatedConfig = current.config.copy(workflowStates = List(State("foo"), State("bar"), State("baz"), State("bareta")))
     val expected = current.copy(config = updatedConfig)
