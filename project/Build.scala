@@ -33,8 +33,9 @@ object Build {
         val distdir = targetDir / dist
         val jars = libs.map(_.data).pair(flatRebase(s"$dist/lib"))
         val script = file("package/reprobate.sh").pair(flatRebase(dist))
-        IO.write(file("target/dist/version.txt"), ver)
-        val version = file("target/dist/version.txt").pair(flatRebase(dist))
+        val versionFile = file("target/dist/version.txt")
+        IO.write(versionFile, ver)
+        val version = versionFile.pair(flatRebase("."))
         val files = Seq(artifact -> s"$dist/lib/$dist.jar")
         println(s"### Building $dist.zip")
         IO.zip(files ++ jars ++ script ++ version, targetDir / "dist.zip")
