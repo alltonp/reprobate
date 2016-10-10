@@ -55,7 +55,7 @@ object Presentation {
   private def groupByStatus(model: Model, compressEmptyStates: Boolean, includeReleased: Boolean, includePreWorkflowState: Boolean, hideBy: Boolean, hideTags: Boolean, issues: Seq[Issue], currentModel: Model,
                             changed: Seq[String], aka: Option[String]) = {
     val stateToIssues: Map[Int, Seq[Issue]] = issues.groupBy(_.status.getOrElse(currentModel.config.lastWorkflowStateIncludingPre + 1))
-    val interestingStates = currentModel.config.allStates ++ (if (includeReleased) Seq(currentModel.config.postWorkflowState) else Nil)
+    val interestingStates: Seq[String] = currentModel.config.allStateNames ++ (if (includeReleased) Seq(currentModel.config.postWorkflowState) else Nil)
 //      (if (includePreWorkflowState) List(model.config.preWorkflowState) else Nil) ::: currentModel.config.workflowStates ::: (if (includeReleased) List(currentModel.config.postWorkflowState) else Nil)
 
     val interestingStates2 = interestingStates.zipWithIndex.filter(sAndI => {

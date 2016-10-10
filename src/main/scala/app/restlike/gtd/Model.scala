@@ -66,7 +66,7 @@ object ColouredForStatus {
       case "next-really-overdue" => customRed(value)
       case "next-overdue" => customOrange(value)
       case "next" => customYellow(value)
-      //        case Some(x) if x == m.endState => customGreen(value) //customOrange(value)
+      //        case Some(x) if x == m.endStateIndex => customGreen(value) //customOrange(value)
       case _ => customGrey(value) //customYellow(value)
     }
 }
@@ -121,8 +121,8 @@ case class Model(/*workflowStates: List[String],*/ /*userToAka: immutable.Map[St
   def findDone(ref: String) = done.find(_.ref == ref)
 //  def beginState = workflowStates.head
 //  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
-//  def endState = workflowStates.reverse.head
-//  def releasableIssues = things.filter(_.date == Some(endState))
+//  def endStateIndex = workflowStates.reverse.head
+//  def releasableIssues = things.filter(_.date == Some(endStateIndex))
 //  def releaseTags = done.map(_.tag)
   def allThingsIncludingDone = done ++ things
 

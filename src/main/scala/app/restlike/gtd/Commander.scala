@@ -269,7 +269,7 @@ object Commander {
 //  }
 
 //  private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-//    currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
+//    currentModel.createIssue(args, Some(currentModel.endStateIndex), Some(aka), refProvider) match {
 //      case Left(e) => Out(e, None)
 //      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel))
 //    }

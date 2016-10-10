@@ -16,7 +16,7 @@ class RimSpec extends WordSpec with MustMatchers {
   private val doing = "doing"
   private val done = "done"
   private val released = "released"
-  private val workflowStates = List(next, doing, done)
+  private val workflowStates = List(State(next), State(doing), State(done))
   private val aka = "A"
   private val aka2 = "B"
   private val usersToAka = Map("anon" -> aka, "anon2" -> aka2)

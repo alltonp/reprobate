@@ -49,7 +49,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
   private val renderValues = values.getOrElse(Map.empty).toList.sorted.map(v => s"${v._1}=${v._2}").mkString(", ")
 
   private def renderStatus(model: Option[Model], config: Config) = {
-    val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + config.allStates(_))
+    val value = status.fold(s" ^${config.postWorkflowState}")(" ^" + config.allStateNames(_))
     colouredForStatus(model, value)
   }
 
@@ -59,7 +59,7 @@ case class Issue(ref: String, name: String, when: Option[Long], status: Option[I
         case Some(x) if blocked.isDefined => customRed(value)
         case Some(x) if x == 0 => customGrey(value)
         case Some(x) if x == m.beginState => customYellow(value)
-        case Some(x) if x == m.endState => customGreen(value)
+        case Some(x) if x == m.endStateIndex => customGreen(value)
         case None => customMagenta(value)
         case _ => customOrange(value)
       })
@@ -110,8 +110,10 @@ case class Tag(name: String, count: Int)
 //(5) borrow the bcrypt from thing
 //(6) be able to create new from ui/url create/name/email - sends token to email
 
-case class Config(name: String, preWorkflowState: String, workflowStates: List[String], postWorkflowState: String, priorityTags: List[String]) {
-  val allStates = (Seq(preWorkflowState) ++ workflowStates)
+case class State(name: String)
+
+case class Config(name: String, preWorkflowState: String, workflowStates: List[State], postWorkflowState: String, priorityTags: List[String]) {
+  val allStateNames: Seq[String] = (Seq(preWorkflowState) ++ workflowStates.map(_.name))
   val lastWorkflowStateIncludingPre = workflowStates.size
 }
 
@@ -153,13 +155,12 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
   def akas = userToAka.values.toList.distinct
   def findIssue(ref: String) = issues.find(_.ref == ref)
   def beginState = 1
-  def state(number: Int) = (allSomeStates)(number)
 
-  private def allSomeStates = config.workflowStates ::: config.preWorkflowState :: Nil
+  private def allSomeStateNames: List[String] = config.workflowStates.map(_.name) ::: config.preWorkflowState :: Nil
 
   //TODO: this obviously needs thinking about if the states change
-  def endState = allSomeStates.size -1
-  def releasableIssues = issues.filter(_.status == Some(endState))
+  def endStateIndex = allSomeStateNames.size -1
+  def releasableIssues: List[Issue] = issues.filter(_.status == Some(endStateIndex))
   def releaseTags = released.map(_.tag)
   def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 

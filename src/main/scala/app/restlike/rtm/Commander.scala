@@ -296,7 +296,7 @@ object Commander {
 
 //  private def onFastForwardIssue(ref: String, currentModel: Model, aka: String) = {
 //    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
-//      val newStatus = currentModel.endState
+//      val newStatus = currentModel.endStateIndex
 //      val updatedIssue = found.copy(status = Some(newStatus), by = Some(aka))
 //      val updatedModel = currentModel.updateIssue(updatedIssue)
 //      Out(Presentation.board(updatedModel, Seq(ref), aka), Some(updatedModel), Seq(updatedIssue.ref))
@@ -388,7 +388,7 @@ object Commander {
 //  }
 
 //  private def onAddAndEndIssue(args: List[String], currentModel: Model, refProvider: RefProvider, aka: String) = {
-//    currentModel.createIssue(args, Some(currentModel.endState), Some(aka), refProvider) match {
+//    currentModel.createIssue(args, Some(currentModel.endStateIndex), Some(aka), refProvider) match {
 //      case Left(e) => Out(e, None, Nil)
 //      case Right(r) => Out(Presentation.board(r.updatedModel, Seq(r.created.ref), aka), Some(r.updatedModel), Seq(r.created.ref))
 //    }

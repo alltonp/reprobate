@@ -39,7 +39,7 @@ case class Issue(ref: String, description: String, status: Option[String], by: O
 //        case None => customGrey(value)
 //        case Some(x) if blocked.isDefined => customRed(value)
 //        case Some(x) if x == m.beginState => customYellow(value)
-//        case Some(x) if x == m.endState => customGreen(value)
+//        case Some(x) if x == m.endStateIndex => customGreen(value)
 //        case _ => customOrange(value)
 //      })
 //  }
@@ -100,8 +100,8 @@ case class Model(facts: immutable.Map[String, immutable.Map[String, String]], us
 //  def findIssue(ref: String) = issues.find(_.ref == ref)
 //  def beginState = workflowStates.head
 //  def state(number: Int) = workflowStates(number) //TODO: this obviously needs thinking about if the states change
-//  def endState = workflowStates.reverse.head
-//  def releasableIssues = issues.filter(_.status == Some(endState))
+//  def endStateIndex = workflowStates.reverse.head
+//  def releasableIssues = issues.filter(_.status == Some(endStateIndex))
 //  def releaseTags = released.map(_.tag)
 //  def allIssuesIncludingReleased = released.map(_.issues).flatten ++ issues
 
