@@ -35,6 +35,7 @@ object Commander {
       case In(Some(ref), List("-")) => onRemoveIssue(ref, currentModel)
       case In(Some(ref), args) if args.nonEmpty && args.head == "=" => onEditIssue(ref, args.drop(1), currentModel, aka)
       case In(Some(ref), args) if args.nonEmpty && args.forall(_.contains("=")) => onValueIssue(ref, args, currentModel, aka)
+//      case In(Some(ref), args) if args.nonEmpty && args.forall(_.contains("+")) => onIncrementValue(ref, args, currentModel, aka)
       case In(Some(ref), List("/")) => onForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List("/!")) => onFastForwardIssue(ref, currentModel, aka)
       case In(Some(ref), List(".")) => onBackwardIssue(ref, currentModel, aka)
@@ -55,6 +56,7 @@ object Commander {
       case In(Some(tagToDelete), args) if args.nonEmpty && args.size == 1 && args.head == ":--" => onDeleteTagUsages(tagToDelete, currentModel)
       case In(Some(":"), args) if args.nonEmpty && args.size == 1 => onShowAllForTag(args.head, currentModel)
       case In(Some(":-"), Nil) => onShowUntagged(currentModel, aka)
+      //or £
       case In(Some("±"), List(tag)) => onRelease(tag, currentModel, aka)
       case In(Some("±"), Nil) => onShowReleases(currentModel, aka)
 //      case In(Some("note"), args) if args.nonEmpty && args.size == 1 => onShowReleaseNote(args.head, currentModel)
@@ -432,6 +434,50 @@ object Commander {
       Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
     }
   }
+
+//  private def onIncrementValue(ref: String, args: List[String], currentModel: Model, aka: String) = {
+//    currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>
+//      val existingValues = found.values.getOrElse(Map.empty)
+//
+//      //TODO: all sorts to worry about here ..
+//      //- does key exist
+//      //- is existing value a number
+//      //- was passed in value a number
+//      //-
+//
+//      val values = args.map(kv => {
+//        val b = kv.split("+")
+//        val value = if (b.size > 1) b(1) else "1"
+//        (b(0), if (existingValues.contains(b(0))) b(1) else value)
+//      }).toMap
+//
+//      val key = values.keys.head
+//
+//      if (!existingValues.contains(key)) {
+//        Out(Messages.problem(s"property $key does not exist"), None, Nil)
+//      } else if (values.values.head.toInt) {
+//
+//      }
+//
+//      val mergedValues = (existingValues.keySet ++ values.keySet).map (i=> (
+//        i, if (values.contains(i)) values(i) else existingValues(i))
+//      ).toMap
+//
+//      //TODO: when deleting, show a message if key does not exist ... key- or key=-
+//      //TODO: make it an Option[Map] .. for better json's when values are empty (check for and set to None)
+//
+//      val toRemove = values.filter(_._2 == "-")
+//      val mergedAndDeleted = mergedValues.filterKeys(!toRemove.contains(_))
+//      val updatedIssue = found.copy(values = if (mergedAndDeleted.isEmpty) None else Some(mergedAndDeleted))
+//      val updatedModel = currentModel.updateIssue(updatedIssue)
+//      //TODO: abstract this away somewhere
+//      //also, depended on context might want to show the preWorkflowState or releases
+////      val presentation = if (updatedModel.onBoard_?(found)) Presentation.board(updatedModel, changed = Seq(found.ref), aka)
+////                         else
+////        Messages.successfulUpdate(s"${updatedIssue.render()}")
+//      Out(Presentation.basedOnUpdateContext(updatedModel, updatedIssue, aka), Some(updatedModel), Seq(updatedIssue.ref))
+//    }
+//  }
 
   private def onRemoveIssue(ref: String, currentModel: Model) = {
     currentModel.findIssue(ref).fold(Out(Messages.notFound(ref), None, Nil)){found =>

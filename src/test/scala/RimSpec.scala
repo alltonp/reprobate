@@ -250,6 +250,21 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("1 key1=-", current, expected)
   }
 
+//  "increment a value" in {
+//    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("count" -> "0")))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(values = Some(Map("count" -> "2")))))
+//    runAndExpect("1 count+2", current, expected)
+//  }
+//
+//  "increment a value by default" in {
+//    val issue = Issue("1", "an item", None, Some(2), None, None, values = Some(Map("count" -> "0")))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(issues = List(issue.copy(values = Some(Map("count" -> "1")))))
+//    runAndExpect("1 count+", current, expected)
+//  }
+
+
   //priority
 
   "move x under y" in {
