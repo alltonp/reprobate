@@ -31,7 +31,7 @@ case class Universe(tokenToModel: immutable.Map[String, Model], tokenToAccess: i
 //TODO: I need a new name, something more generic, thing?
 //TODO: when to be set for defer 3M thing etc or maybe for ordering ... millis - x
 //TODO: think about dependsOn ...
-case class Issue(ref: String, name: String, when: Option[Long], status: Option[Int], by: Option[String],
+case class Issue(ref: String, name: String, status: Option[Int], by: Option[String],
                  blocked: Option[String], tags: Option[Set[String]] = None,
                  values: Option[immutable.Map[String, String]] = None,
                  comments : Option[List[String]] = None) {
@@ -141,7 +141,7 @@ case class Model(config: Config, userToAka: immutable.Map[String, String], issue
     val maybeDupe = issues.find(i => i.name == description)
     if (maybeDupe.isDefined) return Left(Messages.duplicateIssue(maybeDupe.get.ref))
     val newRef = refProvider.next
-    val created = Issue(newRef, description, None, status, by, None, if (tagBits.isEmpty) None else Some(tagBits.toSet))
+    val created = Issue(newRef, description, status, by, None, if (tagBits.isEmpty) None else Some(tagBits.toSet))
     val updatedModel = this.copy(issues = created :: this.issues)
     Right(IssueCreation(created, updatedModel))
   }
