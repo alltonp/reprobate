@@ -16,7 +16,7 @@ object Persistence {
     if (!file.toFile.exists()) {
       save(createEmpty)
       println(add("rim@spabloshi.com", "rim", "backlog", List(State("next"), State("doing"), State("done")), "released"))
-      println(add("timesheets@spabloshi.com", "timesheets", "unprocessed", List(State("submitted"), State("invoiced"), State("paid")), "archived"))
+//      println(add("timesheets@spabloshi.com", "timesheets", "unprocessed", List(State("submitted"), State("invoiced"), State("paid")), "archived"))
     }
     Json.deserialise(Filepath.load(file))
   }
