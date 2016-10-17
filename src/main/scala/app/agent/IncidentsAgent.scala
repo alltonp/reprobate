@@ -31,12 +31,12 @@ case class IncidentsAgent() extends Renderable {
 
   //TODO: ideally lets give 1 and 3 more room
   private def tableHeaders(prefix: String) = headers(List(
-    header(span(None, prefix).styles(color("#0088cc"))).styles(width("25%")),
+    header(span(None, prefix).styles(color("#0088cc"))).styles(width("16%")),
     header(R("Environment")).styles(width("9%")),
 //    header(R("Ref")).styles(width("7%")),
-    header(R("Reason")).styles(width("32%")),
-    header(R("Opened")).styles(width("12%")),
-    header(R("Closed")).styles(width("12%")),
+    header(R("Reason")).styles(width("45%")),
+    header(R("Opened")).styles(width("10%")),
+    header(R("Closed")).styles(width("10%")),
     header(R("Duration")).styles(width("10%"))
   ))
 
