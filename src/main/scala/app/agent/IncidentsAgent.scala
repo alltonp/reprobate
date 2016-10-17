@@ -6,6 +6,7 @@ import app.server.AllRunsStatusUpdate
 import im.mange.jetboot._
 import im.mange.jetpac._
 import im.mange.jetboot.widget.table.{TableHeaders, TableRow}
+import im.mange.jetpac.css.Style
 
 import scala.xml.Unparsed
 
@@ -43,7 +44,7 @@ case class IncidentsAgent() extends Renderable {
     R(i.probe.description),
     R(i.probe.env),
 //    R(s"IN-${i.id}"),
-    R(Unparsed(i.failures.mkString("<br/>"))),
+    span(None, R(Unparsed(i.failures.mkString("<br/>")))).styles(Style("word-break", "break-all")),
     R(dateFormats().today(i.start)),
     R(i.finish.fold("-"){dateFormats().today(_)}),
     R(dateFormats().ago(i.openDuration))
