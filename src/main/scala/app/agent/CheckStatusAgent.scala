@@ -35,7 +35,11 @@ case class CheckStatusAgent(probe: Probe) extends Renderable {
   private def description = div(None, span(None, probe.env).classes("lozenge").styles(color("#cc0000")), Spacer(),
     span(None, probe.description)).styles(fontWeight(bold))
 
-  private def failures(failure: ProbeFailure) = span(None, failure.failures.head + "... (see incident log for details)").styles(fontSize(smaller))
+  private def failures(failure: ProbeFailure) = {
+    val message = failure.failures.head
+    span(None, (if (message.size > 100) message.substring(0, 99) + "... " else message) + " (see incident log for details)").styles(fontSize(smaller))
+  }
+
   private def ref(failure: ProbeFailure) = span(/*Badge(value = "I123")*/).styles(fontSize(smaller))
   private def remedy = span(None, probe.remedy).styles(fontWeight(bold))
 }
