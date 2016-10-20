@@ -35,9 +35,9 @@ case class IncidentsAgent() extends Renderable {
     header(R("Environment")).styles(width("9%")),
 //    header(R("Ref")).styles(width("7%")),
     header(R("Reason")).styles(width("45%")),
-    header(R("Opened")).styles(width("10%")),
-    header(R("Closed")).styles(width("10%")),
-    header(R("Duration")).styles(width("10%"))
+    header(R("Opened")).styles(width("11%")),
+    header(R("Closed")).styles(width("11%")),
+    header(R("Duration")).styles(width("8%"))
   ))
 
   private def rows(incidents: List[Incident]) = incidents.map(i => TableRow(None, List(
