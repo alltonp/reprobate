@@ -59,6 +59,17 @@ class RimSpec extends WordSpec with MustMatchers {
     runAndExpect("workflow = foo bar baz bareta", current, expected)
   }
 
+  //TODO: need to make this work - it's a bug
+//  "set workflow rejected" in {
+//    val issue = Issue("1", "an item", status = Some(2))
+//    val current = modelWithIssue(issue)
+//    val expected = current.copy(config = emptyModelWithWorkflow.config)
+//    runAndExpect("workflow = foo", current, expected)
+//  }
+
+  //TODO: set preWorkflowState
+  //TODO: set postWorkflowState
+
 
   //adding
 
