@@ -23,7 +23,6 @@ case class ConfigEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
 
   def render = belch.render
 
-//  def onInit = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns))))
   def onLoad(config: String) = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns, config))))
 
   def currentColumnConfig = columnConfig
@@ -34,20 +33,13 @@ case class ConfigEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
       case PortMessage("ColumnsChanged", payload) =>
         parent.onColumnsChanged
         columnConfig = tagsFromJson(payload)
-//        subscriber ! Init()
 
+      //Cancel
       case PortMessage("CancelCommand", _) =>
-//        parent.onColumnsSaved
-//        subscriber ! Init()
         subscriber ! CancelProbeConfig()
 
+      //Save
       case PortMessage("RunCommand", command) =>
-        //TODO: this should be the authorised users initials or email ....
-        //.. probsbly email and then have an aka to the email, so doesnt clash with cli versions
-//        val r = Controller.execute("PA", RimToken.token, command)
-//        println(r)
-//        subscriber ! Init
-//        parent.onColumnsSaved
         subscriber ! SaveProbeConfig(command)
 
       case x => throw new RuntimeException(s"Don't know how to handle: $x")
