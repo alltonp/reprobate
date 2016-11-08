@@ -9550,62 +9550,56 @@ _alltonp$reprobate$ConfigEditor_View_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _alltonp$reprobate$ConfigEditor_View$saveButton = function (disable) {
-	return A2(
-		_elm_lang$html$Html$button,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('btn btn-link'),
-				_elm_lang$html$Html_Attributes$style(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'padding', '0px'),
-						A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'margin', '0px')
-					])),
-				_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$ConfigEditor_Msg$RunCommand),
-				_elm_lang$html$Html_Attributes$title('Save'),
-				_elm_lang$html$Html_Attributes$disabled(disable)
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$i,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('fa fa-check fa-2x')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[]))
-			]));
-};
-var _alltonp$reprobate$ConfigEditor_View$cancelButton = function (disable) {
-	return A2(
-		_elm_lang$html$Html$button,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('btn btn-link'),
-				_elm_lang$html$Html_Attributes$style(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'padding', '0px'),
-						A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'margin', '0px')
-					])),
-				_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$ConfigEditor_Msg$CancelCommand),
-				_elm_lang$html$Html_Attributes$title('Cancel'),
-				_elm_lang$html$Html_Attributes$disabled(disable)
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$i,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('fa fa-times fa-2x')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[]))
-			]));
-};
+var _alltonp$reprobate$ConfigEditor_View$saveButton = A2(
+	_elm_lang$html$Html$button,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html_Attributes$class('btn btn-link'),
+			_elm_lang$html$Html_Attributes$style(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'padding', '0px'),
+					A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'margin', '0px')
+				])),
+			_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$ConfigEditor_Msg$RunCommand),
+			_elm_lang$html$Html_Attributes$title('Save')
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$i,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('fa fa-check fa-2x')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]));
+var _alltonp$reprobate$ConfigEditor_View$cancelButton = A2(
+	_elm_lang$html$Html$button,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html_Attributes$class('btn btn-link'),
+			_elm_lang$html$Html_Attributes$style(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'padding', '0px'),
+					A2(_alltonp$reprobate$ConfigEditor_View_ops['=>'], 'margin', '0px')
+				])),
+			_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$ConfigEditor_Msg$CancelCommand),
+			_elm_lang$html$Html_Attributes$title('Cancel')
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$i,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('fa fa-times fa-2x')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]));
 var _alltonp$reprobate$ConfigEditor_View$agentView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9621,10 +9615,7 @@ var _alltonp$reprobate$ConfigEditor_View$agentView = function (model) {
 						_elm_lang$html$Html_Attributes$class('form-group')
 					]),
 				_elm_lang$core$Native_List.fromArray(
-					[
-						_alltonp$reprobate$ConfigEditor_View$saveButton(false),
-						_alltonp$reprobate$ConfigEditor_View$cancelButton(false)
-					]))
+					[_alltonp$reprobate$ConfigEditor_View$saveButton, _alltonp$reprobate$ConfigEditor_View$cancelButton]))
 			]));
 };
 var _alltonp$reprobate$ConfigEditor_View$view = function (model) {

@@ -29,7 +29,7 @@ view model =
 agentView : Model -> Html Msg
 agentView model =
     div [] [ configEditor (model.command) False
-           , div [ class "form-group" ] [ saveButton (False), cancelButton (False) ]
+           , div [ class "form-group" ] [ saveButton, cancelButton ]
            ]
 
 
@@ -44,27 +44,21 @@ configEditor v disable =
 
 
 
-saveButton : Bool -> Html Msg
-saveButton disable =
+saveButton : Html Msg
+saveButton =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
       , onClick RunCommand
       , title "Save"
-      , disabled disable
       ]
-      [
-      i [ class "fa fa-check fa-2x" ] []
-      ]
+      [ i [ class "fa fa-check fa-2x" ] [] ]
 
 
-cancelButton : Bool -> Html Msg
-cancelButton disable =
+cancelButton : Html Msg
+cancelButton =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
       , onClick CancelCommand
       , title "Cancel"
-      , disabled disable
       ]
-      [
-      i [ class "fa fa-times fa-2x" ] []
-      ]
+      [ i [ class "fa fa-times fa-2x" ] [] ]
