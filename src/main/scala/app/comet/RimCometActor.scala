@@ -1,7 +1,7 @@
 package app.comet
 
 import app.ServiceFactory.rimServerActor
-import app.agent.{Column, ColumnConfig, CommandEditorAgent}
+import app.agent.{CommandEditorAgent}
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}
 import app.server.ModelChanged
@@ -80,9 +80,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
-  private val commandEditorAgent = CommandEditorAgent(
-    ColumnConfig(Seq(Column("one", true, false), Column("two", true, false))),
-    subscriber)
+  private val commandEditorAgent = CommandEditorAgent(subscriber)
 
   def render = {
     import Css._

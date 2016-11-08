@@ -5832,41 +5832,17 @@ var _alltonp$reprobate$CommandEditor_Model$Column = F3(
 		return {name: a, selected: b, system: c};
 	});
 var _alltonp$reprobate$CommandEditor_Model$AgentModel = function (a) {
-	return {columns: a};
+	return {data: a};
 };
 
-var _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	_elm_lang$core$Json_Decode$string,
-	function (val) {
-		var _p0 = val;
-		switch (_p0) {
-			case 'true':
-				return _elm_lang$core$Json_Decode$succeed(true);
-			case 'false':
-				return _elm_lang$core$Json_Decode$succeed(false);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(_elm_lang$core$Basics_ops['++'], 'Expecting \"true\" or \"false\" but found ', val));
-		}
-	});
-var _alltonp$reprobate$CommandEditor_Codec$columnDecoder = A4(
-	_elm_lang$core$Json_Decode$object3,
-	_alltonp$reprobate$CommandEditor_Model$Column,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		_elm_lang$core$Native_List.fromArray(
-			['name']),
-		_elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'selected', _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'system', _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder));
 var _alltonp$reprobate$CommandEditor_Codec$agentModelDecoder = A2(
 	_elm_lang$core$Json_Decode$object1,
 	_alltonp$reprobate$CommandEditor_Model$AgentModel,
 	A2(
-		_elm_lang$core$Json_Decode_ops[':='],
-		'columns',
-		_elm_lang$core$Json_Decode$list(_alltonp$reprobate$CommandEditor_Codec$columnDecoder)));
+		_elm_lang$core$Json_Decode$at,
+		_elm_lang$core$Native_List.fromArray(
+			['data']),
+		_elm_lang$core$Json_Decode$string));
 var _alltonp$reprobate$CommandEditor_Codec$decodeAgentModel = function (serialised) {
 	return A2(_elm_lang$core$Json_Decode$decodeString, _alltonp$reprobate$CommandEditor_Codec$agentModelDecoder, serialised);
 };
