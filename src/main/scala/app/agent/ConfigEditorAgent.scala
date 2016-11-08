@@ -1,8 +1,5 @@
-package app.agent.configeditor
+package app.agent
 
-import app.comet.{Init, RimToken}
-import app.model.ProbeRegistry
-import app.restlike.rim.Controller
 import app.server.{CancelProbeConfig, SaveProbeConfig}
 import im.mange.belch.{Belch, PortMessage, ToLiftPort}
 import im.mange.jetpac.Renderable
@@ -11,9 +8,9 @@ import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
-case class AgentModel(config: String)
-
 case class ConfigEditorAgent(subscriber: Subscriber) extends Renderable {
+  case class AgentModel(config: String)
+
   private val belch = Belch("configEditorAgent", "ConfigEditorAgent", Some(ToLiftPort(receiveFromElm)),
     messageDebug = true, bridgeDebug = false)
 

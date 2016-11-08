@@ -1,36 +1,25 @@
 package app.comet
 
-import app.ServiceFactory.{rimServerActor, systemClock}
+import app.ServiceFactory.rimServerActor
 import app.agent.{Column, ColumnConfig, CommandEditorAgent}
-import app.agent.columneditor.{Column, ColumnConfig}
-import app.restlike.common.Colours
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}
 import app.server.ModelChanged
 import im.mange.jetboot._
 import im.mange.jetboot.widget.button.ToggleButton
-import im.mange.jetpac.comet._
 import im.mange.jetpac._
+import im.mange.jetpac.comet._
 import im.mange.jetpac.css.{Classes, Styles}
-import im.mange.jetpac.html.{A, LinkAnchor}
-import im.mange.jetpac.page.{CometPage, StaticPage}
-import net.liftweb.actor.LiftActor
+import im.mange.jetpac.html.LinkAnchor
+import im.mange.jetpac.page.StaticPage
 import net.liftweb.common.Loggable
-import net.liftweb.http.{S, SHtml}
+import net.liftweb.http.S
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds._
 import net.liftweb.sitemap.Loc
-import net.liftweb.http.js.JE.{JsRaw, ValById}
-import net.liftweb.http.js.JsCmds.{SetHtml, _}
-import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
-import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
-import net.liftweb.http.js.JE.{JsRaw, ValById}
-import net.liftweb.http.js.JsCmds.{SetHtml, _}
-import net.liftweb.http.js.jquery.JqJE.{JqAttr, JqGetAttr, JqId, JqPrepend, JqRemove, JqReplace, _}
-import net.liftweb.http.js.{JsCmd, JsExp, JsMember}
 
 import scala.reflect.ClassTag
-import scala.xml.Unparsed
 
 abstract class CometPageWithRequestArgs[T: ClassTag] extends StaticPage {
   def cometActorName: String = implicitly[ClassTag[T]].runtimeClass.getSimpleName

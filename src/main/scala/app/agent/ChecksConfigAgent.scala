@@ -1,6 +1,5 @@
 package app.agent
 
-import app.agent.configeditor.ConfigEditorAgent
 import app.server.ProbeConfigResponse
 import app.ui.BigSpinner
 import im.mange.jetpac._
