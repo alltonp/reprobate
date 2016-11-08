@@ -13,8 +13,8 @@ case class AgentModel(columns: Seq[Column])
 case class Column(name: String, selected: Boolean, system: Boolean)
 case class ColumnConfig(columns: Seq[Column])
 
-case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subscriber, parent: ColumnEditableAgent) extends Renderable {
-  private var columnConfig = initialColumnConfig
+case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subscriber) extends Renderable {
+  private val columnConfig = initialColumnConfig
 
   private val belch = Belch("columnEditorAgent", "ColumnEditorAgent", Some(ToLiftPort(receiveFromElm)),
     messageDebug = true, bridgeDebug = false)
@@ -23,23 +23,14 @@ case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subs
 
   def onInit = belch.sendToElm(PortMessage("LoadAgentModel", toJson(AgentModel(columnConfig.columns))))
 
-  def currentColumnConfig = columnConfig
+//  def currentColumnConfig = columnConfig
 
   //TODO: this needs to be wrapped in an error handler
   private def receiveFromElm(message: PortMessage) {
     message match {
-      case PortMessage("ColumnsChanged", payload) =>
-        parent.onColumnsChanged
-        columnConfig = tagsFromJson(payload)
-//        subscriber ! Init()
-
-      case PortMessage("SaveColumns", _) =>
-        parent.onColumnsSaved
-//        subscriber ! Init()
-
       case PortMessage("RunCommand", command) =>
         //TODO: this should be the authorised users initials or email ....
-        //.. probsbly email and then have an aka to the email, so doesnt clash with cli versions
+        //.. probably email and then have an aka to the email, so doesnt clash with cli versions
         val r = Controller.execute("anon", RimToken.token, command)
         println(r)
         subscriber ! Init

@@ -92,11 +92,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
 
   private val columnEditorAgent = ColumnEditorAgent(
     ColumnConfig(Seq(Column("one", true, false), Column("two", true, false))),
-    subscriber, new ColumnEditableAgent() {
-      override def onColumnsChanged: Unit = println("changed")
-      override def onColumnsSaved: Unit = println("saved")
-    }
-  )
+    subscriber)
 
   def render = {
     import Css._
