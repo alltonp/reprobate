@@ -34,9 +34,9 @@ case class IncidentsAgent() extends Renderable {
     header(span(None, prefix).styles(color("#0088cc"))).styles(width("16%")),
     header(R("Environment")).styles(width("9%")),
 //    header(R("Ref")).styles(width("7%")),
-    header(R("Reason")).styles(width("45%")),
-    header(R("Opened")).styles(width("11%")),
-    header(R("Closed")).styles(width("11%")),
+    header(R("Reason")).styles(width("43%")),
+    header(R("Opened")).styles(width("12%")),
+    header(R("Closed")).styles(width("12%")),
     header(R("Duration")).styles(width("8%"))
   ))
 
