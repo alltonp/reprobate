@@ -5822,20 +5822,20 @@ var _elm_lang$core$Json_Decode$dict = function (decoder) {
 };
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
 
-var _alltonp$reprobate$ColumnEditor_Model$Model = F4(
+var _alltonp$reprobate$CommandEditor_Model$Model = F4(
 	function (a, b, c, d) {
 		return {agentModel: a, editing: b, error: c, command: d};
 	});
-var _alltonp$reprobate$ColumnEditor_Model$initialModel = A4(_alltonp$reprobate$ColumnEditor_Model$Model, _elm_lang$core$Maybe$Nothing, false, _elm_lang$core$Maybe$Nothing, '');
-var _alltonp$reprobate$ColumnEditor_Model$Column = F3(
+var _alltonp$reprobate$CommandEditor_Model$initialModel = A4(_alltonp$reprobate$CommandEditor_Model$Model, _elm_lang$core$Maybe$Nothing, false, _elm_lang$core$Maybe$Nothing, '');
+var _alltonp$reprobate$CommandEditor_Model$Column = F3(
 	function (a, b, c) {
 		return {name: a, selected: b, system: c};
 	});
-var _alltonp$reprobate$ColumnEditor_Model$AgentModel = function (a) {
+var _alltonp$reprobate$CommandEditor_Model$AgentModel = function (a) {
 	return {columns: a};
 };
 
-var _alltonp$reprobate$ColumnEditor_Codec$stringBoolDecoder = A2(
+var _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	_elm_lang$core$Json_Decode$string,
 	function (val) {
@@ -5850,50 +5850,50 @@ var _alltonp$reprobate$ColumnEditor_Codec$stringBoolDecoder = A2(
 					A2(_elm_lang$core$Basics_ops['++'], 'Expecting \"true\" or \"false\" but found ', val));
 		}
 	});
-var _alltonp$reprobate$ColumnEditor_Codec$columnDecoder = A4(
+var _alltonp$reprobate$CommandEditor_Codec$columnDecoder = A4(
 	_elm_lang$core$Json_Decode$object3,
-	_alltonp$reprobate$ColumnEditor_Model$Column,
+	_alltonp$reprobate$CommandEditor_Model$Column,
 	A2(
 		_elm_lang$core$Json_Decode$at,
 		_elm_lang$core$Native_List.fromArray(
 			['name']),
 		_elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'selected', _alltonp$reprobate$ColumnEditor_Codec$stringBoolDecoder),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'system', _alltonp$reprobate$ColumnEditor_Codec$stringBoolDecoder));
-var _alltonp$reprobate$ColumnEditor_Codec$agentModelDecoder = A2(
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'selected', _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'system', _alltonp$reprobate$CommandEditor_Codec$stringBoolDecoder));
+var _alltonp$reprobate$CommandEditor_Codec$agentModelDecoder = A2(
 	_elm_lang$core$Json_Decode$object1,
-	_alltonp$reprobate$ColumnEditor_Model$AgentModel,
+	_alltonp$reprobate$CommandEditor_Model$AgentModel,
 	A2(
 		_elm_lang$core$Json_Decode_ops[':='],
 		'columns',
-		_elm_lang$core$Json_Decode$list(_alltonp$reprobate$ColumnEditor_Codec$columnDecoder)));
-var _alltonp$reprobate$ColumnEditor_Codec$decodeAgentModel = function (serialised) {
-	return A2(_elm_lang$core$Json_Decode$decodeString, _alltonp$reprobate$ColumnEditor_Codec$agentModelDecoder, serialised);
+		_elm_lang$core$Json_Decode$list(_alltonp$reprobate$CommandEditor_Codec$columnDecoder)));
+var _alltonp$reprobate$CommandEditor_Codec$decodeAgentModel = function (serialised) {
+	return A2(_elm_lang$core$Json_Decode$decodeString, _alltonp$reprobate$CommandEditor_Codec$agentModelDecoder, serialised);
 };
 
-var _alltonp$reprobate$ColumnEditor_Msg$NoOp = {ctor: 'NoOp'};
-var _alltonp$reprobate$ColumnEditor_Msg$RunCommand = {ctor: 'RunCommand'};
-var _alltonp$reprobate$ColumnEditor_Msg$CommandChanged = function (a) {
+var _alltonp$reprobate$CommandEditor_Msg$NoOp = {ctor: 'NoOp'};
+var _alltonp$reprobate$CommandEditor_Msg$RunCommand = {ctor: 'RunCommand'};
+var _alltonp$reprobate$CommandEditor_Msg$CommandChanged = function (a) {
 	return {ctor: 'CommandChanged', _0: a};
 };
-var _alltonp$reprobate$ColumnEditor_Msg$Load = function (a) {
+var _alltonp$reprobate$CommandEditor_Msg$Load = function (a) {
 	return {ctor: 'Load', _0: a};
 };
-var _alltonp$reprobate$ColumnEditor_Msg$Error = function (a) {
+var _alltonp$reprobate$CommandEditor_Msg$Error = function (a) {
 	return {ctor: 'Error', _0: a};
 };
 
-var _alltonp$reprobate$ColumnEditor_Messaging$portMessageToMsg = function (message) {
+var _alltonp$reprobate$CommandEditor_Messaging$portMessageToMsg = function (message) {
 	var _p0 = message.typeName;
 	if (_p0 === 'LoadAgentModel') {
-		var _p1 = _alltonp$reprobate$ColumnEditor_Codec$decodeAgentModel(message.payload);
+		var _p1 = _alltonp$reprobate$CommandEditor_Codec$decodeAgentModel(message.payload);
 		if (_p1.ctor === 'Ok') {
-			return _alltonp$reprobate$ColumnEditor_Msg$Load(_p1._0);
+			return _alltonp$reprobate$CommandEditor_Msg$Load(_p1._0);
 		} else {
-			return _alltonp$reprobate$ColumnEditor_Msg$Error(_p1._0);
+			return _alltonp$reprobate$CommandEditor_Msg$Error(_p1._0);
 		}
 	} else {
-		return _alltonp$reprobate$ColumnEditor_Msg$Error(
+		return _alltonp$reprobate$CommandEditor_Msg$Error(
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				'Received unknown message: ',
@@ -5901,8 +5901,8 @@ var _alltonp$reprobate$ColumnEditor_Messaging$portMessageToMsg = function (messa
 	}
 };
 
-var _alltonp$reprobate$ColumnEditor_Port$columnEditorAgentFromLift = _elm_lang$core$Native_Platform.incomingPort(
-	'columnEditorAgentFromLift',
+var _alltonp$reprobate$CommandEditor_Port$commandEditorAgentFromLift = _elm_lang$core$Native_Platform.incomingPort(
+	'commandEditorAgentFromLift',
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'typeName', _elm_lang$core$Json_Decode$string),
@@ -5915,16 +5915,16 @@ var _alltonp$reprobate$ColumnEditor_Port$columnEditorAgentFromLift = _elm_lang$c
 						{typeName: typeName, payload: payload});
 				});
 		}));
-var _alltonp$reprobate$ColumnEditor_Port$columnEditorAgentToLift = _elm_lang$core$Native_Platform.outgoingPort(
-	'columnEditorAgentToLift',
+var _alltonp$reprobate$CommandEditor_Port$commandEditorAgentToLift = _elm_lang$core$Native_Platform.outgoingPort(
+	'commandEditorAgentToLift',
 	function (v) {
 		return {typeName: v.typeName, payload: v.payload};
 	});
 
-var _alltonp$reprobate$ColumnEditor_Update$runCommand = function (command) {
+var _alltonp$reprobate$CommandEditor_Update$runCommand = function (command) {
 	return A2(_alltonp$reprobate$Belch$PortMessage, 'RunCommand', command);
 };
-var _alltonp$reprobate$ColumnEditor_Update$update = F2(
+var _alltonp$reprobate$CommandEditor_Update$update = F2(
 	function (action, model) {
 		var _p0 = action;
 		switch (_p0.ctor) {
@@ -5963,8 +5963,8 @@ var _alltonp$reprobate$ColumnEditor_Update$update = F2(
 				return {
 					ctor: '_Tuple2',
 					_0: model$,
-					_1: _alltonp$reprobate$ColumnEditor_Port$columnEditorAgentToLift(
-						_alltonp$reprobate$ColumnEditor_Update$runCommand(model.command))
+					_1: _alltonp$reprobate$CommandEditor_Port$commandEditorAgentToLift(
+						_alltonp$reprobate$CommandEditor_Update$runCommand(model.command))
 				};
 			default:
 				return A2(
@@ -5974,7 +5974,7 @@ var _alltonp$reprobate$ColumnEditor_Update$update = F2(
 						[]));
 		}
 	});
-var _alltonp$reprobate$ColumnEditor_Update$init = {ctor: '_Tuple2', _0: _alltonp$reprobate$ColumnEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _alltonp$reprobate$CommandEditor_Update$init = {ctor: '_Tuple2', _0: _alltonp$reprobate$CommandEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
 
 //import Native.Json //
 
@@ -9223,16 +9223,16 @@ var _evancz$elm_http$Http$post = F3(
 			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
 	});
 
-var _alltonp$reprobate$ColumnEditor_View$onEnter = function (msg) {
+var _alltonp$reprobate$CommandEditor_View$onEnter = function (msg) {
 	var tagger = function (code) {
-		return _elm_lang$core$Native_Utils.eq(code, 13) ? msg : _alltonp$reprobate$ColumnEditor_Msg$NoOp;
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? msg : _alltonp$reprobate$CommandEditor_Msg$NoOp;
 	};
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'keydown',
 		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$keyCode));
 };
-var _alltonp$reprobate$ColumnEditor_View$commandEditor = F2(
+var _alltonp$reprobate$CommandEditor_View$commandEditor = F2(
 	function (v, disable) {
 		return A2(
 			_elm_lang$html$Html$input,
@@ -9243,26 +9243,26 @@ var _alltonp$reprobate$ColumnEditor_View$commandEditor = F2(
 					_elm_lang$html$Html_Attributes$class('form-control input-sm'),
 					_elm_lang$html$Html_Events$onInput(
 					function (v) {
-						return _alltonp$reprobate$ColumnEditor_Msg$CommandChanged(v);
+						return _alltonp$reprobate$CommandEditor_Msg$CommandChanged(v);
 					}),
-					_alltonp$reprobate$ColumnEditor_View$onEnter(_alltonp$reprobate$ColumnEditor_Msg$RunCommand),
+					_alltonp$reprobate$CommandEditor_View$onEnter(_alltonp$reprobate$CommandEditor_Msg$RunCommand),
 					_elm_lang$html$Html_Attributes$disabled(disable),
 					_elm_lang$html$Html_Attributes$value(v)
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[]));
 	});
-var _alltonp$reprobate$ColumnEditor_View$agentView = function (model) {
+var _alltonp$reprobate$CommandEditor_View$agentView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(_alltonp$reprobate$ColumnEditor_View$commandEditor, model.command, false)
+				A2(_alltonp$reprobate$CommandEditor_View$commandEditor, model.command, false)
 			]));
 };
-var _alltonp$reprobate$ColumnEditor_View$view = function (model) {
+var _alltonp$reprobate$CommandEditor_View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -9294,16 +9294,16 @@ var _alltonp$reprobate$ColumnEditor_View$view = function (model) {
 								_elm_lang$html$Html$text(
 								A2(_elm_lang$core$Maybe$withDefault, '', model.error))
 							])),
-						_alltonp$reprobate$ColumnEditor_View$agentView(model)
+						_alltonp$reprobate$CommandEditor_View$agentView(model)
 					]))
 			]));
 };
-var _alltonp$reprobate$ColumnEditor_View_ops = _alltonp$reprobate$ColumnEditor_View_ops || {};
-_alltonp$reprobate$ColumnEditor_View_ops['=>'] = F2(
+var _alltonp$reprobate$CommandEditor_View_ops = _alltonp$reprobate$CommandEditor_View_ops || {};
+_alltonp$reprobate$CommandEditor_View_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _alltonp$reprobate$ColumnEditor_View$runButton = function (disable) {
+var _alltonp$reprobate$CommandEditor_View$runButton = function (disable) {
 	return A2(
 		_elm_lang$html$Html$button,
 		_elm_lang$core$Native_List.fromArray(
@@ -9312,10 +9312,10 @@ var _alltonp$reprobate$ColumnEditor_View$runButton = function (disable) {
 				_elm_lang$html$Html_Attributes$style(
 				_elm_lang$core$Native_List.fromArray(
 					[
-						A2(_alltonp$reprobate$ColumnEditor_View_ops['=>'], 'padding', '0px'),
-						A2(_alltonp$reprobate$ColumnEditor_View_ops['=>'], 'margin', '0px')
+						A2(_alltonp$reprobate$CommandEditor_View_ops['=>'], 'padding', '0px'),
+						A2(_alltonp$reprobate$CommandEditor_View_ops['=>'], 'margin', '0px')
 					])),
-				_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$ColumnEditor_Msg$RunCommand),
+				_elm_lang$html$Html_Events$onClick(_alltonp$reprobate$CommandEditor_Msg$RunCommand),
 				_elm_lang$html$Html_Attributes$title('Run Command'),
 				_elm_lang$html$Html_Attributes$disabled(disable)
 			]),
@@ -9370,19 +9370,19 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
-var _alltonp$reprobate$ColumnEditorAgent$subscriptions = function (model) {
-	return _alltonp$reprobate$ColumnEditor_Port$columnEditorAgentFromLift(_alltonp$reprobate$ColumnEditor_Messaging$portMessageToMsg);
+var _alltonp$reprobate$CommandEditorAgent$subscriptions = function (model) {
+	return _alltonp$reprobate$CommandEditor_Port$commandEditorAgentFromLift(_alltonp$reprobate$CommandEditor_Messaging$portMessageToMsg);
 };
-var _alltonp$reprobate$ColumnEditorAgent$view = function (model) {
-	return _alltonp$reprobate$ColumnEditor_View$view(model);
+var _alltonp$reprobate$CommandEditorAgent$view = function (model) {
+	return _alltonp$reprobate$CommandEditor_View$view(model);
 };
-var _alltonp$reprobate$ColumnEditorAgent$update = F2(
+var _alltonp$reprobate$CommandEditorAgent$update = F2(
 	function (action, model) {
-		return A2(_alltonp$reprobate$ColumnEditor_Update$update, action, model);
+		return A2(_alltonp$reprobate$CommandEditor_Update$update, action, model);
 	});
-var _alltonp$reprobate$ColumnEditorAgent$main = {
+var _alltonp$reprobate$CommandEditorAgent$main = {
 	main: _elm_lang$html$Html_App$program(
-		{init: _alltonp$reprobate$ColumnEditor_Update$init, update: _alltonp$reprobate$ColumnEditorAgent$update, view: _alltonp$reprobate$ColumnEditorAgent$view, subscriptions: _alltonp$reprobate$ColumnEditorAgent$subscriptions})
+		{init: _alltonp$reprobate$CommandEditor_Update$init, update: _alltonp$reprobate$CommandEditorAgent$update, view: _alltonp$reprobate$CommandEditorAgent$view, subscriptions: _alltonp$reprobate$CommandEditorAgent$subscriptions})
 };
 
 var _alltonp$reprobate$ConfigEditor_Model$Model = F4(
@@ -9673,29 +9673,29 @@ var _alltonp$reprobate$ConfigEditorAgent$main = {
 var Elm = {};
 Elm['Belch'] = Elm['Belch'] || {};
 _elm_lang$core$Native_Platform.addPublicModule(Elm['Belch'], 'Belch', typeof _alltonp$reprobate$Belch$main === 'undefined' ? null : _alltonp$reprobate$Belch$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Codec'] = Elm['ColumnEditor']['Codec'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Codec'], 'ColumnEditor.Codec', typeof _alltonp$reprobate$ColumnEditor_Codec$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Codec$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Messaging'] = Elm['ColumnEditor']['Messaging'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Messaging'], 'ColumnEditor.Messaging', typeof _alltonp$reprobate$ColumnEditor_Messaging$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Messaging$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Model'] = Elm['ColumnEditor']['Model'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Model'], 'ColumnEditor.Model', typeof _alltonp$reprobate$ColumnEditor_Model$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Model$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Msg'] = Elm['ColumnEditor']['Msg'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Msg'], 'ColumnEditor.Msg', typeof _alltonp$reprobate$ColumnEditor_Msg$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Msg$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Port'] = Elm['ColumnEditor']['Port'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Port'], 'ColumnEditor.Port', typeof _alltonp$reprobate$ColumnEditor_Port$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Port$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['Update'] = Elm['ColumnEditor']['Update'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['Update'], 'ColumnEditor.Update', typeof _alltonp$reprobate$ColumnEditor_Update$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_Update$main);
-Elm['ColumnEditor'] = Elm['ColumnEditor'] || {};
-Elm['ColumnEditor']['View'] = Elm['ColumnEditor']['View'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditor']['View'], 'ColumnEditor.View', typeof _alltonp$reprobate$ColumnEditor_View$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditor_View$main);
-Elm['ColumnEditorAgent'] = Elm['ColumnEditorAgent'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['ColumnEditorAgent'], 'ColumnEditorAgent', typeof _alltonp$reprobate$ColumnEditorAgent$main === 'undefined' ? null : _alltonp$reprobate$ColumnEditorAgent$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Codec'] = Elm['CommandEditor']['Codec'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Codec'], 'CommandEditor.Codec', typeof _alltonp$reprobate$CommandEditor_Codec$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Codec$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Messaging'] = Elm['CommandEditor']['Messaging'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Messaging'], 'CommandEditor.Messaging', typeof _alltonp$reprobate$CommandEditor_Messaging$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Messaging$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Model'] = Elm['CommandEditor']['Model'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Model'], 'CommandEditor.Model', typeof _alltonp$reprobate$CommandEditor_Model$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Model$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Msg'] = Elm['CommandEditor']['Msg'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Msg'], 'CommandEditor.Msg', typeof _alltonp$reprobate$CommandEditor_Msg$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Msg$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Port'] = Elm['CommandEditor']['Port'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Port'], 'CommandEditor.Port', typeof _alltonp$reprobate$CommandEditor_Port$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Port$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['Update'] = Elm['CommandEditor']['Update'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['Update'], 'CommandEditor.Update', typeof _alltonp$reprobate$CommandEditor_Update$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_Update$main);
+Elm['CommandEditor'] = Elm['CommandEditor'] || {};
+Elm['CommandEditor']['View'] = Elm['CommandEditor']['View'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditor']['View'], 'CommandEditor.View', typeof _alltonp$reprobate$CommandEditor_View$main === 'undefined' ? null : _alltonp$reprobate$CommandEditor_View$main);
+Elm['CommandEditorAgent'] = Elm['CommandEditorAgent'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['CommandEditorAgent'], 'CommandEditorAgent', typeof _alltonp$reprobate$CommandEditorAgent$main === 'undefined' ? null : _alltonp$reprobate$CommandEditorAgent$main);
 Elm['ConfigEditor'] = Elm['ConfigEditor'] || {};
 Elm['ConfigEditor']['Codec'] = Elm['ConfigEditor']['Codec'] || {};
 _elm_lang$core$Native_Platform.addPublicModule(Elm['ConfigEditor']['Codec'], 'ConfigEditor.Codec', typeof _alltonp$reprobate$ConfigEditor_Codec$main === 'undefined' ? null : _alltonp$reprobate$ConfigEditor_Codec$main);

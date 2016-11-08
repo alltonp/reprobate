@@ -1,7 +1,7 @@
-module ColumnEditor.Msg exposing (..)
+module CommandEditor.Msg exposing (..)
 
 
-import ColumnEditor.Model exposing (..)
+import CommandEditor.Model exposing (..)
 
 
 type Msg

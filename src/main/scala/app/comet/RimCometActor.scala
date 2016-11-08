@@ -1,7 +1,7 @@
 package app.comet
 
 import app.ServiceFactory.{rimServerActor, systemClock}
-import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, ColumnEditorAgent}
+import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, CommandEditorAgent}
 import app.restlike.common.Colours
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}
@@ -90,7 +90,7 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
   private val backlogToggle = ToggleButton("backlog", "Backlog", Classes("btn-xs btn-primary"), false, () => backlogTerminal.hide, () => backlogTerminal.show)
   private val boardToggle = ToggleButton("board", "Board", Classes("btn-xs btn-primary"), true, () => boardTerminal.hide, () => boardTerminal.show)
 
-  private val columnEditorAgent = ColumnEditorAgent(
+  private val commandEditorAgent = CommandEditorAgent(
     ColumnConfig(Seq(Column("one", true, false), Column("two", true, false))),
     subscriber)
 
@@ -118,12 +118,12 @@ case class RimAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Render
             ).styles(display("table-row"), padding("1px"))
           ).styles(display("table"), width("100%"))
         )),
-        Bs.row(col(12, columnEditorAgent))
+        Bs.row(col(12, commandEditorAgent))
       )
     ).render
   }
 
-  def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide & columnEditorAgent.onInit
+  def onInit = boardTerminal.init & boardTerminal.show & backlogTerminal.init & backlogTerminal.hide & commandEditorAgent.onInit
 
   def onModelChanged(changed: ModelChanged) = present(changed)
 

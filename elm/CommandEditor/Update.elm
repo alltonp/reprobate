@@ -1,10 +1,10 @@
-module ColumnEditor.Update exposing (..)
+module CommandEditor.Update exposing (..)
 
 
-import ColumnEditor.Model exposing (..)
-import ColumnEditor.Msg as Msg exposing (..)
-import ColumnEditor.Port exposing (..)
-import ColumnEditor.Codec exposing (..)
+import CommandEditor.Model exposing (..)
+import CommandEditor.Msg as Msg exposing (..)
+import CommandEditor.Port exposing (..)
+import CommandEditor.Codec exposing (..)
 import Belch exposing (..)
 import Dict
 import String
@@ -26,7 +26,7 @@ update action model =
 
     RunCommand ->
         let model' = { model | command = "" }
-        in (model', columnEditorAgentToLift (runCommand model.command))
+        in (model', commandEditorAgentToLift (runCommand model.command))
 
     NoOp -> model ! []
 

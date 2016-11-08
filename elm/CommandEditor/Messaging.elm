@@ -1,8 +1,8 @@
-module ColumnEditor.Messaging exposing (..)
+module CommandEditor.Messaging exposing (..)
 
 
-import ColumnEditor.Codec exposing (..)
-import ColumnEditor.Msg as Msg exposing (..)
+import CommandEditor.Codec exposing (..)
+import CommandEditor.Msg as Msg exposing (..)
 import Belch exposing (..)
 
 

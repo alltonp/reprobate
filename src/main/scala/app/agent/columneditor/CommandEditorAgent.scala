@@ -13,11 +13,11 @@ case class AgentModel(columns: Seq[Column])
 case class Column(name: String, selected: Boolean, system: Boolean)
 case class ColumnConfig(columns: Seq[Column])
 
-case class ColumnEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subscriber) extends Renderable {
+case class CommandEditorAgent(initialColumnConfig: ColumnConfig, subscriber: Subscriber) extends Renderable {
   private val columnConfig = initialColumnConfig
 
-  private val belch = Belch("columnEditorAgent", "ColumnEditorAgent", Some(ToLiftPort(receiveFromElm)),
-    messageDebug = true, bridgeDebug = false)
+  private val belch = Belch("commandEditorAgent", "CommandEditorAgent", Some(ToLiftPort(receiveFromElm)),
+    messageDebug = true, bridgeDebug = true)
 
   def render = belch.render
 

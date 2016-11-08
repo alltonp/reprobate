@@ -1,10 +1,10 @@
-module ColumnEditor.View exposing (view)
+module CommandEditor.View exposing (view)
 
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
-import ColumnEditor.Model as Model exposing (..)
-import ColumnEditor.Msg as Msg exposing (..)
+import CommandEditor.Model as Model exposing (..)
+import CommandEditor.Msg as Msg exposing (..)
 import String
 import Dict
 import Json.Encode as JsonEncode

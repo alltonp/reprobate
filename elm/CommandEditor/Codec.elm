@@ -1,8 +1,8 @@
-module ColumnEditor.Codec exposing (decodeAgentModel)
+module CommandEditor.Codec exposing (decodeAgentModel)
 
 
 import Json.Decode as JsonDecode exposing (Decoder, (:=), succeed, fail, andThen)
-import ColumnEditor.Model exposing (..)
+import CommandEditor.Model exposing (..)
 
 
 decodeAgentModel : String -> Result String AgentModel

@@ -1,4 +1,4 @@
-module ColumnEditor.Model exposing (..)
+module CommandEditor.Model exposing (..)
 
 
 import Dict
