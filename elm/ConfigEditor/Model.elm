@@ -14,16 +14,8 @@ type alias Model =
    }
 
 
-type alias Column =
-  { name : String
-  , selected : Bool
-  , system : Bool
-  }
-
-
 type alias AgentModel =
-   { columns : List Column
-   , config : String
+   { config : String
    }
 
 

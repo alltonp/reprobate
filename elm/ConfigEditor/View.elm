@@ -28,46 +28,24 @@ view model =
 
 agentView : Model -> Html Msg
 agentView model =
-    div [] [
---      div [ class "form-inline" ] [
---        div [ style [ ( "margin" => "7px" ) ] ]
---          [
---          div [ class ("form-group"), style [ "padding-right" => "3px" ] ]
---            [
---            configEditor ((Maybe.map (\m -> m.config) model.agentModel) |> Maybe.withDefault "") False
-            configEditor (model.command) False
-            --,  span [ class "glyphicon glyphicon-ok form-control-feedback", (property "aria-hidden" (JsonEncode.string "true")) ] [ ]
---            ]
-          , div [ class "form-group" ] [ runButton (False), cancelButton (False) ]
---          ]
---      ]
-    ]
+    div [] [ configEditor (model.command) False
+           , div [ class "form-group" ] [ saveButton (False), cancelButton (False) ]
+           ]
 
 
 configEditor : String -> Bool -> Html Msg
 configEditor v disable =
   textarea [ class "form-control input-sm"
         , onInput (\v -> (CommandChanged v))
-        --, onEnter RunCommand
         , disabled disable
         , value v
         , rows 30
         ] []
 
 
---TIP: borrowed from https://github.com/evancz/elm-todomvc/blob/master/Todo.elm
-onEnter : Msg -> Attribute Msg
-onEnter msg =
-  let
-    tagger code =
-      if code == 13 then msg else NoOp
-  in
-    on "keydown" (JsonDecode.map tagger keyCode)
 
-
-
-runButton : Bool -> Html Msg
-runButton disable =
+saveButton : Bool -> Html Msg
+saveButton disable =
   button
       [ class "btn btn-link", style [ "padding" => "0px", "margin" => "0px" ]
       , onClick RunCommand

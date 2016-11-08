@@ -9390,47 +9390,13 @@ var _alltonp$reprobate$ConfigEditor_Model$Model = F4(
 		return {agentModel: a, editing: b, error: c, command: d};
 	});
 var _alltonp$reprobate$ConfigEditor_Model$initialModel = A4(_alltonp$reprobate$ConfigEditor_Model$Model, _elm_lang$core$Maybe$Nothing, false, _elm_lang$core$Maybe$Nothing, '');
-var _alltonp$reprobate$ConfigEditor_Model$Column = F3(
-	function (a, b, c) {
-		return {name: a, selected: b, system: c};
-	});
-var _alltonp$reprobate$ConfigEditor_Model$AgentModel = F2(
-	function (a, b) {
-		return {columns: a, config: b};
-	});
+var _alltonp$reprobate$ConfigEditor_Model$AgentModel = function (a) {
+	return {config: a};
+};
 
-var _alltonp$reprobate$ConfigEditor_Codec$stringBoolDecoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	_elm_lang$core$Json_Decode$string,
-	function (val) {
-		var _p0 = val;
-		switch (_p0) {
-			case 'true':
-				return _elm_lang$core$Json_Decode$succeed(true);
-			case 'false':
-				return _elm_lang$core$Json_Decode$succeed(false);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(_elm_lang$core$Basics_ops['++'], 'Expecting \"true\" or \"false\" but found ', val));
-		}
-	});
-var _alltonp$reprobate$ConfigEditor_Codec$columnDecoder = A4(
-	_elm_lang$core$Json_Decode$object3,
-	_alltonp$reprobate$ConfigEditor_Model$Column,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		_elm_lang$core$Native_List.fromArray(
-			['name']),
-		_elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'selected', _alltonp$reprobate$ConfigEditor_Codec$stringBoolDecoder),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'system', _alltonp$reprobate$ConfigEditor_Codec$stringBoolDecoder));
-var _alltonp$reprobate$ConfigEditor_Codec$agentModelDecoder = A3(
-	_elm_lang$core$Json_Decode$object2,
+var _alltonp$reprobate$ConfigEditor_Codec$agentModelDecoder = A2(
+	_elm_lang$core$Json_Decode$object1,
 	_alltonp$reprobate$ConfigEditor_Model$AgentModel,
-	A2(
-		_elm_lang$core$Json_Decode_ops[':='],
-		'columns',
-		_elm_lang$core$Json_Decode$list(_alltonp$reprobate$ConfigEditor_Codec$columnDecoder)),
 	A2(
 		_elm_lang$core$Json_Decode$at,
 		_elm_lang$core$Native_List.fromArray(
@@ -9561,15 +9527,6 @@ var _alltonp$reprobate$ConfigEditor_Update$update = F2(
 	});
 var _alltonp$reprobate$ConfigEditor_Update$init = {ctor: '_Tuple2', _0: _alltonp$reprobate$ConfigEditor_Model$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
 
-var _alltonp$reprobate$ConfigEditor_View$onEnter = function (msg) {
-	var tagger = function (code) {
-		return _elm_lang$core$Native_Utils.eq(code, 13) ? msg : _alltonp$reprobate$ConfigEditor_Msg$NoOp;
-	};
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'keydown',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$keyCode));
-};
 var _alltonp$reprobate$ConfigEditor_View$configEditor = F2(
 	function (v, disable) {
 		return A2(
@@ -9593,7 +9550,7 @@ _alltonp$reprobate$ConfigEditor_View_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _alltonp$reprobate$ConfigEditor_View$runButton = function (disable) {
+var _alltonp$reprobate$ConfigEditor_View$saveButton = function (disable) {
 	return A2(
 		_elm_lang$html$Html$button,
 		_elm_lang$core$Native_List.fromArray(
@@ -9665,7 +9622,7 @@ var _alltonp$reprobate$ConfigEditor_View$agentView = function (model) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_alltonp$reprobate$ConfigEditor_View$runButton(false),
+						_alltonp$reprobate$ConfigEditor_View$saveButton(false),
 						_alltonp$reprobate$ConfigEditor_View$cancelButton(false)
 					]))
 			]));
