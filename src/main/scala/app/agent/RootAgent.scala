@@ -2,7 +2,7 @@ package app.agent
 
 //import app.comet.Subscriber
 
-import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, CommandEditorAgent}
+import app.agent.columneditor.ColumnConfig
 import app.comet.AppCometActor
 import app.server._
 import im.mange.jetboot._

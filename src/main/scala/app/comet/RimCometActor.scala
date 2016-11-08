@@ -1,7 +1,8 @@
 package app.comet
 
 import app.ServiceFactory.{rimServerActor, systemClock}
-import app.agent.columneditor.{Column, ColumnConfig, ColumnEditableAgent, CommandEditorAgent}
+import app.agent.{Column, ColumnConfig, CommandEditorAgent}
+import app.agent.columneditor.{Column, ColumnConfig}
 import app.restlike.common.Colours
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}

@@ -1,12 +1,12 @@
-package app.agent.columneditor
+package app.agent
 
 import app.comet.{Init, RimToken}
 import app.restlike.rim.Controller
-import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
-import org.json4s.NoTypeHints
 import im.mange.belch.{Belch, PortMessage, ToLiftPort}
 import im.mange.jetpac.Renderable
 import im.mange.jetpac.comet.Subscriber
+import im.mange.little.json.{LittleJodaSerialisers, LittleSerialisers}
+import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 
 case class AgentModel(columns: Seq[Column])
