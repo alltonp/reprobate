@@ -1,6 +1,5 @@
 module CommandEditor.Update exposing (..)
 
-
 import CommandEditor.Model exposing (..)
 import CommandEditor.Msg as Msg exposing (..)
 import CommandEditor.Port exposing (..)
@@ -10,25 +9,32 @@ import Dict
 import String
 
 
-init : (Model, Cmd Msg)
+init : ( Model, Cmd Msg )
 init =
-    (initialModel, Cmd.none)
+    ( initialModel, Cmd.none )
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
-  case action of
-    Error message -> { model | error = Just message } ! []
+    case action of
+        Error message ->
+            { model | error = Just message } ! []
 
-    Load agentModel -> { model | agentModel = Just agentModel } ! []
+        Load agentModel ->
+            { model | agentModel = Just agentModel } ! []
 
-    CommandChanged command -> { model | command = command } ! []
+        CommandChanged command ->
+            { model | command = command } ! []
 
-    RunCommand ->
-        let model' = { model | command = "" }
-        in (model', commandEditorAgentToLift (runCommand model.command))
+        RunCommand ->
+            let
+                model' =
+                    { model | command = "" }
+            in
+                ( model', commandEditorAgentToLift (runCommand model.command) )
 
-    NoOp -> model ! []
+        NoOp ->
+            model ! []
 
 
 runCommand : String -> PortMessage

@@ -1,6 +1,5 @@
 port module CommandEditor.Port exposing (..)
 
-
 import Belch exposing (..)
 
 
