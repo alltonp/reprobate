@@ -34,10 +34,11 @@ case class Model() {
   def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
 }
 
+//TODO: all this subscriber stuff seems very old/hard work, should be more like barry
 //TODO: this isnt really quite right be are mutating the model rather than returning a new one ...
 //... but it' s a start I guess
 class Update extends LiftActor {
-  //TODO: lose field and delegate to ServiceFactory.model()
+  //TODO: lose field and delegate to ServiceFactory.model() - maybe not, see TODO's at handler. below
   private val modelInstance = Model()
 
   private def model() = modelInstance
