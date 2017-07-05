@@ -2,6 +2,7 @@ package server.tea
 
 import app.model._
 
+//TODO: some of this can definitely die dupe/not useful etc ..
 case class State(incidentLog: IncidentLog, probeRunHistory: ProbeRunHistory, broadcastLog: BroadcastLog, currentRun: ProbeRun, currentProbeStatuses: CurrentProbeStatuses)
 
 case class Model() {
