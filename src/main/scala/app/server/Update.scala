@@ -27,6 +27,9 @@ case class Model() {
   val incidentLog = IncidentLog(historicState.incidentsReported)
   val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
   val broadcastLog = BroadcastLog()
+  var currentRun = createProbeRun
+
+  def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
 }
 
 class Update extends LiftActor {
@@ -37,8 +40,7 @@ class Update extends LiftActor {
 
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
-  private var currentRun = createProbeRun
-  private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
+  private val currentProbeStatuses = CurrentProbeStatuses(model().currentRun.probes)
 
   this ! ExecuteProbeRun
 
@@ -67,8 +69,6 @@ class Update extends LiftActor {
     subscribers.foreach(_ ! configChanged)
   }
 
-  private def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
-
   private def onExecuteProbeRun() {
     val thisInstance = this
     //TODO: old messages should die
@@ -87,9 +87,9 @@ class Update extends LiftActor {
           in = in - 1
         }
 
-        val nextRun = createProbeRun
+        val nextRun = model().createProbeRun
 
-        if (currentRun.probes != nextRun.probes) {
+        if (model().currentRun.probes != nextRun.probes) {
           model().incidentLog.onConfigChanged()
           currentProbeStatuses.onConfigChanged()
           thisInstance ! ConfigChanged(nextRun.probes)
@@ -98,10 +98,10 @@ class Update extends LiftActor {
           Thread.sleep(2000)
         }
 
-        currentRun = nextRun
-        model().probeRunHistory.add(currentRun)
+        model().currentRun = nextRun
+        model().probeRunHistory.add(model().currentRun)
 
-        thisInstance ! PreExecuteProbe(currentRun.nextToRun)
+        thisInstance ! PreExecuteProbe(model().currentRun.nextToRun)
       }
     }).start()
   }
@@ -121,7 +121,7 @@ class Update extends LiftActor {
 
     val result = doRunRun(probe)
 
-    currentRun.update(probe, result)
+    model().currentRun.update(probe, result)
     model().incidentLog.update(probe, result)
     currentProbeStatuses.update(probe, result)
 
@@ -134,7 +134,8 @@ class Update extends LiftActor {
     this ! createAllRunsStatusUpdate
 
     //TODO: this probably shouldn't be here
-    this ! (if (currentRun.runFinished) ExecuteProbeRun else PreExecuteProbe(currentRun.nextToRun))
+    this ! (if (model().currentRun.runFinished) ExecuteProbeRun
+            else PreExecuteProbe(model().currentRun.nextToRun))
   }
 
   //TODO: get out sooner when !probe.isActive
@@ -188,8 +189,8 @@ class Update extends LiftActor {
     }
   }
 
-  private def createCurrentRunStatusUpdate = CurrentRunStatusUpdate(currentRun.successCount, currentRun.failureCount,
-    currentRun.ignoreCount, currentRun.totalCount)
+  private def createCurrentRunStatusUpdate = CurrentRunStatusUpdate(model().currentRun.successCount,
+    model().currentRun.failureCount, model().currentRun.ignoreCount, model().currentRun.totalCount)
 
   private def createMessageUpdate(subject: String, detail: String) = Message(subject, detail)
 
@@ -216,7 +217,7 @@ class Update extends LiftActor {
       println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
     }
 
-    subscriber ! app.comet.Init(currentRun.probes)
+    subscriber ! app.comet.Init(model().currentRun.probes)
     currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
   }
 
