@@ -25,7 +25,7 @@ case class Model() {
   //TODO: ultimately can be passed in and forgotten about
   val historicState = ProbateRegistry.load
   val incidentLog = IncidentLog(historicState.incidentsReported)
-
+  val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
 }
 
 class Update extends LiftActor {
@@ -37,7 +37,6 @@ class Update extends LiftActor {
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
   private var currentRun = createProbeRun
-  private val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), model().incidentLog, model().historicState.checksExecuted)
   private val broadcastLog = BroadcastLog()
   private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
 
@@ -100,7 +99,7 @@ class Update extends LiftActor {
         }
 
         currentRun = nextRun
-        probeRunHistory.add(currentRun)
+        model().probeRunHistory.add(currentRun)
 
         thisInstance ! PreExecuteProbe(currentRun.nextToRun)
       }
@@ -194,7 +193,7 @@ class Update extends LiftActor {
 
   private def createMessageUpdate(subject: String, detail: String) = Message(subject, detail)
 
-  def createAllRunsStatusUpdate = AllRunsStatusUpdate(probeRunHistory.totalExecuted,
+  def createAllRunsStatusUpdate = AllRunsStatusUpdate(model().probeRunHistory.totalExecuted,
     model().incidentLog.totalIncidents, model().incidentLog.open, model().incidentLog.closed)
 
   private def onProbeStatusUpdate(update: ProbeStatusUpdate) { subscribers.foreach(_ ! update) }
@@ -228,7 +227,7 @@ class Update extends LiftActor {
   }
 
   private def onProbeSummaryRequest(subscriber: Subscriber) {
-    subscriber ! ProbeSummaryResponse(probeRunHistory.probesWithHistory)
+    subscriber ! ProbeSummaryResponse(model().probeRunHistory.probesWithHistory)
   }
 
   private def onProbeConfigRequest(subscriber: Subscriber) {
