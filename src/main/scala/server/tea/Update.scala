@@ -13,27 +13,20 @@ import app.server._
 import im.mange.jetpac.Bangable
 import im.mange.jetpac.comet._
 import im.mange.reprobate.api.Json
-import net.liftweb.actor.LiftActor
 
-import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, _}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 
 
-//TODO: I think i need to be a MulticastLiftActor and a MessageCapturingLiftActor
 class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bangable[Any] {
   override def onCapturedMessage(message: Any) { }
-
 
   //TODO: lose field and delegate to ServiceFactory.model() - maybe not, see TODO's at handler. below
   private val modelInstance = Model()
 
   private def model() = modelInstance
-
-  //private var subscribers = Set[Subscriber]()
-  //TODO: do we still need this? can we stash it in PRH
 
   this ! ExecuteProbeRun
 
@@ -52,8 +45,6 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     case u:Message => onMessage(u)
     case u:AllRunsStatusUpdate => onAllRunsStatusUpdate(u)
     case u:ProbeStatusUpdate => onProbeStatusUpdate(u)
-//    case Subscribe(s) => onSubscribe(s)
-//    case Unsubscribe(s) => onUnsubscribe(s)
     case ProbeSummaryRequest(s) => onProbeSummaryRequest(s)
     case ProbeConfigRequest(s) => onProbeConfigRequest(s)
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
@@ -206,14 +197,9 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     this ! PushToAllSubscribers(broadcast)
   }
 
+  //TODO: if jetboot exposed number of subscrivers (but not the actual subscribers)
   override def afterSubscribe(subscriber: Subscriber) {
     println("### " + dateFormats().timeNow + " - onSubscribe: " + subscriber)
-//    if (!subscribers.contains(subscriber)) {
-//      subscribers = subscribers + subscriber
-//      println("### " + dateFormats().timeNow + " - new subscriber, now have: " + subscribers.size)
-//    } else {
-//      println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
-//    }
 
     subscriber ! app.comet.Init(model().currentRun.probes)
     model().currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
@@ -221,8 +207,6 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
 
   override def afterUnsubscribe(subscriber: Subscriber) {
     println("### " + dateFormats().timeNow + " - onUnsubscribe: " + subscriber)
-//    subscribers = subscribers - subscriber
-//    println("### " + dateFormats().timeNow + " - subscriber removed, now have: " + subscribers.size)
   }
 
   private def onProbeSummaryRequest(subscriber: Subscriber) {
