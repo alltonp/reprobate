@@ -84,7 +84,7 @@ class Boot extends Loggable {
     JQueryModule.InitParam.JQuery=JQueryModule.JQuery211
 
     //TODO: we probably need an init to kick things off.
-    ServiceFactory.probeProviderActor()
+    ServiceFactory.update()
 
     logger.info("Lift has Booted.")
   }

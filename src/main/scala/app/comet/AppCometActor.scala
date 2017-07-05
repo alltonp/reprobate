@@ -18,7 +18,7 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
 
   def beforeRefresh() {
     //root.cleanup()
-    probeProviderActor() ! Unsubscribe(this)
+    update() ! Unsubscribe(this)
   }
 
   def doRefresh() {
@@ -26,7 +26,7 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
   }
 
   def afterRefresh() = {
-    probeProviderActor() ! Subscribe(this)//; this ! Init()
+    update() ! Subscribe(this)//; this ! Init()
   }
 
   def doRender = {
@@ -34,7 +34,7 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
   }
 
   override def localShutdown() {
-    probeProviderActor() ! Unsubscribe(this)
+    update() ! Unsubscribe(this)
     rootAgent.cleanup()
     super.localShutdown()
   }
@@ -64,12 +64,12 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
 
   //TODO: should be show?
   private def onSendProbeSummary = {
-    probeProviderActor() ! ProbeSummaryRequest(this)
+    update() ! ProbeSummaryRequest(this)
     nothing
   }
 
   private def onSendProbeConfig = {
-    probeProviderActor() ! ProbeConfigRequest(this)
+    update() ! ProbeConfigRequest(this)
     nothing
   }
 
@@ -83,7 +83,7 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
   }
 
   private def onShowBroadcasts = {
-    probeProviderActor() ! BroadcastsRequest(this)
+    update() ! BroadcastsRequest(this)
     nothing
   }
 }

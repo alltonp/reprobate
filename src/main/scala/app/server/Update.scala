@@ -20,7 +20,7 @@ import scala.concurrent._
 import scala.concurrent.duration.Duration
 
 //TODO: make this be more like RimServerActor
-class ProbeProviderActor extends LiftActor {
+class Update extends LiftActor {
   private val historicState = ProbateRegistry.load
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH

@@ -44,7 +44,7 @@ object Dogfood extends RestHelper {
 
 case class OkProbe(env: String) extends Check {
   def run = {
-    val future = ServiceFactory.probeProviderActor() !< GetProbeStatuses
+    val future = ServiceFactory.update() !< GetProbeStatuses
     val result = future.get(60 * 1000).asInstanceOf[Box[ProbeStatuses]]
 
     result match {

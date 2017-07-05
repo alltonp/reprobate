@@ -45,7 +45,7 @@ case object BroadcastMessage {
   def send(req: Req) = {
     JsonRequestHandler.handle(req)((json, req) ⇒ {
       val broadcast = BroadcastRequestJson.deserialise(pretty(render(json)))
-      ServiceFactory.probeProviderActor() ! broadcast.copy(env = broadcast.env.toUpperCase)
+      ServiceFactory.update() ! broadcast.copy(env = broadcast.env.toUpperCase)
       Full(PlainTextResponse("OK"))
     })
   }
