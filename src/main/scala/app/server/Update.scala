@@ -47,6 +47,11 @@ class Update extends LiftActor {
 
   this ! ExecuteProbeRun
 
+  //TODO: possibly pass this to an undate() function that takes model and returns model
+  //then handler is basically....   _ => SendToView(update(model, _)
+  //would need to save the model obvs
+  //in which case maybe this class just becomes App/Teat and model not in ServiceFactory, but app() is
+
   protected def messageHandler = {
     case ExecuteProbeRun => onExecuteProbeRun()
     case PreExecuteProbe(p) => onPreExecuteProbe(p)
