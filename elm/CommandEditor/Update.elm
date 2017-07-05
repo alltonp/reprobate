@@ -28,10 +28,10 @@ update action model =
 
         RunCommand ->
             let
-                model' =
+                model_ =
                     { model | command = "" }
             in
-                ( model', commandEditorAgentToLift (runCommand model.command) )
+                ( model_, commandEditorAgentToLift (runCommand model.command) )
 
         NoOp ->
             model ! []

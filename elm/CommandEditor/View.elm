@@ -47,7 +47,7 @@ agentView model =
 commandEditor : String -> Bool -> Html Msg
 commandEditor v disable =
     input
-        [ type' "text"
+        [ type_ "text"
         , placeholder "Command"
         , class "form-control input-sm"
         , onInput (\v -> (CommandChanged v))

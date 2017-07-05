@@ -28,17 +28,17 @@ update action model =
 
         RunCommand ->
             let
-                model' =
+                model_ =
                     { model | command = "" }
             in
-                ( model', configEditorAgentToLift (runCommand model.command) )
+                ( model_, configEditorAgentToLift (runCommand model.command) )
 
         CancelCommand ->
             let
-                model' =
+                model_ =
                     { model | command = "" }
             in
-                ( model', configEditorAgentToLift (cancelCommand "") )
+                ( model_, configEditorAgentToLift (cancelCommand "") )
 
         NoOp ->
             model ! []

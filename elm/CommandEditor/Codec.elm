@@ -1,6 +1,6 @@
 module CommandEditor.Codec exposing (decodeAgentModel)
 
-import Json.Decode as JsonDecode exposing (Decoder, (:=), succeed, fail, andThen)
+import Json.Decode as JsonDecode exposing (Decoder, succeed, fail, andThen)
 import CommandEditor.Model exposing (..)
 
 
@@ -11,5 +11,5 @@ decodeAgentModel serialised =
 
 agentModelDecoder : Decoder AgentModel
 agentModelDecoder =
-    JsonDecode.object1 AgentModel
+    JsonDecode.map AgentModel
         (JsonDecode.at [ "data" ] JsonDecode.string)
