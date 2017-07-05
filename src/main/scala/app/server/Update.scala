@@ -22,18 +22,22 @@ import scala.concurrent.duration.Duration
 //TODO: make this be more like RimServerActor
 
 case class Model() {
+  //TODO: ultimately can be passed in and forgotten about
   val historicState = ProbateRegistry.load
+  val incidentLog = IncidentLog(historicState.incidentsReported)
+
 }
 
 class Update extends LiftActor {
   //TODO: lose field and delegate to ServiceFactory.model()
-  private val model = Model()
+  private val modelInstance = Model()
+
+  private def model() = modelInstance
 
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
   private var currentRun = createProbeRun
-  private val incidentLog = IncidentLog(model.historicState.incidentsReported)
-  private val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, model.historicState.checksExecuted)
+  private val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), model().incidentLog, model().historicState.checksExecuted)
   private val broadcastLog = BroadcastLog()
   private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
 
@@ -87,7 +91,7 @@ class Update extends LiftActor {
         val nextRun = createProbeRun
 
         if (currentRun.probes != nextRun.probes) {
-          incidentLog.onConfigChanged()
+          model().incidentLog.onConfigChanged()
           currentProbeStatuses.onConfigChanged()
           thisInstance ! ConfigChanged(nextRun.probes)
           println("### " + dateFormats().timeNow + " - configuration change")
@@ -119,14 +123,14 @@ class Update extends LiftActor {
     val result = doRunRun(probe)
 
     currentRun.update(probe, result)
-    incidentLog.update(probe, result)
+    model().incidentLog.update(probe, result)
     currentProbeStatuses.update(probe, result)
 
     this ! PostExecuteProbe(probe, result)
   }
 
   private def onPostExecuteProbe(probe: Probe, result: ProbeStatus) {
-    this ! ProbeStatusUpdate(probe, result, incidentLog.currentOpenIncident(probe))
+    this ! ProbeStatusUpdate(probe, result, model().incidentLog.currentOpenIncident(probe))
     //TODO: maybe not the best thing to do (or place to do it)
     this ! createAllRunsStatusUpdate
 
@@ -190,8 +194,8 @@ class Update extends LiftActor {
 
   private def createMessageUpdate(subject: String, detail: String) = Message(subject, detail)
 
-  def createAllRunsStatusUpdate = AllRunsStatusUpdate(probeRunHistory.totalExecuted, incidentLog.totalIncidents,
-    incidentLog.open, incidentLog.closed)
+  def createAllRunsStatusUpdate = AllRunsStatusUpdate(probeRunHistory.totalExecuted,
+    model().incidentLog.totalIncidents, model().incidentLog.open, model().incidentLog.closed)
 
   private def onProbeStatusUpdate(update: ProbeStatusUpdate) { subscribers.foreach(_ ! update) }
   private def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) { subscribers.foreach(_ ! update) }
@@ -214,7 +218,7 @@ class Update extends LiftActor {
     }
 
     subscriber ! app.comet.Init(currentRun.probes)
-    currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, incidentLog.currentOpenIncident(p._1)) }
+    currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
   }
 
   private def onUnsubscribe(subscriber: Subscriber) {
