@@ -8,6 +8,7 @@ import net.liftweb.http.{GetRequest, JsonResponse, PlainTextResponse, Req}
 import net.liftweb.common.{Box, Failure, Full}
 import app.model._
 import server.ServiceFactory
+import server.tea.{Model, State}
 
 object Blink1 extends RestHelper {
   serve {
@@ -39,6 +40,19 @@ object Dogfood extends RestHelper {
 
     //TODO: I'm not really dogfood, because I'm not a check ...
     case Req("incidents" :: Nil, _, GetRequest) ⇒ () ⇒ { Full(JsonResponse(Json.serialise(IncidentRegistry.load))) }
+
+
+    case Req("state" :: Nil, _, GetRequest) ⇒ () ⇒ {
+      val future = ServiceFactory.update() !< GetState
+      val result = future.get(60 * 1000).asInstanceOf[Box[State]]
+
+      result match {
+        case Full(x) => Full(JsonResponse(Json.serialise(x)))
+        case Failure(f, _, _) => Full(PlainTextResponse(f))
+        case _ => Full(PlainTextResponse("???"))
+      }
+
+    }
   }
 }
 
@@ -61,5 +75,6 @@ case class OkProbe(env: String) extends Check {
 }
 
 case object GetProbeStatuses
+case object GetState
 
 case class ProbeStatuses(failures: Iterable[FailedProbe])

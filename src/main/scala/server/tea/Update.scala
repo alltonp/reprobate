@@ -8,7 +8,7 @@ import server.ServiceFactory._
 import app.model.{Broadcast, Probe, ProbeRegistry}
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
-import app.restlike.dogfood.{GetProbeStatuses, ProbeStatuses}
+import app.restlike.dogfood.{GetProbeStatuses, GetState, ProbeStatuses}
 import app.server._
 import im.mange.jetpac.Bangable
 import im.mange.jetpac.comet._
@@ -51,6 +51,7 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     //TODO: should probably rename this to StatusMessage
     case b:BroadcastFlash => onBroadcast(b)
     case GetProbeStatuses => reply(ProbeStatuses(model().currentProbeStatuses.failures))
+    case GetState => reply(model().state)
     case c:ConfigChanged => onConfigChanged(c)
   }
 
