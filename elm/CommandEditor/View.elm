@@ -10,7 +10,6 @@ import Dict
 import Json.Encode as JsonEncode
 import Date
 import Date.Format as DateFormat
-import Http
 import Json.Decode as JsonDecode
 
 

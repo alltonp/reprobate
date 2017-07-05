@@ -1,6 +1,5 @@
 module CommandEditorAgent exposing (..)
 
-import Html.App as Html
 import Html exposing (..)
 import CommandEditor.Model as Model exposing (..)
 import CommandEditor.Msg as Msg exposing (..)
@@ -20,10 +19,14 @@ view model =
     CommandEditorView.view model
 
 
+main : Program Never Model Msg
 main =
-    Html.program
-        { init = CommandEditorUpdate.init, update = update, view = view, subscriptions = subscriptions }
-
+    program
+        { init = CommandEditorUpdate.init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

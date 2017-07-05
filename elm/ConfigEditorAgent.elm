@@ -1,6 +1,5 @@
 module ConfigEditorAgent exposing (..)
 
-import Html.App as Html
 import Html exposing (..)
 import ConfigEditor.Model as Model exposing (..)
 import ConfigEditor.Msg as Msg exposing (..)
@@ -20,9 +19,14 @@ view model =
     ConfigEditorView.view model
 
 
+main : Program Never Model Msg
 main =
-    Html.program
-        { init = ConfigEditorUpdate.init, update = update, view = view, subscriptions = subscriptions }
+    program
+        { init = ConfigEditorUpdate.init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 subscriptions : Model -> Sub Msg
