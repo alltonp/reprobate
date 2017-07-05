@@ -209,6 +209,7 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     println("### " + dateFormats().timeNow + " - onUnsubscribe: " + subscriber)
   }
 
+  //TODO: we should use ForSubscriber
   private def onProbeSummaryRequest(subscriber: Subscriber) {
     subscriber ! ProbeSummaryResponse(model().probeRunHistory.probesWithHistory)
   }
