@@ -60,6 +60,7 @@ case class Terminal(id: String, styles: Styles = Styles()) extends Renderable wi
 
 object RimToken {
   def token = Controller.tokensHead
+  //TODO: these don't seem to work well locally on mac ... e.g. http://pauls-macbook.local:8473/rim/install/
   def script = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/install/$token"
   def state = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/state/$token"
   def tracking = s"http://${java.net.InetAddress.getLocalHost.getHostName}:8473/rim/tracking/$token"
