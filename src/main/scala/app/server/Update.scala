@@ -26,6 +26,7 @@ case class Model() {
   val historicState = ProbateRegistry.load
   val incidentLog = IncidentLog(historicState.incidentsReported)
   val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
+  val broadcastLog = BroadcastLog()
 }
 
 class Update extends LiftActor {
@@ -37,7 +38,6 @@ class Update extends LiftActor {
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
   private var currentRun = createProbeRun
-  private val broadcastLog = BroadcastLog()
   private val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
 
   this ! ExecuteProbeRun
@@ -149,7 +149,7 @@ class Update extends LiftActor {
         //TODO: should probably be scheduled
         //begin move this out ..
         Thread.sleep(1000) //TODO: make me a config - sleep between probes
-        if (probe.isActive && broadcastLog.notInAReleaseWindow(probe)) unsafeRun(probe) else ProbeInactive }
+        if (probe.isActive && model().broadcastLog.notInAReleaseWindow(probe)) unsafeRun(probe) else ProbeInactive }
         //end move this out
       }
       f onSuccess { case status => status }
@@ -203,7 +203,7 @@ class Update extends LiftActor {
 
   private def onBroadcast(flash: BroadcastFlash) {
     val broadcast = Broadcast(flash.messages, flash.env, flash.durationSeconds)
-    broadcastLog.update(broadcast)
+    model().broadcastLog.update(broadcast)
     subscribers.foreach(_ ! broadcast)
   }
 
@@ -235,6 +235,6 @@ class Update extends LiftActor {
   }
 
   private def onBroadcastsRequest(subscriber: Subscriber) {
-    subscriber ! BroadcastsResponse(broadcastLog.mostRecent)
+    subscriber ! BroadcastsResponse(model().broadcastLog.mostRecent)
   }
 }
