@@ -10,26 +10,29 @@ import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.dogfood.{GetProbeStatuses, ProbeStatuses}
 import app.server._
-import im.mange.jetpac.comet.{Subscribe, Subscriber, Unsubscribe}
+import im.mange.jetpac.Bangable
+import im.mange.jetpac.comet._
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, _}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 
 
 //TODO: I think i need to be a MulticastLiftActor and a MessageCapturingLiftActor
-class Update extends LiftActor {
+class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bangable[Any] {
+  override def onCapturedMessage(message: Any) { }
+
+
   //TODO: lose field and delegate to ServiceFactory.model() - maybe not, see TODO's at handler. below
   private val modelInstance = Model()
 
   private def model() = modelInstance
 
-  private var subscribers = Set[Subscriber]()
+  //private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
 
   this ! ExecuteProbeRun
@@ -39,7 +42,7 @@ class Update extends LiftActor {
   //would need to save the model obvs
   //in which case maybe this class just becomes App/Teat and model not in ServiceFactory, but app() is
 
-  protected def messageHandler = {
+  def handleMessage: PartialFunction[Any, Unit] = {
     case ExecuteProbeRun => onExecuteProbeRun()
     case PreExecuteProbe(p) => onPreExecuteProbe(p)
     case ReallyExecuteProbe(p) => onReallyExecuteProbe(p)
@@ -49,8 +52,8 @@ class Update extends LiftActor {
     case u:Message => onMessage(u)
     case u:AllRunsStatusUpdate => onAllRunsStatusUpdate(u)
     case u:ProbeStatusUpdate => onProbeStatusUpdate(u)
-    case Subscribe(s) => onSubscribe(s)
-    case Unsubscribe(s) => onUnsubscribe(s)
+//    case Subscribe(s) => onSubscribe(s)
+//    case Unsubscribe(s) => onUnsubscribe(s)
     case ProbeSummaryRequest(s) => onProbeSummaryRequest(s)
     case ProbeConfigRequest(s) => onProbeConfigRequest(s)
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
@@ -61,7 +64,7 @@ class Update extends LiftActor {
   }
 
   private def onConfigChanged(configChanged: ConfigChanged) {
-    subscribers.foreach(_ ! configChanged)
+    this ! PushToAllSubscribers(configChanged)
   }
 
   private def onExecuteProbeRun() {
@@ -192,34 +195,34 @@ class Update extends LiftActor {
   def createAllRunsStatusUpdate = AllRunsStatusUpdate(model().probeRunHistory.totalExecuted,
     model().incidentLog.totalIncidents, model().incidentLog.open, model().incidentLog.closed)
 
-  private def onProbeStatusUpdate(update: ProbeStatusUpdate) { subscribers.foreach(_ ! update) }
-  private def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) { subscribers.foreach(_ ! update) }
-  private def onMessage(update: Message) { subscribers.foreach(_ ! update) }
-  private def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) { subscribers.foreach(_ ! update) }
+  private def onProbeStatusUpdate(update: ProbeStatusUpdate) { this ! PushToAllSubscribers(update)}
+  private def onCurrentRunStatusUpdate(update: CurrentRunStatusUpdate) { this ! PushToAllSubscribers(update) }
+  private def onMessage(update: Message) { this ! PushToAllSubscribers(update) }
+  private def onAllRunsStatusUpdate(update: AllRunsStatusUpdate) { this ! PushToAllSubscribers(update) }
 
   private def onBroadcast(flash: BroadcastFlash) {
     val broadcast = Broadcast(flash.messages, flash.env, flash.durationSeconds)
     model().broadcastLog.update(broadcast)
-    subscribers.foreach(_ ! broadcast)
+    this ! PushToAllSubscribers(broadcast)
   }
 
-  private def onSubscribe(subscriber: Subscriber) {
+  override def afterSubscribe(subscriber: Subscriber) {
     println("### " + dateFormats().timeNow + " - onSubscribe: " + subscriber)
-    if (!subscribers.contains(subscriber)) {
-      subscribers = subscribers + subscriber
-      println("### " + dateFormats().timeNow + " - new subscriber, now have: " + subscribers.size)
-    } else {
-      println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
-    }
+//    if (!subscribers.contains(subscriber)) {
+//      subscribers = subscribers + subscriber
+//      println("### " + dateFormats().timeNow + " - new subscriber, now have: " + subscribers.size)
+//    } else {
+//      println("### " + dateFormats().timeNow + " - existing subscriber, still have: " + subscribers.size)
+//    }
 
     subscriber ! app.comet.Init(model().currentRun.probes)
     model().currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
   }
 
-  private def onUnsubscribe(subscriber: Subscriber) {
+  override def afterUnsubscribe(subscriber: Subscriber) {
     println("### " + dateFormats().timeNow + " - onUnsubscribe: " + subscriber)
-    subscribers = subscribers - subscriber
-    println("### " + dateFormats().timeNow + " - subscriber removed, now have: " + subscribers.size)
+//    subscribers = subscribers - subscriber
+//    println("### " + dateFormats().timeNow + " - subscriber removed, now have: " + subscribers.size)
   }
 
   private def onProbeSummaryRequest(subscriber: Subscriber) {
