@@ -1,6 +1,6 @@
 package app.restlike.rtm
 
-import app.ServiceFactory.dateFormats
+import server.ServiceFactory.dateFormats
 
 //TODO: add issue
 object Presentation {

@@ -10,7 +10,6 @@ import app.restlike.rim.Rim
 import app.restlike.gtd.Gtd
 import app.restlike.rtm.Rtm
 import app.view.{AppView, RimView}
-import app.ServiceFactory
 import im.mange.jetpac.page.Pages
 import net.liftmodules.JQueryModule
 import net.liftweb.common._
@@ -20,6 +19,7 @@ import net.liftweb.sitemap._
 import net.liftweb.util._
 import app.restlike.iam.Iam
 import app.restlike.dogfood.{Blink1, Dogfood}
+import server.ServiceFactory
 
 class Boot extends Loggable {
   def boot() {

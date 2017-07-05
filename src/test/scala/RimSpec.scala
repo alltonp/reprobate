@@ -1,10 +1,10 @@
-import app.ServiceFactory
-import app.ServiceFactory._
+import server.ServiceFactory._
 import app.restlike.common.RefProvider
 import app.restlike.rim._
 import im.mange.little.clock.FrozenClock
 import org.joda.time.DateTime
 import org.scalatest.{MustMatchers, WordSpec}
+import server.ServiceFactory
 
 class RimSpec extends WordSpec with MustMatchers {
   //TODO: this is naughty

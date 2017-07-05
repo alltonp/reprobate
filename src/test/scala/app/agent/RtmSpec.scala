@@ -1,10 +1,10 @@
 package app.agent
 
-import app.ServiceFactory
 import app.restlike.rtm._
 import im.mange.little.clock.FrozenClock
 import org.joda.time.DateTime
 import org.scalatest.{MustMatchers, WordSpec}
+import server.ServiceFactory
 
 class RtmSpec extends WordSpec with MustMatchers {
   //TOOD: this is naughty

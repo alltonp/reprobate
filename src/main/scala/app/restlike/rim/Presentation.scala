@@ -1,6 +1,6 @@
 package app.restlike.rim
 
-import app.ServiceFactory.dateFormats
+import server.ServiceFactory.dateFormats
 import org.joda.time.DateTime
 
 //TODO: add issue

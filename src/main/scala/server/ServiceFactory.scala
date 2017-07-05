@@ -1,10 +1,11 @@
-package app
+package server
 
-import app.server.{RimServerActor, Update}
+import app.server.RimServerActor
 import im.mange.little.clock.{Clock, RealClock}
 import im.mange.little.date.DateFormatForHumans
 import net.liftweb.http._
 import org.joda.time.DateTimeZone
+import server.tea.Update
 
 object ServiceFactory extends Factory {
   lazy val updateInstance: Update = new Update

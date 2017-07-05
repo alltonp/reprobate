@@ -1,6 +1,6 @@
 package app.agent
 
-import app.ServiceFactory.dateFormats
+import server.ServiceFactory.dateFormats
 import app.model.Incident
 import app.server.AllRunsStatusUpdate
 import im.mange.jetboot._

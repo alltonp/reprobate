@@ -1,6 +1,6 @@
 package app.model
 
-import app.ServiceFactory._
+import server.ServiceFactory._
 import app.server.{ProbeFailure, ProbeStatus}
 import scala.collection.immutable.HashMap
 

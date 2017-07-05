@@ -1,6 +1,6 @@
 package app.model
 
-import app.ServiceFactory.systemClock
+import server.ServiceFactory.systemClock
 import org.joda.time.{DateTime, LocalDateTime}
 
 case class ActivePeriod(startHour: Int, finishHour: Int) {

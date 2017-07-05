@@ -1,6 +1,6 @@
 package app.comet
 
-import app.ServiceFactory._
+import server.ServiceFactory._
 import app.agent.RootAgent
 import app.model.{Broadcast, ProbeRegistry}
 import app.server._
@@ -11,7 +11,7 @@ import net.liftweb.actor.LiftActor
 import net.liftweb.common.Loggable
 
 //TODO: push probeProviderActor into the Agent (and rename the agent)
-class AppCometActor extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
+class View extends RefreshableCometActor with MessageCapturingCometActor with Subscriber with Loggable {
   override def onCapturedMessage(message: Any) { /*println(s"$this got a $message")*/ }
 
   private var rootAgent: RootAgent = _
@@ -29,9 +29,7 @@ class AppCometActor extends RefreshableCometActor with MessageCapturingCometActo
     update() ! Subscribe(this)//; this ! Init()
   }
 
-  def doRender = {
-    rootAgent.render
-  }
+  def doRender = rootAgent.render
 
   override def localShutdown() {
     update() ! Unsubscribe(this)

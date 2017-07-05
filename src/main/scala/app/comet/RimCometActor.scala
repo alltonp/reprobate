@@ -1,6 +1,6 @@
 package app.comet
 
-import app.ServiceFactory.rimServerActor
+import server.ServiceFactory.rimServerActor
 import app.agent.{CommandEditorAgent}
 import app.restlike.common.Colours._
 import app.restlike.rim.{Controller, Persistence, Presentation}

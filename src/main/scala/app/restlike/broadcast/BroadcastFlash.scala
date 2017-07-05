@@ -1,10 +1,10 @@
 package app.restlike.broadcast
 
-import app.ServiceFactory
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.json._
+import server.ServiceFactory
 
 object BroadcastFlash extends RestHelper {
   serve {

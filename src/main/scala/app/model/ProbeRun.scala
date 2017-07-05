@@ -2,7 +2,7 @@ package app.model
 
 import app.server.{ProbeInactive, ProbeSuccess, ProbeStatus}
 import org.joda.time.{DateTime, LocalDateTime}
-import app.ServiceFactory._
+import server.ServiceFactory._
 import scala.Some
 import app.server.ProbeFailure
 

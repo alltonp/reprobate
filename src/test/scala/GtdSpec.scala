@@ -1,10 +1,10 @@
-import app.ServiceFactory
-import app.ServiceFactory._
+import server.ServiceFactory._
 import app.restlike.common.RefProvider
 import app.restlike.gtd._
 import im.mange.little.clock.FrozenClock
-import org.joda.time.{LocalDate, DateTime}
+import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{MustMatchers, WordSpec}
+import server.ServiceFactory
 
 class GtdSpec extends WordSpec with MustMatchers {
   //TODO: this is naughty

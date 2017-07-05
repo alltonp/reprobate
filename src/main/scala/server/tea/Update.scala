@@ -1,42 +1,26 @@
-package app.server
+package server.tea
 
 import java.io.FileNotFoundException
 import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
 
-import app.ServiceFactory._
-import app.model._
+import server.ServiceFactory._
+import app.model.{Broadcast, Probe, ProbeRegistry}
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.dogfood.{GetProbeStatuses, ProbeStatuses}
+import app.server._
+import im.mange.jetpac.comet.{Subscribe, Subscriber, Unsubscribe}
 import im.mange.reprobate.api.Json
 import net.liftweb.actor.LiftActor
-import im.mange.jetboot._
-import im.mange.jetpac._
-import im.mange.jetpac.comet._
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 
-//TODO: make this be more like RimServerActor
-
-case class Model() {
-  //TODO: ultimately can be passed in and forgotten about
-  //TODO: there might be more model lurking, e.g. for endpoints like incidents etc
-  val historicState = ProbateRegistry.load
-  val incidentLog = IncidentLog(historicState.incidentsReported)
-  val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
-  val broadcastLog = BroadcastLog()
-  var currentRun = createProbeRun
-  val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
-
-  def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
-}
-
-//TODO: all this subscriber stuff seems very old/hard work, should be more like barry
-//TODO: this isnt really quite right be are mutating the model rather than returning a new one ...
-//... but it' s a start I guess
 
 //TODO: I think i need to be a MulticastLiftActor and a MessageCapturingLiftActor
 class Update extends LiftActor {

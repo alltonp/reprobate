@@ -1,6 +1,6 @@
 package app.restlike.rtm
 
-import app.ServiceFactory.rimServerActor
+import server.ServiceFactory.rimServerActor
 import app.restlike.common.Colours.customGrey
 import app.restlike.common.Responder._
 import app.restlike.common._

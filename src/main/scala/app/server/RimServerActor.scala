@@ -2,8 +2,9 @@ package app.server
 
 import app.restlike.rim.Model
 import im.mange.jetpac.Bangable
-import im.mange.jetpac.comet.{PushToAllSubscribers, Subscriber, MulticastLiftActor, MessageCapturingLiftActor}
+import im.mange.jetpac.comet.{MessageCapturingLiftActor, MulticastLiftActor, PushToAllSubscribers, Subscriber}
 import net.liftweb.actor.LiftActor
+import server.tea
 
 class RimServerActor extends MessageCapturingLiftActor with MulticastLiftActor with Bangable[Any] {
   override def onCapturedMessage(message: Any) { }

@@ -5,9 +5,9 @@ import im.mange.shoreditch.api.Check
 import im.mange.shoreditch.check.Alive
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.{GetRequest, JsonResponse, PlainTextResponse, Req}
-import app.ServiceFactory
 import net.liftweb.common.{Box, Failure, Full}
 import app.model._
+import server.ServiceFactory
 
 object Blink1 extends RestHelper {
   serve {

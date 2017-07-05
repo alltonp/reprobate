@@ -1,9 +1,9 @@
 package app.restlike.rim
 
-import app.ServiceFactory
 import app.restlike.common.Colours._
 import app.restlike.common._
 import org.joda.time.DateTime
+import server.ServiceFactory
 
 import scala.collection.immutable
 

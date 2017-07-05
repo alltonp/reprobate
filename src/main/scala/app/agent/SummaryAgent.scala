@@ -1,6 +1,6 @@
 package app.agent
 
-import app.ServiceFactory._
+import server.ServiceFactory._
 import im.mange.jetboot.widget.Spacer
 import im.mange.jetboot._
 import im.mange.jetpac._

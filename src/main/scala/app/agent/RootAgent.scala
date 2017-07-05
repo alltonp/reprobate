@@ -2,7 +2,7 @@ package app.agent
 
 //import app.comet.Subscriber
 
-import app.comet.AppCometActor
+import app.comet.View
 import app.server._
 import im.mange.jetboot._
 import im.mange.jetpac._
@@ -48,7 +48,7 @@ import net.liftweb.sitemap.Loc
 //features:
 //store probe duration ...
 
-case class AppPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[AppCometActor]
+case class AppPage(override val path: String, override val params: Loc.LocParam[Any]*) extends CometPage[View]
 
 case class RootAgent(subscriber: im.mange.jetpac.comet.Subscriber) extends Renderable {
   private val allProbesStatus = div(id = Some("allProbesStatus"))

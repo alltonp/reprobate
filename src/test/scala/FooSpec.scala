@@ -1,4 +1,4 @@
-import app.ServiceFactory._
+import server.ServiceFactory._
 import org.scalatest.{MustMatchers, WordSpec}
 
 class FooSpec extends WordSpec with MustMatchers {

@@ -1,7 +1,7 @@
 package app.model
 
 import org.joda.time.{DateTime, Interval, Hours, LocalDateTime}
-import app.ServiceFactory.systemClock
+import server.ServiceFactory.systemClock
 
 case class Broadcast(messages: List[String], env: String, durationSeconds: Int) {
   val start = systemClock().dateTime

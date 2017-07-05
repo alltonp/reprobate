@@ -1,6 +1,6 @@
 package app.restlike.demo
 
-import app.ServiceFactory._
+import server.ServiceFactory._
 import im.mange.reprobate.api.Runner
 import im.mange.shoreditch.api.Check
 import net.liftweb.http.rest.RestHelper

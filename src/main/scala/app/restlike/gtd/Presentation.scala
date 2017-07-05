@@ -1,6 +1,6 @@
 package app.restlike.gtd
 
-import app.ServiceFactory.{systemClock, dateFormats}
+import server.ServiceFactory.{systemClock, dateFormats}
 import app.restlike.common.Colours
 import org.joda.time.LocalDate
 

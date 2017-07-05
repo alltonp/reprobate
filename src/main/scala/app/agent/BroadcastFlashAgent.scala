@@ -1,6 +1,6 @@
 package app.agent
 
-import app.ServiceFactory.dateFormats
+import server.ServiceFactory.dateFormats
 import app.server.ProbeFailure
 import im.mange.jetboot.Bss
 import im.mange.jetpac._

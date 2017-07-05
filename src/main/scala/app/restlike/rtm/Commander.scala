@@ -1,6 +1,6 @@
 package app.restlike.rtm
 
-import app.ServiceFactory._
+import server.ServiceFactory._
 import app.restlike.common.Colours._
 import app.restlike.common._
 
