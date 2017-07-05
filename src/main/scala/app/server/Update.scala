@@ -23,6 +23,7 @@ import scala.concurrent.duration.Duration
 
 case class Model() {
   //TODO: ultimately can be passed in and forgotten about
+  //TODO: there might be more model lurking, e.g. for endpoints like incidents etc
   val historicState = ProbateRegistry.load
   val incidentLog = IncidentLog(historicState.incidentsReported)
   val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
@@ -33,6 +34,8 @@ case class Model() {
   def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
 }
 
+//TODO: this isnt really quite right be are mutating the model rather than returning a new one ...
+//... but it' s a start I guess
 class Update extends LiftActor {
   //TODO: lose field and delegate to ServiceFactory.model()
   private val modelInstance = Model()
