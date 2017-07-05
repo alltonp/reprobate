@@ -28,6 +28,7 @@ case class Model() {
   val probeRunHistory = ProbeRunHistory(ProbeRegistry.load.map(_.copy()), incidentLog, historicState.checksExecuted)
   val broadcastLog = BroadcastLog()
   var currentRun = createProbeRun
+  val currentProbeStatuses = CurrentProbeStatuses(currentRun.probes)
 
   def createProbeRun = ProbeRun(ProbeRegistry.load.map(_.copy()))
 }
@@ -40,7 +41,6 @@ class Update extends LiftActor {
 
   private var subscribers = Set[Subscriber]()
   //TODO: do we still need this? can we stash it in PRH
-  private val currentProbeStatuses = CurrentProbeStatuses(model().currentRun.probes)
 
   this ! ExecuteProbeRun
 
@@ -61,7 +61,7 @@ class Update extends LiftActor {
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
     //TODO: should probably rename this to StatusMessage
     case b:BroadcastFlash => onBroadcast(b)
-    case GetProbeStatuses => reply(ProbeStatuses(currentProbeStatuses.failures))
+    case GetProbeStatuses => reply(ProbeStatuses(model().currentProbeStatuses.failures))
     case c:ConfigChanged => onConfigChanged(c)
   }
 
@@ -91,7 +91,7 @@ class Update extends LiftActor {
 
         if (model().currentRun.probes != nextRun.probes) {
           model().incidentLog.onConfigChanged()
-          currentProbeStatuses.onConfigChanged()
+          model().currentProbeStatuses.onConfigChanged()
           thisInstance ! ConfigChanged(nextRun.probes)
           println("### " + dateFormats().timeNow + " - configuration change")
           thisInstance ! createMessageUpdate("detected", "Configuration change")
@@ -123,7 +123,7 @@ class Update extends LiftActor {
 
     model().currentRun.update(probe, result)
     model().incidentLog.update(probe, result)
-    currentProbeStatuses.update(probe, result)
+    model().currentProbeStatuses.update(probe, result)
 
     this ! PostExecuteProbe(probe, result)
   }
@@ -218,7 +218,7 @@ class Update extends LiftActor {
     }
 
     subscriber ! app.comet.Init(model().currentRun.probes)
-    currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
+    model().currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
   }
 
   private def onUnsubscribe(subscriber: Subscriber) {
