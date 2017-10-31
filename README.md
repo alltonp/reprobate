@@ -1,6 +1,6 @@
 <a href="https://travis-ci.org/alltonp/reprobate" target="_blank"><img src="https://travis-ci.org/alltonp/reprobate.png?branch=master"></a>
 
-### Reprobate - continuous assertion monitoring
+# Reprobate - continuous assertion monitoring
 
 ![](https://media.giphy.com/media/l2SpRVOmmrHj7jlcc/giphy.gif)
 
