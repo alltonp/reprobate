@@ -124,4 +124,4 @@
 
 -----
 
-Copyright © 2015-2016 Spabloshi Ltd
+Copyright © 2015-2017 Spabloshi Ltd
