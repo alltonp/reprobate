@@ -56,5 +56,11 @@ case class CurrentProbeStatuses(probes: List[app.model.Probe]) {
     }
   })
 
-  def statuses = probeToStatus
+  // Retain the order of the probes
+  def statuses: List[(Probe, Option[ProbeStatus])] = probes.map(probe => (probe, probeToStatus.get(probe)))
+
+  def completedProbes: List[(Probe, ProbeStatus)] = statuses.collect {
+    case (probe, Some(status)) => (probe, status)
+  }
+
 }
