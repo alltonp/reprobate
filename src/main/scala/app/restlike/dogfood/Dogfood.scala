@@ -5,8 +5,11 @@ import im.mange.shoreditch.api.Check
 import im.mange.shoreditch.check.Alive
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http.{GetRequest, JsonResponse, PlainTextResponse, Req}
-import net.liftweb.common.{Box, Failure, Full}
+import net.liftweb.common.{Box, Empty, Failure, Full}
 import app.model._
+import app.server.ProbeStatus
+import net.liftweb.actor.LAFuture
+import net.liftweb.json._
 import server.ServiceFactory
 import server.tea.{Model, State}
 
@@ -44,14 +47,22 @@ object Dogfood extends RestHelper {
 
     case Req("state" :: Nil, _, GetRequest) ⇒ () ⇒ {
       val future = ServiceFactory.update() !< GetState
-      val result = future.get(60 * 1000).asInstanceOf[Box[State]]
+      awaitAndRespond[State](future, Json.serialise)
+    }
 
-      result match {
-        case Full(x) => Full(JsonResponse(Json.serialise(x)))
-        case Failure(f, _, _) => Full(PlainTextResponse(f))
-        case _ => Full(PlainTextResponse("???"))
-      }
+    case Req("state" :: "probes" :: Nil, _, GetRequest) ⇒ () ⇒ {
+      val future = ServiceFactory.update() !< GetAllProbeStatuses
+      awaitAndRespond[List[(Probe, Option[ProbeStatus])]](future, Json.serialise)
+    }
+  }
 
+  private def awaitAndRespond[T](future: LAFuture[Any], serialise: T => JValue) = {
+    val result = future.get(60 * 1000).asInstanceOf[Box[T]]
+    result match {
+      case Full(x)          => Full(JsonResponse(serialise(x)))
+      case Failure(f, _, _) => Full(PlainTextResponse(f, 500))
+      case Empty            => Full(PlainTextResponse("Timed out", 500))
+      case _                => Full(PlainTextResponse(s"Bug: Did not expect: $result", 500))
     }
   }
 }
@@ -76,5 +87,6 @@ case class OkProbe(env: String) extends Check {
 
 case object GetProbeStatuses
 case object GetState
+case object GetAllProbeStatuses
 
 case class ProbeStatuses(failures: Iterable[FailedProbe])

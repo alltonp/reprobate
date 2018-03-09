@@ -8,7 +8,7 @@ import server.ServiceFactory._
 import app.model.{Broadcast, Probe, ProbeRegistry}
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
-import app.restlike.dogfood.{GetProbeStatuses, GetState, ProbeStatuses}
+import app.restlike.dogfood.{GetAllProbeStatuses, GetProbeStatuses, GetState, ProbeStatuses}
 import app.server._
 import im.mange.jetpac.Bangable
 import im.mange.jetpac.comet._
@@ -49,10 +49,11 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     case ProbeConfigRequest(s) => onProbeConfigRequest(s)
     case BroadcastsRequest(s) => onBroadcastsRequest(s)
     //TODO: should probably rename this to StatusMessage
-    case b:BroadcastFlash => onBroadcast(b)
-    case GetProbeStatuses => reply(ProbeStatuses(model().currentProbeStatuses.failures))
-    case GetState => reply(model().state)
-    case c:ConfigChanged => onConfigChanged(c)
+    case b:BroadcastFlash    => onBroadcast(b)
+    case GetProbeStatuses    => reply(ProbeStatuses(model().currentProbeStatuses.failures))
+    case GetState            => reply(model().state)
+    case GetAllProbeStatuses => reply(model().state.currentProbeStatuses.statuses)
+    case c:ConfigChanged     => onConfigChanged(c)
   }
 
   private def onConfigChanged(configChanged: ConfigChanged) {
@@ -203,7 +204,7 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
     println("### " + dateFormats().timeNow + " - onSubscribe: " + subscriber)
 
     subscriber ! app.comet.Init(model().currentRun.probes)
-    model().currentProbeStatuses.statuses.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
+    model().currentProbeStatuses.completedProbes.map { p => subscriber ! ProbeStatusUpdate(p._1, p._2, model().incidentLog.currentOpenIncident(p._1)) }
   }
 
   override def afterUnsubscribe(subscriber: Subscriber) {

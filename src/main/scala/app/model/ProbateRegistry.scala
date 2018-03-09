@@ -11,6 +11,7 @@ import java.nio.file.{Files, Paths, StandardOpenOption}
 import net.liftweb.json._
 import java.nio.charset.StandardCharsets
 
+import app.server.ProbeStatus
 import server.tea.{Model, State}
 
 case class ProbateState(checksExecuted: Long, incidentsReported: Long)
@@ -90,6 +91,11 @@ object Json {
   }
 
   def serialise(response: State) = {
+    implicit val formats = probateFormats
+    JsonParser.parse(write(response))
+  }
+
+  def serialise(response: List[(Probe, Option[ProbeStatus])]) = {
     implicit val formats = probateFormats
     JsonParser.parse(write(response))
   }
