@@ -10,3 +10,6 @@ sbt dist assembly
 #docker run --name reprobate-current -t -d -h=`hostname` \
 #-p 8473:8473 \
 #reprobate-1
+
+#TODO: put files in data and -v it
+#TODO: push to dockerhub
