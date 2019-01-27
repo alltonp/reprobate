@@ -4,7 +4,7 @@ import java.io.File
 import scala.io.Source
 
 object ProbeRegistry {
-  private val file = new File("checks.csv")
+  private val file = new File("data/checks.csv")
 
   def load: List[Probe] = {
 //    println("loading checks ...")

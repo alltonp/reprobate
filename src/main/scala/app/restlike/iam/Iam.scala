@@ -152,7 +152,7 @@ object Model {
   import Responder._
   import Messages._
 
-  private val file = new File("iam.json")
+  private val file = new File("data/iam.json")
   private val whoToStatuses = load
 
   println("### loaded:" + whoToStatuses)
@@ -216,7 +216,7 @@ object Model {
   private def save(state: IamState) {
     println("### save: " + state)
     val jsonAst = Json.serialise(state)
-    Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
+    Files.write(Paths.get(file.getPath), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 }

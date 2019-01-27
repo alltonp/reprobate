@@ -10,7 +10,7 @@ import scala.collection.immutable
 
 //TODO: use app name
 object Persistence {
-  private val file = Paths.get(s"${Rtm.appName}.json")
+  private val file = Paths.get(s"data/${Rtm.appName}.json")
 //  private val defaultStatuses = List("next", "doing", "done")
 
   //TODO: could Model be 'T'ed up?

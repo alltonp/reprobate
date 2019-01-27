@@ -1,5 +1,7 @@
 package server
 
+import java.io.File
+
 import app.server.RimServerActor
 import im.mange.little.clock.{Clock, RealClock}
 import im.mange.little.date.DateFormatForHumans
@@ -8,6 +10,12 @@ import org.joda.time.DateTimeZone
 import server.tea.Update
 
 object ServiceFactory extends Factory {
+  val dataDir = new File("data")
+
+  if (!dataDir.exists()) {
+    dataDir.mkdir()
+  }
+
   lazy val updateInstance: Update = new Update
   lazy val rimServerActorInstance: RimServerActor = new RimServerActor
   lazy val clockInstance: Clock = RealClock

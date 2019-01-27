@@ -10,7 +10,7 @@ import scala.collection.immutable
 
 //TODO: use app name
 object Persistence {
-  private val file = Paths.get(s"${Rim.appName}.json")
+  private val file = Paths.get(s"data/${Rim.appName}.json")
 
   def load: Universe = {
     if (!file.toFile.exists()) {

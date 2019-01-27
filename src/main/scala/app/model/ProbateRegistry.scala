@@ -16,7 +16,7 @@ import server.tea.{Model, State}
 case class ProbateState(checksExecuted: Long, incidentsReported: Long)
 
 object ProbateRegistry {
-  private val file = new File("state.json")
+  private val file = Paths.get("data/state.json").toFile
 
   def load = {
 //    val counter = ProbeIdCounter()
@@ -40,7 +40,8 @@ object ProbateRegistry {
 
   private def save(state: ProbateState) {
     val jsonAst = Json.serialise(state)
-    Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
+    import java.nio.file.Files
+    Files.write(Paths.get(file.getPath), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 }

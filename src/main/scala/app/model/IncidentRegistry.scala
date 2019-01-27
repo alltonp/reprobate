@@ -13,7 +13,7 @@ case class IncidentState(id: Long, name: String, env: String, start: DateTime, f
 case class IncidentsState(incidents: List[IncidentState])
 
 object IncidentRegistry {
-  private val file = new File("incidents.json")
+  private val file = new File("data/incidents.json")
 
   def load = {
     if (!file.exists()) save(IncidentsState(Nil))
@@ -37,7 +37,7 @@ object IncidentRegistry {
   private def save(state: IncidentsState) {
     //TODO: drop ...
     val jsonAst = Json.serialise(state)
-    Files.write(Paths.get(file.getName), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
+    Files.write(Paths.get(file.getPath), pretty(render(jsonAst)).getBytes(StandardCharsets.UTF_8),
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 }
