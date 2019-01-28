@@ -1,7 +1,5 @@
 package server
 
-import im.mange.little.LittleServer
-
 //FEATURES:
 //use font awesome spinners instead of gifs
 //use font awesome icons instead of broadcast and config
@@ -14,8 +12,6 @@ object Reprobate extends App {
   new LittleServer2(port, webAppPath = "webapp")
   println(s"### Started Reprobate on $port")
 }
-
-import java.io.File
 
 import org.eclipse.jetty.server.{Server, ServerConnector}
 import org.eclipse.jetty.webapp.WebAppContext
@@ -41,10 +37,8 @@ class LittleServer2(serverPort: Int, autoStart: Boolean = true, webAppPath: Stri
 
   private def createContext = {
     val classLoader = getClass.getClassLoader
-//    val x = classLoader.getResource(webAppPath)
-//    val y = classLoader.getResource("webapp")
 
-    def packagedPath(root: String) = classLoader.getResource(root).toExternalForm
+//    def packagedPath(root: String) = classLoader.getResource(root).toExternalForm
 
 //    def discover(path: String, packaged: String, context: WebAppContext) =
 //      if (new File(path).exists()) path else packagedPath("webapp")

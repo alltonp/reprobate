@@ -4,13 +4,17 @@ import net.liftweb.http.rest.RestHelper
 import net.liftweb.http._
 import net.liftweb.common._
 import net.liftweb.json._
+
 import scala.collection.{immutable, mutable}
-import java.nio.file.{StandardOpenOption, Paths, Files}
+import java.nio.file.{Files, Paths, StandardOpenOption}
 import java.nio.charset.StandardCharsets
 import java.io.File
+
 import scala.io.Source
 import scala.collection
 import net.liftweb.common.Full
+import server.ServiceFactory
+
 import scala.Some
 
 //TODO: simplifiy all of this:
@@ -152,7 +156,7 @@ object Model {
   import Responder._
   import Messages._
 
-  private val file = new File("data/iam.json")
+  private val file = new File(s"${ServiceFactory.dataDir}/iam.json")
   private val whoToStatuses = load
 
   println("### loaded:" + whoToStatuses)

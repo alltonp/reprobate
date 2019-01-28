@@ -11,12 +11,13 @@ import java.nio.file.{Files, Paths, StandardOpenOption}
 import net.liftweb.json._
 import java.nio.charset.StandardCharsets
 
+import server.ServiceFactory
 import server.tea.{Model, State}
 
 case class ProbateState(checksExecuted: Long, incidentsReported: Long)
 
 object ProbateRegistry {
-  private val file = Paths.get("data/state.json").toFile
+  private val file = Paths.get(s"${ServiceFactory.dataDir}/state.json").toFile
 
   def load = {
 //    val counter = ProbeIdCounter()

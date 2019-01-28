@@ -4,9 +4,10 @@ import java.nio.file.Paths
 
 import im.mange.little.file.Filepath
 import net.liftweb.json._
+import server.ServiceFactory
 
 object Persistence {
-  private val file = Paths.get(s"data/${Rem.appName}.json")
+  private val file = Paths.get(s"${ServiceFactory.dataDir}/${Rem.appName}.json")
 
   def load: Universe = {
     if (!file.toFile.exists()) save(

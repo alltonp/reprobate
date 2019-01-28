@@ -6,6 +6,7 @@ import java.nio.file.{Files, Paths, StandardOpenOption}
 
 import net.liftweb.json._
 import org.joda.time.DateTime
+import server.ServiceFactory
 
 import scala.io.Source
 
@@ -13,7 +14,7 @@ case class IncidentState(id: Long, name: String, env: String, start: DateTime, f
 case class IncidentsState(incidents: List[IncidentState])
 
 object IncidentRegistry {
-  private val file = new File("data/incidents.json")
+  private val file = new File(s"${ServiceFactory.dataDir}/incidents.json")
 
   def load = {
     if (!file.exists()) save(IncidentsState(Nil))

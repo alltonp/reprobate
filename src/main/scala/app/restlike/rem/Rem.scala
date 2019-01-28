@@ -15,7 +15,7 @@ object Rem extends RestHelper {
       t(Script.install(appName, token), downcase = false)
     //TODO: this should be filtered for the token
 //    case r@Req(`appName` :: "tracking" :: token :: Nil, _, GetRequest) ⇒ () ⇒
-//      t(Tracker(s"data/${appName}.tracking").view, downcase = false)
+//      t(Tracker(s"${ServiceFactory.dataDir}/${appName}.tracking").view, downcase = false)
     case r@Req(`appName` :: "state" :: token :: Nil, _, GetRequest) ⇒ () ⇒
       Full(JsonResponse(Json.serialise(Persistence.load.modelFor(token))))
     case r@Req(`appName` :: who :: token :: Nil, _, PostRequest) ⇒ () ⇒

@@ -3,6 +3,7 @@ package app.restlike.rim
 import java.nio.file.Paths
 
 import im.mange.little.file.Filepath
+import server.ServiceFactory
 //import net.liftweb.json._
 import org.json4s.native.JsonMethods._
 
@@ -10,7 +11,7 @@ import scala.collection.immutable
 
 //TODO: use app name
 object Persistence {
-  private val file = Paths.get(s"data/${Rim.appName}.json")
+  private val file = Paths.get(s"${ServiceFactory.dataDir}/${Rim.appName}.json")
 
   def load: Universe = {
     if (!file.toFile.exists()) {

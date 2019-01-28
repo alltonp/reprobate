@@ -10,7 +10,7 @@ import org.joda.time.DateTimeZone
 import server.tea.Update
 
 object ServiceFactory extends Factory {
-  val dataDir = new File("data")
+  val dataDir = new File("/data")
 
   if (!dataDir.exists()) {
     println(s"### Creating $dataDir")

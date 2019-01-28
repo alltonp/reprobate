@@ -1,10 +1,13 @@
 package app.model
 
 import java.io.File
+
+import server.ServiceFactory
+
 import scala.io.Source
 
 object ProbeRegistry {
-  private val file = new File("data/checks.csv")
+  private val file = new File(s"${ServiceFactory.dataDir}/checks.csv")
 
   def load: List[Probe] = {
 //    println("loading checks ...")

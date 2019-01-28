@@ -5,6 +5,7 @@ import app.restlike.common.Responder._
 import app.restlike.common._
 import net.liftweb.http._
 import net.liftweb.json._
+import server.ServiceFactory
 
 object Controller {
   private var universe = Persistence.load
@@ -23,7 +24,7 @@ object Controller {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
 
             //TODO: if we do this later we could potentially bend in the ref of the reseult .. fo reasier parsing
-            Tracker(s"data/${Gtd.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
+            Tracker(s"${ServiceFactory.dataDir}/${Gtd.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
 
             val out = Commander.process(value, who, model, refProvider)
             out.updatedModel.foreach(m => {

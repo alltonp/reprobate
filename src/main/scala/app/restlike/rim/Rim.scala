@@ -5,6 +5,7 @@ import net.liftweb.common.Full
 import net.liftweb.http._
 import net.liftweb.http.rest.RestHelper
 import org.json4s.native.JsonMethods
+import server.ServiceFactory
 
 object Rim extends RestHelper {
   import app.restlike.common.Responder._
@@ -25,5 +26,5 @@ object Rim extends RestHelper {
       Controller.process(who, r, token)
   }
 
-  def history(token: String) = Tracker(s"data/$appName.tracking").view(token)
+  def history(token: String) = Tracker(s"${ServiceFactory.dataDir}/$appName.tracking").view(token)
 }

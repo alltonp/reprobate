@@ -4,6 +4,7 @@ import app.restlike.common.Responder._
 import app.restlike.common.{CliRequestJson, JsonRequestHandler, RefProvider, Tracker}
 import net.liftweb.http.Req
 import net.liftweb.json._
+import server.ServiceFactory
 
 object Controller {
   private var universe = Persistence.load
@@ -16,7 +17,7 @@ object Controller {
         JsonRequestHandler.handle(req)((json, req) ⇒ {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-            Tracker(s"data/${Rem.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
+            Tracker(s"${ServiceFactory.dataDir}/${Rem.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
             val out = Commander.process(value, who, model, refProvider, universe.tokenToUser(token))
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)

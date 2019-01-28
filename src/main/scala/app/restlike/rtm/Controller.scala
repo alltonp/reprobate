@@ -7,6 +7,7 @@ import app.restlike.common._
 import app.server.ModelChanged
 import net.liftweb.http._
 import net.liftweb.json._
+import server.ServiceFactory
 
 object Controller {
   private var universe = Persistence.load
@@ -23,7 +24,7 @@ object Controller {
         JsonRequestHandler.handle(req)((json, req) ⇒ {
           synchronized {
             val value = CliRequestJson.deserialise(pretty(render(json))).value.toLowerCase.trim.replaceAll("\\|", "")
-            Tracker(s"data/${Rtm.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
+            Tracker(s"${ServiceFactory.dataDir}/${Rtm.appName}.tracking").track(who, value, universe.tokenToUser(token), Nil)
             val out = Commander.process(value, who, model, /*refProvider,*/ token)
             out.updatedModel.foreach(m => {
               universe = universe.updateModelFor(token, m)
