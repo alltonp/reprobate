@@ -13,6 +13,7 @@ object ServiceFactory extends Factory {
   val dataDir = new File("data")
 
   if (!dataDir.exists()) {
+    println(s"### Creating $dataDir")
     dataDir.mkdir()
   }
 
