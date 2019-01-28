@@ -9,6 +9,6 @@ docker run --name reprobate-current -t -d -h=`hostname` \
 -p 8473:8473 \
 reprobate-1
 
-#issues: - do data dir when -v
+#issues:
+#do data dir when -v
 #need to do non root thing
-#not finding elm.js in docker
