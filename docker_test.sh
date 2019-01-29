@@ -11,5 +11,6 @@ docker run --name reprobate-current -t -d -h=`hostname` \
 reprobate-1
 
 #issues:
-#do data dir when -v
 #need to do non root thing
+#checks executed going to 0 on config change, not right ... state.json
+#app.log should go into data too
