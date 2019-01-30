@@ -5,7 +5,7 @@ import java.net.ConnectException
 import java.util.concurrent.TimeUnit._
 
 import server.ServiceFactory._
-import app.model.{Broadcast, Probe, ProbeRegistry}
+import app.model.{Broadcast, ProbateRegistry, Probe, ProbeRegistry}
 import app.probe.HttpClient
 import app.restlike.broadcast.BroadcastFlash
 import app.restlike.dogfood.{GetProbeStatuses, GetState, ProbeStatuses}
@@ -80,8 +80,9 @@ class Update extends MessageCapturingLiftActor with MulticastLiftActor with Bang
         val nextRun = model().createProbeRun
 
         if (model().currentRun.probes != nextRun.probes) {
-          model().incidentLog.onConfigChanged()
-          model().currentProbeStatuses.onConfigChanged()
+//          model().probeRunHistory.add(model().currentRun)
+//          model().currentRun.executedCount
+          model().onConfigChanged()
           thisInstance ! ConfigChanged(nextRun.probes)
           println("### " + dateFormats().timeNow + " - configuration change")
           thisInstance ! createMessageUpdate("detected", "Configuration change")

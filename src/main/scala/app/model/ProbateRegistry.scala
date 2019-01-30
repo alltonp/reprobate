@@ -22,7 +22,10 @@ object ProbateRegistry {
   def load = {
 //    val counter = ProbeIdCounter()
     if (!file.exists()) save(ProbateState(0, 0))
-    Json.deserialiseProbateState(Source.fromFile(file).getLines().mkString("\n"))
+//    val x =
+      Json.deserialiseProbateState(Source.fromFile(file).getLines().mkString("\n"))
+//    println(x)
+//    x
   }
 
   def updateIncidentsReported(newValue: Long) {
