@@ -1,8 +1,5 @@
 FROM openjdk:8-jre-alpine
 
-RUN adduser -D myuser
-USER myuser
-
 COPY ./target/scala-2.11/reprobate-assembly-1.0-SNAPSHOT.jar reprobate.jar
 
 EXPOSE 8473
