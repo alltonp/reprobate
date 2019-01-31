@@ -1,14 +1,17 @@
 #!/bin/sh
 #./autobuild.sh first ...
 ./sbt assembly
-docker build --no-cache  -t spabloshi/reprobate-1 .
-docker stop reprobate-current ||:
-docker rm reprobate-current ||:
+docker build --no-cache -t spabloshi/reprobate .
+docker stop reprobate ||:
+docker rm reprobate ||:
+
 rm -rf /Users/pall/dev/paulos/reprobate/test-data
-docker run --name reprobate-current -t -d -h=`hostname` \
+
+docker run --name reprobate -t -d -h=`hostname` \
+--restart always \
 -v /Users/pall/dev/paulos/reprobate/test-data:/data \
 -p 8473:8473 \
-reprobate-1
+spabloshi/reprobate
 
 #issues:
 #need to do non root thing
